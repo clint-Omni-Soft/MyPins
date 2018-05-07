@@ -1,0 +1,45 @@
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "4gJ-YG-42w"; */
+"4gJ-YG-42w.text" = "Title";
+
+/* Class = "UILabel"; text = "Altitude"; ObjectID = "8Ni-E9-0um"; */
+"8Ni-E9-0um.text" = "Altitude";
+
+/* Class = "UILabel"; text = "Address / Description"; ObjectID = "CuJ-m3-g2N"; */
+"CuJ-m3-g2N.text" = "Address / Description";
+
+/* Class = "UIBarButtonItem"; title = "Map Type"; ObjectID = "EWX-Gm-m6W"; */
+"EWX-Gm-m6W.title" = "Map Type";
+
+/* Class = "UILabel"; text = "m"; ObjectID = "HXV-sL-gmL"; */
+"HXV-sL-gmL.text" = "m";
+
+/* Class = "UIButton"; normalTitle = "Use Current Location"; ObjectID = "Jiz-dR-3H7"; */
+"Jiz-dR-3H7.normalTitle" = "Use Current Location";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "K6X-bk-9TZ"; */
+"K6X-bk-9TZ.text" = "Name";
+
+/* Class = "UIViewController"; title = "Pin Editor"; ObjectID = "MmU-jN-n5E"; */
+"MmU-jN-n5E.title" = "Pin Editor";
+
+/* Class = "UILabel"; text = "Longitude"; ObjectID = "NhJ-GT-vd6"; */
+"NhJ-GT-vd6.text" = "Longitude";
+
+/* Class = "UILabel"; text = "Latitude"; ObjectID = "Sg9-bW-oKG"; */
+"Sg9-bW-oKG.text" = "Latitude";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "byJ-cC-3dP"; */
+"byJ-cC-3dP.text" = "Subtitle";
+
+/* Class = "UIBarButtonItem"; title = "Zoom In"; ObjectID = "ogK-hz-vAZ"; */
+"ogK-hz-vAZ.title" = "Zoom In";
+
+/* Class = "UIViewController"; title = "Map"; ObjectID = "pHk-dB-HVW"; */
+"pHk-dB-HVW.title" = "Map";
+
+/* Class = "UIBarButtonItem"; title = "Directions"; ObjectID = "yCm-vf-DZD"; */
+"yCm-vf-DZD.title" = "Directions";
+
+/* Class = "UINavigationItem"; title = "Pin List"; ObjectID = "z3V-N1-gCT"; */
+"z3V-N1-gCT.title" = "Pin List";

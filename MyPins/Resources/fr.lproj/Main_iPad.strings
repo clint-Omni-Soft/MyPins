@@ -1,0 +1,42 @@
+
+/* Class = "UILabel"; text = "Latitude"; ObjectID = "AJj-On-mBK"; */
+"AJj-On-mBK.text" = "Latitude";
+
+/* Class = "UIButton"; normalTitle = "Use Current Location"; ObjectID = "Ea8-8N-ZHm"; */
+"Ea8-8N-ZHm.normalTitle" = "Use Current Location";
+
+/* Class = "UIBarButtonItem"; title = "Directions"; ObjectID = "FTy-WZ-cCH"; */
+"FTy-WZ-cCH.title" = "Directions";
+
+/* Class = "UIBarButtonItem"; title = "Zoom In"; ObjectID = "Iv0-xI-nix"; */
+"Iv0-xI-nix.title" = "Zoom In";
+
+/* Class = "UINavigationItem"; title = "My Pins"; ObjectID = "LKI-sP-faO"; */
+"LKI-sP-faO.title" = "My Pins";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "Pdo-gh-czb"; */
+"Pdo-gh-czb.text" = "Name";
+
+/* Class = "UILabel"; text = "Altitude"; ObjectID = "Sc2-3J-otc"; */
+"Sc2-3J-otc.text" = "Altitude";
+
+/* Class = "UIBarButtonItem"; title = "Map Type"; ObjectID = "XZa-zC-MaF"; */
+"XZa-zC-MaF.title" = "Map Type";
+
+/* Class = "UILabel"; text = "Longitude"; ObjectID = "XyV-pf-4Kz"; */
+"XyV-pf-4Kz.text" = "Longitude";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "Ycg-J1-7y0"; */
+"Ycg-J1-7y0.text" = "Title";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "asb-2T-RWH"; */
+"asb-2T-RWH.text" = "Subtitle";
+
+/* Class = "UISplitViewController"; title = "My Pins"; ObjectID = "bd1-MZ-lwn"; */
+"bd1-MZ-lwn.title" = "My Pins";
+
+/* Class = "UILabel"; text = "m"; ObjectID = "blg-lP-vhX"; */
+"blg-lP-vhX.text" = "m";
+
+/* Class = "UILabel"; text = "Address / Description"; ObjectID = "ftK-R6-kAZ"; */
+"ftK-R6-kAZ.text" = "Address / Description";

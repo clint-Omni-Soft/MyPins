@@ -1,0 +1,91 @@
+/* 
+  Localizable.strings - Spanish
+  MyPins
+
+  Created by Clint Shank on 3/26/18.
+  Copyright © 2018 Omni-Soft, Inc. All rights reserved.
+*/
+
+
+"AlertMessage.CannotOpenDatabase"   = "Error fatal!  No se puede abrir la base de datos.";
+"AlertMessage.ImageSaveFailed"      = "No pudimos guardar la imagen que seleccionó.";
+"AlertMessage.InvalidMediaType"     = "No podemos guardar el artículo que seleccionaste. Solo podemos guardar fotos.";
+"AlertMessage.LocationNotYetSet"    = "Su ubicación aún no ha sido establecida.  Por favor, inténtelo de nuevo más tarde.";
+"AlertMessage.NameCannotBeBlank"    = "El campo de nombre no se puede dejar en blanco";
+"AlertMessage.NoRoutesAvailable"    = "No se pudo encontrar una ruta a esta ubicación.";
+"AlertMessage.UnableToDeleteImage"  = "No hemos podido eliminar la imagen que ha creado.";
+"AlertTitle.AreYouSure"             = "¿Estás seguro de que quieres descartar tus cambios?";
+"AlertTitle.CurrentCoordinates"     = "Coordenadas actuales";
+"AlertTitle.Error"                  = "Error";
+"AlertTitle.EditLatLongAndAlt"      = "Editar latitud, longitud y altitud";
+"AlertTitle.EditNameAndDetails"     = "Editar nombre y detalles";
+"AlertTitle.ImageDisposition"       = "¿Qué te gustaría hacer con esta imagen?";
+"AlertTitle.SelectMapType"          = "Seleccionar tipo de mapa";
+"AlertTitle.SelectMediaSource"      = "Seleccionar fuente de medios para foto";
+
+"ButtonTitle.Back"                  = "Espalda";
+"ButtonTitle.Camera"                = "Cámara";
+"ButtonTitle.Cancel"                = "Cancelar";
+"ButtonTitle.Delete"                = "Borrar";
+"ButtonTitle.Directions"            = "Direcciones";
+"ButtonTitle.EndDirections"         = "Finalizar indicaciones";
+"ButtonTitle.Hybrid"                = "Híbrido";
+"ButtonTitle.HybridFlyover"         = "Paso elevado híbrido";
+"ButtonTitle.Map"                   = "Mapa";
+"ButtonTitle.MapType"               = "Tipo de mapa";
+"ButtonTitle.MutedStandard"         = "Estándar silenciado";
+"ButtonTitle.No"                    = "¡No!";
+"ButtonTitle.OK"                    = "DE ACUERDO";
+"ButtonTitle.PhotoAlbum"            = "Album de fotos";
+"ButtonTitle.PinColor"              = "Pin Color";
+"ButtonTitle.Replace"               = "Reemplazar";
+"ButtonTitle.Satellite"             = "Satélite";
+"ButtonTitle.SatelliteFlyover"      = "Paso elevado por satélite";
+"ButtonTitle.Save"                  = "Salvar";
+"ButtonTitle.ShowOnMap"             = "Mostrar en el mapa";
+"ButtonTitle.Standard"              = "Estándar";
+"ButtonTitle.ToggleUnits"           = "Conmutar unidades";
+"ButtonTitle.ZoomIn"                = "Acercarse";
+"ButtonTitle.UseCurrent"            = "Usar la ubicación actual";
+"ButtonTitle.Yes"                   = "Sí";
+
+"LabelText.About"                   = "Acerca de";
+"LabelText.Altitude"                = "Altitud";
+"LabelText.ContactUs"               = "Todos los derechos reservados. Contactanos en";
+"LabelText.Details"                 = "Descripción de la dirección";
+"LableText.HowToUse01"              = "LISTA DE PIN\n\nAgrega un Pin - Al tocar el signo más (+), accederá al Editor de pines, donde puede asociar, proporcionar información sobre ese pin.\n\n\n";
+"LableText.HowToUse02"              = "EDITOR DE PIN\n\nProporciona la capacidad de (a) asociar una imagen con el pin, (b) asignarle un nombre, (c) dirección y / o descripción, (d) modificar sus coordenadas y / o altitud, ";
+"LableText.HowToUse03"              = "(e) cambie las unidades de visualización de altitud y (f) configure su color de pin.  Toca el botón Guardar cuando hayas terminado.  Para ver la ubicación del pin en el mapa, toca el botón Mostrar en el mapa.\n\n\n";
+"LableText.HowToUse04"              = "AJUSTES\n\nToque cualquier fila poblada en la tabla para obtener información / datos de configuración sobre esta aplicación.\n\nAcerca de - Nuestra información de contacto.\n\nCómo utilizar - Esta vista.\n\n\n";
+"LableText.HowToUse05"              = "MAPA\n\nAgrega un Pin - Al tocar el signo más (+), accederás al Editor de pines, donde puedes proporcionar información sobre ese pin.\n\n";
+"LableText.HowToUse06"              = "Cambiar el modo de visualización del mapa - Tocar el botón Tipo de mapa producirá un popover que le permitirá elegir entre los modos de visualización de mapas admitidos.\n\n";
+"LableText.HowToUse07"              = "Coordenadas actuales - Al tocar el ícono del dardo, se producirá un popover que dará la latitud, longitud y altitud actual del dispositivo.\n\n";
+"LableText.HowToUse08"              = "Direcciones desde mi posición actual hasta el pin seleccionado - Cuando se selecciona un pin (su descripción se muestra encima del pin en el mapa), se habilitará el botón de Indicaciones.  ";
+"LableText.HowToUse09"              = "Tocar el botón Indicaciones en este momento agregará hasta dos rutas diferentes desde su posición actual al pin seleccionado.  ";
+"LableText.HowToUse10"              = "(Tenga en cuenta que el nombre del botón Indicaciones se habrá cambiado a Direcciones finales). Al tocar el botón Finalizar indicaciones, se eliminarán las rutas del mapa.\n\n";
+"LabelText.Latitude"                = "Latitud";
+"LabelText.Longitude"               = "Longitud";
+"LabelText.Name"                    = "Nombre";
+
+"PinColor.Black"                    = "Negro";
+"PinColor.Blue"                     = "Azul";
+"PinColor.Brown"                    = "Marrón";
+"PinColor.Cyan"                     = "Cyan";
+"PinColor.DarkGray"                 = "Gris oscuro";
+"PinColor.Gray"                     = "Gris";
+"PinColor.Green"                    = "Verde";
+"PinColor.LightGray"                = "Gris claro";
+"PinColor.Magenta"                  = "Magenta";
+"PinColor.Orange"                   = "Naranja";
+"PinColor.Purple"                   = "Púrpura";
+"PinColor.Red"                      = "Rojo";
+"PinColor.White"                    = "Blanco";
+"PinColor.Yellow"                   = "Amarillo";
+
+"Title.App"                         = "¿Donde fue eso?";
+"Title.HowToUse"                    = "Cómo utilizar";
+"Title.Map"                         = "Mapa";
+"Title.PinEditor"                   = "Pin Editor";
+"Title.PinList"                     = "Lista de Pin";
+"Title.SelectPinColor"              = "Seleccionar color de pin";
+"Title.Settings"                    = "Configuraciones";

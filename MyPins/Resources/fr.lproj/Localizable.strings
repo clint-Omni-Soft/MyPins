@@ -1,0 +1,91 @@
+/* 
+  Localizable.strings - French
+  MyPins
+
+  Created by Clint Shank on 3/26/18.
+  Copyright © 2018 Omni-Soft, Inc. All rights reserved.
+*/
+
+
+"AlertMessage.CannotOpenDatabase"   = "Erreur fatale!  Impossible d'ouvrir la base de données.";
+"AlertMessage.ImageSaveFailed"      = "Nous n'avons pas pu enregistrer l'image que vous avez sélectionnée.";
+"AlertMessage.InvalidMediaType"     = "Nous ne pouvons pas enregistrer l'article que vous avez sélectionné. Nous pouvons seulement enregistrer des photos.";
+"AlertMessage.LocationNotYetSet"    = "Votre position n'a pas encore été établie.  Veuillez réessayer plus tard.";
+"AlertMessage.NameCannotBeBlank"    = "Le champ Nom ne peut pas être laissé vide";
+"AlertMessage.NoRoutesAvailable"    = "Impossible de trouver un itinéraire vers cet emplacement.";
+"AlertMessage.UnableToDeleteImage"  = "Nous n'avons pas pu supprimer l'image que vous avez créée.";
+"AlertTitle.AreYouSure"             = "Êtes-vous sûr de vouloir annuler vos modifications?";
+"AlertTitle.CurrentCoordinates"     = "Coordonnées actuelles";
+"AlertTitle.Error"                  = "Erreur!";
+"AlertTitle.EditLatLongAndAlt"      = "Modifier la latitude, la longitude et l'altitude";
+"AlertTitle.EditNameAndDetails"     = "Modifier le nom et les détails";
+"AlertTitle.ImageDisposition"       = "Que voudriez-vous faire avec cette image?";
+"AlertTitle.SelectMapType"          = "Sélectionner le type de carte";
+"AlertTitle.SelectMediaSource"      = "Sélectionnez la source multimédia pour la photo";
+
+"ButtonTitle.Back"                  = "Retour";
+"ButtonTitle.Cancel"                = "Annuler";
+"ButtonTitle.Camera"                = "Caméra";
+"ButtonTitle.Delete"                = "Effacer";
+"ButtonTitle.Directions"            = "Directions";
+"ButtonTitle.EndDirections"         = "Fin des directions";
+"ButtonTitle.Hybrid"                = "Hybride";
+"ButtonTitle.HybridFlyover"         = "Survol hybride";
+"ButtonTitle.Map"                   = "Carte";
+"ButtonTitle.MapType"               = "Types de Carte";
+"ButtonTitle.MutedStandard"         = "Standard en sourdine";
+"ButtonTitle.No"                    = "Non!";
+"ButtonTitle.OK"                    = "OK";
+"ButtonTitle.PhotoAlbum"            = "Album photo";
+"ButtonTitle.PinColor"              = "Couleur de broche";
+"ButtonTitle.Replace"               = "Remplacer";
+"ButtonTitle.Satellite"             = "Satellite";
+"ButtonTitle.SatelliteFlyover"      = "Survol satellite";
+"ButtonTitle.Save"                  = "Sauvegarder";
+"ButtonTitle.ShowOnMap"             = "Afficher sur la carte";
+"ButtonTitle.Standard"              = "la norme";
+"ButtonTitle.ToggleUnits"           = "Toggle Unités";
+"ButtonTitle.ZoomIn"                = "Agrandir";
+"ButtonTitle.UseCurrent"            = "Utiliser la position actuelle";
+"ButtonTitle.Yes"                   = "Oui";
+
+"LabelText.About"                   = "Sur";
+"LabelText.Altitude"                = "Altitude";
+"LabelText.ContactUs"               = "Tous les droits sont réservés. Contactez-nous à";
+"LabelText.Details"                 = "Adresse / Description";
+"LableText.HowToUse01"              = "LISTE PIN\n\nAjouter un épingle - Appuyez sur le signe plus (+) pour accéder à l'éditeur de broches où vous pouvez associer des informations sur cette broche.\n\n\n";
+"LableText.HowToUse02"              = "ÉDITEUR DE BROCHES\n\nPermet de (a) associer une image à la broche, (b) lui attribuer un nom, (c) une adresse et / ou une description, (d) modifier ses coordonnées et / ou son altitude, ";
+"LableText.HowToUse03"              = "(e) changer les unités d'affichage de l'altitude et (f) régler la couleur de la broche.  Appuyez sur le bouton Enregistrer lorsque vous avez terminé.  Pour voir l'emplacement de la punaise sur la carte, appuyez sur le bouton Afficher sur la carte.\n\n\n";
+"LableText.HowToUse04"              = "PARAMÈTRES\n\nAppuyez sur n'importe quelle ligne remplie dans le tableau pour obtenir des informations / données de configuration sur cette application.\n\nSur - Nos coordonnées\n\nComment utiliser - Cette vue.\n\n\n";
+"LableText.HowToUse05"              = "CARTE\n\nAjouter un épingle - Toucher le signe plus (+) vous amène à l'éditeur de broches où vous pouvez fournir des informations sur cette broche.\n\n";
+"LableText.HowToUse06"              = "Changer le mode d'affichage de la carte - Si vous appuyez sur le bouton Type de carte, vous obtenez un survol qui vous permet de choisir parmi les modes d'affichage de carte pris en charge.\n\n";
+"LableText.HowToUse07"              = "Coordonnées actuelles - Toucher l'icône de fléchette produira un survol qui donnera la latitude, la longitude et l'altitude actuelles de l'appareil.\n\n";
+"LableText.HowToUse08"              = "Itinéraire depuis ma position actuelle jusqu'à la broche sélectionnée - Lorsqu'une broche est sélectionnée (sa description est affichée au-dessus de la broche sur la carte), le bouton Directions sera activé.  ";
+"LableText.HowToUse09"              = "Si vous appuyez sur le bouton Itinéraires à ce moment-là, vous pouvez ajouter jusqu'à deux itinéraires différents de votre position actuelle à la broche sélectionnée.  ";
+"LableText.HowToUse10"              = "(Notez que le nom du bouton de directions aura été modifié en directions de fin.) Si vous appuyez sur le bouton End Directions, les itinéraires seront supprimés de la carte.\n\n";
+"LabelText.Latitude"                = "Latitude";
+"LabelText.Longitude"               = "Longitude";
+"LabelText.Name"                    = "Nom";
+
+"PinColor.Black"                    = "Noir";
+"PinColor.Blue"                     = "Bleu";
+"PinColor.Brown"                    = "Marron";
+"PinColor.Cyan"                     = "Cyan";
+"PinColor.DarkGray"                 = "Gris foncé";
+"PinColor.Gray"                     = "Gris";
+"PinColor.Green"                    = "Vert";
+"PinColor.LightGray"                = "Gris clair";
+"PinColor.Magenta"                  = "Magenta";
+"PinColor.Orange"                   = "Orange";
+"PinColor.Purple"                   = "Violet";
+"PinColor.Red"                      = "Rouge";
+"PinColor.White"                    = "Blanc";
+"PinColor.Yellow"                   = "Jaune";
+
+"Title.App"                         = "Où était-ce?";
+"Title.HowToUse"                    = "Comment utiliser";
+"Title.Map"                         = "Carte";
+"Title.PinEditor"                   = "Éditeur de broche";
+"Title.PinList"                     = "Liste des broches";
+"Title.SelectPinColor"              = "Sélectionnez la couleur";
+"Title.Settings"                    = "Paramètres";

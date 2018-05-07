@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bd1-MZ-lwn">
+    <device id="ipad10_5" orientation="landscape">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+    </dependencies>
+    <scenes>
+        <!--My Pins-->
+        <scene sceneID="H8H-un-dRe">
+            <objects>
+                <splitViewController storyboardIdentifier="SplitViewController" title="My Pins" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bd1-MZ-lwn" customClass="SplitViewController" customModule="MyPins" customModuleProvider="target" sceneMemberID="viewController">
+                    <connections>
+                        <segue destination="d6K-nu-ED1" kind="relationship" relationship="masterViewController" id="4fb-FE-Yjk"/>
+                        <segue destination="kiY-7S-TY5" kind="relationship" relationship="detailViewController" id="YBu-Dh-2BC"/>
+                    </connections>
+                </splitViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="j5J-Rj-HaE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-322" y="152"/>
+        </scene>
+        <!--TabBarViewController-->
+        <scene sceneID="R2K-oc-HRY">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Main_iPhone" referencedIdentifier="TabBarViewController" id="d6K-nu-ED1" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nvz-7f-DBF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="269" y="-156"/>
+        </scene>
+        <!--MapNavigationController-->
+        <scene sceneID="FR3-Xi-ROE">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Main_iPhone" referencedIdentifier="MapNavigationController" id="kiY-7S-TY5" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iug-Mq-2Ed" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="269" y="442"/>
+        </scene>
+    </scenes>
+</document>

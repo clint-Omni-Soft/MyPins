@@ -1,0 +1,510 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F400B4C420572E0000556F51 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F400B4C320572E0000556F51 /* AppDelegate.swift */; };
+		F400B4CC20572E0000556F51 /* MyPins.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F400B4CA20572E0000556F51 /* MyPins.xcdatamodeld */; };
+		F400B4CE20572E0000556F51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F400B4CD20572E0000556F51 /* Assets.xcassets */; };
+		F400B4D120572E0000556F51 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F400B4CF20572E0000556F51 /* LaunchScreen.storyboard */; };
+		F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF84209A293600DBA3CD /* HowToUseViewController.swift */; };
+		F427FF87209A2A6B00DBA3CD /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF86209A2A6B00DBA3CD /* SettingsTableViewController.swift */; };
+		F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */; };
+		F427FF8B209A51C400DBA3CD /* appIcon 76x2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F427FF8A209A51C400DBA3CD /* appIcon 76x2x.png */; };
+		F438F6DC2061D0B10032F465 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F438F6DB2061D0B10032F465 /* SplitViewController.swift */; };
+		F46B387220599BDB005347AC /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */; };
+		F4820DFE206998E800780C2D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4820DFC206998E800780C2D /* Localizable.strings */; };
+		F48A45C720698D0400C27F03 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F48A45C920698D0400C27F03 /* Main_iPhone.storyboard */; };
+		F48A45CA20698FDE00C27F03 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F48A45CC20698FDE00C27F03 /* Main_iPad.storyboard */; };
+		F49766AD205B11AE00A76F9D /* PointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49766AC205B11AE00A76F9D /* PointAnnotation.swift */; };
+		F4982F6A207BEF9B00A30D40 /* PinColorSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */; };
+		F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */; };
+		F49B9A59207D406B007598F9 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */; };
+		F49B9A5B207D587E007598F9 /* appIcon MASTER.png in Resources */ = {isa = PBXBuildFile; fileRef = F49B9A5A207D587D007598F9 /* appIcon MASTER.png */; };
+		F49F8119207A6FEE009970E7 /* PinEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49F8118207A6FEE009970E7 /* PinEditViewController.swift */; };
+		F4B47FEB205734880027755B /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FEA205734880027755B /* ListTableViewController.swift */; };
+		F4B47FED205734A80027755B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FEC205734A80027755B /* MapViewController.swift */; };
+		F4B47FF2205734F40027755B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B47FF1205734F40027755B /* MapKit.framework */; };
+		F4B47FF5205745130027755B /* PinCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FF4205745130027755B /* PinCentral.swift */; };
+		F4B47FF9205746A80027755B /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FF7205746A80027755B /* Pin.swift */; };
+		F4FD7501207A61D800C264A0 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FD74FF207A61D800C264A0 /* Pin+CoreDataProperties.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F400B4C020572E0000556F51 /* MyPins.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyPins.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F400B4C320572E0000556F51 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F400B4CB20572E0000556F51 /* MyPins.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MyPins.xcdatamodel; sourceTree = "<group>"; };
+		F400B4CD20572E0000556F51 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F400B4D020572E0000556F51 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F400B4D220572E0000556F51 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F427FF84209A293600DBA3CD /* HowToUseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseViewController.swift; sourceTree = "<group>"; };
+		F427FF86209A2A6B00DBA3CD /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		F427FF8A209A51C400DBA3CD /* appIcon 76x2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appIcon 76x2x.png"; path = "AppIcon/appIcon 76x2x.png"; sourceTree = "<group>"; };
+		F438F6DB2061D0B10032F465 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
+		F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
+		F4820DFD206998E800780C2D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F4820E022069991700780C2D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F4820E032069996D00780C2D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F48A45C820698D0400C27F03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
+		F48A45CB20698FDE00C27F03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
+		F48A45CD2069903C00C27F03 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		F48A45CE2069903C00C27F03 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main_iPad.strings; sourceTree = "<group>"; };
+		F48A45CF2069903C00C27F03 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main_iPhone.strings; sourceTree = "<group>"; };
+		F48A45D02069904900C27F03 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		F48A45D12069904900C27F03 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main_iPad.strings; sourceTree = "<group>"; };
+		F48A45D22069904900C27F03 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main_iPhone.strings; sourceTree = "<group>"; };
+		F49766AC205B11AE00A76F9D /* PointAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotation.swift; sourceTree = "<group>"; };
+		F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinColorSelectorViewController.swift; sourceTree = "<group>"; };
+		F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutContraint+Extension.swift"; sourceTree = "<group>"; };
+		F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
+		F49B9A5A207D587D007598F9 /* appIcon MASTER.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appIcon MASTER.png"; path = "AppIcon/appIcon MASTER.png"; sourceTree = "<group>"; };
+		F49F8118207A6FEE009970E7 /* PinEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinEditViewController.swift; sourceTree = "<group>"; };
+		F4B47FEA205734880027755B /* ListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
+		F4B47FEC205734A80027755B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		F4B47FF1205734F40027755B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		F4B47FF4205745130027755B /* PinCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCentral.swift; sourceTree = "<group>"; };
+		F4B47FF7205746A80027755B /* Pin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
+		F4FD74FF207A61D800C264A0 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F400B4BD20572E0000556F51 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4B47FF2205734F40027755B /* MapKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F400B4B720572E0000556F51 = {
+			isa = PBXGroup;
+			children = (
+				F400B4C220572E0000556F51 /* MyPins */,
+				F400B4C120572E0000556F51 /* Products */,
+				F4B47FF0205734F40027755B /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		F400B4C120572E0000556F51 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F400B4C020572E0000556F51 /* MyPins.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F400B4C220572E0000556F51 /* MyPins */ = {
+			isa = PBXGroup;
+			children = (
+				F400B4D220572E0000556F51 /* Info.plist */,
+				F400B4D820572E2700556F51 /* Application */,
+				F4B47FF3205744F40027755B /* PinCentral */,
+				F400B4D920572E2F00556F51 /* Resources */,
+				F400B4DA20572E3900556F51 /* User Interface */,
+			);
+			path = MyPins;
+			sourceTree = "<group>";
+		};
+		F400B4D820572E2700556F51 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				F400B4C320572E0000556F51 /* AppDelegate.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		F400B4D920572E2F00556F51 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F427FF8A209A51C400DBA3CD /* appIcon 76x2x.png */,
+				F49B9A5A207D587D007598F9 /* appIcon MASTER.png */,
+				F400B4CD20572E0000556F51 /* Assets.xcassets */,
+				F400B4CF20572E0000556F51 /* LaunchScreen.storyboard */,
+				F4820DFC206998E800780C2D /* Localizable.strings */,
+				F48A45CC20698FDE00C27F03 /* Main_iPad.storyboard */,
+				F48A45C920698D0400C27F03 /* Main_iPhone.storyboard */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		F400B4DA20572E3900556F51 /* User Interface */ = {
+			isa = PBXGroup;
+			children = (
+				F427FF84209A293600DBA3CD /* HowToUseViewController.swift */,
+				F4B47FEA205734880027755B /* ListTableViewController.swift */,
+				F4B47FEC205734A80027755B /* MapViewController.swift */,
+				F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */,
+				F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */,
+				F49F8118207A6FEE009970E7 /* PinEditViewController.swift */,
+				F49766AC205B11AE00A76F9D /* PointAnnotation.swift */,
+				F427FF86209A2A6B00DBA3CD /* SettingsTableViewController.swift */,
+				F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */,
+				F438F6DB2061D0B10032F465 /* SplitViewController.swift */,
+				F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */,
+				F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */,
+			);
+			path = "User Interface";
+			sourceTree = "<group>";
+		};
+		F4B47FF0205734F40027755B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F4B47FF1205734F40027755B /* MapKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F4B47FF3205744F40027755B /* PinCentral */ = {
+			isa = PBXGroup;
+			children = (
+				F4B47FF62057467D0027755B /* CoreData Entities */,
+				F400B4CA20572E0000556F51 /* MyPins.xcdatamodeld */,
+				F4B47FF4205745130027755B /* PinCentral.swift */,
+			);
+			path = PinCentral;
+			sourceTree = "<group>";
+		};
+		F4B47FF62057467D0027755B /* CoreData Entities */ = {
+			isa = PBXGroup;
+			children = (
+				F4B47FF7205746A80027755B /* Pin.swift */,
+				F4FD74FF207A61D800C264A0 /* Pin+CoreDataProperties.swift */,
+			);
+			path = "CoreData Entities";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F400B4BF20572E0000556F51 /* MyPins */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F400B4D520572E0000556F51 /* Build configuration list for PBXNativeTarget "MyPins" */;
+			buildPhases = (
+				F400B4BC20572E0000556F51 /* Sources */,
+				F400B4BD20572E0000556F51 /* Frameworks */,
+				F400B4BE20572E0000556F51 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MyPins;
+			productName = MyPins;
+			productReference = F400B4C020572E0000556F51 /* MyPins.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F400B4B820572E0000556F51 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0920;
+				LastUpgradeCheck = 0930;
+				ORGANIZATIONNAME = "Omni-Soft, Inc.";
+				TargetAttributes = {
+					F400B4BF20572E0000556F51 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = F400B4BB20572E0000556F51 /* Build configuration list for PBXProject "MyPins" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				es,
+				fr,
+			);
+			mainGroup = F400B4B720572E0000556F51;
+			productRefGroup = F400B4C120572E0000556F51 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F400B4BF20572E0000556F51 /* MyPins */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F400B4BE20572E0000556F51 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F48A45C720698D0400C27F03 /* Main_iPhone.storyboard in Resources */,
+				F49B9A5B207D587E007598F9 /* appIcon MASTER.png in Resources */,
+				F4820DFE206998E800780C2D /* Localizable.strings in Resources */,
+				F48A45CA20698FDE00C27F03 /* Main_iPad.storyboard in Resources */,
+				F427FF8B209A51C400DBA3CD /* appIcon 76x2x.png in Resources */,
+				F400B4D120572E0000556F51 /* LaunchScreen.storyboard in Resources */,
+				F400B4CE20572E0000556F51 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F400B4BC20572E0000556F51 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4B47FEB205734880027755B /* ListTableViewController.swift in Sources */,
+				F4FD7501207A61D800C264A0 /* Pin+CoreDataProperties.swift in Sources */,
+				F400B4CC20572E0000556F51 /* MyPins.xcdatamodeld in Sources */,
+				F49766AD205B11AE00A76F9D /* PointAnnotation.swift in Sources */,
+				F46B387220599BDB005347AC /* UIViewControllerExtensions.swift in Sources */,
+				F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */,
+				F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */,
+				F4B47FF9205746A80027755B /* Pin.swift in Sources */,
+				F400B4C420572E0000556F51 /* AppDelegate.swift in Sources */,
+				F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */,
+				F4B47FF5205745130027755B /* PinCentral.swift in Sources */,
+				F49B9A59207D406B007598F9 /* SplashScreenViewController.swift in Sources */,
+				F4B47FED205734A80027755B /* MapViewController.swift in Sources */,
+				F427FF87209A2A6B00DBA3CD /* SettingsTableViewController.swift in Sources */,
+				F49F8119207A6FEE009970E7 /* PinEditViewController.swift in Sources */,
+				F4982F6A207BEF9B00A30D40 /* PinColorSelectorViewController.swift in Sources */,
+				F438F6DC2061D0B10032F465 /* SplitViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F400B4CF20572E0000556F51 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F400B4D020572E0000556F51 /* Base */,
+				F48A45CD2069903C00C27F03 /* fr */,
+				F48A45D02069904900C27F03 /* es */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		F4820DFC206998E800780C2D /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4820DFD206998E800780C2D /* Base */,
+				F4820E022069991700780C2D /* es */,
+				F4820E032069996D00780C2D /* fr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		F48A45C920698D0400C27F03 /* Main_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F48A45C820698D0400C27F03 /* Base */,
+				F48A45CF2069903C00C27F03 /* fr */,
+				F48A45D22069904900C27F03 /* es */,
+			);
+			name = Main_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		F48A45CC20698FDE00C27F03 /* Main_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F48A45CB20698FDE00C27F03 /* Base */,
+				F48A45CE2069903C00C27F03 /* fr */,
+				F48A45D12069904900C27F03 /* es */,
+			);
+			name = Main_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F400B4D320572E0000556F51 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F400B4D420572E0000556F51 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F400B4D620572E0000556F51 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = YEJQTHXY7Y;
+				INFOPLIST_FILE = MyPins/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F400B4D720572E0000556F51 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = YEJQTHXY7Y;
+				INFOPLIST_FILE = MyPins/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F400B4BB20572E0000556F51 /* Build configuration list for PBXProject "MyPins" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F400B4D320572E0000556F51 /* Debug */,
+				F400B4D420572E0000556F51 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F400B4D520572E0000556F51 /* Build configuration list for PBXNativeTarget "MyPins" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F400B4D620572E0000556F51 /* Debug */,
+				F400B4D720572E0000556F51 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F400B4CA20572E0000556F51 /* MyPins.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F400B4CB20572E0000556F51 /* MyPins.xcdatamodel */,
+			);
+			currentVersion = F400B4CB20572E0000556F51 /* MyPins.xcdatamodel */;
+			path = MyPins.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = F400B4B820572E0000556F51 /* Project object */;
+}
