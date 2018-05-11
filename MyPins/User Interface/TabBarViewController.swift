@@ -10,7 +10,6 @@
 import UIKit
 
 
-
 class TabBarViewController: UITabBarController,
                             PinCentralDelegate
 {
@@ -21,9 +20,9 @@ class TabBarViewController: UITabBarController,
     
     override func viewDidLoad()
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         super.viewDidLoad()
-        
+
         tabBar.items![0].title = NSLocalizedString( "Title.PinList",   comment: "Pin List"  )
         tabBar.items![1].title = NSLocalizedString( "Title.Map",       comment: "Map"       )
         tabBar.items![2].title = NSLocalizedString( "Title.Settings",  comment: "Settings"  )
@@ -56,14 +55,14 @@ class TabBarViewController: UITabBarController,
     
     override func viewWillAppear(_ animated: Bool)
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         super.viewWillAppear( animated )
     }
     
     
     override func didReceiveMemoryWarning()
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "MEMORY WARNING!!!" )
+        appLogVerbose( format: "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
     
@@ -74,7 +73,7 @@ class TabBarViewController: UITabBarController,
     func pinCentral( pinCentral: PinCentral,
                      didOpenDatabase: Bool )
     {
-        NSLog( "%@:%@[%d] - didOpenDatabase[ %@ ]", self.description(), #function, #line, stringForBool( boolValue: didOpenDatabase ) )
+        appLogVerbose( format: "didOpenDatabase[ %@ ]", parameters: String( didOpenDatabase ) )
         if !didOpenDatabase
         {
             presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
@@ -86,17 +85,10 @@ class TabBarViewController: UITabBarController,
     
     func pinCentralDidReloadPinArray( pinCentral: PinCentral )
     {
-        NSLog( "%@:%@[%d] - loaded [ %d ] pins", description(), #function, #line, pinCentral.pinArray!.count )
+        appLogVerbose( format: "loaded [ %@ ] pins", parameters: String( pinCentral.pinArray!.count ) )
     }
     
     
-    
-    // MARK: Utility Methods
-    
-    private func description() -> String
-    {
-        return "TabBarViewController"
-    }
     
     
     

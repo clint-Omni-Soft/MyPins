@@ -40,7 +40,7 @@ class PinColorSelectorViewController: UIViewController,
     
     override func viewDidLoad()
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         super.viewDidLoad()
         
         titleLabel.text = NSLocalizedString( "Title.SelectPinColor", comment: "Select Pin Color" )
@@ -54,7 +54,7 @@ class PinColorSelectorViewController: UIViewController,
     
     override func viewWillAppear(_ animated: Bool)
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         super.viewWillAppear( animated )
         
         pickerView.reloadComponent( 0 )
@@ -66,7 +66,7 @@ class PinColorSelectorViewController: UIViewController,
     
     override func didReceiveMemoryWarning()
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         super.didReceiveMemoryWarning()
     }
     
@@ -76,7 +76,7 @@ class PinColorSelectorViewController: UIViewController,
     
     @IBAction func cancelButtonTouched(_ sender: UIButton )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         dismiss( animated: true, completion: nil )
     }
     
@@ -86,7 +86,7 @@ class PinColorSelectorViewController: UIViewController,
         let     colorSelected = pickerView.selectedRow( inComponent: 0 )
         
         
-        NSLog( "%@:%@[%d] - selected color[ %d ][ %@ ]", description(), #function, #line, colorSelected, pinColorNameArray[colorSelected] )
+        appLogVerbose( format: "selected color[ %@ ][ %@ ]", parameters: String( colorSelected ), pinColorNameArray[colorSelected] )
        
         if colorSelected != originalPinColor
         {
@@ -103,7 +103,7 @@ class PinColorSelectorViewController: UIViewController,
     
     func numberOfComponents( in pickerView: UIPickerView ) -> Int
     {
-//        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+//        appLogTrace()
         return 1
     }
     
@@ -111,7 +111,7 @@ class PinColorSelectorViewController: UIViewController,
     func pickerView(_ pickerView: UIPickerView,
                       numberOfRowsInComponent component: Int) -> Int
     {
-//        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+//        appLogTrace()
         return pinColorNameArray.count
     }
 
@@ -123,7 +123,7 @@ class PinColorSelectorViewController: UIViewController,
                       titleForRow row: Int,
                       forComponent component: Int) -> String?
     {
-//        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+//        appLogTrace()
         return pinColorNameArray[row]
     }
     
@@ -132,17 +132,10 @@ class PinColorSelectorViewController: UIViewController,
                       didSelectRow row: Int,
                       inComponent component: Int)
     {
-//        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+//        appLogTrace()
     }
     
     
-    
-    // MARK: Utility Methods
-    
-    private func description() -> String
-    {
-        return "PinColorSelectorViewController"
-    }
     
     
 

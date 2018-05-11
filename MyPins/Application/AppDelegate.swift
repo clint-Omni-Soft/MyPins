@@ -29,6 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         locationManager = CLLocationManager()
         locationManager?.requestWhenInUseAuthorization()
         
+        ZLog.setupLogging()
+        
         return true
     }
     

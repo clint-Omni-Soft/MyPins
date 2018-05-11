@@ -57,7 +57,7 @@ class MapViewController: UIViewController,
     
     override func viewDidLoad()
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         super.viewDidLoad()
         
         title = NSLocalizedString( "Title.Map", comment: "Map" )
@@ -83,7 +83,7 @@ class MapViewController: UIViewController,
     
     override func viewWillAppear(_ animated: Bool)
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         super.viewWillAppear( animated )
         
 
@@ -124,7 +124,7 @@ class MapViewController: UIViewController,
     
     override func viewWillDisappear(_ animated: Bool)
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         super.viewWillDisappear( animated )
         
         NotificationCenter.default.removeObserver( self )
@@ -133,7 +133,7 @@ class MapViewController: UIViewController,
     
     override func didReceiveMemoryWarning()
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "MEMORY WARNING!!!" )
+        appLogVerbose( format: "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
     
@@ -144,7 +144,7 @@ class MapViewController: UIViewController,
     func locationManager(_ manager: CLLocationManager,
                            didFailWithError error: Error )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, error.localizedDescription )
+        appLogVerbose( format: "[ %@ ]", parameters: error.localizedDescription )
         presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                       message: error.localizedDescription )
     }
@@ -155,7 +155,7 @@ class MapViewController: UIViewController,
     {
         if !locationEstablished && centerMapOnUserLocation
         {
-            NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+            appLogTrace()
             self.zoomInOnUser()
         }
         
@@ -175,16 +175,16 @@ class MapViewController: UIViewController,
             let     index           = pointAnnotation.pinIndex!
 
 
-//            NSLog( "%@:%@[%d] - index[ %d ]", description(), #function, #line, index )
+//            appLogVerbose( format: "index[ %@ ]", parameters: String( index ) )
             launchPinEditorForPinAt( index: index )
         }
         else if view.annotation is MKUserLocation
         {
-//            NSLog( "%@:%@[%d] - %@", description(), #function, #line, "Got a MKUserLocation ... ignoring" )
+//            appLogVerbose( format: "Got a MKUserLocation ... ignoring" )
         }
         else
         {
-            NSLog( "%@:%@[%d] - %@", description(), #function, #line, "Whazat???" )
+            appLogVerbose( format: "Whazat???" )
         }
         
     }
@@ -198,8 +198,7 @@ class MapViewController: UIViewController,
         let     pointAnnotation = view.annotation as! PointAnnotation
         
 
-//        NSLog( "%@:%@[%d] - [ %f, %f ]  [ %@ ]->[ %@ ]",
-//               description(), #function, #line, pointAnnotation.coordinate.latitude, pointAnnotation.coordinate.longitude, titleForDragState( state: oldState ), titleForDragState( state: newState ) )
+//        appLogVerbose( format: "[ %@, %@ ]  [ %@ ]->[ %@ ]", parameters: String( pointAnnotation.coordinate.latitude ), String( pointAnnotation.coordinate.longitude ), titleForDragState( state: oldState ), titleForDragState( state: newState ) )
         
         switch newState
         {
@@ -227,7 +226,7 @@ class MapViewController: UIViewController,
     func mapView(_ mapView: MKMapView,
                    didDeselect view: MKAnnotationView )
     {
-//        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+//        appLogTrace()
         
         directionsBarButtonItem.isEnabled = false
         selectedPointAnnotation           = nil
@@ -248,7 +247,7 @@ class MapViewController: UIViewController,
         
         directionsBarButtonItem.isEnabled = true
         selectedPointAnnotation           = pointAnnotation
-//        NSLog( "%@:%@[%d] - selected pin[ %d ]", description(), #function, #line, pointAnnotation.pinIndex! )
+//        appLogVerbose( format: "selected pin[ %@ ]", parameters: String( pointAnnotation.pinIndex! ) )
     }
     
     
@@ -262,12 +261,12 @@ class MapViewController: UIViewController,
         {
             if centerMapOnUserLocation
             {
-                NSLog( "%@:%@[%d] - setting map center [ %f, %f ] on user location", description(), #function, #line, userLocation.location!.coordinate.latitude, userLocation.location!.coordinate.longitude )
+                appLogVerbose( format: "Setting map center [ %@, %@ ] on user location", parameters: String( userLocation.location!.coordinate.latitude ), String( userLocation.location!.coordinate.longitude ) )
                 zoomInOn( coordinate: userLocation.location!.coordinate )
             }
             else
             {
-                NSLog( "%@:%@[%d] - Setting map center [ %f, %f ] on requested by PinEdit[0]", description(), #function, #line, coordinateToCenterMapOn!.longitude, coordinateToCenterMapOn!.latitude )
+                appLogVerbose( format: "Setting map center [ %@, %@ ] on requested by PinEdit[0]", parameters: String( coordinateToCenterMapOn!.longitude ), String( coordinateToCenterMapOn!.latitude) )
                 centerMapOnUserLocation = true
                 zoomInOn( coordinate: coordinateToCenterMapOn! )
             }
@@ -276,7 +275,7 @@ class MapViewController: UIViewController,
         }
         else if !centerMapOnUserLocation
         {
-            NSLog( "%@:%@[%d] - Setting map center [ %f, %f ] on requested by PinEdit[1]", description(), #function, #line, coordinateToCenterMapOn!.longitude, coordinateToCenterMapOn!.latitude )
+            appLogVerbose( format: "Setting map center [ %@, %@ ] on requested by PinEdit[1]", parameters: String( coordinateToCenterMapOn!.longitude ), String( coordinateToCenterMapOn!.latitude) )
             centerMapOnUserLocation = true
             zoomInOn( coordinate: coordinateToCenterMapOn! )
         }
@@ -287,7 +286,7 @@ class MapViewController: UIViewController,
     func mapView(_ mapView: MKMapView,
                    didFailToLocateUserWithError error: Error )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, error.localizedDescription )
+        appLogVerbose( format: "[ %@ ]", parameters: error.localizedDescription )
         presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                       message: error.localizedDescription )
     }
@@ -296,7 +295,7 @@ class MapViewController: UIViewController,
     func mapView(_ mapView: MKMapView,
                    rendererFor overlay: MKOverlay ) -> MKOverlayRenderer
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         if overlay is MKPolyline
         {
             let     polylineRenderer = MKPolylineRenderer( overlay: overlay )
@@ -319,7 +318,7 @@ class MapViewController: UIViewController,
     {
         if annotation is MKUserLocation
         {
-//            NSLog( "%@:%@[%d] - %@", description(), #function, #line, "Our location" )
+//            appLogVerbose( format: "Our location" )
             return nil      // This allows us to retain the blue dot & circle animation for the user's location (instead of our mapPin image)
         }
         
@@ -333,7 +332,7 @@ class MapViewController: UIViewController,
         
         if nil == annotationView
         {
-//            NSLog( "%@:%@[%d] - %@", description(), #function, #line, "New pin" )
+//            appLogVerbose( format: "New Pin" )
             pinAnnotationView = MKPinAnnotationView( annotation: annotation, reuseIdentifier: annotationIdentifier )
             
 //          pinAnnotationView.animatesDrop   = true
@@ -344,7 +343,7 @@ class MapViewController: UIViewController,
         }
         else
         {
-//            NSLog( "%@:%@[%d] - %@", description(), #function, #line, "Existing pin" )
+//            appLogVerbose( format: "Existing Pin" )
             pinAnnotationView = annotationView as! MKPinAnnotationView
             
             pinAnnotationView!.annotation   = annotation
@@ -357,13 +356,13 @@ class MapViewController: UIViewController,
     
     func mapViewDidStopLocatingUser(_ mapView: MKMapView )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
     }
     
     
     func mapViewWillStartLocatingUser(_ mapView: MKMapView )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
     }
 
     
@@ -379,7 +378,7 @@ class MapViewController: UIViewController,
         
         if locationEstablished
         {
-            NSLog( "%@:%@[%d] - at [ %f, %f ] ... right now", description(), #function, #line, latitude, longitude )
+            appLogVerbose( format: "locationEstablished at [ %@, %@ ] ... right now", parameters: String( latitude ), String( longitude ) )
             let     pinCentral = PinCentral.sharedInstance
             
             
@@ -405,7 +404,7 @@ class MapViewController: UIViewController,
         }
         else
         {
-            NSLog( "%@:%@[%d] - at [ %f, %f ] ... wait for location to be established", description(), #function, #line, latitude, longitude )
+            appLogVerbose( format: "at [ %@, %@ ] ... wait for location to be established", parameters: String( latitude ), String( longitude ) )
             coordinateToCenterMapOn = coordinate
             centerMapOnUserLocation = false
         }
@@ -415,7 +414,7 @@ class MapViewController: UIViewController,
     
     @objc func pinsUpdated( notification: NSNotification )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         
         // The reason we are using Notifications is because this view can be up in two different places on the iPad at the same time.
         // This approach allows a change in one to immediately be reflected in the other.
@@ -430,7 +429,7 @@ class MapViewController: UIViewController,
     func pinCentral( pinCentral: PinCentral,
                      didOpenDatabase: Bool )
     {
-        NSLog( "%@:%@[%d] - didOpenDatabase[ %@ ]", self.description(), #function, #line, stringForBool( boolValue: didOpenDatabase ) )
+        appLogVerbose( format: "didOpenDatabase[ %@ ]", parameters: String( didOpenDatabase ) )
         if didOpenDatabase
         {
             pinCentral.fetchPins()
@@ -446,7 +445,7 @@ class MapViewController: UIViewController,
     
     func pinCentralDidReloadPinArray( pinCentral: PinCentral )
     {
-        NSLog( "%@:%@[%d] - loaded [ %d ] pins", description(), #function, #line, pinCentral.pinArray!.count )
+        appLogVerbose( format: "loaded [ %@ ] pins", parameters: String( pinCentral.pinArray!.count ) )
         if ignoreRefresh
         {
             ignoreRefresh = false
@@ -465,7 +464,7 @@ class MapViewController: UIViewController,
     func pinEditViewController( pinEditViewController: PinEditViewController,
                                   didEditPinData: Bool )
     {
-        NSLog( "%@:%@[%d] - didEditPinData[ %@ ]", self.description(), #function, #line, stringForBool( boolValue: didEditPinData ) )
+        appLogVerbose( format: "didEditPinData[ %@ ]", parameters: String( didEditPinData ) )
         let     pinCentral = PinCentral.sharedInstance
         
         
@@ -480,7 +479,7 @@ class MapViewController: UIViewController,
             
             centerMapOnUserLocation = false
             coordinateToCenterMapOn = CLLocationCoordinate2DMake( newPin.latitude, newPin.longitude )
-            NSLog( "%@:%@[%d] - center map on pin[ %d ]", self.description(), #function, #line, pinCentral.newPinIndex! )
+            appLogVerbose( format: "center map on pin[ %@ ]", parameters: String( pinCentral.newPinIndex! ) )
         }
         
     }
@@ -489,7 +488,7 @@ class MapViewController: UIViewController,
     func pinEditViewController( pinEditViewController: PinEditViewController,
                                 wantsToCenterMapAt coordinate: CLLocationCoordinate2D )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         
 
         coordinateToCenterMapOn = coordinate
@@ -502,7 +501,7 @@ class MapViewController: UIViewController,
     
     @IBAction @objc func addBarButtonItemTouched(_ sender: UIBarButtonItem )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         PinCentral.sharedInstance.delegate = self
         
         launchPinEditorForPinAt( index: PinCentral.sharedInstance.NEW_PIN )
@@ -511,7 +510,7 @@ class MapViewController: UIViewController,
     
     @IBAction func dartBarButtonItemTouched(_ sender: UIBarButtonItem )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         let     pinCentral = PinCentral.sharedInstance
         
         
@@ -537,14 +536,14 @@ class MapViewController: UIViewController,
     
     @IBAction @objc func directionsBarButtonItemTouched(_ sender: UIBarButtonItem )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         manageDirectionsOverlay()
     }
     
     
     @IBAction @objc func mapTypeBarButtonItemTouched(_ sender: UIBarButtonItem )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         presentMapOptions()
     }
     
@@ -561,17 +560,11 @@ class MapViewController: UIViewController,
     
     // MARK: Utility Methods
     
-    private func description() -> String
-    {
-        return "MapViewController"
-    }
-    
-    
     private func examinePointAnnotation( pointAnnotation: PointAnnotation )
     {
         DispatchQueue.main.asyncAfter(deadline: ( .now() + 1.0 ), execute:
         {
-            NSLog( "%@:%@[%d] - %@", self.description(), #function, #line, "" )
+            appLogTrace()
             let     pin = PinCentral.sharedInstance.pinArray![pointAnnotation.pinIndex!]
             
             
@@ -588,7 +581,7 @@ class MapViewController: UIViewController,
     
     private func launchPinEditorForPinAt( index: Int )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         let         pinEditVC: PinEditViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_EDITOR ) as! PinEditViewController
 
         
@@ -631,7 +624,7 @@ class MapViewController: UIViewController,
     
     private func loadBarButtonItems()
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         addBarButtonItem        = UIBarButtonItem.init( barButtonSystemItem: .add,
                                                         target: self,
                                                         action: #selector( addBarButtonItemTouched(_:) ) )
@@ -657,7 +650,7 @@ class MapViewController: UIViewController,
 
     private func manageDirectionsOverlay()
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         if showingDirectionsOverlay
         {
             for overlay in myMapView.overlays
@@ -697,7 +690,7 @@ class MapViewController: UIViewController,
                         let         errorMessage = String.init( format: "%@\n%@", NSLocalizedString( "AlertMessage.NoRoutesAvailable", comment: "Unable to find a route to this location." ), error.localizedDescription )
                         
                         
-                        NSLog( "%@:%@[%d] - ERROR!  We failed to get directions!  Error[ %@ ]", self.description(), #function, #line, error.localizedDescription )
+                        appLogVerbose( format: "ERROR!  We failed to get directions!  Error[ %@ ]", parameters: error.localizedDescription )
                         self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                                            message: errorMessage )
                     }
@@ -707,7 +700,7 @@ class MapViewController: UIViewController,
                 
                 if ( 0 == response.routes.count )
                 {
-                    NSLog( "%@:%@[%d] - %@", self.description(), #function, #line, "Can't get there from here!  No routes!" )
+                    appLogVerbose( format: "Can't get there from here!  No routes!" )
                     self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                                        message: NSLocalizedString( "AlertMessage.NoRoutesAvailable", comment: "Unable to find a route to this location." ) )
                 }
@@ -737,7 +730,7 @@ class MapViewController: UIViewController,
     
     private func presentMapOptions()
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.SelectMapType", comment: "Select Map Type" ),
                                                 message: nil,
                                                 preferredStyle: .actionSheet )
@@ -817,7 +810,7 @@ class MapViewController: UIViewController,
     
     private func refreshMapAnnotations()
     {
-//        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+//        appLogTrace()
         let     pinCentral = PinCentral.sharedInstance
         var     annotationArray:[PointAnnotation] = Array.init()
         
@@ -839,7 +832,7 @@ class MapViewController: UIViewController,
             myMapView.addAnnotations( annotationArray )
         }
         
-        NSLog( "%@:%@[%d] - Added %d pins", description(), #function, #line, annotationArray.count )
+        appLogVerbose( format: "Added [ %@ ] pins", parameters: String( annotationArray.count ) )
     }
     
    
@@ -866,7 +859,7 @@ class MapViewController: UIViewController,
         default:                           myMapView.mapType = .standard
         }
         
-        NSLog( "%@:%@[%d] - [ %d ][ %@ ]", description(), #function, #line, savedMapType, typeName )
+        appLogVerbose( format: "[ %@ ][ %@ ]", parameters: String( savedMapType ), typeName )
     }
     
     
@@ -890,7 +883,7 @@ class MapViewController: UIViewController,
     
     private func updatePinCoordinatesUsing( pointAnnotation: PointAnnotation )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         let     pinCentral = PinCentral.sharedInstance
         let     pin        = pinCentral.pinArray![pointAnnotation.pinIndex!]
         
@@ -907,7 +900,7 @@ class MapViewController: UIViewController,
     {
         guard let coordinate = myMapView.userLocation.location?.coordinate else
         {
-            NSLog( "%@:%@[%d] - %@", description(), #function, #line, "no data yet... waiting" )
+            appLogVerbose( format: "no data yet... waiting" )
             return
         }
         
@@ -922,8 +915,7 @@ class MapViewController: UIViewController,
         let     region = MKCoordinateRegionMakeWithDistance( coordinate, 2000, 2000 )
         
         
-        NSLog( "%@:%@[%d] - [ %f, %f ]", description(), #function, #line, coordinate.latitude, coordinate.longitude )
-        
+        appLogVerbose( format: "[ %@, %@ ]", parameters: String( coordinate.latitude ), String( coordinate.longitude ) )
         myMapView.setRegion( region, animated: true )
     }
 
@@ -945,7 +937,7 @@ class MapViewController: UIViewController,
 /*
     @IBAction func zoomBarButtonItemTouched(_ sender: UIBarButtonItem )
     {
-        NSLog( "%@:%@[%d] - %@", description(), #function, #line, "" )
+        appLogTrace()
         let     region = MKCoordinateRegionMakeWithDistance( myMapView.userLocation.location!.coordinate, 2000, 2000 )
 
         
@@ -959,7 +951,6 @@ class MapViewController: UIViewController,
     {
         if annotation is MKUserLocation
         {
-            NSLog( "%@:%@[%d] - %@", description(), #function, #line, "Our location" )
             return nil      // This keeps the blue dot & circle animation for the user's location (instead of our mapPin image)
         }
         
@@ -970,7 +961,6 @@ class MapViewController: UIViewController,
         
         if nil == annotationView
         {
-            NSLog( "%@:%@[%d] - %@", description(), #function, #line, "New pin" )
             annotationView = MKAnnotationView( annotation: annotation,
                                                reuseIdentifier: annotationIdentifier )
             
@@ -980,7 +970,6 @@ class MapViewController: UIViewController,
         }
         else
         {
-            NSLog( "%@:%@[%d] - %@", description(), #function, #line, "Existing pin" )
             annotationView!.annotation = annotation
         }
         
