@@ -21,7 +21,7 @@ class HowToUseViewController: UIViewController
     
     override func viewDidLoad()
     {
-        appLogTrace()
+        logTrace()
         super.viewDidLoad()
         
         navigationItem.title = NSLocalizedString( "Title.HowToUse", comment: "How to Use" )
@@ -45,7 +45,7 @@ class HowToUseViewController: UIViewController
     
     override func viewDidLayoutSubviews()
     {
-        appLogTrace()
+        logTrace()
         super.viewDidLayoutSubviews()
         
         myTextView.setContentOffset( CGPoint.zero, animated: true )
@@ -54,7 +54,7 @@ class HowToUseViewController: UIViewController
     
     override func didReceiveMemoryWarning()
     {
-        appLogVerbose( format: "MEMORY WARNING!!!" )
+        logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
     

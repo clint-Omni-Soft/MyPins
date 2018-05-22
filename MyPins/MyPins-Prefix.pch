@@ -13,6 +13,8 @@
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
 
 
+//#import <Swifty/Swifty-Swift.h>
 #import <ZLogKit/ZLogKit.h>
+#import <ZLogKit/ZLogKit-Swift.h>
 
 #endif /* MyPins_Prefix_pch */

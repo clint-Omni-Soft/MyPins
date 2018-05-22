@@ -20,14 +20,14 @@ class SplitViewController: UISplitViewController
     
     override func viewDidLoad()
     {
-        appLogTrace()
+        logTrace()
         super.viewDidLoad()
     }
     
 
     override func didReceiveMemoryWarning()
     {
-        appLogVerbose( format: "MEMORY WARNING!!!" )
+        logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
     

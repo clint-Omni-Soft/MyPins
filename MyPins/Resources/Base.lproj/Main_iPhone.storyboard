@@ -185,11 +185,24 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" pitchEnabled="NO" showsUserLocation="YES" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eqz-2U-wcn">
                                 <rect key="frame" x="0.0" y="64" width="375" height="554"/>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7wy-5H-rcX" userLabel="homeZoomButton">
+                                <rect key="frame" x="336" y="64" width="39" height="39"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="39" id="7vI-yg-Zmo"/>
+                                    <constraint firstAttribute="width" constant="39" id="vr1-xq-bNd"/>
+                                </constraints>
+                                <state key="normal" image="homeZoom"/>
+                                <connections>
+                                    <action selector="homeZoomButtonTouched:" destination="pHk-dB-HVW" eventType="touchUpInside" id="VJY-jl-sUK"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="eqz-2U-wcn" firstAttribute="top" secondItem="WiF-Lo-UHs" secondAttribute="top" id="6bj-Jj-qZb"/>
                             <constraint firstItem="eqz-2U-wcn" firstAttribute="bottom" secondItem="WiF-Lo-UHs" secondAttribute="bottom" id="VwZ-Gc-eAt"/>
+                            <constraint firstItem="7wy-5H-rcX" firstAttribute="top" secondItem="WiF-Lo-UHs" secondAttribute="top" id="gAX-LY-Lki"/>
+                            <constraint firstItem="7wy-5H-rcX" firstAttribute="trailing" secondItem="WiF-Lo-UHs" secondAttribute="trailing" id="gvk-jD-QdI"/>
                             <constraint firstItem="eqz-2U-wcn" firstAttribute="leading" secondItem="WiF-Lo-UHs" secondAttribute="leading" id="tAh-P6-sFl"/>
                             <constraint firstItem="eqz-2U-wcn" firstAttribute="trailing" secondItem="WiF-Lo-UHs" secondAttribute="trailing" id="xBO-Mz-emx"/>
                         </constraints>
@@ -557,6 +570,7 @@
         <image name="appIcon MASTER.png" width="732" height="732"/>
         <image name="camera" width="28" height="21"/>
         <image name="globe" width="28" height="28"/>
+        <image name="homeZoom" width="39" height="39"/>
         <image name="mapPin" width="32" height="32"/>
         <image name="settings" width="13" height="13"/>
     </resources>

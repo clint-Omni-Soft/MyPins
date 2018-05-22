@@ -63,7 +63,7 @@ class PinCentral: NSObject,
     
     func openDatabase()
     {
-        appLogTrace()
+        logTrace()
         didOpenDatabase     = false
         pinArray            = Array.init()
         persistentContainer = NSPersistentContainer( name: "MyPins" )
@@ -73,7 +73,7 @@ class PinCentral: NSObject,
             
             if let error = error as NSError?
             {
-                appLogVerbose( format: "Unresolved error[ %@ ]", parameters: error.localizedDescription )
+                logVerbose( "Unresolved error[ %@ ]", error.localizedDescription )
             }
             else
             {
@@ -100,7 +100,7 @@ class PinCentral: NSObject,
             
             DispatchQueue.main.async
             {
-                appLogVerbose( format: "didOpenDatabase[ %@ ]", parameters: String( self.didOpenDatabase ) )
+                logVerbose( "didOpenDatabase[ %@ ]", stringFor( self.didOpenDatabase ) )
                 self.delegate?.pinCentral( pinCentral: self, didOpenDatabase: self.didOpenDatabase )
             }
             
@@ -122,11 +122,11 @@ class PinCentral: NSObject,
     {
         if !self.didOpenDatabase
         {
-            appLogVerbose( format: "ERROR!  Database NOT open yet!" )
+            logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
-        appLogTrace()
+        logTrace()
 
         persistentContainer.viewContext.perform
         {
@@ -156,13 +156,13 @@ class PinCentral: NSObject,
     {
         if !self.didOpenDatabase
         {
-            appLogVerbose( format: "ERROR!  Database NOT open yet!" )
+            logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
         persistentContainer.viewContext.perform
         {
-            appLogVerbose( format: "deleting pin at [ %@ ]", parameters: String( index ) )
+            logVerbose( "deleting pin at [ %d ]", index )
             let     pin = self.pinArray![index]
             
             
@@ -178,11 +178,11 @@ class PinCentral: NSObject,
     {
         if !self.didOpenDatabase
         {
-            appLogVerbose( format: "ERROR!  Database NOT open yet!" )
+            logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
-        appLogTrace()
+        logTrace()
         
         persistentContainer.viewContext.perform
         {
@@ -196,11 +196,11 @@ class PinCentral: NSObject,
     {
         if !self.didOpenDatabase
         {
-            appLogVerbose( format: "ERROR!  Database NOT open yet!" )
+            logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
-        appLogTrace()
+        logTrace()
 
         persistentContainer.viewContext.perform
         {
@@ -216,7 +216,7 @@ class PinCentral: NSObject,
     
     func deleteImageWith( name: String ) -> Bool
     {
-//        appLogTrace()
+//        logTrace()
         let         directoryPath = pictureDirectoryPath()
         
         
@@ -230,13 +230,13 @@ class PinCentral: NSObject,
             {
                 try FileManager.default.removeItem( at: imageFileURL )
                 
-                appLogVerbose( format: "deleted image named [ %@ ]", parameters: name )
+                logVerbose( "deleted image named [ %@ ]", name )
                 return true
             }
                 
             catch let error as NSError
             {
-                appLogVerbose( format: "ERROR!  Failed to delete image named [ %@ ] ... Error[ %@ ]", parameters: name, error.localizedDescription )
+                logVerbose( "ERROR!  Failed to delete image named [ %@ ] ... Error[ %@ ]", name, error.localizedDescription )
             }
             
         }
@@ -265,7 +265,7 @@ class PinCentral: NSObject,
     
     func imageWith( name: String ) -> UIImage
     {
-//        appLogTrace()
+//        logTrace()
         let         directoryPath = pictureDirectoryPath()
 
         
@@ -278,13 +278,13 @@ class PinCentral: NSObject,
             
             if let image = UIImage.init( data: imageFileData! )
             {
-//                appLogVerbose( format: "Loaded image named [ %@ ]", parameters: name )
+//                logVerbose( "Loaded image named [ %@ ]", name )
                 return image
             }
             
         }
         
-        appLogVerbose( format: "ERROR!  Failed to load image for [ %@ ]", parameters: name )
+        logVerbose( "ERROR!  Failed to load image for [ %@ ]", name )
         
         return UIImage.init()
     }
@@ -292,7 +292,7 @@ class PinCentral: NSObject,
     
     func saveImage( image: UIImage ) -> String
     {
-//        appLogTrace()
+//        logTrace()
         let         directoryPath = pictureDirectoryPath()
         
         
@@ -309,7 +309,7 @@ class PinCentral: NSObject,
         
         guard let imageData = UIImageJPEGRepresentation( image, 1 ) ?? UIImagePNGRepresentation( image ) else
         {
-            appLogVerbose( format: "ERROR!  Could NOT convert UIImage to Data!" )
+            logTrace( "ERROR!  Could NOT convert UIImage to Data!" )
             return String.init()
         }
         
@@ -317,13 +317,13 @@ class PinCentral: NSObject,
         {
             try imageData.write( to: pictureFileURL, options: .atomic )
             
-            appLogVerbose( format: "Saved image to file named[ %@ ]", parameters: imageFilename )
+            logVerbose( "Saved image to file named[ %@ ]", imageFilename )
             return imageFilename
         }
             
         catch let error as NSError
         {
-            appLogVerbose( format: "ERROR!  Failed to save image for [ %@ ] ... Error[ %@ ]", parameters: imageFilename, error.localizedDescription )
+            logVerbose( "ERROR!  Failed to save image for [ %@ ] ... Error[ %@ ]", imageFilename, error.localizedDescription )
         }
         
         return String.init()
@@ -348,7 +348,7 @@ class PinCentral: NSObject,
         {
             locationEstablished = true
             
-            appLogVerbose( format: "locationEstablished @ [ %@, %@ ][ %@ ]", parameters: String( currentLocation.latitude ), String( currentLocation.longitude ), String( currentAltitude! ) )
+            logVerbose( "locationEstablished @ [ %f, %f ][ %f ]", currentLocation.latitude, currentLocation.longitude, currentAltitude! )
         }
 
     }
@@ -361,7 +361,7 @@ class PinCentral: NSObject,
     {
         guard let docURL = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).last else
         {
-            appLogVerbose( format: "Error!  Unable to resolve document directory" )
+            logTrace( "Error!  Unable to resolve document directory" )
             return
         }
         
@@ -372,7 +372,7 @@ class PinCentral: NSObject,
         do
         {
             try FileManager.default.removeItem( at: storeURL )
-            appLogVerbose( format: "deleted database @ [ %@ ]", parameters: storeURL.path )
+            logVerbose( "deleted database @ [ %@ ]", storeURL.path )
         }
         
         catch
@@ -380,7 +380,7 @@ class PinCentral: NSObject,
             let     nsError = error as NSError
             
             
-            appLogVerbose( format: "Error!  Unable delete store! ... Error[ %@ ]", parameters: nsError.localizedDescription )
+            logVerbose( "Error!  Unable delete store! ... Error[ %@ ]", nsError.localizedDescription )
         }
         
     }
@@ -423,7 +423,7 @@ class PinCentral: NSObject,
         catch
         {
             pinArray = [Pin]()
-            appLogVerbose( format: "Error!  Fetch failed!" )
+            logTrace( "Error!  Fetch failed!" )
         }
         
     }
@@ -431,19 +431,19 @@ class PinCentral: NSObject,
     
     private func loadCoreData()
     {
-        appLogTrace()
+        logTrace()
 
         guard let modelURL = Bundle.main.url( forResource: "MyPins", withExtension: "momd" ) else
         {
-            appLogVerbose( format: "Error!  Could NOT load model from bundle!" )
+            logTrace( "Error!  Could NOT load model from bundle!" )
             return
         }
         
-        appLogVerbose( format: "modelURL[ %@ ]", parameters: modelURL.path )
+        logVerbose( "modelURL[ %@ ]", modelURL.path )
 
         guard let managedObjectModel = NSManagedObjectModel( contentsOf: modelURL ) else
         {
-            appLogVerbose( format: "Error!  Could NOT initialize managedObjectModel from URL[ %@ ]", parameters: modelURL.path )
+            logVerbose( "Error!  Could NOT initialize managedObjectModel from URL[ %@ ]", modelURL.path )
             return
         }
         
@@ -456,7 +456,7 @@ class PinCentral: NSObject,
         
         guard let docURL = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).last else
         {
-            appLogVerbose( format: "Error!  Unable to resolve document directory!" )
+            logTrace( "Error!  Unable to resolve document directory!" )
             return
         }
         
@@ -464,14 +464,14 @@ class PinCentral: NSObject,
         let     storeURL = docURL.appendingPathComponent( DATABASE_NAME )
         
         
-        appLogVerbose( format: "storeURL[ %@ ]", parameters: storeURL.path )
+        logVerbose( "storeURL[ %@ ]", storeURL.path )
 
         do
         {
             try persistentStoreCoordinator.addPersistentStore( ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil )
             
             self.didOpenDatabase = true
-//            appLogVerbose( format: "added Pins store to coordinator" )
+//            logTrace( "added Pins store to coordinator" )
         }
             
         catch
@@ -479,7 +479,7 @@ class PinCentral: NSObject,
             let     nsError = error as NSError
             
             
-            appLogVerbose( format: "Error!  Unable migrate store[ %@ ]", parameters: nsError.localizedDescription )
+            logVerbose( "Error!  Unable migrate store[ %@ ]", nsError.localizedDescription )
         }
         
     }
@@ -503,7 +503,7 @@ class PinCentral: NSObject,
                 }
                 catch let error as NSError
                 {
-                    appLogVerbose( format: "ERROR!  Failed to create photos directory ... Error[ %@ ]", parameters: error.localizedDescription )
+                    logVerbose( "ERROR!  Failed to create photos directory ... Error[ %@ ]", error.localizedDescription )
                     return String.init()
                 }
                 
@@ -511,15 +511,15 @@ class PinCentral: NSObject,
             
             if !fileManager.fileExists( atPath: picturesDirectoryURL.path )
             {
-                appLogVerbose( format: "ERROR!  photos directory does NOT exist!" )
+                logTrace( "ERROR!  photos directory does NOT exist!" )
                 return String.init()
             }
             
-//            appLogVerbose( format: "picturesDirectory[ %@ ]", parameters: picturesDirectoryURL.path )
+//            logVerbose( "picturesDirectory[ %@ ]", picturesDirectoryURL.path )
             return picturesDirectoryURL.path
         }
         
-//        appLogVerbose( format: "ERROR!  Could NOT find the documentDirectory!" )
+//        logTrace( "ERROR!  Could NOT find the documentDirectory!" )
         return String.init()
     }
     
@@ -554,7 +554,7 @@ class PinCentral: NSObject,
                 let     nsError = error as NSError
                 
                 
-                appLogVerbose( format: "Unresolved error[ %@ ]", parameters: nsError.localizedDescription )
+                logVerbose( "Unresolved error[ %@ ]", nsError.localizedDescription )
             }
             
         }
@@ -626,7 +626,7 @@ let FEET_PER_METER          = 3.28084
 
 func viewControllerWithStoryboardId( storyboardId: String ) -> UIViewController
 {
-    appLogVerbose( format: "[ %@ ]", parameters: storyboardId )
+    logVerbose( "[ %@ ]", storyboardId )
     let     storyboardName = ( ( .pad == UIDevice.current.userInterfaceIdiom ) ? "Main_iPad" : "Main_iPhone" )
     let     storyboard     = UIStoryboard.init( name: storyboardName, bundle: nil )
     let     viewController = storyboard.instantiateViewController( withIdentifier: storyboardId )
@@ -638,7 +638,7 @@ func viewControllerWithStoryboardId( storyboardId: String ) -> UIViewController
 
 func iPhoneViewControllerWithStoryboardId( storyboardId: String ) -> UIViewController
 {
-    appLogVerbose( format: "[ %@ ]", parameters: storyboardId )
+    logVerbose( "[ %@ ]", storyboardId )
     let     storyboardName = "Main_iPhone"
     let     storyboard     = UIStoryboard.init( name: storyboardName, bundle: nil )
     let     viewController = storyboard.instantiateViewController( withIdentifier: storyboardId )
@@ -666,7 +666,7 @@ func addNewPinAtCurrentUserLocation()   // Should only be called iff locationEst
 {
     if !self.didOpenDatabase
     {
-        appLogVerbose( format: "ERROR!  Database NOT open yet!" )
+        logTrace( "ERROR!  Database NOT open yet!" )
         return
     }
     
@@ -675,7 +675,7 @@ func addNewPinAtCurrentUserLocation()   // Should only be called iff locationEst
         return
     }
     
-    appLogTrace()
+    logTrace()
     
     persistentContainer.viewContext.perform
         {

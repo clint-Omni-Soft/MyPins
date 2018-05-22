@@ -28,7 +28,7 @@ class ListTableViewController: UITableViewController,
     
     override func viewDidLoad()
     {
-        appLogTrace()
+        logTrace()
         super.viewDidLoad()
         
         title = NSLocalizedString( "Title.PinList", comment: "Pin List" )
@@ -37,7 +37,7 @@ class ListTableViewController: UITableViewController,
     
     override func viewWillAppear(_ animated: Bool)
     {
-        appLogTrace()
+        logTrace()
         super.viewWillAppear( animated )
         
         
@@ -66,7 +66,7 @@ class ListTableViewController: UITableViewController,
     
     override func viewWillDisappear(_ animated: Bool)
     {
-        appLogTrace()
+        logTrace()
         super.viewWillDisappear( animated )
         
         NotificationCenter.default.removeObserver( self )
@@ -75,7 +75,7 @@ class ListTableViewController: UITableViewController,
     
     override func didReceiveMemoryWarning()
     {
-        appLogVerbose( format: "MEMORY WARNING!!!" )
+        logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
 
@@ -85,7 +85,7 @@ class ListTableViewController: UITableViewController,
     
     @objc func pinsUpdated( notification: NSNotification )
     {
-        appLogTrace()
+        logTrace()
         
         // The reason we are using Notifications is because this view can be up in two different places on the iPad at the same time.
         // This approach allows a change in one to immediately be reflected in the other.
@@ -100,7 +100,7 @@ class ListTableViewController: UITableViewController,
     func pinCentral( pinCentral: PinCentral,
                      didOpenDatabase: Bool )
     {
-        appLogVerbose( format: "didOpenDatabase[ %@ ]", parameters: String( didOpenDatabase ) )
+        logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
         if didOpenDatabase
         {
             pinCentral.fetchPins()
@@ -116,7 +116,7 @@ class ListTableViewController: UITableViewController,
     
     func pinCentralDidReloadPinArray( pinCentral: PinCentral )
     {
-        appLogVerbose( format: "loaded [ %@ ] pins", parameters: String( pinCentral.pinArray!.count ) )
+        logVerbose( "loaded [ %d ] pins", pinCentral.pinArray!.count )
         tableView.reloadData()
     }
 
@@ -127,7 +127,7 @@ class ListTableViewController: UITableViewController,
     func pinEditViewController( pinEditViewController: PinEditViewController,
                                 didEditPinData: Bool )
     {
-        appLogVerbose( format: "didEditPinData[ %@ ]", parameters: String( didEditPinData ) )
+        logVerbose( "didEditPinData[ %@ ]", stringFor( didEditPinData ) )
         
         PinCentral.sharedInstance.delegate = self
         tableView.reloadData()
@@ -137,7 +137,7 @@ class ListTableViewController: UITableViewController,
     func pinEditViewController( pinEditViewController: PinEditViewController,
                                 wantsToCenterMapAt coordinate: CLLocationCoordinate2D )
     {
-        appLogTrace()
+        logTrace()
         let     pinCentral = PinCentral.sharedInstance
         let     userInfoDictionary = [ pinCentral.USER_INFO_LATITUDE: coordinate.latitude, pinCentral.USER_INFO_LONGITUDE: coordinate.longitude ]
         
@@ -161,7 +161,7 @@ class ListTableViewController: UITableViewController,
     
     @IBAction @objc func addBarButtonItemTouched( barButtonItem: UIBarButtonItem )
     {
-        appLogTrace()
+        logTrace()
         launchPinEditForPinAt( index: PinCentral.sharedInstance.NEW_PIN )
     }
     
@@ -232,7 +232,7 @@ class ListTableViewController: UITableViewController,
     {
         if editingStyle == .delete
         {
-            appLogVerbose( format: "delete pin at [ %@ ]", parameters: String( indexPath.row ) )
+            logVerbose( "delete pin at [ %s ]", indexPath.row )
             PinCentral.sharedInstance.deletePinAtIndex( index: indexPath.row )
         }
         
@@ -245,7 +245,7 @@ class ListTableViewController: UITableViewController,
     override func tableView(_ tableView: UITableView,
                               didSelectRowAt indexPath: IndexPath)
     {
-        appLogTrace()
+        logTrace()
         launchPinEditForPinAt( index: indexPath.row )
     }
     
@@ -255,7 +255,7 @@ class ListTableViewController: UITableViewController,
     
     private func launchPinEditForPinAt( index: Int )
     {
-        appLogVerbose( format: "[ %@ ]", parameters: String( index ) )
+        logVerbose( "[ %d ]", index )
         let         pinEditVC: PinEditViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_EDITOR ) as! PinEditViewController
         
         
@@ -269,7 +269,7 @@ class ListTableViewController: UITableViewController,
 
     private func loadBarButtonItems()
     {
-        appLogTrace()
+        logTrace()
         let     addBarButtonItem  = UIBarButtonItem.init( barButtonSystemItem: .add,
                                                           target: self,
                                                           action: #selector( addBarButtonItemTouched ) )

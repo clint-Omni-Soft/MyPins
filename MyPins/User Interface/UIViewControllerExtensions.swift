@@ -15,7 +15,7 @@ extension UIViewController
 {
     func presentAlert( title: String, message: String )
     {
-        appLogVerbose( format: "[ %@ ][ %@ ]", parameters: title, message )
+        logVerbose( "[ %@ ][ %@ ]", title, message )
         let         alert    = UIAlertController.init( title: title, message: message, preferredStyle: UIAlertControllerStyle.alert )
         let         okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ),
                                                    style: UIAlertActionStyle.default,

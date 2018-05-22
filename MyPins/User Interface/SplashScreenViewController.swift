@@ -22,7 +22,7 @@ class SplashScreenViewController: UIViewController
     
     override func viewDidLoad()
     {
-        appLogTrace()
+        logTrace()
         super.viewDidLoad()
         
         navigationItem.title = NSLocalizedString( "LabelText.About", comment: "About" )
@@ -34,21 +34,21 @@ class SplashScreenViewController: UIViewController
     
     override func viewWillAppear(_ animated: Bool )
     {
-        appLogTrace()
+        logTrace()
         super.viewWillAppear( animated )
     }
     
     
     override func viewWillDisappear(_ animated: Bool )
     {
-        appLogTrace()
+        logTrace()
         super.viewWillDisappear( animated )
     }
     
     
     override func didReceiveMemoryWarning()
     {
-        appLogVerbose( format: "MEMORY WARNING!!!" )
+        logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
     

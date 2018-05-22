@@ -3,4 +3,6 @@
 //
 
 #import <ZLogKit/ZLogKit.h>
-#import <ZLogKit/DDLog.h>
+//#import <ZLogKit/DDLog.h>
+#import <ZLogKit/ZLogKit-Swift.h>
+//#import <Swifty/Swifty-Swift.h>

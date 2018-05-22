@@ -24,7 +24,7 @@ class SettingsTableViewController: UITableViewController
     
     override func viewDidLoad()
     {
-        appLogTrace()
+        logTrace()
         super.viewDidLoad()
         
         title = NSLocalizedString( "Title.Settings",  comment: "Settings"  )
@@ -36,7 +36,7 @@ class SettingsTableViewController: UITableViewController
     
     override func didReceiveMemoryWarning()
     {
-        appLogVerbose( format: "MEMORY WARNING!!!" )
+        logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
     
@@ -69,7 +69,7 @@ class SettingsTableViewController: UITableViewController
     override func tableView(_ tableView: UITableView,
                             didSelectRowAt indexPath: IndexPath )
     {
-        appLogTrace()
+        logTrace()
         tableView.deselectRow( at: indexPath,
                                animated: false )
         

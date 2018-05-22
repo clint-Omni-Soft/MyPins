@@ -11,15 +11,15 @@
 		F400B4CC20572E0000556F51 /* MyPins.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F400B4CA20572E0000556F51 /* MyPins.xcdatamodeld */; };
 		F400B4CE20572E0000556F51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F400B4CD20572E0000556F51 /* Assets.xcassets */; };
 		F400B4D120572E0000556F51 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F400B4CF20572E0000556F51 /* LaunchScreen.storyboard */; };
+		F427C5A120ABA36D005F3F0C /* ZLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F427C59F20ABA36D005F3F0C /* ZLogKit.framework */; };
+		F427C5A220ABA36D005F3F0C /* ZLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F427C59F20ABA36D005F3F0C /* ZLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF84209A293600DBA3CD /* HowToUseViewController.swift */; };
 		F427FF87209A2A6B00DBA3CD /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF86209A2A6B00DBA3CD /* SettingsTableViewController.swift */; };
 		F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */; };
 		F427FF8B209A51C400DBA3CD /* appIcon 76x2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F427FF8A209A51C400DBA3CD /* appIcon 76x2x.png */; };
 		F438F6DC2061D0B10032F465 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F438F6DB2061D0B10032F465 /* SplitViewController.swift */; };
-		F44569EC20A4E2C10018F2A1 /* ZLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F44569EB20A4E2C10018F2A1 /* ZLogKit.framework */; };
-		F44569ED20A4E2C10018F2A1 /* ZLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F44569EB20A4E2C10018F2A1 /* ZLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F449CBC520A642B5001679A0 /* AppLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F449CBC420A642B5001679A0 /* AppLog.swift */; };
 		F46B387220599BDB005347AC /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */; };
+		F47F447F20AA003600E6696C /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47F447E20AA003600E6696C /* Logger.swift */; };
 		F4820DFE206998E800780C2D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4820DFC206998E800780C2D /* Localizable.strings */; };
 		F48A45C720698D0400C27F03 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F48A45C920698D0400C27F03 /* Main_iPhone.storyboard */; };
 		F48A45CA20698FDE00C27F03 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F48A45CC20698FDE00C27F03 /* Main_iPad.storyboard */; };
@@ -44,7 +44,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F44569ED20A4E2C10018F2A1 /* ZLogKit.framework in Embed Frameworks */,
+				F427C5A220ABA36D005F3F0C /* ZLogKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -60,15 +60,14 @@
 		F400B4D220572E0000556F51 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F40319BF20A38A2D00D33372 /* MyPins-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyPins-Prefix.pch"; sourceTree = "<group>"; };
 		F40319FC20A3C3B900D33372 /* MyPins-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyPins-Bridging-Header.h"; sourceTree = "<group>"; };
+		F427C59F20ABA36D005F3F0C /* ZLogKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZLogKit.framework; path = "../ZKits/ZKits-Debug/ZLogKit.framework"; sourceTree = "<group>"; };
 		F427FF84209A293600DBA3CD /* HowToUseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseViewController.swift; sourceTree = "<group>"; };
 		F427FF86209A2A6B00DBA3CD /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		F427FF8A209A51C400DBA3CD /* appIcon 76x2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appIcon 76x2x.png"; path = "AppIcon/appIcon 76x2x.png"; sourceTree = "<group>"; };
 		F438F6DB2061D0B10032F465 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
-		F44569E920A4E2490018F2A1 /* ZLogKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZLogKit.framework; path = "../ZKits/ZKits-Debug/ZLogKit.framework"; sourceTree = "<group>"; };
-		F44569EB20A4E2C10018F2A1 /* ZLogKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZLogKit.framework; path = "../ZKits/ZKits-Debug/ZLogKit.framework"; sourceTree = "<group>"; };
-		F449CBC420A642B5001679A0 /* AppLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLog.swift; sourceTree = "<group>"; };
 		F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
+		F47F447E20AA003600E6696C /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		F4820DFD206998E800780C2D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F4820E022069991700780C2D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F4820E032069996D00780C2D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -100,7 +99,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4B47FF2205734F40027755B /* MapKit.framework in Frameworks */,
-				F44569EC20A4E2C10018F2A1 /* ZLogKit.framework in Frameworks */,
+				F427C5A120ABA36D005F3F0C /* ZLogKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,9 +109,9 @@
 		F400B4B720572E0000556F51 = {
 			isa = PBXGroup;
 			children = (
-				F44569EB20A4E2C10018F2A1 /* ZLogKit.framework */,
 				F400B4C220572E0000556F51 /* MyPins */,
 				F400B4C120572E0000556F51 /* Products */,
+				F427C59F20ABA36D005F3F0C /* ZLogKit.framework */,
 				F4B47FF0205734F40027755B /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -183,7 +182,6 @@
 		F4B47FF0205734F40027755B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F44569E920A4E2490018F2A1 /* ZLogKit.framework */,
 				F4B47FF1205734F40027755B /* MapKit.framework */,
 			);
 			name = Frameworks;
@@ -192,7 +190,7 @@
 		F4B47FF3205744F40027755B /* PinCentral */ = {
 			isa = PBXGroup;
 			children = (
-				F449CBC420A642B5001679A0 /* AppLog.swift */,
+				F47F447E20AA003600E6696C /* Logger.swift */,
 				F4B47FF62057467D0027755B /* CoreData Entities */,
 				F400B4CA20572E0000556F51 /* MyPins.xcdatamodeld */,
 				F4B47FF4205745130027755B /* PinCentral.swift */,
@@ -299,7 +297,7 @@
 				F4B47FF9205746A80027755B /* Pin.swift in Sources */,
 				F400B4C420572E0000556F51 /* AppDelegate.swift in Sources */,
 				F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */,
-				F449CBC520A642B5001679A0 /* AppLog.swift in Sources */,
+				F47F447F20AA003600E6696C /* Logger.swift in Sources */,
 				F4B47FF5205745130027755B /* PinCentral.swift in Sources */,
 				F49B9A59207D406B007598F9 /* SplashScreenViewController.swift in Sources */,
 				F4B47FED205734A80027755B /* MapViewController.swift in Sources */,
@@ -477,14 +475,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = YEJQTHXY7Y;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"../ZKits/ZKits-Debug",
-					"$(PROJECT_DIR)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "../ZKits/ZKits-Debug";
 				GCC_PREFIX_HEADER = "MyPins/MyPins-Prefix.pch";
 				INFOPLIST_FILE = MyPins/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "MyPins/MyPins-Bridging-Header.h";
@@ -503,10 +499,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = YEJQTHXY7Y;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"../ZKits/Zkits-Release",
-					"$(PROJECT_DIR)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "../ZKits/Zkits-Release";
 				GCC_PREFIX_HEADER = "MyPins/MyPins-Prefix.pch";
 				INFOPLIST_FILE = MyPins/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

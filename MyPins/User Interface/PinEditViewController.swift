@@ -73,7 +73,7 @@ class PinEditViewController: UIViewController,
     
     override func viewDidLoad()
     {
-        appLogTrace()
+        logTrace()
         super.viewDidLoad()
 
         title = NSLocalizedString( "Title.PinEditor", comment: "Pin Editor" )
@@ -89,7 +89,7 @@ class PinEditViewController: UIViewController,
     
     override func viewWillAppear(_ animated: Bool)
     {
-        appLogTrace()
+        logTrace()
         super.viewWillAppear( animated )
         
         navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: ( launchedFromDetailView ? NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ) :
@@ -121,7 +121,7 @@ class PinEditViewController: UIViewController,
     
     override func viewWillDisappear(_ animated: Bool)
     {
-        appLogTrace()
+        logTrace()
         super.viewWillDisappear( animated )
         
         NotificationCenter.default.removeObserver( self )
@@ -136,7 +136,7 @@ class PinEditViewController: UIViewController,
     
     override func didReceiveMemoryWarning()
     {
-        appLogVerbose( format: "MEMORY WARNING!!!" )
+        logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
     
@@ -146,7 +146,7 @@ class PinEditViewController: UIViewController,
     
     @objc func pinsUpdated( notification: NSNotification )
     {
-        appLogTrace()
+        logTrace()
         
         // The reason we are using Notifications is because this view can be up in two different places on the iPad at the same time.
         // This approach allows a change in one to immediately be reflected in the other.
@@ -168,13 +168,13 @@ class PinEditViewController: UIViewController,
     func pinCentral( pinCentral: PinCentral,
                      didOpenDatabase: Bool )
     {
-        appLogVerbose( format: "didOpenDatabase[ %@ ]", parameters: String( didOpenDatabase ) )
+        logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
     }
     
     
     func pinCentralDidReloadPinArray( pinCentral: PinCentral )
     {
-        appLogVerbose( format: "loaded [ %@ ] pins", parameters: String( pinCentral.pinArray!.count ) )
+        logVerbose( "loaded [ %d ] pins", pinCentral.pinArray!.count )
         delegate?.pinEditViewController( pinEditViewController: self, didEditPinData: true )
 
         dismissView()
@@ -187,7 +187,7 @@ class PinEditViewController: UIViewController,
     func pinColorSelectorViewController( pinColorSelectorVC: PinColorSelectorViewController,
                                          didSelect color: Int )
     {
-        appLogVerbose( format: "[ %@ ][ %@ ]", parameters: String( color ), pinColorNameArray[color] )
+        logVerbose( "[ %d ][ %@ ]", color, pinColorNameArray[color] )
         pinColor = Int16( color )
         
         loadButtonTitles()
@@ -201,7 +201,7 @@ class PinEditViewController: UIViewController,
     
     @IBAction func cameraButtonTouched(_ sender: UIButton)
     {
-        appLogTrace()
+        logTrace()
         if imageName.isEmpty
         {
             promptForImageSource()
@@ -216,7 +216,7 @@ class PinEditViewController: UIViewController,
     
     @IBAction func cancelBarButtonTouched( sender: UIBarButtonItem )
     {
-        appLogTrace()
+        logTrace()
         if dataChanged()
         {
             confirmIntentToDiscardChanges()
@@ -231,21 +231,21 @@ class PinEditViewController: UIViewController,
     
     @IBAction func nameOrDetailsButtonTouched(_ sender: UIButton )
     {
-        appLogTrace()
+        logTrace()
         editNameAndDetails()
     }
     
     
     @IBAction func locationButtonTouched(_ sender: UIButton )
     {
-        appLogTrace()
+        logTrace()
         editLatLongAndAlt()
     }
     
     
     @IBAction func pinColorButtonTouched(_ sender: UIButton )
     {
-        appLogTrace()
+        logTrace()
         let         pinColorSelectorVC: PinColorSelectorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_COLOR_SELECTOR ) as! PinColorSelectorViewController
 
 
@@ -268,10 +268,10 @@ class PinEditViewController: UIViewController,
     
     @IBAction @objc func saveButtonTouched( barButtonItem: UIBarButtonItem )
     {
-        appLogTrace()
+        logTrace()
         if name.isEmpty
         {
-            appLogVerbose( format: "ERROR!  Name field cannot be left blank" )
+            logTrace( "ERROR!  Name field cannot be left blank" )
             presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                           message: NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank" ) )
         }
@@ -285,10 +285,10 @@ class PinEditViewController: UIViewController,
     
     @IBAction func showOnMapButtonTouched(_ sender: UIButton)
     {
-        appLogTrace()
+        logTrace()
         if name.isEmpty
         {
-            appLogVerbose( format: "ERROR!  Name field cannot be left blank" )
+            logTrace( "ERROR!  Name field cannot be left blank" )
             presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                           message: NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank" ) )
             return
@@ -308,7 +308,7 @@ class PinEditViewController: UIViewController,
     
     @IBAction func unitsButtonTouched(_ sender: UIButton)
     {
-        appLogTrace()
+        logTrace()
         toggleDisplayUnits()
         loadButtonTitles()
     }
@@ -320,7 +320,7 @@ class PinEditViewController: UIViewController,
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController )
     {
-        appLogTrace()
+        logTrace()
         if nil != presentedViewController
         {
             dismiss( animated: true, completion: nil )
@@ -332,7 +332,7 @@ class PinEditViewController: UIViewController,
     func imagePickerController(_ picker: UIImagePickerController,
                                  didFinishPickingMediaWithInfo info: [String : Any] )
     {
-        appLogTrace()
+        logTrace()
         if nil != presentedViewController
         {
             dismiss( animated: true, completion: nil )
@@ -362,7 +362,7 @@ class PinEditViewController: UIViewController,
                 
                 if ( imageName.isEmpty || ( "" == imageName ) )
                 {
-                    appLogVerbose( format: "Image save FAILED!" )
+                    logTrace( "Image save FAILED!" )
                     self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                                        message: NSLocalizedString( "AlertMessage.ImageSaveFailed", comment: "We were unable to save the image you selected." ) )
                 }
@@ -371,14 +371,14 @@ class PinEditViewController: UIViewController,
                     self.imageName       = imageName
                     self.unassignedImage = true
                     
-                    appLogVerbose( format: "Saved image as [ %@ ]", parameters: imageName )
+                    logVerbose( "Saved image as [ %@ ]", imageName )
                     self.configurePhotoControls()
                 }
                 
             }
             else
             {
-                appLogVerbose( format: "Invalid media type[ %@ ]", parameters: mediaType )
+                logVerbose( "Invalid media type[ %@ ]", mediaType )
                 self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                                    message: NSLocalizedString( "AlertMessage.InvalidMediaType", comment: "We can't save the item you selected.  We can only save photos." ) )
             }
@@ -397,11 +397,11 @@ class PinEditViewController: UIViewController,
     {
         guard error == nil else
         {
-            appLogVerbose( format: "Save to photo album failed!  Error[ %@ ]", parameters: error!.localizedDescription )
+            logVerbose( "Save to photo album failed!  Error[ %@ ]", error!.localizedDescription )
             return
         }
         
-        appLogVerbose( format: "Image successfully saved to photo album" )
+        logTrace( "Image successfully saved to photo album" )
     }
     
     
@@ -419,7 +419,7 @@ class PinEditViewController: UIViewController,
     
     private func configurePhotoControls()
     {
-        appLogVerbose( format: "[ %@ ]", parameters: imageName )
+        logVerbose( "[ %@ ]", imageName )
         locationImageView.image = ( imageName.isEmpty ? nil : PinCentral.sharedInstance.imageWith( name: imageName ) )
         
         cameraButton.setImage( ( imageName.isEmpty ? UIImage.init( named: "camera" ) : nil ),
@@ -430,14 +430,14 @@ class PinEditViewController: UIViewController,
     
     private func confirmIntentToDiscardChanges()
     {
-        appLogTrace()
+        logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.AreYouSure", comment: "Are you sure you want to discard your changes?" ),
                                                 message: nil,
                                                 preferredStyle: .alert)
         
         let     yesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Yes", comment: "Yes" ), style: .destructive )
         { ( alertAction ) in
-            appLogVerbose( format: "Yes Action" )
+            logTrace( "Yes Action" )
             
             self.dismissView()
         }
@@ -468,7 +468,7 @@ class PinEditViewController: UIViewController,
             dataChanged = true
         }
         
-        appLogVerbose( format: "[ %@ ]", parameters: String( dataChanged ) )
+        logVerbose( "[ %@ ]", stringFor( dataChanged ) )
         
         return dataChanged
     }
@@ -478,7 +478,7 @@ class PinEditViewController: UIViewController,
     {
         if !PinCentral.sharedInstance.deleteImageWith( name: imageName )
         {
-            appLogVerbose( format: "Unable to delete image[ %@ ]!", parameters: self.imageName )
+            logVerbose( "Unable to delete image[ %@ ]!", self.imageName )
             presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                           message: NSLocalizedString( "AlertMessage.UnableToDeleteImage", comment: "We were unable to delete the image you created." ) )
         }
@@ -490,7 +490,7 @@ class PinEditViewController: UIViewController,
     
     private func dismissView()
     {
-        appLogTrace()
+        logTrace()
         if launchedFromDetailView
         {
             dismiss( animated: true, completion: nil )
@@ -526,7 +526,7 @@ class PinEditViewController: UIViewController,
 
     private func editLatLongAndAlt()
     {
-        appLogTrace()
+        logTrace()
         let     pinCentral  = PinCentral.sharedInstance
         let     title       = String( format: "%@ in %@", NSLocalizedString( "AlertTitle.EditLatLongAndAlt", comment: "Edit latitude, longitude and altitude" ), pinCentral.displayUnits() )
         let     alert       = UIAlertController.init( title: title,
@@ -535,7 +535,7 @@ class PinEditViewController: UIViewController,
         
         let     saveAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .default )
         { ( alertAction ) in
-            appLogVerbose( format: "Save Action" )
+            logTrace( "Save Action" )
             let     latitudeTextField  = alert.textFields![0] as UITextField
             let     longitudeTextField = alert.textFields![1] as UITextField
             let     altitudeTextField  = alert.textFields![2] as UITextField
@@ -555,7 +555,7 @@ class PinEditViewController: UIViewController,
         
         let     useCurrentAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.UseCurrent", comment: "Use Current Location" ), style: .default )
         { ( alertAction ) in
-            appLogVerbose( format: "Use Current Location Action" )
+            logTrace( "Use Current Location Action" )
             self.latitude  = ( pinCentral.currentLocation?.latitude  )!
             self.longitude = ( pinCentral.currentLocation?.longitude )!
             self.altitude  = ( pinCentral.currentAltitude )!
@@ -601,14 +601,14 @@ class PinEditViewController: UIViewController,
     
     private func editNameAndDetails()
     {
-        appLogTrace()
+        logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditNameAndDetails", comment: "Edit name and details" ),
                                                 message: nil,
                                                 preferredStyle: .alert)
         
         let     saveAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .default )
         { ( alertAction ) in
-            appLogVerbose( format: "Save Action" )
+            logTrace( "Save Action" )
             let     nameTextField    = alert.textFields![0] as UITextField
             let     detailsTextField = alert.textFields![1] as UITextField
 
@@ -668,7 +668,7 @@ class PinEditViewController: UIViewController,
     
     func initializeVariables()
     {
-        appLogTrace()
+        logTrace()
         let         pinCentral = PinCentral.sharedInstance
         
         
@@ -726,7 +726,7 @@ class PinEditViewController: UIViewController,
     
     func loadButtonTitles()
     {
-        appLogTrace()
+        logTrace()
         let         units                  = PinCentral.sharedInstance.displayUnits()
         let         altitudeInDesiredUnits = ( ( DISPLAY_UNITS_METERS == units ) ? altitude : ( altitude * FEET_PER_METER ) )
 
@@ -742,7 +742,7 @@ class PinEditViewController: UIViewController,
     
     func openImagePickerFor( sourceType: UIImagePickerControllerSourceType )
     {
-        appLogVerbose( format: "[ %@ ]", parameters: ( ( .camera == sourceType ) ? "Camera" : "Photo Album" ) )
+        logVerbose( "[ %@ ]", ( ( .camera == sourceType ) ? "Camera" : "Photo Album" ) )
         let     imagePickerVC = UIImagePickerController.init()
         
         
@@ -762,14 +762,14 @@ class PinEditViewController: UIViewController,
     
     func promptForImageDispostion()
     {
-        appLogTrace()
+        logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ImageDisposition", comment: "What would you like to do with this image?" ),
                                                 message: nil,
                                                 preferredStyle: .alert)
         
         let     deleteAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Delete", comment: "Delete" ), style: .default )
         { ( alertAction ) in
-            appLogVerbose( format: "Delete Action" )
+            logTrace( "Delete Action" )
             
             self.deleteImage()
             self.configurePhotoControls()
@@ -777,7 +777,7 @@ class PinEditViewController: UIViewController,
         
         let     replaceAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Replace", comment: "Replace" ), style: .default )
         { ( alertAction ) in
-            appLogVerbose( format: "Replace Action" )
+            logTrace( "Replace Action" )
             
             self.deleteImage()
             self.configurePhotoControls()
@@ -798,21 +798,21 @@ class PinEditViewController: UIViewController,
     
     private func promptForImageSource()
     {
-        appLogTrace()
+        logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.SelectMediaSource", comment: "Select Media Source for Image" ),
                                                 message: nil,
                                                 preferredStyle: .alert)
         
         let     albumAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.PhotoAlbum", comment: "Photo Album" ), style: .default )
         { ( alertAction ) in
-            appLogVerbose( format: "Photo Album Action" )
+            logTrace( "Photo Album Action" )
             
             self.openImagePickerFor( sourceType: .photoLibrary )
         }
         
         let     cameraAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Camera", comment: "Camera" ), style: .default )
         { ( alertAction ) in
-            appLogVerbose( format: "Camera Action" )
+            logTrace( "Camera Action" )
             
             self.openImagePickerFor( sourceType: .camera )
         }
@@ -846,7 +846,7 @@ class PinEditViewController: UIViewController,
     
     private func updatePinCentral()
     {
-        appLogTrace()
+        logTrace()
         let     pinCentral = PinCentral.sharedInstance
         
         
