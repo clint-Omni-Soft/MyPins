@@ -11,11 +11,13 @@ import UIKit
 
 
 
-class SplashScreenViewController: UIViewController
+class SplashScreenViewController: UIViewController,
+                                  UIGestureRecognizerDelegate
 {
-    @IBOutlet weak var contactUsLabel:      UILabel!
-    @IBOutlet weak var titleLabel:          UILabel!
-
+    @IBOutlet weak var contactUsLabel           : UILabel!
+    @IBOutlet weak var titleLabel               : UILabel!
+    @IBOutlet      var downGestureRecognizer    : UISwipeGestureRecognizer!
+    
     
     
     // MARK: UIViewController Lifecycle Methods
@@ -29,6 +31,10 @@ class SplashScreenViewController: UIViewController
         
         contactUsLabel  .text = NSLocalizedString( "LabelText.ContactUs", comment: "All rights reserved.  Contact us at" )
         titleLabel      .text = NSLocalizedString( "Title.App",           comment: "Where Was That?"                     )
+        
+        downGestureRecognizer.delegate                = self
+        downGestureRecognizer.direction               = .down
+        downGestureRecognizer.numberOfTouchesRequired = 1
     }
     
     
@@ -52,6 +58,25 @@ class SplashScreenViewController: UIViewController
         super.didReceiveMemoryWarning()
     }
     
+    
+    
+    // MARK: Target/Action Methods
+    
+    @IBAction func respondToDownSwipeGesture(_ sender: UISwipeGestureRecognizer )
+    {
+        logTrace()
+//        presentAlert(title: "Ta Da!  Flare!", message: "We rock!" )
+    }
+    
+    
+    
+    // MARK: GestureRecognizerDelegate Methods
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer ) -> Bool
+    {
+        logTrace()
+        return true
+    }
     
     
     // MARK: Utility Methods

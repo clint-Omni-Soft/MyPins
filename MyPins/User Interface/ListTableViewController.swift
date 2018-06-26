@@ -116,7 +116,7 @@ class ListTableViewController: UITableViewController,
     
     func pinCentralDidReloadPinArray( pinCentral: PinCentral )
     {
-        logVerbose( "loaded [ %d ] pins", pinCentral.pinArray!.count )
+        logVerbose( "loaded [ %d ] pins", pinCentral.pinArray.count )
         tableView.reloadData()
     }
 
@@ -162,7 +162,7 @@ class ListTableViewController: UITableViewController,
     @IBAction @objc func addBarButtonItemTouched( barButtonItem: UIBarButtonItem )
     {
         logTrace()
-        launchPinEditForPinAt( index: PinCentral.sharedInstance.NEW_PIN )
+        launchPinEditForPinAt( index: NEW_PIN )
     }
     
     
@@ -172,14 +172,14 @@ class ListTableViewController: UITableViewController,
     override func tableView(_ tableView: UITableView,
                               numberOfRowsInSection section: Int) -> Int
     {
-        return PinCentral.sharedInstance.pinArray!.count
+        return PinCentral.sharedInstance.pinArray.count
     }
 
 
     override func tableView(_ tableView: UITableView,
                               cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let         pin                      = PinCentral.sharedInstance.pinArray![indexPath.row]
+        let         pin                      = PinCentral.sharedInstance.pinArray[indexPath.row]
         let         cell                     = tableView.dequeueReusableCell( withIdentifier: "ListTableViewControllerCell", for: indexPath )
         var         dateString               = ""
         let         detailLabel: UILabel     = cell.viewWithTag( CELL_TAG_LABEL_DETAIL ) as! UILabel

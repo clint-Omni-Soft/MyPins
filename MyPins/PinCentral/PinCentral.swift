@@ -29,7 +29,6 @@ class PinCentral: NSObject,
     let DATABASE_NAME               = "PinsDB.sqlite"
     let DISPLAY_UNITS_ALTITUDE      = "DisplayUnitsAltitude"
     let ENTITY_NAME_PIN             = "Pin"
-    let NEW_PIN                     = -1
     let NOTIFICATION_CENTER_MAP     = "CenterMap"
     let NOTIFICATION_PINS_UPDATED   = "PinsUpdated"
     let USER_INFO_LATITUDE          = "Latitude"
@@ -38,18 +37,18 @@ class PinCentral: NSObject,
     
     weak var delegate:      PinCentralDelegate?
 
-    var     currentAltitude:        Double?
-    var     currentLocation:        CLLocationCoordinate2D?
+    var     currentAltitude       = 0.0
+    var     currentLocation       = CLLocationCoordinate2DMake( 0.0, 0.0 )
     var     didOpenDatabase       = false
-    var     indexOfSelectedPin:     Int?
+    var     indexOfSelectedPin    = NO_SELECTION
     var     locationEstablished   = false
-    var     newPinIndex:            Int?
-    var     pinArray: [Pin]?      = Array.init()
+    var     newPinIndex           = NEW_PIN
+    var     pinArray              = [Pin].init()
 
-    private var     locationManager:        CLLocationManager?
-    private var     managedObjectContext:   NSManagedObjectContext!
-    private var     newPinGuid:             String?
-    private var     persistentContainer:    NSPersistentContainer!
+    private var     locationManager         : CLLocationManager?
+    private var     managedObjectContext    : NSManagedObjectContext!
+    private var     newPinGuid              = ""
+    private var     persistentContainer     : NSPersistentContainer!
 
     
     
@@ -126,7 +125,7 @@ class PinCentral: NSObject,
             return
         }
         
-        logTrace()
+        logVerbose( "[ %@ ][ %@ ]", name, details )
 
         persistentContainer.viewContext.perform
         {
@@ -143,7 +142,7 @@ class PinCentral: NSObject,
             pin.name            = name
             pin.pinColor        = pinColor
             
-            self.newPinGuid = pin.guid
+            self.newPinGuid = pin.guid!
             
             self.saveContext()
             self.refetchPinsAndNotifyDelegate()
@@ -163,7 +162,7 @@ class PinCentral: NSObject,
         persistentContainer.viewContext.perform
         {
             logVerbose( "deleting pin at [ %d ]", index )
-            let     pin = self.pinArray![index]
+            let     pin = self.pinArray[index]
             
             
             self.managedObjectContext.delete( pin )
@@ -338,17 +337,24 @@ class PinCentral: NSObject,
     {
         guard let currentLocation: CLLocationCoordinate2D = manager.location?.coordinate else
         {
+            logVerbose( "ERROR!  Failed to extract currentLocation" )
             return
         }
         
-        self.currentAltitude = locations.last?.altitude
+        guard let currentAltitude = locations.last?.altitude else
+        {
+            logVerbose( "ERROR!  Failed to extract currentAltitude" )
+            return
+        }
+        
         self.currentLocation = currentLocation
+        self.currentAltitude = currentAltitude
         
         if !locationEstablished
         {
             locationEstablished = true
             
-            logVerbose( "locationEstablished @ [ %f, %f ][ %f ]", currentLocation.latitude, currentLocation.longitude, currentAltitude! )
+            logVerbose( "locationEstablished @ [ %f, %f ][ %f ]", currentLocation.latitude, currentLocation.longitude, currentAltitude )
         }
 
     }
@@ -408,9 +414,9 @@ class PinCentral: NSObject,
             
             newPinIndex = NEW_PIN
             
-            for index in 0..<self.pinArray!.count
+            for index in 0..<self.pinArray.count
             {
-                if pinArray![index].guid == newPinGuid
+                if pinArray[index].guid == newPinGuid
                 {
                     newPinIndex = index
                     break
@@ -621,6 +627,8 @@ let pinColorNameArray = [ NSLocalizedString( "PinColor.Black"    , comment:  "Bl
 let DISPLAY_UNITS_FEET      = "ft"
 let DISPLAY_UNITS_METERS    = "m"
 let FEET_PER_METER          = 3.28084
+let NEW_PIN                 = -1
+let NO_SELECTION            = -1
 
 
 

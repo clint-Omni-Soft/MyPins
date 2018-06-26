@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bjp-AP-9w6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bjp-AP-9w6">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -505,6 +505,7 @@
                             </label>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="8oL-80-aFl" firstAttribute="bottom" secondItem="bqe-31-s6w" secondAttribute="bottom" constant="25" id="3Xl-dm-a0D"/>
                             <constraint firstItem="8oL-80-aFl" firstAttribute="trailing" secondItem="Hv1-xj-5n4" secondAttribute="trailing" constant="15" id="5Iw-V5-6gs"/>
@@ -522,13 +523,22 @@
                             <constraint firstItem="Hv1-xj-5n4" firstAttribute="leading" secondItem="8oL-80-aFl" secondAttribute="leading" constant="17" id="vy4-ap-II4"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="8oL-80-aFl"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="6YZ-CV-bJx" appends="YES" id="WpV-fI-aFv"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="contactUsLabel" destination="lYm-Sl-TEI" id="Hh7-er-YEJ"/>
+                        <outlet property="downGestureRecognizer" destination="6YZ-CV-bJx" id="pyf-9b-kf5"/>
                         <outlet property="titleLabel" destination="P4F-36-WB4" id="aVR-BC-Cy9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YTU-XQ-cIy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="6YZ-CV-bJx">
+                    <connections>
+                        <action selector="respondToDownSwipeGesture:" destination="JEp-Kd-MnZ" id="B0U-Pu-jIN"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1745" y="797"/>
         </scene>

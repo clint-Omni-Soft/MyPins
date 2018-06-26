@@ -41,13 +41,13 @@ class MapViewController: UIViewController,
     @IBOutlet var directionsBarButtonItem: UIBarButtonItem!
     @IBOutlet var mapTypeBarButtonItem:    UIBarButtonItem!
 
-    private var     coordinateToCenterMapOn:        CLLocationCoordinate2D?
+    private var     coordinateToCenterMapOn       = CLLocationCoordinate2DMake( 0.0, 0.0 )
     private var     ignoreRefresh                 = false
     private var     locationEstablished           = false
-    private var     locationManager:                CLLocationManager?
+    private var     locationManager               : CLLocationManager?
     private var     centerMapOnUserLocation       = true
     private var     routeColor                    = UIColor.green
-    private var     selectedPointAnnotation:        PointAnnotation!
+    private var     selectedPointAnnotation       : PointAnnotation!
     private var     showingDirectionsOverlay      = false
     private var     showingPinEditor              = false
     
@@ -145,8 +145,8 @@ class MapViewController: UIViewController,
                            didFailWithError error: Error )
     {
         logVerbose( "[ %@ ]", error.localizedDescription )
-        presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                      message: error.localizedDescription )
+//        presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+//                      message: error.localizedDescription )
     }
     
     
@@ -266,18 +266,18 @@ class MapViewController: UIViewController,
             }
             else
             {
-                logVerbose( "Setting map center [ %f, %f ] on requested by PinEdit[0]", coordinateToCenterMapOn!.longitude, coordinateToCenterMapOn!.latitude )
+                logVerbose( "Setting map center [ %f, %f ] on requested by PinEdit[0]", coordinateToCenterMapOn.longitude, coordinateToCenterMapOn.latitude )
                 centerMapOnUserLocation = true
-                zoomInOn( coordinate: coordinateToCenterMapOn! )
+                zoomInOn( coordinate: coordinateToCenterMapOn )
             }
 
             locationEstablished = true
         }
         else if !centerMapOnUserLocation
         {
-            logVerbose( "Setting map center [ %f, %f ] on requested by PinEdit[1]", coordinateToCenterMapOn!.longitude, coordinateToCenterMapOn!.latitude )
+            logVerbose( "Setting map center [ %f, %f ] on requested by PinEdit[1]", coordinateToCenterMapOn.longitude, coordinateToCenterMapOn.latitude )
             centerMapOnUserLocation = true
-            zoomInOn( coordinate: coordinateToCenterMapOn! )
+            zoomInOn( coordinate: coordinateToCenterMapOn )
         }
 
     }
@@ -287,8 +287,8 @@ class MapViewController: UIViewController,
                    didFailToLocateUserWithError error: Error )
     {
         logVerbose( "[ %@ ]", error.localizedDescription )
-        presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                      message: error.localizedDescription )
+//        presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+//                      message: error.localizedDescription )
     }
     
     
@@ -327,7 +327,7 @@ class MapViewController: UIViewController,
         let     annotationView       = mapView.dequeueReusableAnnotationView( withIdentifier: annotationIdentifier )
         let     pinAnnotationView: MKPinAnnotationView!
         let     pointAnnotation      = annotation as! PointAnnotation
-        let     pin                  = PinCentral.sharedInstance.pinArray![pointAnnotation.pinIndex!]
+        let     pin                  = PinCentral.sharedInstance.pinArray[pointAnnotation.pinIndex!]
         
         
         if nil == annotationView
@@ -445,7 +445,7 @@ class MapViewController: UIViewController,
     
     func pinCentralDidReloadPinArray( pinCentral: PinCentral )
     {
-        logVerbose( "loaded [ %d ] pins", pinCentral.pinArray!.count )
+        logVerbose( "loaded [ %d ] pins", pinCentral.pinArray.count )
         if ignoreRefresh
         {
             ignoreRefresh = false
@@ -472,14 +472,14 @@ class MapViewController: UIViewController,
 
         refreshMapAnnotations()
         
-        if pinCentral.NEW_PIN != pinCentral.newPinIndex
+        if NEW_PIN != pinCentral.newPinIndex
         {
-            let     newPin     = pinCentral.pinArray![pinCentral.newPinIndex!]
+            let     newPin     = pinCentral.pinArray[pinCentral.newPinIndex]
             
             
             centerMapOnUserLocation = false
             coordinateToCenterMapOn = CLLocationCoordinate2DMake( newPin.latitude, newPin.longitude )
-            logVerbose( "center map on pin[ %d ]", pinCentral.newPinIndex! )
+            logVerbose( "center map on pin[ %d ]", pinCentral.newPinIndex )
         }
         
     }
@@ -489,8 +489,6 @@ class MapViewController: UIViewController,
                                 wantsToCenterMapAt coordinate: CLLocationCoordinate2D )
     {
         logTrace()
-        
-
         coordinateToCenterMapOn = coordinate
         centerMapOnUserLocation = false
     }
@@ -504,7 +502,7 @@ class MapViewController: UIViewController,
         logTrace()
         PinCentral.sharedInstance.delegate = self
         
-        launchPinEditorForPinAt( index: PinCentral.sharedInstance.NEW_PIN )
+        launchPinEditorForPinAt( index: NEW_PIN )
    }
     
     
@@ -516,13 +514,13 @@ class MapViewController: UIViewController,
         
         if pinCentral.locationEstablished
         {
-            let     adjustedAltitude = ( ( DISPLAY_UNITS_FEET == pinCentral.displayUnits() ) ? String.init( format: "%7.1f", ( pinCentral.currentAltitude! * FEET_PER_METER ) ) :
-                                                                                               String.init( format: "%7.1f",   pinCentral.currentAltitude! ) )
+            let     adjustedAltitude = ( ( DISPLAY_UNITS_FEET == pinCentral.displayUnits() ) ? String.init( format: "%7.1f", ( pinCentral.currentAltitude * FEET_PER_METER ) ) :
+                                                                                               String.init( format: "%7.1f",   pinCentral.currentAltitude ) )
             let     message = String( format: "%@, %@\n%7.4f, %7.4f\n\n%@ = %@ %@",
                                       NSLocalizedString( "LabelText.Latitude",  comment: "Latitude"  ),
                                       NSLocalizedString( "LabelText.Longitude", comment: "Longitude" ),
-                                      ( pinCentral.currentLocation?.latitude  )!,
-                                      ( pinCentral.currentLocation?.longitude )!,
+                                      pinCentral.currentLocation.latitude,
+                                      pinCentral.currentLocation.longitude,
                                       NSLocalizedString( "LabelText.Altitude",  comment: "Altitude"  ),
                                       adjustedAltitude,
                                       pinCentral.displayUnits() )
@@ -573,7 +571,7 @@ class MapViewController: UIViewController,
         DispatchQueue.main.asyncAfter(deadline: ( .now() + 1.0 ), execute:
         {
             logTrace()
-            let     pin = PinCentral.sharedInstance.pinArray![pointAnnotation.pinIndex!]
+            let     pin = PinCentral.sharedInstance.pinArray[pointAnnotation.pinIndex!]
             
             
             if ( ( pointAnnotation.coordinate.latitude != pin.latitude ) || ( pointAnnotation.coordinate.longitude != pin.longitude ) )
@@ -597,7 +595,7 @@ class MapViewController: UIViewController,
         pinEditVC.indexOfItemBeingEdited  = index
         pinEditVC.launchedFromDetailView  = ( .pad == UIDevice.current.userInterfaceIdiom )
         
-        if PinCentral.sharedInstance.NEW_PIN == index
+        if NEW_PIN == index
         {
             pinEditVC.centerOfMap    = myMapView.centerCoordinate
             pinEditVC.useCenterOfMap = true
@@ -825,9 +823,9 @@ class MapViewController: UIViewController,
         
         myMapView.removeAnnotations( myMapView.annotations )
         
-        for index in 0..<pinCentral.pinArray!.count
+        for index in 0..<pinCentral.pinArray.count
         {
-            let     pin = pinCentral.pinArray![index]
+            let     pin = pinCentral.pinArray[index]
             let     annotation: PointAnnotation = PointAnnotation.init()
             
             
@@ -893,7 +891,7 @@ class MapViewController: UIViewController,
     {
         logTrace()
         let     pinCentral = PinCentral.sharedInstance
-        let     pin        = pinCentral.pinArray![pointAnnotation.pinIndex!]
+        let     pin        = pinCentral.pinArray[pointAnnotation.pinIndex!]
         
         
         pin.latitude  = pointAnnotation.coordinate.latitude

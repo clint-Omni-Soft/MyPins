@@ -65,6 +65,7 @@ class PinEditViewController: UIViewController,
     private var     originalName              = String()
     private var     originalPinColor:           Int16!
     private var     pinColor:                   Int16!
+    private var     savedPinBeforeShowingMap  = false
     private var     unassignedImage           = false
     
     
@@ -105,11 +106,11 @@ class PinEditViewController: UIViewController,
                                                 name:     NSNotification.Name( rawValue: PinCentral.sharedInstance.NOTIFICATION_PINS_UPDATED ),
                                                 object:   nil )
         
-        if firstTimeIn && ( PinCentral.sharedInstance.NEW_PIN == indexOfItemBeingEdited )
+        if firstTimeIn && ( NEW_PIN == indexOfItemBeingEdited )
         {
             firstTimeIn = false
             
-            DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.5 ) )
+            DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.1 ) )
             {
                 self.editNameAndDetails()
             }
@@ -174,10 +175,17 @@ class PinEditViewController: UIViewController,
     
     func pinCentralDidReloadPinArray( pinCentral: PinCentral )
     {
-        logVerbose( "loaded [ %d ] pins", pinCentral.pinArray!.count )
-        delegate?.pinEditViewController( pinEditViewController: self, didEditPinData: true )
+        logVerbose( "loaded [ %d ] pins", pinCentral.pinArray.count )
+
+        if NEW_PIN == indexOfItemBeingEdited
+        {
+            logVerbose( "recovering pinIndex[ %d ]", pinCentral.newPinIndex )
+            indexOfItemBeingEdited = pinCentral.newPinIndex
+        }
 
         dismissView()
+
+        delegate?.pinEditViewController( pinEditViewController: self, didEditPinData: true )
     }
     
     
@@ -298,11 +306,19 @@ class PinEditViewController: UIViewController,
         {
             updatePinCentral()
             
+            savedPinBeforeShowingMap = true
+            
+            logVerbose( "indexOfSelectedPin[ %d ] = indexOfItemBeingEdited[ %d ]", PinCentral.sharedInstance.indexOfSelectedPin, indexOfItemBeingEdited )
             PinCentral.sharedInstance.indexOfSelectedPin = indexOfItemBeingEdited
         }
         
-        delegate?.pinEditViewController( pinEditViewController: self,
-                                         wantsToCenterMapAt: CLLocationCoordinate2DMake( latitude, longitude ) )
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01 )
+        {
+            logTrace( "waiting for update from pinCentral" )
+            self.delegate?.pinEditViewController( pinEditViewController: self,
+                                                  wantsToCenterMapAt: CLLocationCoordinate2DMake( self.latitude, self.longitude ) )
+        }
+
     }
     
     
@@ -555,10 +571,11 @@ class PinEditViewController: UIViewController,
         
         let     useCurrentAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.UseCurrent", comment: "Use Current Location" ), style: .default )
         { ( alertAction ) in
+            
             logTrace( "Use Current Location Action" )
-            self.latitude  = ( pinCentral.currentLocation?.latitude  )!
-            self.longitude = ( pinCentral.currentLocation?.longitude )!
-            self.altitude  = ( pinCentral.currentAltitude )!
+            self.latitude  = pinCentral.currentLocation.latitude
+            self.longitude = pinCentral.currentLocation.longitude
+            self.altitude  = pinCentral.currentAltitude
             
             self.loadButtonTitles()
         }
@@ -672,7 +689,7 @@ class PinEditViewController: UIViewController,
         let         pinCentral = PinCentral.sharedInstance
         
         
-        if pinCentral.NEW_PIN == indexOfItemBeingEdited
+        if NEW_PIN == indexOfItemBeingEdited
         {
             altitude  = 0.0
             details   = String.init()
@@ -686,9 +703,9 @@ class PinEditViewController: UIViewController,
             }
             else if pinCentral.locationEstablished
             {
-                altitude  = pinCentral.currentAltitude!
-                latitude  = pinCentral.currentLocation!.latitude
-                longitude = pinCentral.currentLocation!.longitude
+                altitude  = pinCentral.currentAltitude
+                latitude  = pinCentral.currentLocation.latitude
+                longitude = pinCentral.currentLocation.longitude
             }
             else
             {
@@ -700,7 +717,7 @@ class PinEditViewController: UIViewController,
         }
         else
         {
-            let         pin = pinCentral.pinArray![indexOfItemBeingEdited]
+            let         pin = pinCentral.pinArray[indexOfItemBeingEdited]
             
             
             altitude    = pin.altitude
@@ -852,7 +869,7 @@ class PinEditViewController: UIViewController,
         
         pinCentral.delegate = self
         
-        if indexOfItemBeingEdited == PinCentral.sharedInstance.NEW_PIN
+        if NEW_PIN == indexOfItemBeingEdited
         {
             pinCentral.addPin( name:      name,
                                details:   details,
@@ -864,7 +881,7 @@ class PinEditViewController: UIViewController,
         }
         else
         {
-            let     pin = pinCentral.pinArray![indexOfItemBeingEdited]
+            let     pin = pinCentral.pinArray[indexOfItemBeingEdited]
             
             
             pin.altitude  = altitude
