@@ -14,23 +14,23 @@ import MapKit
 
 class MapViewController: UIViewController,
                          CLLocationManagerDelegate,
+                         LocationEditorViewControllerDelegate,
                          MKMapViewDelegate,
                          PinCentralDelegate,
-                         PinEditViewControllerDelegate,
                          UIPopoverPresentationControllerDelegate
 {
-    let NO_SELECTION         = -1
-    let KEY_MAP_TYPE         = "MapType"
-    let STORYBOARD_ID_EDITOR = "PinEditViewController"
-    
+    let     KEY_MAP_TYPE                  = "MapType"
+    let     NO_SELECTION                  = -1
+    let     STORYBOARD_ID_LOCATION_EDITOR = "LocationEditorViewController"
+
     struct MapTypes
     {
-        static let eStandard            = 0
-        static let eSatellite           = 1
-        static let eHybrid              = 2
-        static let eSatelliteFlyover    = 3
-        static let eHybridFlyover       = 4
-        static let eMutedStandard       = 5
+        static let eStandard         = 0
+        static let eSatellite        = 1
+        static let eHybrid           = 2
+        static let eSatelliteFlyover = 3
+        static let eHybridFlyover    = 4
+        static let eMutedStandard    = 5
     }
 
     
@@ -41,15 +41,15 @@ class MapViewController: UIViewController,
     @IBOutlet var directionsBarButtonItem: UIBarButtonItem!
     @IBOutlet var mapTypeBarButtonItem:    UIBarButtonItem!
 
-    private var     coordinateToCenterMapOn       = CLLocationCoordinate2DMake( 0.0, 0.0 )
-    private var     ignoreRefresh                 = false
-    private var     locationEstablished           = false
-    private var     locationManager               : CLLocationManager?
-    private var     centerMapOnUserLocation       = true
-    private var     routeColor                    = UIColor.green
-    private var     selectedPointAnnotation       : PointAnnotation!
-    private var     showingDirectionsOverlay      = false
-    private var     showingPinEditor              = false
+    private var coordinateToCenterMapOn  = CLLocationCoordinate2DMake( 0.0, 0.0 )
+    private var ignoreRefresh            = false
+    private var locationEstablished      = false
+    private var locationManager          : CLLocationManager?
+    private var centerMapOnUserLocation  = true
+    private var routeColor               = UIColor.green
+    private var selectedPointAnnotation  : PointAnnotation?
+    private var showingDirectionsOverlay = false
+    private var showingPinEditor         = false
     
     
     
@@ -113,11 +113,11 @@ class MapViewController: UIViewController,
         
         NotificationCenter.default.addObserver( self,
                                                 selector: #selector( MapViewController.centerMap( notification: ) ),
-                                                name:     NSNotification.Name( rawValue: pinCentral.NOTIFICATION_CENTER_MAP ),
+                                                name:     NSNotification.Name( rawValue: NOTIFICATION_CENTER_MAP ),
                                                 object:   nil )
         NotificationCenter.default.addObserver( self,
                                                 selector: #selector( MapViewController.pinsUpdated( notification: ) ),
-                                                name:     NSNotification.Name( rawValue: pinCentral.NOTIFICATION_PINS_UPDATED ),
+                                                name:     NSNotification.Name( rawValue: NOTIFICATION_PINS_UPDATED ),
                                                 object:   nil )
     }
     
@@ -163,6 +163,42 @@ class MapViewController: UIViewController,
     
     
     
+    // MARK: LocationEditorViewControllerDelegate Methods
+    
+    func locationEditorViewController( locationEditorViewController: LocationEditorViewController,
+                                       didEditLocationData: Bool )
+    {
+        logVerbose( "didEditLocationData[ %@ ]", stringFor( didEditLocationData ) )
+        let     pinCentral = PinCentral.sharedInstance
+        
+        
+        pinCentral.delegate = self
+        
+        refreshMapAnnotations()
+        
+        if NEW_PIN != pinCentral.newPinIndex
+        {
+            let     newPin = pinCentral.pinArray[pinCentral.newPinIndex]
+            
+            
+            centerMapOnUserLocation = false
+            coordinateToCenterMapOn = CLLocationCoordinate2DMake( newPin.latitude, newPin.longitude )
+            logVerbose( "center map on pin[ %d ]", pinCentral.newPinIndex )
+        }
+        
+    }
+    
+    
+    func locationEditorViewController( locationEditorViewController: LocationEditorViewController,
+                                       wantsToCenterMapAt coordinate: CLLocationCoordinate2D )
+    {
+        logTrace()
+        coordinateToCenterMapOn = coordinate
+        centerMapOnUserLocation = false
+    }
+    
+    
+    
     // MARK: MKMapViewDelegate Methods
     
     func mapView(_ mapView: MKMapView,
@@ -171,12 +207,17 @@ class MapViewController: UIViewController,
     {
         if view.annotation is PointAnnotation
         {
-            let     pointAnnotation = view.annotation as! PointAnnotation
-            let     index           = pointAnnotation.pinIndex!
+            if let pointAnnotation = view.annotation as? PointAnnotation,
+               let index           = pointAnnotation.pinIndex
+            {
+//              logVerbose( "Requesting edit of pin at index[ %@ ]", String( index ) )
+                launchLocationEditorForPinAt( index: index )
+            }
+            else
+            {
+                logTrace( "ERROR: Could NOT convert view.annotation to PointAnnotation OR pointAnnotation.pinIndex could NOT be unwrapped!" )
+            }
 
-
-//            logVerbose( "index[ %@ ]", String( index ) )
-            launchPinEditorForPinAt( index: index )
         }
         else if view.annotation is MKUserLocation
         {
@@ -195,29 +236,34 @@ class MapViewController: UIViewController,
                    didChange newState: MKAnnotationViewDragState,
                    fromOldState oldState: MKAnnotationViewDragState )
     {
-        let     pointAnnotation = view.annotation as! PointAnnotation
-        
-
-//        logVerbose( "[ %f, %f ]  [ %@ ]->[ %@ ]", pointAnnotation.coordinate.latitude, pointAnnotation.coordinate.longitude, titleForDragState( state: oldState ), titleForDragState( state: newState ) )
-        
-        switch newState
+        if let pointAnnotation = view.annotation as? PointAnnotation
         {
-        case .dragging: break
+//        logVerbose( "[ %f, %f ]  [ %@ ]->[ %@ ]", pointAnnotation.coordinate.latitude, pointAnnotation.coordinate.longitude, titleForDragState( state: oldState ), titleForDragState( state: newState ) )
             
-        case .starting:
-            view.dragState = .dragging
-            
-        case .canceling, .ending:
-            view.dragState = .none
-            examinePointAnnotation( pointAnnotation: pointAnnotation )
+            switch newState
+            {
+            case .dragging: break
+                
+            case .starting:
+                view.dragState = .dragging
+                
+            case .canceling, .ending:
+                view.dragState = .none
+                examinePointAnnotation( pointAnnotation: pointAnnotation )
+                
+            default:    // .none
+                
+                // This ia KLUDGE!  For some reason we don't get .canceling or .end after some dragging events start
+                //  ... instead we get a .none even though the pin was moved!  This allows us to capture that data.
+                
+                examinePointAnnotation( pointAnnotation: pointAnnotation )
+                break
+            }
 
-        default:    // .none
-            
-            // This ia KLUDGE!  For some reason we don't get .canceling or .end after some dragging events start
-            //  ... instead we get a .none even though the pin was moved!  This allows us to capture that data.
-            
-            examinePointAnnotation( pointAnnotation: pointAnnotation )
-            break
+        }
+        else
+        {
+            logTrace( "ERROR: Could NOT convert view.annotation to PointAnnotation!" )
         }
         
     }
@@ -227,7 +273,6 @@ class MapViewController: UIViewController,
                    didDeselect view: MKAnnotationView )
     {
 //        logTrace()
-        
         directionsBarButtonItem.isEnabled = false
         selectedPointAnnotation           = nil
     }
@@ -241,13 +286,19 @@ class MapViewController: UIViewController,
             return
         }
         
-
-        let     pointAnnotation = view.annotation as! PointAnnotation
+        if let pointAnnotation = view.annotation as? PointAnnotation,
+           let pinIndex        = pointAnnotation.pinIndex
+        {
+            directionsBarButtonItem.isEnabled = true
+            selectedPointAnnotation           = pointAnnotation
+            
+            logVerbose( "selected pin[ %d ]", pinIndex )
+        }
+        else
+        {
+            logTrace( "ERROR: Could NOT convert view.annotation to PointAnnotation OR could NOT unwrap pointAnnotation.pinIndex!" )
+        }
         
-        
-        directionsBarButtonItem.isEnabled = true
-        selectedPointAnnotation           = pointAnnotation
-//        logVerbose( "selected pin[ %d ]", pointAnnotation.pinIndex! )
     }
     
     
@@ -261,8 +312,15 @@ class MapViewController: UIViewController,
         {
             if centerMapOnUserLocation
             {
-                logVerbose( "Setting map center [ %f, %f ] on user location", userLocation.location!.coordinate.latitude, userLocation.location!.coordinate.longitude )
-                zoomInOn( coordinate: userLocation.location!.coordinate )
+                if let location = userLocation.location
+                {
+                    logVerbose( "Setting map center [ %f, %f ] on user location", location.coordinate.latitude, location.coordinate.longitude )
+                    zoomInOn( coordinate: location.coordinate )
+                }
+                else
+                {
+                    logTrace( "ERROR: Could NOT unwrap userLocation.location!" )
+                }
             }
             else
             {
@@ -286,7 +344,7 @@ class MapViewController: UIViewController,
     func mapView(_ mapView: MKMapView,
                    didFailToLocateUserWithError error: Error )
     {
-        logVerbose( "[ %@ ]", error.localizedDescription )
+        logVerbose( "ERROR: [ %@ ]", error.localizedDescription )
 //        presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
 //                      message: error.localizedDescription )
     }
@@ -325,14 +383,14 @@ class MapViewController: UIViewController,
         
         let     annotationIdentifier = "AnnotationIdentifier"
         let     annotationView       = mapView.dequeueReusableAnnotationView( withIdentifier: annotationIdentifier )
-        let     pinAnnotationView: MKPinAnnotationView!
+        let     pinAnnotationView    : MKPinAnnotationView!
         let     pointAnnotation      = annotation as! PointAnnotation
         let     pin                  = PinCentral.sharedInstance.pinArray[pointAnnotation.pinIndex!]
         
         
-        if nil == annotationView
+        guard annotationView != nil else
         {
-//            logTrace( "New Pin" )
+            logTrace( "Creating New Pin" )
             pinAnnotationView = MKPinAnnotationView( annotation: annotation, reuseIdentifier: annotationIdentifier )
             
 //          pinAnnotationView.animatesDrop   = true
@@ -340,17 +398,21 @@ class MapViewController: UIViewController,
             pinAnnotationView.isDraggable    = true
             pinAnnotationView.pinTintColor   = pinColorArray[Int( pin.pinColor )]
             pinAnnotationView.rightCalloutAccessoryView = UIButton( type: .detailDisclosure )
-        }
-        else
-        {
-//            logTrace( "Existing Pin" )
-            pinAnnotationView = annotationView as! MKPinAnnotationView
             
-            pinAnnotationView!.annotation   = annotation
-            pinAnnotationView!.pinTintColor = pinColorArray[Int( pin.pinColor )]
+            return pinAnnotationView
         }
         
-        return pinAnnotationView
+        if let pinAnnotationView = annotationView as? MKPinAnnotationView
+        {
+            logTrace( "Use Existing Pin" )
+            pinAnnotationView.annotation   = annotation
+            pinAnnotationView.pinTintColor = pinColorArray[Int( pin.pinColor )]
+            
+            return pinAnnotationView
+        }
+            
+        logTrace( "ERROR: Could NOT convert annotationView to MKPinAnnotationView!" )
+        return nil
     }
     
     
@@ -371,44 +433,53 @@ class MapViewController: UIViewController,
     
     @objc func centerMap( notification: NSNotification )
     {
-        let     latitude   = notification.userInfo![ PinCentral.sharedInstance.USER_INFO_LATITUDE  ] as! Double
-        let     longitude  = notification.userInfo![ PinCentral.sharedInstance.USER_INFO_LONGITUDE ] as! Double
-        let     coordinate = CLLocationCoordinate2DMake( latitude, longitude )
-        
-        
-        if locationEstablished
+        if let userInfo = notification.userInfo
         {
-            logVerbose( "locationEstablished at [ %f, %f ] ... right now", latitude, longitude )
-            let     pinCentral = PinCentral.sharedInstance
+            let     latitude   = userInfo[ USER_INFO_LATITUDE  ] as! Double
+            let     longitude  = userInfo[ USER_INFO_LONGITUDE ] as! Double
+            let     coordinate = CLLocationCoordinate2DMake( latitude, longitude )
             
             
-            zoomInOn( coordinate: coordinate )
-            
-            for annotation in myMapView.annotations
+            if locationEstablished
             {
-                if annotation is PointAnnotation
+                logVerbose( "locationEstablished at [ %f, %f ] ... right now", latitude, longitude )
+                let     pinCentral = PinCentral.sharedInstance
+                
+                
+                zoomInOn( coordinate: coordinate )
+                
+                for annotation in myMapView.annotations
                 {
-                    let     pointAnnotation = annotation as! PointAnnotation
-                    
-                    
-                    if pinCentral.indexOfSelectedPin == pointAnnotation.pinIndex
+                    if let pointAnnotation = annotation as? PointAnnotation
                     {
-                        myMapView.selectAnnotation( annotation, animated: true )
-                        break
+                        if pinCentral.indexOfSelectedPin == pointAnnotation.pinIndex
+                        {
+                            myMapView.selectAnnotation( annotation, animated: true )
+                            break
+                        }
+                        
+                    }
+                    else
+                    {
+                        logTrace( "ERROR: Could NOT convert annotation to PointAnnotation!" )
                     }
                     
                 }
                 
             }
-            
+            else
+            {
+                logVerbose( "at [ %f, %f ] ... wait for location to be established", latitude, longitude )
+                coordinateToCenterMapOn = coordinate
+                centerMapOnUserLocation = false
+            }
+        
         }
         else
         {
-            logVerbose( "at [ %f, %f ] ... wait for location to be established", latitude, longitude )
-            coordinateToCenterMapOn = coordinate
-            centerMapOnUserLocation = false
+            logTrace( "ERROR: Could NOT unwrap notification.userInfo!" )
         }
-        
+
     }
     
     
@@ -437,7 +508,7 @@ class MapViewController: UIViewController,
         else
         {
             presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                          message: NSLocalizedString( "AlertMessage.CannotOpenDatabase", comment: "Fatal Error!  Cannot open database." ) )
+                          message: NSLocalizedString( "AlertMessage.CannotOpenDatabase", comment: "Fatal ERROR: Cannot open database." ) )
         }
 
     }
@@ -459,42 +530,6 @@ class MapViewController: UIViewController,
     
     
     
-    // MARK: PinEditViewControllerDelegate Methods
-    
-    func pinEditViewController( pinEditViewController: PinEditViewController,
-                                  didEditPinData: Bool )
-    {
-        logVerbose( "didEditPinData[ %@ ]", stringFor( didEditPinData ) )
-        let     pinCentral = PinCentral.sharedInstance
-        
-        
-        pinCentral.delegate = self
-
-        refreshMapAnnotations()
-        
-        if NEW_PIN != pinCentral.newPinIndex
-        {
-            let     newPin     = pinCentral.pinArray[pinCentral.newPinIndex]
-            
-            
-            centerMapOnUserLocation = false
-            coordinateToCenterMapOn = CLLocationCoordinate2DMake( newPin.latitude, newPin.longitude )
-            logVerbose( "center map on pin[ %d ]", pinCentral.newPinIndex )
-        }
-        
-    }
-
-    
-    func pinEditViewController( pinEditViewController: PinEditViewController,
-                                wantsToCenterMapAt coordinate: CLLocationCoordinate2D )
-    {
-        logTrace()
-        coordinateToCenterMapOn = coordinate
-        centerMapOnUserLocation = false
-    }
-    
-    
-
     // MARK: Target/Action Methods
     
     @IBAction @objc func addBarButtonItemTouched(_ sender: UIBarButtonItem )
@@ -502,7 +537,7 @@ class MapViewController: UIViewController,
         logTrace()
         PinCentral.sharedInstance.delegate = self
         
-        launchPinEditorForPinAt( index: NEW_PIN )
+        launchLocationEditorForPinAt( index: NEW_PIN )
    }
     
     
@@ -568,84 +603,97 @@ class MapViewController: UIViewController,
     
     private func examinePointAnnotation( pointAnnotation: PointAnnotation )
     {
-        DispatchQueue.main.asyncAfter(deadline: ( .now() + 1.0 ), execute:
+        if let pinIndex = pointAnnotation.pinIndex
         {
-            logTrace()
-            let     pin = PinCentral.sharedInstance.pinArray[pointAnnotation.pinIndex!]
+            logVerbose( "Fetching annotation at index[ %d ]", pinIndex )
+            let     pin = PinCentral.sharedInstance.pinArray[pinIndex]
             
             
             if ( ( pointAnnotation.coordinate.latitude != pin.latitude ) || ( pointAnnotation.coordinate.longitude != pin.longitude ) )
             {
                 self.ignoreRefresh = true
-                self.updatePinCoordinatesUsing( pointAnnotation: pointAnnotation )
+                DispatchQueue.main.asyncAfter(deadline: ( .now() + 1.0 ), execute:
+                {
+                    self.updatePinCoordinatesUsing( pointAnnotation: pointAnnotation )
+                } )
+                
             }
             
-        } )
-        
+        }
+        else
+        {
+            logTrace( "ERROR: pointAnnotation.pinIndex could NOT be unwrapped!" )
+        }
+            
     }
 
     
-    private func launchPinEditorForPinAt( index: Int )
+    private func launchLocationEditorForPinAt( index: Int )
     {
-        logTrace()
-        let         pinEditVC: PinEditViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_EDITOR ) as! PinEditViewController
-
-        
-        pinEditVC.delegate                = self
-        pinEditVC.indexOfItemBeingEdited  = index
-        pinEditVC.launchedFromDetailView  = ( .pad == UIDevice.current.userInterfaceIdiom )
-        
-        if NEW_PIN == index
+        logVerbose( "[ %d ]", index )
+        if let locationEditorVC: LocationEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_LOCATION_EDITOR ) as? LocationEditorViewController
         {
-            pinEditVC.centerOfMap    = myMapView.centerCoordinate
-            pinEditVC.useCenterOfMap = true
+            locationEditorVC.delegate                = self
+            locationEditorVC.indexOfItemBeingEdited  = index
+            locationEditorVC.launchedFromDetailView  = ( .pad == UIDevice.current.userInterfaceIdiom )
+            
+            if NEW_PIN == index
+            {
+                locationEditorVC.centerOfMap    = myMapView.centerCoordinate
+                locationEditorVC.useCenterOfMap = true
+            }
+            else
+            {
+                locationEditorVC.useCenterOfMap = false
+            }
+            
+            if .phone == UIDevice.current.userInterfaceIdiom
+            {
+                navigationController?.pushViewController( locationEditorVC, animated: true )
+            }
+            else
+            {
+                let     navigationController = UINavigationController.init( rootViewController: locationEditorVC )
+                
+                
+                navigationController.modalPresentationStyle = .formSheet
+                
+                present( navigationController, animated: true, completion: nil )
+                
+                navigationController.popoverPresentationController?.delegate                 = self
+                navigationController.popoverPresentationController?.permittedArrowDirections = .any
+                navigationController.popoverPresentationController?.sourceRect               = view.frame
+                navigationController.popoverPresentationController?.sourceView               = view
+            }
+            
+            showingPinEditor = true
         }
         else
         {
-            pinEditVC.useCenterOfMap = false
-        }
-
-        if .phone == UIDevice.current.userInterfaceIdiom
-        {
-            navigationController?.pushViewController( pinEditVC, animated: true )
-        }
-        else
-        {
-            let     navigationController = UINavigationController.init( rootViewController: pinEditVC )
-            
-            
-            navigationController.modalPresentationStyle = .formSheet
-            
-            present( navigationController, animated: true, completion: nil )
-            
-            navigationController.popoverPresentationController?.delegate                 = self
-            navigationController.popoverPresentationController?.permittedArrowDirections = .any
-            navigationController.popoverPresentationController?.sourceRect               = view.frame
-            navigationController.popoverPresentationController?.sourceView               = view
+            logTrace( "ERROR: Could NOT load LocationEditorViewController!" )
         }
         
-        showingPinEditor = true
     }
     
     
     private func loadBarButtonItems()
     {
         logTrace()
-        addBarButtonItem        = UIBarButtonItem.init( barButtonSystemItem: .add,
-                                                        target: self,
-                                                        action: #selector( addBarButtonItemTouched(_:) ) )
+        addBarButtonItem          = UIBarButtonItem.init( barButtonSystemItem: .add,
+                                                          target: self,
+                                                          action: #selector( addBarButtonItemTouched(_:) ) )
         let     dartBarButtonItem = UIBarButtonItem.init( image:  UIImage.init(named: "dart" ),
                                                           style: .plain,
                                                           target: self,
                                                           action: #selector( dartBarButtonItemTouched(_:) ) )
-        directionsBarButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Directions", comment: "Directions" ),
-                                                        style: .plain,
-                                                        target: self,
-                                                        action: #selector( directionsBarButtonItemTouched(_:) ) )
-        mapTypeBarButtonItem    = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.MapType", comment: "Map Type" ),
-                                                        style: .plain,
-                                                        target: self,
-                                                        action: #selector( mapTypeBarButtonItemTouched(_:) ) )
+        directionsBarButtonItem   = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Directions", comment: "Directions" ),
+                                                          style: .plain,
+                                                          target: self,
+                                                          action: #selector( directionsBarButtonItemTouched(_:) ) )
+        mapTypeBarButtonItem      = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.MapType", comment: "Map Type" ),
+                                                          style: .plain,
+                                                          target: self,
+                                                          action: #selector( mapTypeBarButtonItemTouched(_:) ) )
         
         navigationItem.leftBarButtonItems  = [dartBarButtonItem, directionsBarButtonItem]
         navigationItem.rightBarButtonItems = [addBarButtonItem, mapTypeBarButtonItem]
@@ -677,56 +725,65 @@ class MapViewController: UIViewController,
             let     request = MKDirectionsRequest()
             
             
-            request.destination             = MKMapItem( placemark: MKPlacemark( coordinate: selectedPointAnnotation         .coordinate, addressDictionary: nil ) )
-            request.requestsAlternateRoutes = true
-            request.source                  = MKMapItem( placemark: MKPlacemark( coordinate: myMapView.userLocation.location!.coordinate, addressDictionary: nil ) )
-            request.transportType           = .automobile
-            
-            
-            let     directions = MKDirections( request: request )
-            
-            
-            directions.calculate
-            { ( response, error ) -> Void in
+            if let myAnnotation = selectedPointAnnotation,
+               let location     = myMapView.userLocation.location
+            {
+                request.destination             = MKMapItem( placemark: MKPlacemark( coordinate: myAnnotation.coordinate, addressDictionary: nil ) )
+                request.requestsAlternateRoutes = true
+                request.source                  = MKMapItem( placemark: MKPlacemark( coordinate: location.coordinate, addressDictionary: nil ) )
+                request.transportType           = .automobile
                 
-                guard let response = response else
-                {
-                    if let error = error
-                    {
-                        let         errorMessage = String.init( format: "%@\n%@", NSLocalizedString( "AlertMessage.NoRoutesAvailable", comment: "Unable to find a route to this location." ), error.localizedDescription )
-                        
-                        
-                        logVerbose( "ERROR!  We failed to get directions!  Error[ %@ ]", error.localizedDescription )
-                        self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                                           message: errorMessage )
-                    }
-                    
-                    return
-                }
                 
-                if ( 0 == response.routes.count )
-                {
-                    logTrace( "Can't get there from here!  No routes!" )
-                    self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                                       message: NSLocalizedString( "AlertMessage.NoRoutesAvailable", comment: "Unable to find a route to this location." ) )
+                let     directions = MKDirections( request: request )
+                
+                
+                directions.calculate
+                    { ( response, error ) -> Void in
+                        
+                        guard let response = response else
+                        {
+                            if let error = error
+                            {
+                                let         errorMessage = String.init( format: "%@\n%@", NSLocalizedString( "AlertMessage.NoRoutesAvailable", comment: "Unable to find a route to this location." ), error.localizedDescription )
+                                
+                                
+                                logVerbose( "ERROR: We failed to get directions!  [ %@ ]", error.localizedDescription )
+                                self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                                                   message: errorMessage )
+                            }
+                            
+                            return
+                        }
+                        
+                        if ( 0 == response.routes.count )
+                        {
+                            logTrace( "Can't get there from here!  No routes!" )
+                            self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                                               message: NSLocalizedString( "AlertMessage.NoRoutesAvailable", comment: "Unable to find a route to this location." ) )
+                        }
+                        else
+                        {
+                            self.myMapView.add( response.routes[0].polyline )
+                            
+                            if 1 < response.routes.count
+                            {
+                                self.myMapView.add( response.routes[1].polyline )
+                            }
+                            
+                            self.myMapView.mapType = .hybrid
+                            self.myMapView.setUserTrackingMode( .follow, animated: true )
+                            self.myMapView.setVisibleMapRect( response.routes[0].polyline.boundingMapRect, animated: true )
+                            
+                            self.directionsBarButtonItem.title = NSLocalizedString( "ButtonTitle.EndDirections", comment: "End Directions" )
+                            self.showingDirectionsOverlay      = true
+                        }
+                        
                 }
-                else
-                {
-                    self.myMapView.add( response.routes[0].polyline )
-                    
-                    if 1 < response.routes.count
-                    {
-                        self.myMapView.add( response.routes[1].polyline )
-                    }
-                    
-                    self.myMapView.mapType = .hybrid
-                    self.myMapView.setUserTrackingMode( .follow, animated: true )
-                    self.myMapView.setVisibleMapRect( response.routes[0].polyline.boundingMapRect, animated: true )
 
-                    self.directionsBarButtonItem.title = NSLocalizedString( "ButtonTitle.EndDirections", comment: "End Directions" )
-                    self.showingDirectionsOverlay      = true
-                }
-                
+            }
+            else
+            {
+                logTrace( "ERROR: Count NOT assign selectedPointAnnotation OR unwrap myMapView.userLocation.location!" )
             }
             
         }
@@ -889,16 +946,24 @@ class MapViewController: UIViewController,
     
     private func updatePinCoordinatesUsing( pointAnnotation: PointAnnotation )
     {
-        logTrace()
-        let     pinCentral = PinCentral.sharedInstance
-        let     pin        = pinCentral.pinArray[pointAnnotation.pinIndex!]
+        if let pinIndex = pointAnnotation.pinIndex
+        {
+            logVerbose( "pointAnnotation.pinIndex[ %d ]", pinIndex )
+            let     pinCentral = PinCentral.sharedInstance
+            let     pin        = pinCentral.pinArray[pinIndex]
+            
+            
+            pin.latitude  = pointAnnotation.coordinate.latitude
+            pin.longitude = pointAnnotation.coordinate.longitude
+            
+            pinCentral.delegate = self
+            pinCentral.saveUpdatedPin( pin: pin )
+        }
+        else
+        {
+            logVerbose( "ERROR: pointAnnotation.pinIndex cound NOT be unwrapped!" )
+        }
         
-        
-        pin.latitude  = pointAnnotation.coordinate.latitude
-        pin.longitude = pointAnnotation.coordinate.longitude
-        
-        pinCentral.delegate = self
-        pinCentral.saveUpdatedPin( pin: pin )
     }
     
     

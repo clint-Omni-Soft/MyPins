@@ -26,29 +26,26 @@ protocol PinCentralDelegate: class
 class PinCentral: NSObject,
                   CLLocationManagerDelegate
 {
-    let DATABASE_NAME               = "PinsDB.sqlite"
-    let DISPLAY_UNITS_ALTITUDE      = "DisplayUnitsAltitude"
-    let ENTITY_NAME_PIN             = "Pin"
-    let NOTIFICATION_CENTER_MAP     = "CenterMap"
-    let NOTIFICATION_PINS_UPDATED   = "PinsUpdated"
-    let USER_INFO_LATITUDE          = "Latitude"
-    let USER_INFO_LONGITUDE         = "Longitude"
-    
-    
+    // MARK: Public Variables
     weak var delegate:      PinCentralDelegate?
 
-    var     currentAltitude       = 0.0
-    var     currentLocation       = CLLocationCoordinate2DMake( 0.0, 0.0 )
-    var     didOpenDatabase       = false
-    var     indexOfSelectedPin    = NO_SELECTION
-    var     locationEstablished   = false
-    var     newPinIndex           = NEW_PIN
-    var     pinArray              = [Pin].init()
+    var currentAltitude       = 0.0
+    var currentLocation       = CLLocationCoordinate2DMake( 0.0, 0.0 )
+    var didOpenDatabase       = false
+    var indexOfSelectedPin    = NO_SELECTION
+    var locationEstablished   = false
+    var newPinIndex           = NEW_PIN
+    var pinArray              = [Pin].init()
 
-    private var     locationManager         : CLLocationManager?
-    private var     managedObjectContext    : NSManagedObjectContext!
-    private var     newPinGuid              = ""
-    private var     persistentContainer     : NSPersistentContainer!
+    
+    // MARK: Private Variables
+    private let DATABASE_NAME   = "PinsDB.sqlite"
+    private let ENTITY_NAME_PIN = "Pin"
+    
+    private var locationManager      : CLLocationManager?
+    private var managedObjectContext : NSManagedObjectContext!
+    private var newPinGuid           = ""
+    private var persistentContainer  : NSPersistentContainer!
 
     
     
@@ -58,7 +55,7 @@ class PinCentral: NSObject,
 
 
     
-    // MARK: Database Access Methods
+    // MARK: Database Access Methods (Public)
     
     func openDatabase()
     {
@@ -109,7 +106,7 @@ class PinCentral: NSObject,
     
     
     
-    // MARK: Pin Access/Modifier Methods
+    // MARK: Pin Access/Modifier Methods (Public)
     
     func addPin( name:      String,
                  details:   String,
@@ -142,7 +139,7 @@ class PinCentral: NSObject,
             pin.name            = name
             pin.pinColor        = pinColor
             
-            self.newPinGuid = pin.guid!
+            self.newPinGuid = pin.guid ?? "Unwrapping Failed"
             
             self.saveContext()
             self.refetchPinsAndNotifyDelegate()
@@ -211,7 +208,7 @@ class PinCentral: NSObject,
     
     
     
-    // MARK: Image Convenience Methods
+    // MARK: Image Convenience Methods (Public)
     
     func deleteImageWith( name: String ) -> Bool
     {
@@ -249,7 +246,7 @@ class PinCentral: NSObject,
         var         units = DISPLAY_UNITS_METERS
         
         
-        if let displayUnits = UserDefaults.standard.string( forKey: PinCentral.sharedInstance.DISPLAY_UNITS_ALTITUDE )
+        if let displayUnits = UserDefaults.standard.string( forKey: DISPLAY_UNITS_ALTITUDE )
         {
             if !displayUnits.isEmpty
             {
@@ -275,15 +272,25 @@ class PinCentral: NSObject,
             let     imageFileData        = FileManager.default.contents( atPath: imageFileURL.path )
             
             
-            if let image = UIImage.init( data: imageFileData! )
+            if let imageData = imageFileData
             {
-//                logVerbose( "Loaded image named [ %@ ]", name )
-                return image
+                if let image = UIImage.init( data: imageData )
+                {
+//                    logVerbose( "Loaded image named [ %@ ]", name )
+                    return image
+                }
+                
+            }
+            else
+            {
+                logVerbose( "ERROR!  Failed to load data for image [ %@ ]", name )
             }
             
         }
-        
-        logVerbose( "ERROR!  Failed to load image for [ %@ ]", name )
+        else
+        {
+            logVerbose( "ERROR!  directoryPath is Empty!" )
+        }
         
         return UIImage.init()
     }
@@ -409,7 +416,7 @@ class PinCentral: NSObject,
             pinArray = fetchedPins.sorted( by:
                         { (pin1, pin2) -> Bool in
                     
-                            pin1.name! < pin2.name!
+                            pin1.name! < pin2.name!     // We can do this because the name is a required field that must be unique
                         } )
             
             newPinIndex = NEW_PIN
@@ -437,8 +444,6 @@ class PinCentral: NSObject,
     
     private func loadCoreData()
     {
-        logTrace()
-
         guard let modelURL = Bundle.main.url( forResource: "MyPins", withExtension: "momd" ) else
         {
             logTrace( "Error!  Could NOT load model from bundle!" )
@@ -572,7 +577,7 @@ class PinCentral: NSObject,
 
 
 
-// MARK: Global Utility Methods
+// MARK: Public Definitions & Utility Methods
 
 struct PinColors
 {
@@ -624,11 +629,17 @@ let pinColorNameArray = [ NSLocalizedString( "PinColor.Black"    , comment:  "Bl
                           NSLocalizedString( "PinColor.White"    , comment:  "White"      ),
                           NSLocalizedString( "PinColor.Yellow"   , comment:  "Yellow"     )]
 
-let DISPLAY_UNITS_FEET      = "ft"
-let DISPLAY_UNITS_METERS    = "m"
-let FEET_PER_METER          = 3.28084
-let NEW_PIN                 = -1
-let NO_SELECTION            = -1
+
+let DISPLAY_UNITS_ALTITUDE      = "DisplayUnitsAltitude"
+let DISPLAY_UNITS_FEET          = "ft"
+let DISPLAY_UNITS_METERS        = "m"
+let FEET_PER_METER              = 3.28084
+let NEW_PIN                     = -1
+let NO_SELECTION                = -1
+let NOTIFICATION_CENTER_MAP     = "CenterMap"
+let NOTIFICATION_PINS_UPDATED   = "PinsUpdated"
+let USER_INFO_LATITUDE          = "Latitude"
+let USER_INFO_LONGITUDE         = "Longitude"
 
 
 
@@ -654,88 +665,5 @@ func iPhoneViewControllerWithStoryboardId( storyboardId: String ) -> UIViewContr
     
     return viewController
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-// MARK: Dumpster Diving Area
-
-/*
-func addNewPinAtCurrentUserLocation()   // Should only be called iff locationEstablished == true
-{
-    if !self.didOpenDatabase
-    {
-        logTrace( "ERROR!  Database NOT open yet!" )
-        return
-    }
-    
-    if !self.locationEstablished
-    {
-        return
-    }
-    
-    logTrace()
-    
-    persistentContainer.viewContext.perform
-        {
-            let     pin = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_PIN, into: self.managedObjectContext ) as! Pin
-            
-            
-            pin.altitude        = self.currentAltitude!
-            pin.details         = ""
-            pin.guid            = UUID().uuidString
-            pin.imageName       = ""
-            pin.lastModified    = NSDate.init()
-            pin.latitude        = self.currentLocation!.latitude
-            pin.longitude       = self.currentLocation!.longitude
-            pin.name            = "New Pin"
-            
-            self.newPinGuid = pin.guid
-            
-            self.saveContext()
-            self.refetchPinsAndNotifyDelegate()
-    }
-    
-}
-
-
-// This was a test I took for YNAB
-func sortedArray( inputArray: [Int] )->[Int]
-{
-    var myDictionary = [Int: Int]()
-    
-    
-    for value in inputArray
-    {
-        myDictionary[value] = 0
-    }
-    
-    
-    let     myArray = myDictionary.keys
-    
-    return myArray.sorted()
-}
- */
-
-
-
-
-
-
-
-
-
-
-
-
 
 

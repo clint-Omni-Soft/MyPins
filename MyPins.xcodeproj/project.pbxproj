@@ -11,6 +11,7 @@
 		F400B4CC20572E0000556F51 /* MyPins.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F400B4CA20572E0000556F51 /* MyPins.xcdatamodeld */; };
 		F400B4CE20572E0000556F51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F400B4CD20572E0000556F51 /* Assets.xcassets */; };
 		F400B4D120572E0000556F51 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F400B4CF20572E0000556F51 /* LaunchScreen.storyboard */; };
+		F403EF8822C17780000D9ABD /* LocationEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F403EF8722C17780000D9ABD /* LocationEditorViewController.swift */; };
 		F427C5A120ABA36D005F3F0C /* ZLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F427C59F20ABA36D005F3F0C /* ZLogKit.framework */; };
 		F427C5A220ABA36D005F3F0C /* ZLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F427C59F20ABA36D005F3F0C /* ZLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF84209A293600DBA3CD /* HowToUseViewController.swift */; };
@@ -28,7 +29,6 @@
 		F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */; };
 		F49B9A59207D406B007598F9 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */; };
 		F49B9A5B207D587E007598F9 /* appIcon MASTER.png in Resources */ = {isa = PBXBuildFile; fileRef = F49B9A5A207D587D007598F9 /* appIcon MASTER.png */; };
-		F49F8119207A6FEE009970E7 /* PinEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49F8118207A6FEE009970E7 /* PinEditViewController.swift */; };
 		F4B47FEB205734880027755B /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FEA205734880027755B /* ListTableViewController.swift */; };
 		F4B47FED205734A80027755B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FEC205734A80027755B /* MapViewController.swift */; };
 		F4B47FF2205734F40027755B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B47FF1205734F40027755B /* MapKit.framework */; };
@@ -60,6 +60,7 @@
 		F400B4D220572E0000556F51 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F40319BF20A38A2D00D33372 /* MyPins-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyPins-Prefix.pch"; sourceTree = "<group>"; };
 		F40319FC20A3C3B900D33372 /* MyPins-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyPins-Bridging-Header.h"; sourceTree = "<group>"; };
+		F403EF8722C17780000D9ABD /* LocationEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEditorViewController.swift; sourceTree = "<group>"; };
 		F427C59F20ABA36D005F3F0C /* ZLogKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZLogKit.framework; path = "../ZKits/ZKits-Debug/ZLogKit.framework"; sourceTree = "<group>"; };
 		F427FF84209A293600DBA3CD /* HowToUseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseViewController.swift; sourceTree = "<group>"; };
 		F427FF86209A2A6B00DBA3CD /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -84,7 +85,6 @@
 		F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutContraint+Extension.swift"; sourceTree = "<group>"; };
 		F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		F49B9A5A207D587D007598F9 /* appIcon MASTER.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appIcon MASTER.png"; path = "AppIcon/appIcon MASTER.png"; sourceTree = "<group>"; };
-		F49F8118207A6FEE009970E7 /* PinEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinEditViewController.swift; sourceTree = "<group>"; };
 		F4B47FEA205734880027755B /* ListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
 		F4B47FEC205734A80027755B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		F4B47FF1205734F40027755B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -165,10 +165,10 @@
 			children = (
 				F427FF84209A293600DBA3CD /* HowToUseViewController.swift */,
 				F4B47FEA205734880027755B /* ListTableViewController.swift */,
+				F403EF8722C17780000D9ABD /* LocationEditorViewController.swift */,
 				F4B47FEC205734A80027755B /* MapViewController.swift */,
 				F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */,
 				F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */,
-				F49F8118207A6FEE009970E7 /* PinEditViewController.swift */,
 				F49766AC205B11AE00A76F9D /* PointAnnotation.swift */,
 				F427FF86209A2A6B00DBA3CD /* SettingsTableViewController.swift */,
 				F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */,
@@ -297,12 +297,12 @@
 				F4B47FF9205746A80027755B /* Pin.swift in Sources */,
 				F400B4C420572E0000556F51 /* AppDelegate.swift in Sources */,
 				F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */,
+				F403EF8822C17780000D9ABD /* LocationEditorViewController.swift in Sources */,
 				F47F447F20AA003600E6696C /* Logger.swift in Sources */,
 				F4B47FF5205745130027755B /* PinCentral.swift in Sources */,
 				F49B9A59207D406B007598F9 /* SplashScreenViewController.swift in Sources */,
 				F4B47FED205734A80027755B /* MapViewController.swift in Sources */,
 				F427FF87209A2A6B00DBA3CD /* SettingsTableViewController.swift in Sources */,
-				F49F8119207A6FEE009970E7 /* PinEditViewController.swift in Sources */,
 				F4982F6A207BEF9B00A30D40 /* PinColorSelectorViewController.swift in Sources */,
 				F438F6DC2061D0B10032F465 /* SplitViewController.swift in Sources */,
 			);

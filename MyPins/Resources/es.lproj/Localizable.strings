@@ -46,6 +46,7 @@
 "ButtonTitle.Standard"              = "Estándar";
 "ButtonTitle.ToggleUnits"           = "Conmutar unidades";
 "ButtonTitle.ZoomIn"                = "Acercarse";
+"ButtonTitle.Units"                 = "Unidades";
 "ButtonTitle.UseCurrent"            = "Usar la ubicación actual";
 "ButtonTitle.Yes"                   = "Sí";
 
@@ -64,6 +65,7 @@
 "LableText.HowToUse09"              = "Tocar el botón Indicaciones en este momento agregará hasta dos rutas diferentes desde su posición actual al pin seleccionado.  ";
 "LableText.HowToUse10"              = "(Tenga en cuenta que el nombre del botón Indicaciones se habrá cambiado a Direcciones finales). Al tocar el botón Finalizar indicaciones, se eliminarán las rutas del mapa.\n\n";
 "LabelText.Latitude"                = "Latitud";
+"LabelText.Location"                = "Ubicación";
 "LabelText.Longitude"               = "Longitud";
 "LabelText.Name"                    = "Nombre";
 

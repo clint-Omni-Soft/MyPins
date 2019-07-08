@@ -46,6 +46,7 @@
 "ButtonTitle.Standard"              = "la norme";
 "ButtonTitle.ToggleUnits"           = "Toggle Unités";
 "ButtonTitle.ZoomIn"                = "Agrandir";
+"ButtonTitle.Units"                 = "Unités";
 "ButtonTitle.UseCurrent"            = "Utiliser la position actuelle";
 "ButtonTitle.Yes"                   = "Oui";
 
@@ -64,6 +65,7 @@
 "LableText.HowToUse09"              = "Si vous appuyez sur le bouton Itinéraires à ce moment-là, vous pouvez ajouter jusqu'à deux itinéraires différents de votre position actuelle à la broche sélectionnée.  ";
 "LableText.HowToUse10"              = "(Notez que le nom du bouton de directions aura été modifié en directions de fin.) Si vous appuyez sur le bouton End Directions, les itinéraires seront supprimés de la carte.\n\n";
 "LabelText.Latitude"                = "Latitude";
+"LabelText.Location"                = "Emplacement";
 "LabelText.Longitude"               = "Longitude";
 "LabelText.Name"                    = "Nom";
 

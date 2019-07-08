@@ -45,7 +45,7 @@ class SettingsTableViewController: UITableViewController
     // MARK: UITableViewDataSource Methods
     
     override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath ) -> UITableViewCell
+                              cellForRowAt indexPath: IndexPath ) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCell( withIdentifier: CELL_IDENTIFIER,
                                                   for: indexPath)
@@ -57,7 +57,7 @@ class SettingsTableViewController: UITableViewController
     
     
     override func tableView(_ tableView: UITableView,
-                            numberOfRowsInSection section: Int ) -> Int
+                              numberOfRowsInSection section: Int ) -> Int
     {
         return rowTitleArray.count
     }
@@ -67,7 +67,7 @@ class SettingsTableViewController: UITableViewController
     // MARK: - UITableViewDelegate Methods
     
     override func tableView(_ tableView: UITableView,
-                            didSelectRowAt indexPath: IndexPath )
+                              didSelectRowAt indexPath: IndexPath )
     {
         logTrace()
         tableView.deselectRow( at: indexPath,

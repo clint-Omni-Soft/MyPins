@@ -14,13 +14,13 @@ import MapKit
 
 class ListTableViewController: UITableViewController,
                                PinCentralDelegate,
-                               PinEditViewControllerDelegate
+                               LocationEditorViewControllerDelegate
 {
-    let     CELL_TAG_LABEL_NAME         = 10
-    let     CELL_TAG_LABEL_DETAIL       = 11
-    let     CELL_TAG_IMAGE_VIEW         = 12
-    let     STORYBOARD_ID_EDITOR        = "PinEditViewController"
-    let     STORYBOARD_ID_MAP           = "MapViewController"
+    let     CELL_TAG_LABEL_NAME           = 10
+    let     CELL_TAG_LABEL_DETAIL         = 11
+    let     CELL_TAG_IMAGE_VIEW           = 12
+    let     STORYBOARD_ID_LOCATION_EDITOR = "LocationEditorViewController"
+    let     STORYBOARD_ID_MAP             = "MapViewController"
     
     
     
@@ -59,7 +59,7 @@ class ListTableViewController: UITableViewController,
         
         NotificationCenter.default.addObserver( self,
                                                 selector: #selector( ListTableViewController.pinsUpdated( notification: ) ),
-                                                name:     NSNotification.Name( rawValue: pinCentral.NOTIFICATION_PINS_UPDATED ),
+                                                name:     NSNotification.Name( rawValue: NOTIFICATION_PINS_UPDATED ),
                                                 object:   nil )
     }
 
@@ -79,6 +79,40 @@ class ListTableViewController: UITableViewController,
         super.didReceiveMemoryWarning()
     }
 
+    
+    
+    // MARK: LocationEditorViewControllerDelegate Methods
+    
+    func locationEditorViewController( locationEditorViewController: LocationEditorViewController,
+                                       didEditLocationData: Bool )
+    {
+        logVerbose( "didEditLocationData[ %@ ]", stringFor( didEditLocationData ) )
+        
+        PinCentral.sharedInstance.delegate = self
+        tableView.reloadData()
+    }
+    
+    
+    func locationEditorViewController( locationEditorViewController: LocationEditorViewController,
+                                       wantsToCenterMapAt coordinate: CLLocationCoordinate2D )
+    {
+        logTrace()
+        let     userInfoDictionary = [ USER_INFO_LATITUDE: coordinate.latitude, USER_INFO_LONGITUDE: coordinate.longitude ]
+        
+        
+        if .phone == UIDevice.current.userInterfaceIdiom
+        {
+            tabBarController?.selectedIndex = 1
+        }
+        
+        DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.1 ) )
+        {
+            NotificationCenter.default.post( name: NSNotification.Name( rawValue: NOTIFICATION_CENTER_MAP ),
+                                             object: self, userInfo: userInfoDictionary )
+        }
+        
+    }
+    
     
     
     // MARK: NSNotification Methods
@@ -122,47 +156,12 @@ class ListTableViewController: UITableViewController,
 
     
     
-    // MARK: PinEditViewControllerDelegate Methods
-    
-    func pinEditViewController( pinEditViewController: PinEditViewController,
-                                didEditPinData: Bool )
-    {
-        logVerbose( "didEditPinData[ %@ ]", stringFor( didEditPinData ) )
-        
-        PinCentral.sharedInstance.delegate = self
-        tableView.reloadData()
-    }
-    
-    
-    func pinEditViewController( pinEditViewController: PinEditViewController,
-                                wantsToCenterMapAt coordinate: CLLocationCoordinate2D )
-    {
-        logTrace()
-        let     pinCentral = PinCentral.sharedInstance
-        let     userInfoDictionary = [ pinCentral.USER_INFO_LATITUDE: coordinate.latitude, pinCentral.USER_INFO_LONGITUDE: coordinate.longitude ]
-        
-        
-        if .phone == UIDevice.current.userInterfaceIdiom
-        {
-            tabBarController?.selectedIndex = 1
-        }
-        
-        DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.1 ) )
-        {
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: pinCentral.NOTIFICATION_CENTER_MAP ),
-                                             object: self, userInfo: userInfoDictionary )
-        }
-
-    }
-
-    
-    
     // MARK: Target / Action Methods
     
     @IBAction @objc func addBarButtonItemTouched( barButtonItem: UIBarButtonItem )
     {
         logTrace()
-        launchPinEditForPinAt( index: NEW_PIN )
+        launchLocationEditorForPinAt( index: NEW_PIN)
     }
     
     
@@ -246,27 +245,32 @@ class ListTableViewController: UITableViewController,
                               didSelectRowAt indexPath: IndexPath)
     {
         logTrace()
-        launchPinEditForPinAt( index: indexPath.row )
+        launchLocationEditorForPinAt( index: indexPath.row )
     }
     
     
     
     // MARK: Utility Methods
     
-    private func launchPinEditForPinAt( index: Int )
+    private func launchLocationEditorForPinAt( index: Int )
     {
         logVerbose( "[ %d ]", index )
-        let         pinEditVC: PinEditViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_EDITOR ) as! PinEditViewController
+        if let locationEditorVC: LocationEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_LOCATION_EDITOR ) as? LocationEditorViewController
+        {
+            locationEditorVC.delegate                = self
+            locationEditorVC.indexOfItemBeingEdited  = index
+            locationEditorVC.launchedFromDetailView = false
+            
+            navigationController?.pushViewController( locationEditorVC, animated: true )
+        }
+        else
+        {
+            logTrace( "ERROR: Could NOT load LocationEditorViewController!" )
+        }
         
-        
-        pinEditVC.delegate                = self
-        pinEditVC.indexOfItemBeingEdited  = index
-        pinEditVC.launchedFromDetailView = false
-
-        navigationController?.pushViewController( pinEditVC, animated: true )
     }
-
-
+    
+    
     private func loadBarButtonItems()
     {
         logTrace()
@@ -276,10 +280,6 @@ class ListTableViewController: UITableViewController,
 
         navigationItem.rightBarButtonItem = addBarButtonItem
     }
-
-
-    
-    
 
 
     

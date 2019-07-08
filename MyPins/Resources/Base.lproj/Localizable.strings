@@ -46,6 +46,7 @@
 "ButtonTitle.Standard"              = "Standard";
 "ButtonTitle.ToggleUnits"           = "Toggle Units";
 "ButtonTitle.ZoomIn"                = "Zoom In";
+"ButtonTitle.Units"                 = "Units";
 "ButtonTitle.UseCurrent"            = "Use Current Location";
 "ButtonTitle.Yes"                   = "Yes";
 
@@ -64,6 +65,7 @@
 "LableText.HowToUse09"              = "Touching the Directions button at this time will add up to two different routes from your current position to the selected pin.  ";
 "LableText.HowToUse10"              = "(Note the Directions button name will have been changed to End Directions.)   Touching the End Directions button will remove the routes from the map.\n\n";
 "LabelText.Latitude"                = "Latitude";
+"LabelText.Location"                = "Location";
 "LabelText.Longitude"               = "Longitude";
 "LabelText.Name"                    = "Name";
 

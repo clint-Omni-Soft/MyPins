@@ -1,9 +1,9 @@
 //
-//  PinEditViewController.swift
+//  LocationEditorViewController.swift
 //  MyPins
 //
-//  Created by Clint Shank on 4/8/18.
-//  Copyright © 2018 Omni-Soft, Inc. All rights reserved.
+//  Created by Clint Shank on 6/24/19.
+//  Copyright © 2019 Omni-Soft, Inc. All rights reserved.
 //
 
 import UIKit
@@ -11,47 +11,43 @@ import MapKit
 
 
 
-protocol PinEditViewControllerDelegate: class
+protocol LocationEditorViewControllerDelegate: class
 {
-    func pinEditViewController( pinEditViewController: PinEditViewController,
-                                didEditPinData: Bool )
+    func locationEditorViewController( locationEditorViewController: LocationEditorViewController,
+                                       didEditLocationData: Bool )
     
-    func pinEditViewController( pinEditViewController: PinEditViewController,
-                                wantsToCenterMapAt coordinate: CLLocationCoordinate2D )
+    func locationEditorViewController( locationEditorViewController: LocationEditorViewController,
+                                       wantsToCenterMapAt coordinate: CLLocationCoordinate2D )
 }
 
 
 
-class PinEditViewController: UIViewController,
-                             PinCentralDelegate,
-                             PinColorSelectorViewControllerDelegate,
-                             UIImagePickerControllerDelegate,
-                             UINavigationControllerDelegate,  // Required for UIImagePickerControllerDelegate
-                             UIPopoverPresentationControllerDelegate
-{
+class LocationEditorViewController: UIViewController,
+                                    PinCentralDelegate,
+                                    PinColorSelectorViewControllerDelegate,
+                                    UIImagePickerControllerDelegate,
+                                    UINavigationControllerDelegate,  // Required for UIImagePickerControllerDelegate
+                                    UIPopoverPresentationControllerDelegate,
+                                    UITableViewDataSource,
+                                    UITableViewDelegate
+ {
+    let CELL_ID_DETAILS              = "LocationDetailsTableViewCell"
+    let CELL_ID_IMAGE                = "LocationImageTableViewCell"
     let STORYBOARD_ID_COLOR_SELECTOR = "PinColorSelectorViewController"
 
+    @IBOutlet weak var myTableView: UITableView!
     
-    @IBOutlet weak var locationImageView:   UIImageView!
-    @IBOutlet weak var cameraButton:        UIButton!
-    @IBOutlet weak var nameButton:          UIButton!
-    @IBOutlet weak var detailsButton:       UIButton!
-    @IBOutlet weak var locationButton:      UIButton!
-    @IBOutlet weak var unitsButton:         UIButton!
-    @IBOutlet weak var pinColorButton:      UIButton!
-    @IBOutlet weak var showOnMapButton:     UIButton!
-    
-    
-    weak var delegate: PinEditViewControllerDelegate?
+    weak var delegate: LocationEditorViewControllerDelegate?
     
     var     centerOfMap:                CLLocationCoordinate2D!     // Only set by MapViewController when indexOfItemBeingEdited == NEW_PIN
     var     indexOfItemBeingEdited:     Int!                        // Set by delegate
     var     launchedFromDetailView    = false                       // Set by delegate
     var     useCenterOfMap            = false                       // Only set by MapViewController when indexOfItemBeingEdited == NEW_PIN
-
+    
     private var     altitude                  = 0.0
     private var     changingColors            = false
     private var     details                   = String()
+    private var     detailsCell:                UITableViewCell?
     private var     firstTimeIn               = true
     private var     imageAssigned             = false
     private var     imageName                 = String()
@@ -79,9 +75,7 @@ class PinEditViewController: UIViewController,
 
         title = NSLocalizedString( "Title.PinEditor", comment: "Pin Editor" )
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init( barButtonSystemItem: .save,
-                                                                       target: self,
-                                                                       action: #selector( saveButtonTouched ) )
+        showSaveBarButtonItem(show: false)
         preferredContentSize = CGSize( width: 320, height: 460 )
         
         initializeVariables()
@@ -98,25 +92,28 @@ class PinEditViewController: UIViewController,
                                                                   style: .plain,
                                                                   target: self,
                                                                   action: #selector( cancelBarButtonTouched ) )
-        loadButtonTitles()
-        configurePhotoControls()
+        myTableView.reloadData()
         
         NotificationCenter.default.addObserver( self,
-                                                selector: #selector( PinEditViewController.pinsUpdated( notification: ) ),
-                                                name:     NSNotification.Name( rawValue: PinCentral.sharedInstance.NOTIFICATION_PINS_UPDATED ),
+                                                selector: #selector( LocationEditorViewController.pinsUpdated( notification: ) ),
+                                                name:     NSNotification.Name( rawValue: NOTIFICATION_PINS_UPDATED ),
                                                 object:   nil )
         
         if firstTimeIn && ( NEW_PIN == indexOfItemBeingEdited )
         {
             firstTimeIn = false
-            
+
             DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.1 ) )
             {
                 self.editNameAndDetails()
             }
-            
-        }
 
+        }
+        else
+        {
+            showSaveBarButtonItem(show: dataChanged())
+        }
+        
     }
     
     
@@ -143,6 +140,7 @@ class PinEditViewController: UIViewController,
     
     
     
+
     // MARK: NSNotification Methods
     
     @objc func pinsUpdated( notification: NSNotification )
@@ -158,9 +156,10 @@ class PinEditViewController: UIViewController,
         }
         
         initializeVariables()
-        loadButtonTitles()
-        configurePhotoControls()
-    }
+        myTableView.reloadData()
+        
+        self.showSaveBarButtonItem(show: self.dataChanged())
+   }
     
     
     
@@ -176,17 +175,17 @@ class PinEditViewController: UIViewController,
     func pinCentralDidReloadPinArray( pinCentral: PinCentral )
     {
         logVerbose( "loaded [ %d ] pins", pinCentral.pinArray.count )
-
+        
         if NEW_PIN == indexOfItemBeingEdited
         {
             logVerbose( "recovering pinIndex[ %d ]", pinCentral.newPinIndex )
             indexOfItemBeingEdited = pinCentral.newPinIndex
         }
-
+        
         dismissView()
-
-        delegate?.pinEditViewController( pinEditViewController: self,
-                                         didEditPinData: true )
+        
+        delegate?.locationEditorViewController( locationEditorViewController: self,
+                                                didEditLocationData: true )
     }
     
     
@@ -199,8 +198,7 @@ class PinEditViewController: UIViewController,
         logVerbose( "[ %d ][ %@ ]", color, pinColorNameArray[color] )
         pinColor = Int16( color )
         
-        loadButtonTitles()
-        configurePhotoControls()
+        self.populateDetailsCell()
         changingColors = false
     }
     
@@ -275,7 +273,7 @@ class PinEditViewController: UIViewController,
         {
             logTrace( "ERROR:  Unable to load PinColorSelectorViewController!" )
         }
-
+        
     }
     
     
@@ -310,9 +308,9 @@ class PinEditViewController: UIViewController,
         if dataChanged()
         {
             updatePinCentral()
-            
+
             savedPinBeforeShowingMap = true
-            
+
             logVerbose( "indexOfSelectedPin[ %d ] = indexOfItemBeingEdited[ %d ]", PinCentral.sharedInstance.indexOfSelectedPin, indexOfItemBeingEdited )
             PinCentral.sharedInstance.indexOfSelectedPin = indexOfItemBeingEdited
         }
@@ -320,10 +318,10 @@ class PinEditViewController: UIViewController,
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01 )
         {
             logTrace( "waiting for update from pinCentral" )
-            self.delegate?.pinEditViewController( pinEditViewController: self,
-                                                  wantsToCenterMapAt: CLLocationCoordinate2DMake( self.latitude, self.longitude ) )
+            self.delegate?.locationEditorViewController( locationEditorViewController: self,
+                                                         wantsToCenterMapAt: CLLocationCoordinate2DMake( self.latitude, self.longitude ) )
         }
-
+        
     }
     
     
@@ -331,12 +329,11 @@ class PinEditViewController: UIViewController,
     {
         logTrace()
         toggleDisplayUnits()
-        loadButtonTitles()
+        populateDetailsCell()
     }
     
     
-    
-    
+
     // MARK: UIImagePickerControllerDelegate Methods
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController )
@@ -351,7 +348,7 @@ class PinEditViewController: UIViewController,
     
     
     func imagePickerController(_ picker: UIImagePickerController,
-                                 didFinishPickingMediaWithInfo info: [String : Any] )
+                               didFinishPickingMediaWithInfo info: [String : Any] )
     {
         logTrace()
         if nil != presentedViewController
@@ -376,16 +373,15 @@ class PinEditViewController: UIViewController,
                     {
                         imageToSave = editedImage
                     }
-
+                    
                     if let myImageToSave = imageToSave
                     {
                         if .camera == picker.sourceType
                         {
-                            UIImageWriteToSavedPhotosAlbum( myImageToSave, self, #selector( PinEditViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
-                            //                    UIImageWriteToSavedPhotosAlbum( imageToSave!, nil, nil, nil )
+                            UIImageWriteToSavedPhotosAlbum( myImageToSave, self, #selector( LocationEditorViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
                         }
-
-                    
+                        
+                        
                         let     imageName = PinCentral.sharedInstance.saveImage( image: myImageToSave )
                         
                         
@@ -401,15 +397,17 @@ class PinEditViewController: UIViewController,
                             self.imageName     = imageName
                             
                             logVerbose( "Saved image as [ %@ ]", imageName )
-                            self.configurePhotoControls()
+                            self.myTableView.reloadRows(at: [IndexPath.init(item: 0, section: 0)], with: .none)
+                            
+                            self.showSaveBarButtonItem(show: self.dataChanged())
                         }
-
+                        
                     }
                     else
                     {
                         logTrace( "ERROR:  Unable to unwrap imageToSave!" )
                     }
-
+                    
                 }
                 else
                 {
@@ -417,7 +415,7 @@ class PinEditViewController: UIViewController,
                     self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                                        message: NSLocalizedString( "AlertMessage.InvalidMediaType", comment: "We can't save the item you selected.  We can only save photos." ) )
                 }
-
+                
             }
             else
             {
@@ -427,7 +425,7 @@ class PinEditViewController: UIViewController,
         }
         
     }
-
+    
     
     
     // MARK: UIImageWrite Completion Methods
@@ -451,6 +449,7 @@ class PinEditViewController: UIViewController,
         }
         
         logTrace( "Image successfully saved to photo album" )
+        self.showSaveBarButtonItem(show: self.dataChanged())
     }
     
     
@@ -464,18 +463,37 @@ class PinEditViewController: UIViewController,
     
     
     
-    // MARK: Utility Methods
+    // MARK: UITableViewDataSource
     
-    private func configurePhotoControls()
+    func tableView(_ tableView: UITableView,
+                     numberOfRowsInSection section: Int) -> Int
     {
-        logVerbose( "[ %@ ]", imageName )
-        locationImageView.image = ( imageName.isEmpty ? nil : PinCentral.sharedInstance.imageWith( name: imageName ) )
-        
-        cameraButton.setImage( ( imageName.isEmpty ? UIImage.init( named: "camera" ) : nil ),
-                               for: .normal )
-        cameraButton.backgroundColor = ( imageName.isEmpty ? .white : .clear )
+//        logTrace()
+        return 2
     }
     
+    
+    func tableView(_ tableView: UITableView,
+                     cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
+//        logVerbose( "row[ %d ]", indexPath.row)
+        let cell : UITableViewCell!
+        
+        if (indexPath.row == 0)
+        {
+            cell = loadImageViewCell()
+        }
+        else
+        {
+            cell = loadDetailsCell()
+        }
+
+        return cell
+    }
+    
+
+
+    // MARK: Utility Methods
     
     private func confirmIntentToDiscardChanges()
     {
@@ -517,7 +535,7 @@ class PinEditViewController: UIViewController,
             dataChanged = true
         }
         
-        logVerbose( "[ %@ ]", stringFor( dataChanged ) )
+//        logVerbose( "[ %@ ]", stringFor( dataChanged ) )
         
         return dataChanged
     }
@@ -534,6 +552,8 @@ class PinEditViewController: UIViewController,
         
         imageName     = String.init()
         imageAssigned = true
+        
+        self.showSaveBarButtonItem(show: self.dataChanged())
     }
     
     
@@ -548,7 +568,7 @@ class PinEditViewController: UIViewController,
         {
             navigationController?.popViewController( animated: true )
         }
-
+        
     }
     
     
@@ -574,19 +594,19 @@ class PinEditViewController: UIViewController,
                     {
                         logTrace( "ERROR:  Unable to convert text into a Double!  Returning defaultValue" )
                     }
-
+                    
                 }
                 else
                 {
                     logTrace( "ERROR:  Input string contained nothing but whitespace" )
                 }
-
+                
             }
             else
             {
                 logTrace( "ERROR:  Input string isEmpty!" )
             }
-
+            
         }
         else
         {
@@ -595,9 +615,9 @@ class PinEditViewController: UIViewController,
         
         return doubleValue
     }
-
-
-    private func editLatLongAndAlt()
+    
+    
+    @objc private func editLatLongAndAlt()
     {
         logTrace()
         let     pinCentral  = PinCentral.sharedInstance
@@ -612,7 +632,7 @@ class PinEditViewController: UIViewController,
             let     latitudeTextField  = alert.textFields![0] as UITextField
             let     longitudeTextField = alert.textFields![1] as UITextField
             let     altitudeTextField  = alert.textFields![2] as UITextField
-
+            
             
             self.latitude  = self.doubleFrom( text: latitudeTextField .text!, defaultValue: self.latitude  )
             self.longitude = self.doubleFrom( text: longitudeTextField.text!, defaultValue: self.longitude )
@@ -623,7 +643,7 @@ class PinEditViewController: UIViewController,
                 self.altitude = ( self.altitude / FEET_PER_METER )
             }
             
-            self.loadButtonTitles()
+            self.populateDetailsCell()
         }
         
         let     useCurrentAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.UseCurrent", comment: "Use Current Location" ), style: .default )
@@ -634,46 +654,46 @@ class PinEditViewController: UIViewController,
             self.longitude = pinCentral.currentLocation.longitude
             self.altitude  = pinCentral.currentAltitude
             
-            self.loadButtonTitles()
+            self.populateDetailsCell()
         }
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
         
         
         alert.addTextField
-        { ( textField ) in
-            
-            textField.text = String.init( format: "%7.4f", self.latitude )
-            textField.keyboardType = .decimalPad
+            { ( textField ) in
+                
+                textField.text = String.init( format: "%7.4f", self.latitude )
+                textField.keyboardType = .decimalPad
         }
         
         alert.addTextField
-        { ( textField ) in
-            
-            textField.text = String.init( format: "%7.4f", self.longitude )
-            textField.keyboardType = .decimalPad
+            { ( textField ) in
+                
+                textField.text = String.init( format: "%7.4f", self.longitude )
+                textField.keyboardType = .decimalPad
         }
         
         alert.addTextField
-        { ( textField ) in
-            
-            textField.text = ( ( DISPLAY_UNITS_FEET == pinCentral.displayUnits() ) ? String.init( format: "%7.1f", ( self.altitude * FEET_PER_METER ) ) : String.init( format: "%7.1f", self.altitude ) )
-            textField.keyboardType = .decimalPad
+            { ( textField ) in
+                
+                textField.text = ( ( DISPLAY_UNITS_FEET == pinCentral.displayUnits() ) ? String.init( format: "%7.1f", ( self.altitude * FEET_PER_METER ) ) : String.init( format: "%7.1f", self.altitude ) )
+                textField.keyboardType = .decimalPad
         }
         
         if PinCentral.sharedInstance.locationEstablished
         {
             alert.addAction( useCurrentAction )
         }
-
-        alert.addAction( saveAction        )
-        alert.addAction( cancelAction      )
+        
+        alert.addAction( saveAction   )
+        alert.addAction( cancelAction )
         
         present( alert, animated: true, completion: nil )
     }
     
     
-    private func editNameAndDetails()
+    @objc func editNameAndDetails()
     {
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditNameAndDetails", comment: "Edit name and details" ),
@@ -685,7 +705,7 @@ class PinEditViewController: UIViewController,
             logTrace( "Save Action" )
             let     nameTextField    = alert.textFields![0] as UITextField
             let     detailsTextField = alert.textFields![1] as UITextField
-
+            
             
             if let textString = nameTextField.text
             {
@@ -697,40 +717,40 @@ class PinEditViewController: UIViewController,
                 self.details = textString
             }
             
-            self.loadButtonTitles()
+            self.populateDetailsCell()
         }
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
         
         
         alert.addTextField
-        { ( textField ) in
-            
-            if self.name.isEmpty
-            {
-                textField.placeholder = NSLocalizedString( "LabelText.Name", comment: "Name" )
-            }
-            else
-            {
-                textField.text = self.name
-            }
-            
-            textField.autocapitalizationType = .words
+            { ( textField ) in
+                
+                if self.name.isEmpty
+                {
+                    textField.placeholder = NSLocalizedString( "LabelText.Name", comment: "Name" )
+                }
+                else
+                {
+                    textField.text = self.name
+                }
+                
+                textField.autocapitalizationType = .words
         }
         
         alert.addTextField
-        { ( textField ) in
-            
-            if self.details.isEmpty
-            {
-                textField.placeholder = NSLocalizedString( "LabelText.Details", comment: "Address / Description" )
-            }
-            else
-            {
-                textField.text = self.details
-            }
-            
-            textField.autocapitalizationType = .words
+            { ( textField ) in
+                
+                if self.details.isEmpty
+                {
+                    textField.placeholder = NSLocalizedString( "LabelText.Details", comment: "Address / Description" )
+                }
+                else
+                {
+                    textField.text = self.details
+                }
+                
+                textField.autocapitalizationType = .words
         }
         
         alert.addAction( saveAction   )
@@ -745,6 +765,12 @@ class PinEditViewController: UIViewController,
         logTrace()
         let         pinCentral = PinCentral.sharedInstance
         
+        
+        var         frame      = CGRect.zero
+        frame.size.height = .leastNormalMagnitude
+        myTableView.tableHeaderView = UIView(frame: frame)
+        myTableView.tableFooterView = UIView(frame: frame)
+        myTableView.contentInsetAdjustmentBehavior = .never
         
         if NEW_PIN == indexOfItemBeingEdited
         {
@@ -793,27 +819,50 @@ class PinEditViewController: UIViewController,
         originalLongitude   = longitude
         originalName        = name
         originalPinColor    = pinColor
-
+        
         imageAssigned = true
     }
     
     
-    func loadButtonTitles()
+    func loadDetailsCell() -> UITableViewCell
     {
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CELL_ID_DETAILS ) else
+        {
+            logVerbose("We FAILED to dequeueReusableCell")
+            return UITableViewCell.init()
+        }
+        
         logTrace()
-        let         units                  = PinCentral.sharedInstance.displayUnits()
-        let         altitudeInDesiredUnits = ( ( DISPLAY_UNITS_METERS == units ) ? altitude : ( altitude * FEET_PER_METER ) )
-        let         altitudeText           = String( format: "%7.1f", altitudeInDesiredUnits ).trimmingCharacters(in: .whitespaces)
+        detailsCell = cell
+        populateDetailsCell()
         
-        
-        detailsButton  .setTitle( ( details.isEmpty ? NSLocalizedString( "LabelText.Details", comment: "Address / Description" ) : details ), for: .normal )
-        nameButton     .setTitle( ( name   .isEmpty ? NSLocalizedString( "LabelText.Name",    comment: "Name"                  ) : name    ), for: .normal )
-        locationButton .setTitle( String( format: "%@: %7.4f, %7.4f at %@ %@", NSLocalizedString( "LabelText.Location",  comment: "Location" ),latitude, longitude, altitudeText, units ), for: .normal )
-        pinColorButton .setTitle( NSLocalizedString( "ButtonTitle.PinColor",  comment: "Pin Color"   ), for: .normal )
-        showOnMapButton.setTitle( NSLocalizedString( "ButtonTitle.ShowOnMap", comment: "Show on Map" ), for: .normal )
-        unitsButton    .setTitle( NSLocalizedString( "ButtonTitle.Units",     comment: "Units"       ), for: .normal )
+        return cell
+    }
 
-        pinColorButton .setTitleColor(pinColorArray[Int( pinColor )], for: .normal)
+
+    func loadImageViewCell() -> UITableViewCell
+    {
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CELL_ID_IMAGE ) else
+        {
+            logVerbose("We FAILED to dequeueReusableCell")
+            return UITableViewCell.init()
+        }
+        
+        
+        logTrace()
+        let         cameraButton      = cell.viewWithTag(11) as! UIButton
+        let         locationImageView = cell.viewWithTag(12) as! UIImageView
+
+        
+        cameraButton.addTarget(self, action: #selector(cameraButtonTouched(_:)), for: .touchUpInside )
+        
+        cameraButton.setImage( ( imageName.isEmpty ? UIImage.init( named: "camera" ) : nil ),
+                               for: .normal )
+        cameraButton.backgroundColor = ( imageName.isEmpty ? .white : .clear )
+
+        locationImageView.image = ( imageName.isEmpty ? nil : PinCentral.sharedInstance.imageWith( name: imageName ) )
+        
+        return cell
     }
     
     
@@ -832,8 +881,48 @@ class PinEditViewController: UIViewController,
         present( imagePickerVC, animated: true, completion: nil )
         
         imagePickerVC.popoverPresentationController?.permittedArrowDirections = .any
-        imagePickerVC.popoverPresentationController?.sourceRect               = cameraButton.frame
-        imagePickerVC.popoverPresentationController?.sourceView               = cameraButton
+        imagePickerVC.popoverPresentationController?.sourceRect               = myTableView.frame
+        imagePickerVC.popoverPresentationController?.sourceView               = myTableView
+    }
+    
+    
+    func populateDetailsCell()
+    {
+        guard let cell = detailsCell else {
+            logTrace( "detailsCell NOT set!" )
+            return
+        }
+        
+        logTrace()
+        let         units                  = PinCentral.sharedInstance.displayUnits()
+        let         altitudeInDesiredUnits = ( ( DISPLAY_UNITS_METERS == units ) ? altitude : ( altitude * FEET_PER_METER ) )
+        let         altitudeText           = String( format: "%7.1f", altitudeInDesiredUnits ).trimmingCharacters(in: .whitespaces)
+        
+        let         detailsButton   = cell.viewWithTag(12) as! UIButton
+        let         nameButton      = cell.viewWithTag(11) as! UIButton
+        let         locationButton  = cell.viewWithTag(13) as! UIButton
+        let         pinColorButton  = cell.viewWithTag(14) as! UIButton
+        let         showOnMapButton = cell.viewWithTag(16) as! UIButton
+        let         unitsButton     = cell.viewWithTag(15) as! UIButton
+        
+        
+        detailsButton   .addTarget(self, action: #selector(nameOrDetailsButtonTouched(_:)), for: .touchUpInside )
+        nameButton      .addTarget(self, action: #selector(nameOrDetailsButtonTouched(_:)), for: .touchUpInside )
+        locationButton  .addTarget(self, action: #selector(locationButtonTouched(_:)),      for: .touchUpInside )
+        pinColorButton  .addTarget(self, action: #selector(pinColorButtonTouched(_:)),      for: .touchUpInside )
+        showOnMapButton .addTarget(self, action: #selector(showOnMapButtonTouched(_:)),     for: .touchUpInside )
+        unitsButton     .addTarget(self, action: #selector(unitsButtonTouched(_:)),         for: .touchUpInside )
+        
+        detailsButton  .setTitle( ( details.isEmpty ? NSLocalizedString( "LabelText.Details", comment: "Address / Description" ) : details ), for: .normal )
+        nameButton     .setTitle( ( name   .isEmpty ? NSLocalizedString( "LabelText.Name",    comment: "Name"                  ) : name    ), for: .normal )
+        locationButton .setTitle( String( format: "%@: %7.4f, %7.4f at %@ %@", NSLocalizedString( "LabelText.Location",  comment: "Location" ),latitude, longitude, altitudeText, units ), for: .normal )
+        pinColorButton .setTitle( NSLocalizedString( "ButtonTitle.PinColor",  comment: "Pin Color"   ), for: .normal )
+        showOnMapButton.setTitle( NSLocalizedString( "ButtonTitle.ShowOnMap", comment: "Show on Map" ), for: .normal )
+        unitsButton    .setTitle( NSLocalizedString( "ButtonTitle.Units",     comment: "Units"       ), for: .normal )
+        
+        pinColorButton .setTitleColor(pinColorArray[Int( pinColor )], for: .normal)
+
+        self.showSaveBarButtonItem(show: self.dataChanged())
     }
     
     
@@ -849,7 +938,7 @@ class PinEditViewController: UIViewController,
             logTrace( "Delete Action" )
             
             self.deleteImage()
-            self.configurePhotoControls()
+            self.myTableView.reloadRows(at: [IndexPath.init(item: 0, section: 0)], with: .none)
         }
         
         let     replaceAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Replace", comment: "Replace" ), style: .default )
@@ -857,8 +946,8 @@ class PinEditViewController: UIViewController,
             logTrace( "Replace Action" )
             
             self.deleteImage()
-            self.configurePhotoControls()
-            
+            self.myTableView.reloadRows(at: [IndexPath.init(item: 0, section: 0)], with: .none)
+
             self.promptForImageSource()
         }
         
@@ -909,6 +998,22 @@ class PinEditViewController: UIViewController,
     }
     
     
+    private func showSaveBarButtonItem( show: Bool)
+    {
+        if show
+        {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem.init( barButtonSystemItem: .save,
+                                                                           target: self,
+                                                                           action: #selector( saveButtonTouched ) )
+        }
+        else
+        {
+            self.navigationItem.rightBarButtonItem = nil
+        }
+
+    }
+    
+    
     private func toggleDisplayUnits()
     {
         var     units = PinCentral.sharedInstance.displayUnits()
@@ -916,7 +1021,7 @@ class PinEditViewController: UIViewController,
         
         units = ( ( DISPLAY_UNITS_METERS == units ) ? DISPLAY_UNITS_FEET : DISPLAY_UNITS_METERS )
         
-        UserDefaults.standard.set( units, forKey: PinCentral.sharedInstance.DISPLAY_UNITS_ALTITUDE )
+        UserDefaults.standard.set( units, forKey: DISPLAY_UNITS_ALTITUDE )
         UserDefaults.standard.synchronize()
     }
     
@@ -959,10 +1064,6 @@ class PinEditViewController: UIViewController,
     }
     
     
-    
-    
-    
-    
-    
+
 
 }
