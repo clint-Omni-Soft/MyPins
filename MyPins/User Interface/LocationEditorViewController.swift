@@ -23,6 +23,8 @@ protocol LocationEditorViewControllerDelegate: class
 
 
 class LocationEditorViewController: UIViewController,
+                                    LocationDetailsTableViewCellDelegate,
+                                    LocationImageTableViewCellDelegate,
                                     PinCentralDelegate,
                                     PinColorSelectorViewControllerDelegate,
                                     UIImagePickerControllerDelegate,
@@ -31,12 +33,9 @@ class LocationEditorViewController: UIViewController,
                                     UITableViewDataSource,
                                     UITableViewDelegate
  {
-    let CELL_ID_DETAILS              = "LocationDetailsTableViewCell"
-    let CELL_ID_IMAGE                = "LocationImageTableViewCell"
-    let STORYBOARD_ID_COLOR_SELECTOR = "PinColorSelectorViewController"
-
     @IBOutlet weak var myTableView: UITableView!
     
+    // MARK: Public Variables
     weak var delegate: LocationEditorViewControllerDelegate?
     
     var     centerOfMap:                CLLocationCoordinate2D!     // Only set by MapViewController when indexOfItemBeingEdited == NEW_PIN
@@ -44,12 +43,19 @@ class LocationEditorViewController: UIViewController,
     var     launchedFromDetailView    = false                       // Set by delegate
     var     useCenterOfMap            = false                       // Only set by MapViewController when indexOfItemBeingEdited == NEW_PIN
     
+    
+    // MARK: Private Variables
+    private let     CELL_ID_DETAILS              = "LocationDetailsTableViewCell"
+    private let     CELL_ID_IMAGE                = "LocationImageTableViewCell"
+    private let     STORYBOARD_ID_COLOR_SELECTOR = "PinColorSelectorViewController"
+    
     private var     altitude                  = 0.0
     private var     changingColors            = false
     private var     details                   = String()
-    private var     detailsCell:                UITableViewCell?
+    private var     detailsCell               : LocationDetailsTableViewCell!   // Set in LocationDetailsTableViewCellDelegate Method
     private var     firstTimeIn               = true
     private var     imageAssigned             = false
+    private var     imageCell                 : LocationImageTableViewCell!     // Set in LocationImageTableViewCellDelegate Method
     private var     imageName                 = String()
     private var     latitude                  = 0.0
     private var     longitude                 = 0.0
@@ -60,8 +66,8 @@ class LocationEditorViewController: UIViewController,
     private var     originalLatitude          = 0.0
     private var     originalLongitude         = 0.0
     private var     originalName              = String()
-    private var     originalPinColor:           Int16!      // Set in initializeVariables()
-    private var     pinColor:                   Int16!      // Set in initializeVariables()
+    private var     originalPinColor          : Int16!      // Set in initializeVariables()
+    private var     pinColor                  : Int16!      // Set in initializeVariables()
     private var     savedPinBeforeShowingMap  = false
     
     
@@ -87,8 +93,7 @@ class LocationEditorViewController: UIViewController,
         logTrace()
         super.viewWillAppear( animated )
         
-        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: ( launchedFromDetailView ? NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ) :
-                                                                                                    NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   ) ),
+        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: ( launchedFromDetailView ? NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ) : NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   ) ),
                                                                   style: .plain,
                                                                   target: self,
                                                                   action: #selector( cancelBarButtonTouched ) )
@@ -99,17 +104,7 @@ class LocationEditorViewController: UIViewController,
                                                 name:     NSNotification.Name( rawValue: NOTIFICATION_PINS_UPDATED ),
                                                 object:   nil )
         
-        if firstTimeIn && ( NEW_PIN == indexOfItemBeingEdited )
-        {
-            firstTimeIn = false
-
-            DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.1 ) )
-            {
-                self.editNameAndDetails()
-            }
-
-        }
-        else
+        if !firstTimeIn || ( NEW_PIN != indexOfItemBeingEdited )
         {
             showSaveBarButtonItem(show: dataChanged())
         }
@@ -141,6 +136,109 @@ class LocationEditorViewController: UIViewController,
     
     
 
+    // MARK: LocationDetailsTableViewCellDelegate Methods
+    
+    func locationDetailsTableViewCell( locationDetailsTableViewCell: LocationDetailsTableViewCell,
+                                       requestingEditOfNameAndDetails: Bool )
+    {
+        logTrace()
+        editNameAndDetails(locationDetailsTableViewCell: locationDetailsTableViewCell)
+    }
+
+    
+    
+    func locationDetailsTableViewCell( locationDetailsTableViewCell: LocationDetailsTableViewCell,
+                                       requestingEditOfLocation: Bool )
+    {
+        logTrace()
+        editLatLongAndAlt(locationDetailsTableViewCell: locationDetailsTableViewCell)
+    }
+    
+    
+    func locationDetailsTableViewCell( locationDetailsTableViewCell: LocationDetailsTableViewCell,
+                                       requestingEditOfPinColor: Bool )
+    {
+        logTrace()
+        detailsCell = locationDetailsTableViewCell
+        
+        if let  pinColorSelectorVC: PinColorSelectorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_COLOR_SELECTOR ) as? PinColorSelectorViewController
+        {
+            changingColors = true
+            
+            pinColorSelectorVC.delegate         = self
+            pinColorSelectorVC.originalPinColor = pinColor
+            
+            pinColorSelectorVC.modalPresentationStyle = .formSheet
+            
+            present( pinColorSelectorVC, animated: true, completion: nil )
+            
+            pinColorSelectorVC.popoverPresentationController?.delegate                 = self
+            pinColorSelectorVC.popoverPresentationController?.permittedArrowDirections = .any
+            pinColorSelectorVC.popoverPresentationController?.sourceRect               = view.frame
+            pinColorSelectorVC.popoverPresentationController?.sourceView               = view
+        }
+        else
+        {
+            logTrace( "ERROR:  Unable to load PinColorSelectorViewController!" )
+        }
+    }
+    
+
+    func locationDetailsTableViewCell( locationDetailsTableViewCell: LocationDetailsTableViewCell,
+                                       requestingShowPinOnMap: Bool )
+    {
+        logTrace()
+
+        if name.isEmpty
+        {
+            logTrace( "ERROR:  Name field cannot be left blank!" )
+            presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                          message: NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank" ) )
+            return
+        }
+        
+        if dataChanged()
+        {
+            updatePinCentral()
+            
+            savedPinBeforeShowingMap = true
+            
+            logVerbose( "indexOfSelectedPin[ %d ] = indexOfItemBeingEdited[ %d ]", PinCentral.sharedInstance.indexOfSelectedPin, indexOfItemBeingEdited )
+            PinCentral.sharedInstance.indexOfSelectedPin = indexOfItemBeingEdited
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01 )
+        {
+            logTrace( "waiting for update from pinCentral" )
+            self.delegate?.locationEditorViewController( locationEditorViewController: self,
+                                                         wantsToCenterMapAt: CLLocationCoordinate2DMake( self.latitude, self.longitude ) )
+        }
+        
+    }
+    
+
+
+    // MARK: LocationImageTableViewCellDelegate Methods
+    
+    func locationImageTableViewCell( locationImageTableViewCell: LocationImageTableViewCell,
+                                     cameraButtonTouched: Bool )
+    {
+        logTrace()
+        imageCell = locationImageTableViewCell
+
+        if imageName.isEmpty
+        {
+            promptForImageSource()
+        }
+        else
+        {
+            promptForImageDispostion()
+        }
+
+    }
+    
+    
+    
     // MARK: NSNotification Methods
     
     @objc func pinsUpdated( notification: NSNotification )
@@ -198,28 +296,14 @@ class LocationEditorViewController: UIViewController,
         logVerbose( "[ %d ][ %@ ]", color, pinColorNameArray[color] )
         pinColor = Int16( color )
         
-        self.populateDetailsCell()
+        self.detailsCell.initialize()
+        
         changingColors = false
     }
     
     
     
     // MARK: Target/Action Methods
-    
-    @IBAction func cameraButtonTouched(_ sender: UIButton)
-    {
-        logTrace()
-        if imageName.isEmpty
-        {
-            promptForImageSource()
-        }
-        else
-        {
-            promptForImageDispostion()
-        }
-        
-    }
-    
     
     @IBAction func cancelBarButtonTouched( sender: UIBarButtonItem )
     {
@@ -231,47 +315,6 @@ class LocationEditorViewController: UIViewController,
         else
         {
             dismissView()
-        }
-        
-    }
-    
-    
-    @IBAction func nameOrDetailsButtonTouched(_ sender: UIButton )
-    {
-        logTrace()
-        editNameAndDetails()
-    }
-    
-    
-    @IBAction func locationButtonTouched(_ sender: UIButton )
-    {
-        logTrace()
-        editLatLongAndAlt()
-    }
-    
-    
-    @IBAction func pinColorButtonTouched(_ sender: UIButton )
-    {
-        logTrace()
-        if let  pinColorSelectorVC: PinColorSelectorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_COLOR_SELECTOR ) as? PinColorSelectorViewController
-        {
-            changingColors = true
-            
-            pinColorSelectorVC.delegate         = self
-            pinColorSelectorVC.originalPinColor = pinColor
-            
-            pinColorSelectorVC.modalPresentationStyle = .formSheet
-            
-            present( pinColorSelectorVC, animated: true, completion: nil )
-            
-            pinColorSelectorVC.popoverPresentationController?.delegate                 = self
-            pinColorSelectorVC.popoverPresentationController?.permittedArrowDirections = .any
-            pinColorSelectorVC.popoverPresentationController?.sourceRect               = view.frame
-            pinColorSelectorVC.popoverPresentationController?.sourceView               = view
-        }
-        else
-        {
-            logTrace( "ERROR:  Unable to load PinColorSelectorViewController!" )
         }
         
     }
@@ -291,45 +334,6 @@ class LocationEditorViewController: UIViewController,
             updatePinCentral()
         }
         
-    }
-    
-    
-    @IBAction func showOnMapButtonTouched(_ sender: UIButton)
-    {
-        logTrace()
-        if name.isEmpty
-        {
-            logTrace( "ERROR:  Name field cannot be left blank!" )
-            presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                          message: NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank" ) )
-            return
-        }
-        
-        if dataChanged()
-        {
-            updatePinCentral()
-
-            savedPinBeforeShowingMap = true
-
-            logVerbose( "indexOfSelectedPin[ %d ] = indexOfItemBeingEdited[ %d ]", PinCentral.sharedInstance.indexOfSelectedPin, indexOfItemBeingEdited )
-            PinCentral.sharedInstance.indexOfSelectedPin = indexOfItemBeingEdited
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01 )
-        {
-            logTrace( "waiting for update from pinCentral" )
-            self.delegate?.locationEditorViewController( locationEditorViewController: self,
-                                                         wantsToCenterMapAt: CLLocationCoordinate2DMake( self.latitude, self.longitude ) )
-        }
-        
-    }
-    
-    
-    @IBAction func unitsButtonTouched(_ sender: UIButton)
-    {
-        logTrace()
-        toggleDisplayUnits()
-        populateDetailsCell()
     }
     
     
@@ -397,8 +401,9 @@ class LocationEditorViewController: UIViewController,
                             self.imageName     = imageName
                             
                             logVerbose( "Saved image as [ %@ ]", imageName )
-                            self.myTableView.reloadRows(at: [IndexPath.init(item: 0, section: 0)], with: .none)
                             
+                            self.imageCell.initializeWith(imageName: self.imageName)
+
                             self.showSaveBarButtonItem(show: self.dataChanged())
                         }
                         
@@ -617,7 +622,7 @@ class LocationEditorViewController: UIViewController,
     }
     
     
-    @objc private func editLatLongAndAlt()
+    @objc private func editLatLongAndAlt(locationDetailsTableViewCell: LocationDetailsTableViewCell)
     {
         logTrace()
         let     pinCentral  = PinCentral.sharedInstance
@@ -643,7 +648,7 @@ class LocationEditorViewController: UIViewController,
                 self.altitude = ( self.altitude / FEET_PER_METER )
             }
             
-            self.populateDetailsCell()
+            locationDetailsTableViewCell.initialize()
         }
         
         let     useCurrentAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.UseCurrent", comment: "Use Current Location" ), style: .default )
@@ -654,7 +659,7 @@ class LocationEditorViewController: UIViewController,
             self.longitude = pinCentral.currentLocation.longitude
             self.altitude  = pinCentral.currentAltitude
             
-            self.populateDetailsCell()
+            locationDetailsTableViewCell.initialize()
         }
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
@@ -693,7 +698,7 @@ class LocationEditorViewController: UIViewController,
     }
     
     
-    @objc func editNameAndDetails()
+    @objc func editNameAndDetails(locationDetailsTableViewCell: LocationDetailsTableViewCell)
     {
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditNameAndDetails", comment: "Edit name and details" ),
@@ -717,7 +722,7 @@ class LocationEditorViewController: UIViewController,
                 self.details = textString
             }
             
-            self.populateDetailsCell()
+            self.initialize(locationDetailsTableViewCell: locationDetailsTableViewCell)
         }
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
@@ -760,7 +765,24 @@ class LocationEditorViewController: UIViewController,
     }
     
     
-    func initializeVariables()
+    private func initialize(locationDetailsTableViewCell: LocationDetailsTableViewCell)
+    {
+        logTrace()
+        
+        locationDetailsTableViewCell.altitude  = self.altitude
+        locationDetailsTableViewCell.details   = self.details
+        locationDetailsTableViewCell.latitude  = self.latitude
+        locationDetailsTableViewCell.longitude = self.longitude
+        locationDetailsTableViewCell.name      = self.name
+        locationDetailsTableViewCell.pinColor  = self.pinColor
+        
+        locationDetailsTableViewCell.initialize()
+        
+        self.showSaveBarButtonItem(show: self.dataChanged())
+    }
+
+
+    private func initializeVariables()
     {
         logTrace()
         let         pinCentral = PinCentral.sharedInstance
@@ -833,8 +855,24 @@ class LocationEditorViewController: UIViewController,
         }
         
         logTrace()
-        detailsCell = cell
-        populateDetailsCell()
+
+        let detailsCell = cell as! LocationDetailsTableViewCell
+        
+        
+        detailsCell.delegate = self
+        
+        initialize(locationDetailsTableViewCell: detailsCell)
+        
+        if firstTimeIn && ( NEW_PIN == indexOfItemBeingEdited )
+        {
+            firstTimeIn = false
+            
+            DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.2 ) )
+            {
+                self.editNameAndDetails( locationDetailsTableViewCell: detailsCell )
+            }
+            
+        }
         
         return cell
     }
@@ -850,17 +888,11 @@ class LocationEditorViewController: UIViewController,
         
         
         logTrace()
-        let         cameraButton      = cell.viewWithTag(11) as! UIButton
-        let         locationImageView = cell.viewWithTag(12) as! UIImageView
-
+        let imageCell = cell as! LocationImageTableViewCell
         
-        cameraButton.addTarget(self, action: #selector(cameraButtonTouched(_:)), for: .touchUpInside )
         
-        cameraButton.setImage( ( imageName.isEmpty ? UIImage.init( named: "camera" ) : nil ),
-                               for: .normal )
-        cameraButton.backgroundColor = ( imageName.isEmpty ? .white : .clear )
-
-        locationImageView.image = ( imageName.isEmpty ? nil : PinCentral.sharedInstance.imageWith( name: imageName ) )
+        imageCell.delegate = self
+        imageCell.initializeWith(imageName: imageName)
         
         return cell
     }
@@ -886,46 +918,6 @@ class LocationEditorViewController: UIViewController,
     }
     
     
-    func populateDetailsCell()
-    {
-        guard let cell = detailsCell else {
-            logTrace( "detailsCell NOT set!" )
-            return
-        }
-        
-        logTrace()
-        let         units                  = PinCentral.sharedInstance.displayUnits()
-        let         altitudeInDesiredUnits = ( ( DISPLAY_UNITS_METERS == units ) ? altitude : ( altitude * FEET_PER_METER ) )
-        let         altitudeText           = String( format: "%7.1f", altitudeInDesiredUnits ).trimmingCharacters(in: .whitespaces)
-        
-        let         detailsButton   = cell.viewWithTag(12) as! UIButton
-        let         nameButton      = cell.viewWithTag(11) as! UIButton
-        let         locationButton  = cell.viewWithTag(13) as! UIButton
-        let         pinColorButton  = cell.viewWithTag(14) as! UIButton
-        let         showOnMapButton = cell.viewWithTag(16) as! UIButton
-        let         unitsButton     = cell.viewWithTag(15) as! UIButton
-        
-        
-        detailsButton   .addTarget(self, action: #selector(nameOrDetailsButtonTouched(_:)), for: .touchUpInside )
-        nameButton      .addTarget(self, action: #selector(nameOrDetailsButtonTouched(_:)), for: .touchUpInside )
-        locationButton  .addTarget(self, action: #selector(locationButtonTouched(_:)),      for: .touchUpInside )
-        pinColorButton  .addTarget(self, action: #selector(pinColorButtonTouched(_:)),      for: .touchUpInside )
-        showOnMapButton .addTarget(self, action: #selector(showOnMapButtonTouched(_:)),     for: .touchUpInside )
-        unitsButton     .addTarget(self, action: #selector(unitsButtonTouched(_:)),         for: .touchUpInside )
-        
-        detailsButton  .setTitle( ( details.isEmpty ? NSLocalizedString( "LabelText.Details", comment: "Address / Description" ) : details ), for: .normal )
-        nameButton     .setTitle( ( name   .isEmpty ? NSLocalizedString( "LabelText.Name",    comment: "Name"                  ) : name    ), for: .normal )
-        locationButton .setTitle( String( format: "%@: %7.4f, %7.4f at %@ %@", NSLocalizedString( "LabelText.Location",  comment: "Location" ),latitude, longitude, altitudeText, units ), for: .normal )
-        pinColorButton .setTitle( NSLocalizedString( "ButtonTitle.PinColor",  comment: "Pin Color"   ), for: .normal )
-        showOnMapButton.setTitle( NSLocalizedString( "ButtonTitle.ShowOnMap", comment: "Show on Map" ), for: .normal )
-        unitsButton    .setTitle( NSLocalizedString( "ButtonTitle.Units",     comment: "Units"       ), for: .normal )
-        
-        pinColorButton .setTitleColor(pinColorArray[Int( pinColor )], for: .normal)
-
-        self.showSaveBarButtonItem(show: self.dataChanged())
-    }
-    
-    
     func promptForImageDispostion()
     {
         logTrace()
@@ -938,7 +930,8 @@ class LocationEditorViewController: UIViewController,
             logTrace( "Delete Action" )
             
             self.deleteImage()
-            self.myTableView.reloadRows(at: [IndexPath.init(item: 0, section: 0)], with: .none)
+
+            self.imageCell.initializeWith(imageName: self.imageName)
         }
         
         let     replaceAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Replace", comment: "Replace" ), style: .default )
@@ -946,8 +939,9 @@ class LocationEditorViewController: UIViewController,
             logTrace( "Replace Action" )
             
             self.deleteImage()
-            self.myTableView.reloadRows(at: [IndexPath.init(item: 0, section: 0)], with: .none)
-
+            
+            self.imageCell.initializeWith(imageName: self.imageName)
+            
             self.promptForImageSource()
         }
         
@@ -1011,18 +1005,6 @@ class LocationEditorViewController: UIViewController,
             self.navigationItem.rightBarButtonItem = nil
         }
 
-    }
-    
-    
-    private func toggleDisplayUnits()
-    {
-        var     units = PinCentral.sharedInstance.displayUnits()
-        
-        
-        units = ( ( DISPLAY_UNITS_METERS == units ) ? DISPLAY_UNITS_FEET : DISPLAY_UNITS_METERS )
-        
-        UserDefaults.standard.set( units, forKey: DISPLAY_UNITS_ALTITUDE )
-        UserDefaults.standard.synchronize()
     }
     
     

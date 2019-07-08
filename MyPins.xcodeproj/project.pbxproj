@@ -19,6 +19,8 @@
 		F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */; };
 		F427FF8B209A51C400DBA3CD /* appIcon 76x2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F427FF8A209A51C400DBA3CD /* appIcon 76x2x.png */; };
 		F438F6DC2061D0B10032F465 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F438F6DB2061D0B10032F465 /* SplitViewController.swift */; };
+		F445000822D3A8C200988667 /* LocationDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */; };
+		F445000A22D3A8DD00988667 /* LocationImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */; };
 		F46B387220599BDB005347AC /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */; };
 		F47F447F20AA003600E6696C /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47F447E20AA003600E6696C /* Logger.swift */; };
 		F4820DFE206998E800780C2D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4820DFC206998E800780C2D /* Localizable.strings */; };
@@ -67,6 +69,8 @@
 		F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		F427FF8A209A51C400DBA3CD /* appIcon 76x2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appIcon 76x2x.png"; path = "AppIcon/appIcon 76x2x.png"; sourceTree = "<group>"; };
 		F438F6DB2061D0B10032F465 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
+		F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailsTableViewCell.swift; sourceTree = "<group>"; };
+		F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationImageTableViewCell.swift; sourceTree = "<group>"; };
 		F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		F47F447E20AA003600E6696C /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		F4820DFD206998E800780C2D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -165,7 +169,9 @@
 			children = (
 				F427FF84209A293600DBA3CD /* HowToUseViewController.swift */,
 				F4B47FEA205734880027755B /* ListTableViewController.swift */,
+				F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */,
 				F403EF8722C17780000D9ABD /* LocationEditorViewController.swift */,
+				F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */,
 				F4B47FEC205734A80027755B /* MapViewController.swift */,
 				F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */,
 				F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */,
@@ -173,8 +179,8 @@
 				F427FF86209A2A6B00DBA3CD /* SettingsTableViewController.swift */,
 				F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */,
 				F438F6DB2061D0B10032F465 /* SplitViewController.swift */,
-				F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */,
 				F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */,
+				F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -291,12 +297,14 @@
 				F4FD7501207A61D800C264A0 /* Pin+CoreDataProperties.swift in Sources */,
 				F400B4CC20572E0000556F51 /* MyPins.xcdatamodeld in Sources */,
 				F49766AD205B11AE00A76F9D /* PointAnnotation.swift in Sources */,
+				F445000A22D3A8DD00988667 /* LocationImageTableViewCell.swift in Sources */,
 				F46B387220599BDB005347AC /* UIViewControllerExtensions.swift in Sources */,
 				F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */,
 				F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */,
 				F4B47FF9205746A80027755B /* Pin.swift in Sources */,
 				F400B4C420572E0000556F51 /* AppDelegate.swift in Sources */,
 				F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */,
+				F445000822D3A8C200988667 /* LocationDetailsTableViewCell.swift in Sources */,
 				F403EF8822C17780000D9ABD /* LocationEditorViewController.swift in Sources */,
 				F47F447F20AA003600E6696C /* Logger.swift in Sources */,
 				F4B47FF5205745130027755B /* PinCentral.swift in Sources */,
