@@ -273,7 +273,7 @@ class MapViewController: UIViewController,
                    didDeselect view: MKAnnotationView )
     {
 //        logTrace()
-        directionsBarButtonItem.isEnabled = false
+        directionsBarButtonItem.isEnabled = showingDirectionsOverlay
         selectedPointAnnotation           = nil
     }
     

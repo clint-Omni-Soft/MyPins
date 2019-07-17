@@ -76,7 +76,7 @@ class LocationDetailsTableViewCell: UITableViewCell
         
         detailsButton  .setTitle( ( details.isEmpty ? NSLocalizedString( "LabelText.Details", comment: "Address / Description" ) : details ), for: .normal )
         nameButton     .setTitle( ( name   .isEmpty ? NSLocalizedString( "LabelText.Name",    comment: "Name"                  ) : name    ), for: .normal )
-        locationButton .setTitle( String( format: "%@: %7.4f, %7.4f at %@ %@", NSLocalizedString( "LabelText.Location",  comment: "Location" ), latitude, longitude, altitudeText, units ), for: .normal )
+        locationButton .setTitle( String( format: "%7.4f, %7.4f at %@ %@", latitude, longitude, altitudeText, units ), for: .normal )
         pinColorButton .setTitle( NSLocalizedString( "ButtonTitle.PinColor",  comment: "Pin Color"   ), for: .normal )
         showOnMapButton.setTitle( NSLocalizedString( "ButtonTitle.ShowOnMap", comment: "Show on Map" ), for: .normal )
         unitsButton    .setTitle( NSLocalizedString( "ButtonTitle.Units",     comment: "Units"       ), for: .normal )

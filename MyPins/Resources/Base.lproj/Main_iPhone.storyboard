@@ -219,6 +219,52 @@
             </objects>
             <point key="canvasLocation" x="556" y="381.85907046476763"/>
         </scene>
+        <!--Image View Controller-->
+        <scene sceneID="eSo-Dx-CTt">
+            <objects>
+                <viewController storyboardIdentifier="ImageViewController" id="t0k-DY-6rQ" customClass="ImageViewController" customModule="MyPins" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8pU-uz-uyI">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cc1-JE-Ull">
+                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="R6T-N7-ack">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="R6T-N7-ack" firstAttribute="top" secondItem="cc1-JE-Ull" secondAttribute="top" id="GXJ-dL-8hZ"/>
+                                    <constraint firstItem="R6T-N7-ack" firstAttribute="leading" secondItem="cc1-JE-Ull" secondAttribute="leading" id="IKP-4i-nnT"/>
+                                    <constraint firstAttribute="trailing" secondItem="R6T-N7-ack" secondAttribute="trailing" id="LkV-NF-Dd8"/>
+                                    <constraint firstItem="R6T-N7-ack" firstAttribute="centerX" secondItem="cc1-JE-Ull" secondAttribute="centerX" id="RqN-K4-SLP"/>
+                                    <constraint firstAttribute="bottom" secondItem="R6T-N7-ack" secondAttribute="bottom" id="ovt-1D-ftr"/>
+                                    <constraint firstItem="R6T-N7-ack" firstAttribute="centerY" secondItem="cc1-JE-Ull" secondAttribute="centerY" id="sx8-hU-j28"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="delegate" destination="t0k-DY-6rQ" id="FbC-CT-lkh"/>
+                                </connections>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="cc1-JE-Ull" firstAttribute="top" secondItem="Ido-pf-Uew" secondAttribute="top" id="cqE-M3-0lS"/>
+                            <constraint firstItem="cc1-JE-Ull" firstAttribute="bottom" secondItem="Ido-pf-Uew" secondAttribute="bottom" id="hkQ-SO-M0T"/>
+                            <constraint firstItem="cc1-JE-Ull" firstAttribute="leading" secondItem="Ido-pf-Uew" secondAttribute="leading" id="qiU-eD-C68"/>
+                            <constraint firstItem="cc1-JE-Ull" firstAttribute="trailing" secondItem="Ido-pf-Uew" secondAttribute="trailing" id="tyx-QK-Eer"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Ido-pf-Uew"/>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="R6T-N7-ack" id="3u1-Hn-4Xa"/>
+                        <outlet property="scrollView" destination="cc1-JE-Ull" id="yJi-OF-Gvp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7Zj-Cg-bTx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2648.8000000000002" y="-13.043478260869566"/>
+        </scene>
         <!--Pin Editor-->
         <scene sceneID="J1d-cd-7UO">
             <objects>
@@ -342,7 +388,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H7T-1k-iXv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2633" y="-13"/>
+            <point key="canvasLocation" x="3598" y="-13"/>
         </scene>
         <!--Pin Editor-->
         <scene sceneID="i1u-44-RT5">
@@ -509,6 +555,7 @@
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <connections>
                         <outlet property="myTableView" destination="DoB-iA-Gn2" id="nhN-hx-8gc"/>
+                        <segue destination="t0k-DY-6rQ" kind="show" identifier="ImageViewController" id="vCs-cD-T5Q"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CKr-1M-YHs" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -756,6 +803,6 @@
         <image name="settings" width="13" height="13"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Je9-KE-q4L"/>
+        <segue reference="5Yy-Lw-yLP"/>
     </inferredMetricsTieBreakers>
 </document>

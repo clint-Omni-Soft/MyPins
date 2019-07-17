@@ -28,6 +28,7 @@
 "ButtonTitle.Cancel"                = "Cancelar";
 "ButtonTitle.Delete"                = "Borrar";
 "ButtonTitle.Directions"            = "Direcciones";
+"ButtonTitle.Done"                  = "Hecho";
 "ButtonTitle.EndDirections"         = "Finalizar indicaciones";
 "ButtonTitle.Hybrid"                = "Híbrido";
 "ButtonTitle.HybridFlyover"         = "Paso elevado híbrido";

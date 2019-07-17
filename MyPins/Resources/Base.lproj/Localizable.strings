@@ -28,6 +28,7 @@
 "ButtonTitle.Cancel"                = "Cancel";
 "ButtonTitle.Delete"                = "Delete";
 "ButtonTitle.Directions"            = "Directions";
+"ButtonTitle.Done"                  = "Done";
 "ButtonTitle.EndDirections"         = "End Directions";
 "ButtonTitle.Hybrid"                = "Hybrid";
 "ButtonTitle.HybridFlyover"         = "Hybrid Flyover";

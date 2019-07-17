@@ -28,6 +28,7 @@
 "ButtonTitle.Camera"                = "Caméra";
 "ButtonTitle.Delete"                = "Effacer";
 "ButtonTitle.Directions"            = "Directions";
+"ButtonTitle.Done"                  = "Terminé";
 "ButtonTitle.EndDirections"         = "Fin des directions";
 "ButtonTitle.Hybrid"                = "Hybride";
 "ButtonTitle.HybridFlyover"         = "Survol hybride";

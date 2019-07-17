@@ -48,6 +48,7 @@ class LocationEditorViewController: UIViewController,
     private let     CELL_ID_DETAILS              = "LocationDetailsTableViewCell"
     private let     CELL_ID_IMAGE                = "LocationImageTableViewCell"
     private let     STORYBOARD_ID_COLOR_SELECTOR = "PinColorSelectorViewController"
+    private let     STORYBOARD_ID_IMAGE_VIEWER   = "ImageViewController"
     
     private var     altitude                  = 0.0
     private var     changingColors            = false
@@ -58,6 +59,7 @@ class LocationEditorViewController: UIViewController,
     private var     imageCell                 : LocationImageTableViewCell!     // Set in LocationImageTableViewCellDelegate Method
     private var     imageName                 = String()
     private var     latitude                  = 0.0
+    private var     loadingImageView          = false
     private var     longitude                 = 0.0
     private var     name                      = String()
     private var     originalAltitude          = 0.0
@@ -81,7 +83,6 @@ class LocationEditorViewController: UIViewController,
 
         title = NSLocalizedString( "Title.PinEditor", comment: "Pin Editor" )
         
-        showSaveBarButtonItem(show: false)
         preferredContentSize = CGSize( width: 320, height: 460 )
         
         initializeVariables()
@@ -93,7 +94,7 @@ class LocationEditorViewController: UIViewController,
         logTrace()
         super.viewWillAppear( animated )
         
-        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: ( launchedFromDetailView ? NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ) : NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   ) ),
+        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: ( launchedFromDetailView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   ) ),
                                                                   style: .plain,
                                                                   target: self,
                                                                   action: #selector( cancelBarButtonTouched ) )
@@ -103,12 +104,6 @@ class LocationEditorViewController: UIViewController,
                                                 selector: #selector( LocationEditorViewController.pinsUpdated( notification: ) ),
                                                 name:     NSNotification.Name( rawValue: NOTIFICATION_PINS_UPDATED ),
                                                 object:   nil )
-        
-        if !firstTimeIn || ( NEW_PIN != indexOfItemBeingEdited )
-        {
-            showSaveBarButtonItem(show: dataChanged())
-        }
-        
     }
     
     
@@ -205,11 +200,21 @@ class LocationEditorViewController: UIViewController,
             
             logVerbose( "indexOfSelectedPin[ %d ] = indexOfItemBeingEdited[ %d ]", PinCentral.sharedInstance.indexOfSelectedPin, indexOfItemBeingEdited )
             PinCentral.sharedInstance.indexOfSelectedPin = indexOfItemBeingEdited
-        }
         
+            logTrace( "waiting for update from pinCentral" )
+        }
+        else
+        {
+            if .phone == UIDevice.current.userInterfaceIdiom
+            {
+                tabBarController?.selectedIndex = 1
+                dismissView()
+            }
+
+        }
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01 )
         {
-            logTrace( "waiting for update from pinCentral" )
             self.delegate?.locationEditorViewController( locationEditorViewController: self,
                                                          wantsToCenterMapAt: CLLocationCoordinate2DMake( self.latitude, self.longitude ) )
         }
@@ -243,8 +248,11 @@ class LocationEditorViewController: UIViewController,
     
     @objc func pinsUpdated( notification: NSNotification )
     {
-        logTrace()
+        let     pinCentral = PinCentral.sharedInstance
         
+        logVerbose( "recovering pinIndex[ %d ] from pinCentral", pinCentral.newPinIndex )
+        indexOfItemBeingEdited = pinCentral.newPinIndex
+
         // The reason we are using Notifications is because this view can be up in two different places on the iPad at the same time.
         // This approach allows a change in one to immediately be reflected in the other.
         
@@ -254,9 +262,8 @@ class LocationEditorViewController: UIViewController,
         }
         
         initializeVariables()
-        myTableView.reloadData()
         
-        self.showSaveBarButtonItem(show: self.dataChanged())
+        myTableView.reloadData()
    }
     
     
@@ -272,18 +279,24 @@ class LocationEditorViewController: UIViewController,
     
     func pinCentralDidReloadPinArray( pinCentral: PinCentral )
     {
-        logVerbose( "loaded [ %d ] pins", pinCentral.pinArray.count )
+        logVerbose( "loaded [ %d ] pins ... indexOfItemBeingEdited[ %d ]", pinCentral.pinArray.count, indexOfItemBeingEdited )
         
-        if NEW_PIN == indexOfItemBeingEdited
-        {
-            logVerbose( "recovering pinIndex[ %d ]", pinCentral.newPinIndex )
+//        if NEW_PIN == indexOfItemBeingEdited
+//        {
+            logVerbose( "recovering pinIndex[ %d ] from pinCentral", pinCentral.newPinIndex )
             indexOfItemBeingEdited = pinCentral.newPinIndex
+//        }
+        
+        if loadingImageView
+        {
+            loadingImageView = false
+            launchImageViewController()
+        }
+        else
+        {
+            self.myTableView.reloadData()
         }
         
-        dismissView()
-        
-        delegate?.locationEditorViewController( locationEditorViewController: self,
-                                                didEditLocationData: true )
     }
     
     
@@ -299,6 +312,8 @@ class LocationEditorViewController: UIViewController,
         self.detailsCell.initialize()
         
         changingColors = false
+
+        updatePinCentral()
     }
     
     
@@ -308,32 +323,7 @@ class LocationEditorViewController: UIViewController,
     @IBAction func cancelBarButtonTouched( sender: UIBarButtonItem )
     {
         logTrace()
-        if dataChanged()
-        {
-            confirmIntentToDiscardChanges()
-        }
-        else
-        {
-            dismissView()
-        }
-        
-    }
-    
-    
-    @IBAction @objc func saveButtonTouched( barButtonItem: UIBarButtonItem )
-    {
-        logTrace()
-        if name.isEmpty
-        {
-            logTrace( "ERROR:  Name field cannot be left blank!" )
-            presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                          message: NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank" ) )
-        }
-        else if dataChanged()
-        {
-            updatePinCentral()
-        }
-        
+        dismissView()
     }
     
     
@@ -389,7 +379,7 @@ class LocationEditorViewController: UIViewController,
                         let     imageName = PinCentral.sharedInstance.saveImage( image: myImageToSave )
                         
                         
-                        if ( imageName.isEmpty || imageName.isEmpty )
+                        if imageName.isEmpty
                         {
                             logTrace( "ERROR:  Image save FAILED!" )
                             self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
@@ -402,9 +392,9 @@ class LocationEditorViewController: UIViewController,
                             
                             logVerbose( "Saved image as [ %@ ]", imageName )
                             
-                            self.imageCell.initializeWith(imageName: self.imageName)
+                            self.imageCell.initializeWith( imageName: self.imageName )
 
-                            self.showSaveBarButtonItem(show: self.dataChanged())
+                            self.updatePinCentral()
                         }
                         
                     }
@@ -454,7 +444,6 @@ class LocationEditorViewController: UIViewController,
         }
         
         logTrace( "Image successfully saved to photo album" )
-        self.showSaveBarButtonItem(show: self.dataChanged())
     }
     
     
@@ -527,8 +516,8 @@ class LocationEditorViewController: UIViewController,
     private func dataChanged() -> Bool
     {
         var     dataChanged  = false
-        
-        
+
+
         if ( ( name      != originalName      ) ||
              ( details   != originalDetails   ) ||
              ( altitude  != originalAltitude  ) ||
@@ -539,9 +528,9 @@ class LocationEditorViewController: UIViewController,
         {
             dataChanged = true
         }
-        
+
 //        logVerbose( "[ %@ ]", stringFor( dataChanged ) )
-        
+
         return dataChanged
     }
     
@@ -558,8 +547,8 @@ class LocationEditorViewController: UIViewController,
         imageName     = String.init()
         imageAssigned = true
         
-        self.showSaveBarButtonItem(show: self.dataChanged())
-    }
+        updatePinCentral()
+   }
     
     
     private func dismissView()
@@ -648,7 +637,7 @@ class LocationEditorViewController: UIViewController,
                 self.altitude = ( self.altitude / FEET_PER_METER )
             }
             
-            locationDetailsTableViewCell.initialize()
+            self.updatePinCentral()
         }
         
         let     useCurrentAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.UseCurrent", comment: "Use Current Location" ), style: .default )
@@ -659,7 +648,7 @@ class LocationEditorViewController: UIViewController,
             self.longitude = pinCentral.currentLocation.longitude
             self.altitude  = pinCentral.currentAltitude
             
-            locationDetailsTableViewCell.initialize()
+            self.updatePinCentral()
         }
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
@@ -698,7 +687,7 @@ class LocationEditorViewController: UIViewController,
     }
     
     
-    @objc func editNameAndDetails(locationDetailsTableViewCell: LocationDetailsTableViewCell)
+    @objc private func editNameAndDetails( locationDetailsTableViewCell: LocationDetailsTableViewCell )
     {
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditNameAndDetails", comment: "Edit name and details" ),
@@ -712,17 +701,31 @@ class LocationEditorViewController: UIViewController,
             let     detailsTextField = alert.textFields![1] as UITextField
             
             
-            if let textString = nameTextField.text
+            if var textStringName = nameTextField.text
             {
-                self.name = textString
+                textStringName = textStringName.trimmingCharacters( in: .whitespacesAndNewlines )
+                
+                if !textStringName.isEmpty
+                {
+                    logTrace( "We have a valid name" )
+                    self.name = textStringName
+
+                    if let textStringDetails = detailsTextField.text
+                    {
+                        self.details = textStringDetails
+                    }
+                    
+                    self.updatePinCentral()
+                }
+                else
+                {
+                    logTrace( "ERROR:  Name field cannot be left blank!" )
+                    self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                                       message: NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank" ) )
+                }
+
             }
             
-            if let textString = detailsTextField.text
-            {
-                self.details = textString
-            }
-            
-            self.initialize(locationDetailsTableViewCell: locationDetailsTableViewCell)
         }
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
@@ -777,8 +780,6 @@ class LocationEditorViewController: UIViewController,
         locationDetailsTableViewCell.pinColor  = self.pinColor
         
         locationDetailsTableViewCell.initialize()
-        
-        self.showSaveBarButtonItem(show: self.dataChanged())
     }
 
 
@@ -846,7 +847,24 @@ class LocationEditorViewController: UIViewController,
     }
     
     
-    func loadDetailsCell() -> UITableViewCell
+    private func launchImageViewController()
+    {
+        logVerbose( "imageName[ %@ ]", imageName )
+        if let imageViewController: ImageViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_IMAGE_VIEWER ) as? ImageViewController
+        {
+            imageViewController.imageName = imageName
+            
+            navigationController?.pushViewController( imageViewController, animated: true )
+        }
+        else
+        {
+            logTrace( "ERROR: Could NOT load ImageViewController!" )
+        }
+        
+    }
+    
+    
+    private func loadDetailsCell() -> UITableViewCell
     {
         guard let cell = myTableView.dequeueReusableCell( withIdentifier: CELL_ID_DETAILS ) else
         {
@@ -878,7 +896,7 @@ class LocationEditorViewController: UIViewController,
     }
 
 
-    func loadImageViewCell() -> UITableViewCell
+    private func loadImageViewCell() -> UITableViewCell
     {
         guard let cell = myTableView.dequeueReusableCell( withIdentifier: CELL_ID_IMAGE ) else
         {
@@ -898,7 +916,7 @@ class LocationEditorViewController: UIViewController,
     }
     
     
-    func openImagePickerFor( sourceType: UIImagePickerControllerSourceType )
+    private func openImagePickerFor( sourceType: UIImagePickerControllerSourceType )
     {
         logVerbose( "[ %@ ]", ( ( .camera == sourceType ) ? "Camera" : "Photo Album" ) )
         let     imagePickerVC = UIImagePickerController.init()
@@ -918,7 +936,7 @@ class LocationEditorViewController: UIViewController,
     }
     
     
-    func promptForImageDispostion()
+    private func promptForImageDispostion()
     {
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ImageDisposition", comment: "What would you like to do with this image?" ),
@@ -931,7 +949,7 @@ class LocationEditorViewController: UIViewController,
             
             self.deleteImage()
 
-            self.imageCell.initializeWith(imageName: self.imageName)
+            self.imageCell.initializeWith( imageName: self.imageName )
         }
         
         let     replaceAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Replace", comment: "Replace" ), style: .default )
@@ -940,9 +958,25 @@ class LocationEditorViewController: UIViewController,
             
             self.deleteImage()
             
-            self.imageCell.initializeWith(imageName: self.imageName)
+            self.imageCell.initializeWith( imageName: self.imageName )
             
             self.promptForImageSource()
+        }
+        
+        let     zoomAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.ZoomIn", comment: "Zoom In" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Zoom In Action" )
+            
+            if self.dataChanged()
+            {
+                self.loadingImageView = true
+                self.updatePinCentral()
+            }
+            else
+            {
+                self.launchImageViewController()
+            }
+
         }
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
@@ -950,6 +984,7 @@ class LocationEditorViewController: UIViewController,
         
         alert.addAction( deleteAction  )
         alert.addAction( replaceAction )
+        alert.addAction( zoomAction    )
         alert.addAction( cancelAction  )
         
         present( alert, animated: true, completion: nil )
@@ -989,22 +1024,6 @@ class LocationEditorViewController: UIViewController,
         alert.addAction( cancelAction )
         
         present( alert, animated: true, completion: nil )
-    }
-    
-    
-    private func showSaveBarButtonItem( show: Bool)
-    {
-        if show
-        {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem.init( barButtonSystemItem: .save,
-                                                                           target: self,
-                                                                           action: #selector( saveButtonTouched ) )
-        }
-        else
-        {
-            self.navigationItem.rightBarButtonItem = nil
-        }
-
     }
     
     

@@ -231,7 +231,7 @@ class ListTableViewController: UITableViewController,
     {
         if editingStyle == .delete
         {
-            logVerbose( "delete pin at [ %s ]", indexPath.row )
+            logVerbose( "delete pin at row [ %d ]", indexPath.row )
             PinCentral.sharedInstance.deletePinAtIndex( index: indexPath.row )
         }
         

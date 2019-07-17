@@ -30,12 +30,13 @@
 		F4982F6A207BEF9B00A30D40 /* PinColorSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */; };
 		F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */; };
 		F49B9A59207D406B007598F9 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */; };
-		F49B9A5B207D587E007598F9 /* appIcon MASTER.png in Resources */ = {isa = PBXBuildFile; fileRef = F49B9A5A207D587D007598F9 /* appIcon MASTER.png */; };
+		F49B9A5B207D587E007598F9 /* appIcon MASTER in Resources */ = {isa = PBXBuildFile; fileRef = F49B9A5A207D587D007598F9 /* appIcon MASTER */; };
 		F4B47FEB205734880027755B /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FEA205734880027755B /* ListTableViewController.swift */; };
 		F4B47FED205734A80027755B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FEC205734A80027755B /* MapViewController.swift */; };
 		F4B47FF2205734F40027755B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B47FF1205734F40027755B /* MapKit.framework */; };
 		F4B47FF5205745130027755B /* PinCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FF4205745130027755B /* PinCentral.swift */; };
 		F4B47FF9205746A80027755B /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FF7205746A80027755B /* Pin.swift */; };
+		F4D7FE0422D91EEE00D61B8B /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */; };
 		F4FD7501207A61D800C264A0 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FD74FF207A61D800C264A0 /* Pin+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
@@ -88,12 +89,13 @@
 		F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinColorSelectorViewController.swift; sourceTree = "<group>"; };
 		F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutContraint+Extension.swift"; sourceTree = "<group>"; };
 		F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
-		F49B9A5A207D587D007598F9 /* appIcon MASTER.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appIcon MASTER.png"; path = "AppIcon/appIcon MASTER.png"; sourceTree = "<group>"; };
+		F49B9A5A207D587D007598F9 /* appIcon MASTER */ = {isa = PBXFileReference; lastKnownFileType = file; name = "appIcon MASTER"; path = "AppIcon/appIcon MASTER"; sourceTree = "<group>"; };
 		F4B47FEA205734880027755B /* ListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
 		F4B47FEC205734A80027755B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		F4B47FF1205734F40027755B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		F4B47FF4205745130027755B /* PinCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCentral.swift; sourceTree = "<group>"; };
 		F4B47FF7205746A80027755B /* Pin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
+		F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		F4FD74FF207A61D800C264A0 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -154,7 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				F427FF8A209A51C400DBA3CD /* appIcon 76x2x.png */,
-				F49B9A5A207D587D007598F9 /* appIcon MASTER.png */,
+				F49B9A5A207D587D007598F9 /* appIcon MASTER */,
 				F400B4CD20572E0000556F51 /* Assets.xcassets */,
 				F400B4CF20572E0000556F51 /* LaunchScreen.storyboard */,
 				F4820DFC206998E800780C2D /* Localizable.strings */,
@@ -168,6 +170,7 @@
 			isa = PBXGroup;
 			children = (
 				F427FF84209A293600DBA3CD /* HowToUseViewController.swift */,
+				F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */,
 				F4B47FEA205734880027755B /* ListTableViewController.swift */,
 				F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */,
 				F403EF8722C17780000D9ABD /* LocationEditorViewController.swift */,
@@ -277,7 +280,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F48A45C720698D0400C27F03 /* Main_iPhone.storyboard in Resources */,
-				F49B9A5B207D587E007598F9 /* appIcon MASTER.png in Resources */,
+				F49B9A5B207D587E007598F9 /* appIcon MASTER in Resources */,
 				F4820DFE206998E800780C2D /* Localizable.strings in Resources */,
 				F48A45CA20698FDE00C27F03 /* Main_iPad.storyboard in Resources */,
 				F427FF8B209A51C400DBA3CD /* appIcon 76x2x.png in Resources */,
@@ -303,6 +306,7 @@
 				F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */,
 				F4B47FF9205746A80027755B /* Pin.swift in Sources */,
 				F400B4C420572E0000556F51 /* AppDelegate.swift in Sources */,
+				F4D7FE0422D91EEE00D61B8B /* ImageViewController.swift in Sources */,
 				F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */,
 				F445000822D3A8C200988667 /* LocationDetailsTableViewCell.swift in Sources */,
 				F403EF8822C17780000D9ABD /* LocationEditorViewController.swift in Sources */,
