@@ -87,9 +87,13 @@ class ListTableViewController: UITableViewController,
                                        didEditLocationData: Bool )
     {
         logVerbose( "didEditLocationData[ %@ ]", stringFor( didEditLocationData ) )
-        
         PinCentral.sharedInstance.delegate = self
-        tableView.reloadData()
+        
+        if didEditLocationData
+        {
+            tableView.reloadData()
+        }
+        
     }
     
     

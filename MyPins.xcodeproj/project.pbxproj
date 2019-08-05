@@ -199,8 +199,8 @@
 		F4B47FF3205744F40027755B /* PinCentral */ = {
 			isa = PBXGroup;
 			children = (
-				F47F447E20AA003600E6696C /* Logger.swift */,
 				F4B47FF62057467D0027755B /* CoreData Entities */,
+				F47F447E20AA003600E6696C /* Logger.swift */,
 				F400B4CA20572E0000556F51 /* MyPins.xcdatamodeld */,
 				F4B47FF4205745130027755B /* PinCentral.swift */,
 			);
