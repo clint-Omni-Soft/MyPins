@@ -313,7 +313,7 @@ class PinCentral: NSObject,
         let     pictureFileURL       = picturesDirectoryURL.appendingPathComponent( imageFilename )
         
         
-        guard let imageData = UIImageJPEGRepresentation( image, 1 ) ?? UIImagePNGRepresentation( image ) else
+        guard let imageData = image.jpegData(compressionQuality: 1 ) ?? image.pngData( ) else
         {
             logTrace( "ERROR!  Could NOT convert UIImage to Data!" )
             return String.init()

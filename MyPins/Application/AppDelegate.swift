@@ -24,12 +24,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate
     // MARK: UIApplication Lifecycle Methods
     
     func application(_ application: UIApplication,
-                       didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]? )  -> Bool
+                       didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? )  -> Bool
     {
         locationManager = CLLocationManager()
         locationManager?.requestWhenInUseAuthorization()
         
-        ZLog.setupLogging()
+        setupLogging()
         
         return true
     }

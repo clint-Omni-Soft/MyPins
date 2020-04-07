@@ -16,9 +16,9 @@ extension UIViewController
     func presentAlert( title: String, message: String )
     {
         logVerbose( "[ %@ ][ %@ ]", title, message )
-        let         alert    = UIAlertController.init( title: title, message: message, preferredStyle: UIAlertControllerStyle.alert )
+        let         alert    = UIAlertController.init( title: title, message: message, preferredStyle: .alert )
         let         okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ),
-                                                   style: UIAlertActionStyle.default,
+                                                   style: .default,
                                                    handler: nil )
         alert.addAction( okAction )
         
@@ -26,4 +26,10 @@ extension UIViewController
     }
     
 }
+
+
+func stringFor(_ boolValue: Bool ) -> String {
+    return ( boolValue ? "true" : "false" )
+}
+
 

@@ -233,8 +233,8 @@ class MapViewController: UIViewController,
     
     func mapView(_ mapView: MKMapView,
                    annotationView view: MKAnnotationView,
-                   didChange newState: MKAnnotationViewDragState,
-                   fromOldState oldState: MKAnnotationViewDragState )
+                   didChange newState: MKAnnotationView.DragState,
+                   fromOldState oldState: MKAnnotationView.DragState )
     {
         if let pointAnnotation = view.annotation as? PointAnnotation
         {
@@ -709,7 +709,7 @@ class MapViewController: UIViewController,
         {
             for overlay in myMapView.overlays
             {
-                myMapView.remove( overlay )
+                myMapView.removeOverlay( overlay )
             }
             
             myMapView.setUserTrackingMode( .none, animated: true )
@@ -722,7 +722,7 @@ class MapViewController: UIViewController,
         }
         else
         {
-            let     request = MKDirectionsRequest()
+            let     request = MKDirections.Request()
             
             
             if let myAnnotation = selectedPointAnnotation,
@@ -763,11 +763,11 @@ class MapViewController: UIViewController,
                         }
                         else
                         {
-                            self.myMapView.add( response.routes[0].polyline )
+                            self.myMapView.addOverlay( response.routes[0].polyline )
                             
                             if 1 < response.routes.count
                             {
-                                self.myMapView.add( response.routes[1].polyline )
+                                self.myMapView.addOverlay( response.routes[1].polyline )
                             }
                             
                             self.myMapView.mapType = .hybrid
@@ -926,7 +926,7 @@ class MapViewController: UIViewController,
     }
     
     
-    private func titleForDragState( state: MKAnnotationViewDragState ) -> String
+    private func titleForDragState( state: MKAnnotationView.DragState ) -> String
     {
         var     title = "none     "
         
@@ -983,7 +983,7 @@ class MapViewController: UIViewController,
     
     private func zoomInOn( coordinate: CLLocationCoordinate2D )
     {
-        let     region = MKCoordinateRegionMakeWithDistance( coordinate, 2000, 2000 )
+        let     region = MKCoordinateRegion.init( center: coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000 )
         
         
         logVerbose( "[ %f, %f ]", coordinate.latitude, coordinate.longitude )
