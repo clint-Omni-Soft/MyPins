@@ -13,18 +13,15 @@ import CoreLocation
 
 
 
-protocol PinCentralDelegate: class
-{
-    func pinCentral( pinCentral: PinCentral,
-                     didOpenDatabase: Bool )
+protocol PinCentralDelegate: AnyObject {
     
+    func pinCentral( pinCentral: PinCentral, didOpenDatabase: Bool )
     func pinCentralDidReloadPinArray( pinCentral: PinCentral )
 }
 
 
 
-class PinCentral: NSObject,
-                  CLLocationManagerDelegate
+class PinCentral: NSObject, CLLocationManagerDelegate
 {
     // MARK: Public Variables
     weak var delegate:      PinCentralDelegate?
@@ -259,76 +256,93 @@ class PinCentral: NSObject,
     }
     
     
-    func imageWith( name: String ) -> UIImage
-    {
+    func imageWith( name: String ) -> (Bool, UIImage, Int) {
 //        logTrace()
-        let         directoryPath = pictureDirectoryPath()
+        let     directoryPath = pictureDirectoryPath()
 
-        
-        if !directoryPath.isEmpty
-        {
+        if !directoryPath.isEmpty {
             let     picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
             let     imageFileURL         = picturesDirectoryURL.appendingPathComponent( name )
             let     imageFileData        = FileManager.default.contents( atPath: imageFileURL.path )
             
-            
-            if let imageData = imageFileData
-            {
-                if let image = UIImage.init( data: imageData )
-                {
-//                    logVerbose( "Loaded image named [ %@ ]", name )
-                    return image
+            if let imageData = imageFileData {
+                if let image = UIImage.init( data: imageData ) {
+                    logVerbose( "Loaded image named [ %@ ] size[ %d ]", name, imageData.count )
+                    return (true, image, imageData.count )
                 }
                 
             }
-            else
-            {
+            else {
                 logVerbose( "ERROR!  Failed to load data for image [ %@ ]", name )
             }
             
         }
-        else
-        {
+        else {
             logVerbose( "ERROR!  directoryPath is Empty!" )
         }
         
-        return UIImage.init()
+        return (false, UIImage.init(), 0 )
     }
     
     
-    func saveImage( image: UIImage ) -> String
-    {
+    func replaceImage(_ imageName: String, with image: UIImage ) {
+        let         directoryPath = pictureDirectoryPath()
+        
+        if directoryPath.isEmpty {
+            logTrace( "ERROR!!!  directoryPath.isEmpty" )
+            return
+        }
+        
+        guard let imageData = image.jpegData(compressionQuality: 0.25 ) ?? image.pngData( ) else {
+            logTrace( "ERROR!  Could NOT convert UIImage to Data!" )
+            return
+        }
+        
+        let     picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
+
+        do {
+            let     pictureFileURL = picturesDirectoryURL.appendingPathComponent( imageName )
+            
+            try imageData.write( to: pictureFileURL, options: .atomic )
+            
+            logVerbose( "Reduced image named[ %@ ] to [ %d ]", imageName, imageData.count )
+            return
+        }
+            
+        catch let error as NSError {
+            logVerbose( "ERROR!  Failed to save image for [ %@ ] ... Error[ %@ ]", imageName, error.localizedDescription )
+        }
+        
+    }
+    
+    
+    func saveImage( image: UIImage ) -> String {
 //        logTrace()
         let         directoryPath = pictureDirectoryPath()
         
-        
-        if directoryPath.isEmpty
-        {
+        if directoryPath.isEmpty {
+            logTrace( "ERROR!!!  directoryPath.isEmpty" )
             return String.init()
         }
-        
         
         let     imageFilename        = UUID().uuidString
         let     picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
         let     pictureFileURL       = picturesDirectoryURL.appendingPathComponent( imageFilename )
         
         
-        guard let imageData = image.jpegData(compressionQuality: 1 ) ?? image.pngData( ) else
-        {
+        guard let imageData = image.jpegData(compressionQuality: 0.25 ) ?? image.pngData( ) else {
             logTrace( "ERROR!  Could NOT convert UIImage to Data!" )
-            return String.init()
+            return ""
         }
         
-        do
-        {
+        do {
             try imageData.write( to: pictureFileURL, options: .atomic )
             
             logVerbose( "Saved image to file named[ %@ ]", imageFilename )
             return imageFilename
         }
             
-        catch let error as NSError
-        {
+        catch let error as NSError {
             logVerbose( "ERROR!  Failed to save image for [ %@ ] ... Error[ %@ ]", imageFilename, error.localizedDescription )
         }
         

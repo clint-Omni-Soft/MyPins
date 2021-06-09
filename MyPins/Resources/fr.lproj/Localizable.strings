@@ -90,5 +90,6 @@
 "Title.Map"                         = "Carte";
 "Title.PinEditor"                   = "Éditeur de broche";
 "Title.PinList"                     = "Liste des broches";
+"Title.ReduceImageSize"             = "Réduire la taille de l'image";
 "Title.SelectPinColor"              = "Sélectionnez la couleur";
 "Title.Settings"                    = "Paramètres";

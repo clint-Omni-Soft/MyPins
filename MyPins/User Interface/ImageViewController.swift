@@ -17,10 +17,15 @@ class ImageViewController: UIViewController, UIScrollViewDelegate
     
     
     
+    // MARK: Private Variables
+    
+    private let     pinCentral = PinCentral.sharedInstance
+    
+    
+    
     // MARK: UIViewController Lifecycle Methods
     
-    override func viewDidLoad()
-    {
+    override func viewDidLoad() {
         logTrace()
         super.viewDidLoad()
         
@@ -29,16 +34,25 @@ class ImageViewController: UIViewController, UIScrollViewDelegate
     }
     
     
-    override func viewWillAppear(_ animated: Bool)
-    {
+    override func viewWillAppear(_ animated: Bool) {
         logTrace()
         super.viewWillAppear( animated )
-        imageView.image = PinCentral.sharedInstance.imageWith( name: imageName )
+        
+        var     result = pinCentral.imageWith( name: imageName )
+        
+        if result.0 {
+            imageView.image = result.1
+        }
+        else {
+            result = pinCentral.imageWith( name: "missingImage" )
+            
+            imageView.image = result.1
+        }
+        
     }
     
     
-    override func viewWillDisappear(_ animated: Bool)
-    {
+    override func viewWillDisappear(_ animated: Bool) {
         logTrace()
         super.viewWillDisappear( animated )
     }

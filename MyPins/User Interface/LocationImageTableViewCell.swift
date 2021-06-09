@@ -9,35 +9,43 @@
 import UIKit
 
 
-protocol LocationImageTableViewCellDelegate: class
-{
+protocol LocationImageTableViewCellDelegate: AnyObject {
     func locationImageTableViewCell( locationImageTableViewCell: LocationImageTableViewCell,
                                      cameraButtonTouched: Bool )
 }
 
 
 
-class LocationImageTableViewCell: UITableViewCell
-{
+class LocationImageTableViewCell: UITableViewCell {
+    
     // MARK: Public Variables ... these are guaranteed to be set by our creator
-    weak var delegate: LocationImageTableViewCellDelegate?
     
     @IBOutlet weak var cameraButton      : UIButton!
     @IBOutlet weak var locationImageView : UIImageView!
     
+    
+    
+    // MARK: Private Variables
+        
+    private struct Constants {
+        static let cameraImage  = "camera"
+        static let missingImage = "missingImage"
+    }
 
+    private var     delegate   : LocationImageTableViewCellDelegate!
+    private let     pinCentral = PinCentral.sharedInstance
+
+    
     
     // MARK: UITableViewCell Lifecycle Methods
     
-    override func awakeFromNib()
-    {
+    override func awakeFromNib() {
         logTrace()
         super.awakeFromNib()
     }
 
     
-    override func setSelected(_ selected: Bool, animated: Bool)
-    {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(false, animated: animated)
     }
     
@@ -45,23 +53,42 @@ class LocationImageTableViewCell: UITableViewCell
     
     // MARK: Target/Action Methods
 
-    @IBAction func cameraButtonTouched(_ sender: UIButton)
-    {
+    @IBAction func cameraButtonTouched(_ sender: UIButton) {
         logTrace()
         delegate?.locationImageTableViewCell( locationImageTableViewCell: self,
                                               cameraButtonTouched: true )
     }
     
     
+
     // MARK: Public Initializer
     
-    func initializeWith( imageName: String )
-    {
+    func initializeWith( imageName: String, _ delegate: LocationImageTableViewCellDelegate ) {
         logTrace()
-        cameraButton.setImage( ( imageName.isEmpty ? UIImage.init( named: "camera" ) : nil ), for: .normal )
+        cameraButton.setImage( ( imageName.isEmpty ? UIImage.init( named: Constants.cameraImage ) : nil ), for: .normal )
         cameraButton.backgroundColor = ( imageName.isEmpty ? .white : .clear )
         
-        locationImageView.image = ( imageName.isEmpty ? nil : PinCentral.sharedInstance.imageWith( name: imageName ) )
+        self.delegate = delegate
+        
+        var     imageLoaded = false
+
+        if !imageName.isEmpty {
+            let     result = pinCentral.imageWith( name: imageName )
+            
+            imageLoaded = result.0
+            
+            if imageLoaded {
+                locationImageView.image = result.1
+            }
+            
+        }
+        
+        if !imageLoaded {
+            let result = pinCentral.imageWith( name: Constants.missingImage )
+            
+            locationImageView.image = result.1
+        }
+
     }
     
 }

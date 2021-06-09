@@ -90,5 +90,6 @@
 "Title.Map"                         = "Mapa";
 "Title.PinEditor"                   = "Pin Editor";
 "Title.PinList"                     = "Lista de Pin";
+"Title.ReduceImageSize"             = "Reducir el tamaño de la imagen";
 "Title.SelectPinColor"              = "Seleccionar color de pin";
 "Title.Settings"                    = "Configuraciones";

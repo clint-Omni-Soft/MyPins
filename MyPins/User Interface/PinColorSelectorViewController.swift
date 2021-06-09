@@ -11,7 +11,7 @@ import UIKit
 
 
 
-protocol PinColorSelectorViewControllerDelegate: class
+protocol PinColorSelectorViewControllerDelegate: AnyObject
 {
     func pinColorSelectorViewController( pinColorSelectorVC: PinColorSelectorViewController,
                                          didSelect color: Int )

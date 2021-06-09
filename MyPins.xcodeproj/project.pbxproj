@@ -19,6 +19,7 @@
 		F438F6DC2061D0B10032F465 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F438F6DB2061D0B10032F465 /* SplitViewController.swift */; };
 		F445000822D3A8C200988667 /* LocationDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */; };
 		F445000A22D3A8DD00988667 /* LocationImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */; };
+		F461B8882670209200A2C53A /* ListTableViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F461B8872670209200A2C53A /* ListTableViewControllerCell.swift */; };
 		F46B387220599BDB005347AC /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */; };
 		F4766CE7243D238A0054CD97 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4766CE6243D238A0054CD97 /* Logger.swift */; };
 		F4820DFE206998E800780C2D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4820DFC206998E800780C2D /* Localizable.strings */; };
@@ -55,6 +56,7 @@
 		F438F6DB2061D0B10032F465 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailsTableViewCell.swift; sourceTree = "<group>"; };
 		F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationImageTableViewCell.swift; sourceTree = "<group>"; };
+		F461B8872670209200A2C53A /* ListTableViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewControllerCell.swift; sourceTree = "<group>"; };
 		F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		F4766CE6243D238A0054CD97 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		F4820DFD206998E800780C2D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -150,9 +152,9 @@
 		F400B4DA20572E3900556F51 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
+				F461B8862670205000A2C53A /* ListTableViewController */,
 				F427FF84209A293600DBA3CD /* HowToUseViewController.swift */,
 				F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */,
-				F4B47FEA205734880027755B /* ListTableViewController.swift */,
 				F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */,
 				F403EF8722C17780000D9ABD /* LocationEditorViewController.swift */,
 				F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */,
@@ -168,6 +170,15 @@
 				F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */,
 			);
 			path = "User Interface";
+			sourceTree = "<group>";
+		};
+		F461B8862670205000A2C53A /* ListTableViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F4B47FEA205734880027755B /* ListTableViewController.swift */,
+				F461B8872670209200A2C53A /* ListTableViewControllerCell.swift */,
+			);
+			path = ListTableViewController;
 			sourceTree = "<group>";
 		};
 		F4B47FF0205734F40027755B /* Frameworks */ = {
@@ -224,7 +235,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = "Omni-Soft, Inc.";
 				TargetAttributes = {
 					F400B4BF20572E0000556F51 = {
@@ -287,6 +298,7 @@
 				F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */,
 				F4B47FF9205746A80027755B /* Pin.swift in Sources */,
 				F400B4C420572E0000556F51 /* AppDelegate.swift in Sources */,
+				F461B8882670209200A2C53A /* ListTableViewControllerCell.swift in Sources */,
 				F4D7FE0422D91EEE00D61B8B /* ImageViewController.swift in Sources */,
 				F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */,
 				F445000822D3A8C200988667 /* LocationDetailsTableViewCell.swift in Sources */,
@@ -372,6 +384,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -397,7 +410,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -432,6 +445,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -451,7 +465,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -469,12 +483,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YEJQTHXY7Y;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "../ZKits/ZKits-Debug";
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PREFIX_HEADER = "MyPins/MyPins-Prefix.pch";
 				INFOPLIST_FILE = MyPins/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -497,12 +511,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YEJQTHXY7Y;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "../ZKits/Zkits-Debug";
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PREFIX_HEADER = "MyPins/MyPins-Prefix.pch";
 				INFOPLIST_FILE = MyPins/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

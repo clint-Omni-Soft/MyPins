@@ -10,8 +10,7 @@ import UIKit
 import CoreLocation
 
 
-protocol LocationDetailsTableViewCellDelegate: class
-{
+protocol LocationDetailsTableViewCellDelegate: AnyObject {
     func locationDetailsTableViewCell( locationDetailsTableViewCell: LocationDetailsTableViewCell,
                                        requestingEditOfNameAndDetails: Bool )
     
@@ -27,8 +26,8 @@ protocol LocationDetailsTableViewCellDelegate: class
 
 
 
-class LocationDetailsTableViewCell: UITableViewCell
-{
+class LocationDetailsTableViewCell: UITableViewCell {
+    
     // MARK: Public Variables ... these are guaranteed to be set by our creator
     var altitude    = 0.0
     var details     : String!
@@ -50,15 +49,13 @@ class LocationDetailsTableViewCell: UITableViewCell
     
     // MARK: UITableViewCell Lifecycle Methods
     
-    override func awakeFromNib()
-    {
+    override func awakeFromNib() {
         logTrace()
         super.awakeFromNib()
     }
 
     
-    override func setSelected(_ selected: Bool, animated: Bool)
-    {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(false, animated: animated)
     }
 
@@ -66,14 +63,12 @@ class LocationDetailsTableViewCell: UITableViewCell
     
     // MARK: Public Initializer
     
-    func initialize()
-    {
+    func initialize() {
         logTrace()
         let         units                  = PinCentral.sharedInstance.displayUnits()
         let         altitudeInDesiredUnits = ( ( DISPLAY_UNITS_METERS == units ) ? altitude : ( altitude * FEET_PER_METER ) )
         let         altitudeText           = String( format: "%7.1f", altitudeInDesiredUnits ).trimmingCharacters(in: .whitespaces)
 
-        
         detailsButton  .setTitle( ( details.isEmpty ? NSLocalizedString( "LabelText.Details", comment: "Address / Description" ) : details ), for: .normal )
         nameButton     .setTitle( ( name   .isEmpty ? NSLocalizedString( "LabelText.Name",    comment: "Name"                  ) : name    ), for: .normal )
         locationButton .setTitle( String( format: "%7.4f, %7.4f at %@ %@", latitude, longitude, altitudeText, units ), for: .normal )
@@ -90,40 +85,35 @@ class LocationDetailsTableViewCell: UITableViewCell
     
     // MARK: Target/Action Methods
     
-    @IBAction func locationButtonTouched(_ sender: UIButton )
-    {
+    @IBAction func locationButtonTouched(_ sender: UIButton ) {
         logTrace()
         delegate?.locationDetailsTableViewCell( locationDetailsTableViewCell: self,
                                                 requestingEditOfLocation: true )
     }
     
     
-    @IBAction func nameOrDetailsButtonTouched(_ sender: UIButton )
-    {
+    @IBAction func nameOrDetailsButtonTouched(_ sender: UIButton ) {
         logTrace()
         delegate?.locationDetailsTableViewCell( locationDetailsTableViewCell: self,
                                                 requestingEditOfNameAndDetails: true )
     }
     
     
-    @IBAction func pinColorButtonTouched(_ sender: UIButton )
-    {
+    @IBAction func pinColorButtonTouched(_ sender: UIButton ) {
         logTrace()
         delegate?.locationDetailsTableViewCell( locationDetailsTableViewCell: self,
                                                 requestingEditOfPinColor: true )
     }
     
     
-    @IBAction func showOnMapButtonTouched(_ sender: UIButton)
-    {
+    @IBAction func showOnMapButtonTouched(_ sender: UIButton) {
         logTrace()
         delegate?.locationDetailsTableViewCell( locationDetailsTableViewCell: self,
                                                 requestingShowPinOnMap: true )
     }
     
     
-    @IBAction func unitsButtonTouched(_ sender: UIButton)
-    {
+    @IBAction func unitsButtonTouched(_ sender: UIButton) {
         logTrace()
         toggleDisplayUnits()
     }
@@ -132,16 +122,12 @@ class LocationDetailsTableViewCell: UITableViewCell
     
     // MARK: Utility Methods (Private)
     
-    private func setPinColorButtonBackgroundImage()
-    {
+    private func setPinColorButtonBackgroundImage() {
         let size = pinColorButton.frame.size
         let rect = CGRect( x: 0, y: 0, width: size.width, height: size.height )
-
         var backgroundColor : UIColor = .white
         
-
-        if ( ( pinColor == PinColors.pinWhite ) || ( pinColor == PinColors.pinYellow ) )
-        {
+        if ( ( pinColor == PinColors.pinWhite ) || ( pinColor == PinColors.pinYellow ) ) {
             backgroundColor = .lightGray
         }
         
@@ -150,9 +136,7 @@ class LocationDetailsTableViewCell: UITableViewCell
         backgroundColor.setFill()
         UIRectFill( rect )
         
-        
         let backgroundImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        
         
         UIGraphicsEndImageContext()
       
@@ -160,10 +144,8 @@ class LocationDetailsTableViewCell: UITableViewCell
     }
     
     
-    private func toggleDisplayUnits()
-    {
+    private func toggleDisplayUnits() {
         var     units = PinCentral.sharedInstance.displayUnits()
-        
         
         units = ( ( DISPLAY_UNITS_METERS == units ) ? DISPLAY_UNITS_FEET : DISPLAY_UNITS_METERS )
         
