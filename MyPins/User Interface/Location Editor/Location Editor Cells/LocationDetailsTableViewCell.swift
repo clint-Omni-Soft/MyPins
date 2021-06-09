@@ -50,7 +50,6 @@ class LocationDetailsTableViewCell: UITableViewCell {
     // MARK: UITableViewCell Lifecycle Methods
     
     override func awakeFromNib() {
-        logTrace()
         super.awakeFromNib()
     }
 
@@ -64,9 +63,9 @@ class LocationDetailsTableViewCell: UITableViewCell {
     // MARK: Public Initializer
     
     func initialize() {
-        logTrace()
+//        logTrace()
         let         units                  = PinCentral.sharedInstance.displayUnits()
-        let         altitudeInDesiredUnits = ( ( DISPLAY_UNITS_METERS == units ) ? altitude : ( altitude * FEET_PER_METER ) )
+        let         altitudeInDesiredUnits = ( ( DisplayUnits.meters == units ) ? altitude : ( altitude * GlobalConstants.feetPerMeter ) )
         let         altitudeText           = String( format: "%7.1f", altitudeInDesiredUnits ).trimmingCharacters(in: .whitespaces)
 
         detailsButton  .setTitle( ( details.isEmpty ? NSLocalizedString( "LabelText.Details", comment: "Address / Description" ) : details ), for: .normal )
@@ -147,9 +146,9 @@ class LocationDetailsTableViewCell: UITableViewCell {
     private func toggleDisplayUnits() {
         var     units = PinCentral.sharedInstance.displayUnits()
         
-        units = ( ( DISPLAY_UNITS_METERS == units ) ? DISPLAY_UNITS_FEET : DISPLAY_UNITS_METERS )
+        units = ( ( DisplayUnits.meters == units ) ? DisplayUnits.feet : DisplayUnits.meters )
         
-        UserDefaults.standard.set( units, forKey: DISPLAY_UNITS_ALTITUDE )
+        UserDefaults.standard.set( units, forKey: DisplayUnits.altitude )
         UserDefaults.standard.synchronize()
         
         initialize()

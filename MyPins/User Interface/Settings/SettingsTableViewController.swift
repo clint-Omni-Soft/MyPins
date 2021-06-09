@@ -35,8 +35,8 @@ class SettingsTableViewController: UITableViewController {
         title = NSLocalizedString( "Title.Settings",  comment: "Settings"  )
         
         rowTitleArray = [ NSLocalizedString( "LabelText.About", comment: "About"      ),
-                          NSLocalizedString( "Title.HowToUse",  comment: "How to Use" ),
-                          NSLocalizedString( "Title.ReduceImageSize",  comment: "Reduce Image Size" ) ]
+                          NSLocalizedString( "Title.HowToUse",  comment: "How to Use" ) ]
+//                          NSLocalizedString( "Title.ReduceImageSize",  comment: "Reduce Image Size" ) ]
     }
     
     
@@ -73,7 +73,7 @@ class SettingsTableViewController: UITableViewController {
         switch indexPath.row {
         case 0:     showViewController( storyboardId: StoryboardIds.splashScreen )
         case 1:     showViewController( storyboardId: StoryboardIds.howToUse     )
-        case 2:     reduceImageSize()
+//        case 2:     reduceImageSize()
         default:    break
         }
         

@@ -40,7 +40,6 @@ class LocationImageTableViewCell: UITableViewCell {
     // MARK: UITableViewCell Lifecycle Methods
     
     override func awakeFromNib() {
-        logTrace()
         super.awakeFromNib()
     }
 
@@ -64,7 +63,7 @@ class LocationImageTableViewCell: UITableViewCell {
     // MARK: Public Initializer
     
     func initializeWith( imageName: String, _ delegate: LocationImageTableViewCellDelegate ) {
-        logTrace()
+//        logTrace()
         cameraButton.setImage( ( imageName.isEmpty ? UIImage.init( named: Constants.cameraImage ) : nil ), for: .normal )
         cameraButton.backgroundColor = ( imageName.isEmpty ? .white : .clear )
         

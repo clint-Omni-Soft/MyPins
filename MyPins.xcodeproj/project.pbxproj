@@ -23,6 +23,7 @@
 		F46B387220599BDB005347AC /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */; };
 		F4766CE7243D238A0054CD97 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4766CE6243D238A0054CD97 /* Logger.swift */; };
 		F4820DFE206998E800780C2D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4820DFC206998E800780C2D /* Localizable.strings */; };
+		F483C53B2671812600224D53 /* GlobalDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F483C53A2671812600224D53 /* GlobalDefinitions.swift */; };
 		F48A45C720698D0400C27F03 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F48A45C920698D0400C27F03 /* Main_iPhone.storyboard */; };
 		F48A45CA20698FDE00C27F03 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F48A45CC20698FDE00C27F03 /* Main_iPad.storyboard */; };
 		F49766AD205B11AE00A76F9D /* PointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49766AC205B11AE00A76F9D /* PointAnnotation.swift */; };
@@ -62,6 +63,7 @@
 		F4820DFD206998E800780C2D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F4820E022069991700780C2D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F4820E032069996D00780C2D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F483C53A2671812600224D53 /* GlobalDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalDefinitions.swift; sourceTree = "<group>"; };
 		F48A45C820698D0400C27F03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		F48A45CB20698FDE00C27F03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		F48A45CD2069903C00C27F03 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 		F400B4C220572E0000556F51 /* MyPins */ = {
 			isa = PBXGroup;
 			children = (
+				F483C53A2671812600224D53 /* GlobalDefinitions.swift */,
 				F400B4D220572E0000556F51 /* Info.plist */,
 				F40319FC20A3C3B900D33372 /* MyPins-Bridging-Header.h */,
 				F40319BF20A38A2D00D33372 /* MyPins-Prefix.pch */,
@@ -152,22 +155,14 @@
 		F400B4DA20572E3900556F51 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
+				F483C5362671364C00224D53 /* MapViewController */,
 				F461B8862670205000A2C53A /* ListTableViewController */,
-				F427FF84209A293600DBA3CD /* HowToUseViewController.swift */,
-				F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */,
-				F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */,
-				F403EF8722C17780000D9ABD /* LocationEditorViewController.swift */,
-				F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */,
-				F4766CE6243D238A0054CD97 /* Logger.swift */,
-				F4B47FEC205734A80027755B /* MapViewController.swift */,
-				F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */,
-				F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */,
-				F49766AC205B11AE00A76F9D /* PointAnnotation.swift */,
-				F427FF86209A2A6B00DBA3CD /* SettingsTableViewController.swift */,
+				F483C5342671351700224D53 /* Location Editor */,
+				F483C5352671353E00224D53 /* Settings */,
+				F483C5332671349300224D53 /* Utilities */,
 				F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */,
 				F438F6DB2061D0B10032F465 /* SplitViewController.swift */,
 				F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */,
-				F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -176,9 +171,73 @@
 			isa = PBXGroup;
 			children = (
 				F4B47FEA205734880027755B /* ListTableViewController.swift */,
-				F461B8872670209200A2C53A /* ListTableViewControllerCell.swift */,
+				F483C53926717C3700224D53 /* ListTableViewController Cells */,
 			);
 			path = ListTableViewController;
+			sourceTree = "<group>";
+		};
+		F483C5332671349300224D53 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				F4766CE6243D238A0054CD97 /* Logger.swift */,
+				F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */,
+				F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		F483C5342671351700224D53 /* Location Editor */ = {
+			isa = PBXGroup;
+			children = (
+				F403EF8722C17780000D9ABD /* LocationEditorViewController.swift */,
+				F483C53726717BEC00224D53 /* Location Editor Cells */,
+				F483C53826717C0900224D53 /* Child ViewControllers */,
+			);
+			path = "Location Editor";
+			sourceTree = "<group>";
+		};
+		F483C5352671353E00224D53 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F427FF86209A2A6B00DBA3CD /* SettingsTableViewController.swift */,
+				F427FF84209A293600DBA3CD /* HowToUseViewController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		F483C5362671364C00224D53 /* MapViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F4B47FEC205734A80027755B /* MapViewController.swift */,
+				F49766AC205B11AE00A76F9D /* PointAnnotation.swift */,
+			);
+			path = MapViewController;
+			sourceTree = "<group>";
+		};
+		F483C53726717BEC00224D53 /* Location Editor Cells */ = {
+			isa = PBXGroup;
+			children = (
+				F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */,
+				F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */,
+			);
+			path = "Location Editor Cells";
+			sourceTree = "<group>";
+		};
+		F483C53826717C0900224D53 /* Child ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */,
+				F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */,
+			);
+			path = "Child ViewControllers";
+			sourceTree = "<group>";
+		};
+		F483C53926717C3700224D53 /* ListTableViewController Cells */ = {
+			isa = PBXGroup;
+			children = (
+				F461B8872670209200A2C53A /* ListTableViewControllerCell.swift */,
+			);
+			path = "ListTableViewController Cells";
 			sourceTree = "<group>";
 		};
 		F4B47FF0205734F40027755B /* Frameworks */ = {
@@ -192,9 +251,9 @@
 		F4B47FF3205744F40027755B /* PinCentral */ = {
 			isa = PBXGroup;
 			children = (
-				F4B47FF62057467D0027755B /* CoreData Entities */,
-				F400B4CA20572E0000556F51 /* MyPins.xcdatamodeld */,
 				F4B47FF4205745130027755B /* PinCentral.swift */,
+				F400B4CA20572E0000556F51 /* MyPins.xcdatamodeld */,
+				F4B47FF62057467D0027755B /* CoreData Entities */,
 			);
 			path = PinCentral;
 			sourceTree = "<group>";
@@ -297,6 +356,7 @@
 				F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */,
 				F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */,
 				F4B47FF9205746A80027755B /* Pin.swift in Sources */,
+				F483C53B2671812600224D53 /* GlobalDefinitions.swift in Sources */,
 				F400B4C420572E0000556F51 /* AppDelegate.swift in Sources */,
 				F461B8882670209200A2C53A /* ListTableViewControllerCell.swift in Sources */,
 				F4D7FE0422D91EEE00D61B8B /* ImageViewController.swift in Sources */,
