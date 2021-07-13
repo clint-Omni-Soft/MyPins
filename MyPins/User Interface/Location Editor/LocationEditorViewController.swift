@@ -679,9 +679,13 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
                     }
                     
                     if let myImageToSave = imageToSave {
-                        if .camera == picker.sourceType {
-                            UIImageWriteToSavedPhotosAlbum( myImageToSave, self, #selector( LocationEditorViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
-                        }
+                        
+                        // Uncomment the following 3 lines if you want to save images to the photo album
+                        // but just be aware that we already use PinCentral to save them in our app
+                        
+//                        if .camera == picker.sourceType {
+//                            UIImageWriteToSavedPhotosAlbum( myImageToSave, self, #selector( LocationEditorViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
+//                        }
                         
                         let     imageName = self.pinCentral.saveImage( image: myImageToSave )
                         
