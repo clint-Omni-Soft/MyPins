@@ -32,6 +32,7 @@
 "ButtonTitle.EndDirections"         = "Finalizar indicaciones";
 "ButtonTitle.Hybrid"                = "Híbrido";
 "ButtonTitle.HybridFlyover"         = "Paso elevado híbrido";
+"ButtonTitle.InspectImage"          = "Inspeccionar imagen";
 "ButtonTitle.Map"                   = "Mapa";
 "ButtonTitle.MapType"               = "Tipo de mapa";
 "ButtonTitle.MutedStandard"         = "Estándar silenciado";
@@ -46,7 +47,6 @@
 "ButtonTitle.ShowOnMap"             = "Mostrar en el mapa";
 "ButtonTitle.Standard"              = "Estándar";
 "ButtonTitle.ToggleUnits"           = "Conmutar unidades";
-"ButtonTitle.ZoomIn"                = "Acercarse";
 "ButtonTitle.Units"                 = "Unidades";
 "ButtonTitle.UseCurrent"            = "Usar la ubicación actual";
 "ButtonTitle.Yes"                   = "Sí";

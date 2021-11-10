@@ -11,35 +11,21 @@ import UIKit
 
 
 
-class SplitViewController: UISplitViewController
-{
-    
+class SplitViewController: UISplitViewController {
     
     
     // MARK: UIViewController Lifecycle Methods
     
-    override func viewDidLoad()
-    {
+    override func viewDidLoad() {
         logTrace()
         super.viewDidLoad()
     }
     
 
-    override func didReceiveMemoryWarning()
-    {
+    override func didReceiveMemoryWarning() {
         logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
-    
-    
-    
-    // MARK: Utility Methods
-    
-    private func description() -> String
-    {
-        return "SplitViewController"
-    }
-    
     
 
 }

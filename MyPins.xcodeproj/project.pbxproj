@@ -159,10 +159,10 @@
 				F461B8862670205000A2C53A /* ListTableViewController */,
 				F483C5342671351700224D53 /* Location Editor */,
 				F483C5352671353E00224D53 /* Settings */,
+				F483C5332671349300224D53 /* Utilities */,
 				F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */,
 				F438F6DB2061D0B10032F465 /* SplitViewController.swift */,
 				F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */,
-				F483C5332671349300224D53 /* Utilities */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";

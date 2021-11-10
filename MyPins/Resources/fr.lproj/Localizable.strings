@@ -32,6 +32,7 @@
 "ButtonTitle.EndDirections"         = "Fin des directions";
 "ButtonTitle.Hybrid"                = "Hybride";
 "ButtonTitle.HybridFlyover"         = "Survol hybride";
+"ButtonTitle.InspectImage"          = "Inspecter l'image";
 "ButtonTitle.Map"                   = "Carte";
 "ButtonTitle.MapType"               = "Types de Carte";
 "ButtonTitle.MutedStandard"         = "Standard en sourdine";
@@ -46,7 +47,6 @@
 "ButtonTitle.ShowOnMap"             = "Afficher sur la carte";
 "ButtonTitle.Standard"              = "la norme";
 "ButtonTitle.ToggleUnits"           = "Toggle Unités";
-"ButtonTitle.ZoomIn"                = "Agrandir";
 "ButtonTitle.Units"                 = "Unités";
 "ButtonTitle.UseCurrent"            = "Utiliser la position actuelle";
 "ButtonTitle.Yes"                   = "Oui";

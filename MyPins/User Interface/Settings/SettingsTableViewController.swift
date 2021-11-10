@@ -6,7 +6,9 @@
 //  Copyright © 2018 Omni-Soft, Inc. All rights reserved.
 //
 
+
 import UIKit
+
 
 class SettingsTableViewController: UITableViewController {
 
@@ -82,11 +84,6 @@ class SettingsTableViewController: UITableViewController {
     
     
     // MARK: Utility Methods
-    
-    private func description() -> String {
-        return "SettingsTableViewController"
-    }
-    
     
     private func reduceImageSize() {
         logTrace()

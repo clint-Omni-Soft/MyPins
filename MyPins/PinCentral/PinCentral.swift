@@ -14,8 +14,8 @@ import CoreLocation
 
 
 protocol PinCentralDelegate: AnyObject {
-    func pinCentral( pinCentral: PinCentral, didOpenDatabase: Bool )
-    func pinCentralDidReloadPinArray( pinCentral: PinCentral )
+    func pinCentral(_ pinCentral: PinCentral, didOpenDatabase: Bool )
+    func pinCentralDidReloadPinArray(_ pinCentral: PinCentral )
 }
 
 
@@ -91,7 +91,7 @@ class PinCentral: NSObject {
             
             DispatchQueue.main.async {
                 logVerbose( "didOpenDatabase[ %@ ]", stringFor( self.didOpenDatabase ) )
-                self.delegate?.pinCentral( pinCentral: self, didOpenDatabase: self.didOpenDatabase )
+                self.delegate?.pinCentral( self, didOpenDatabase: self.didOpenDatabase )
             }
             
         } )
@@ -339,11 +339,6 @@ class PinCentral: NSObject {
     }
     
     
-    private func description() -> String {
-        return "PinCentral"
-    }
-    
-    
     // Must be called from within persistentContainer.viewContext
     private func fetchAllPinObjects() {
         do {
@@ -454,7 +449,7 @@ class PinCentral: NSObject {
         fetchAllPinObjects()
         
         DispatchQueue.main.async {
-            self.delegate?.pinCentralDidReloadPinArray( pinCentral: self )
+            self.delegate?.pinCentralDidReloadPinArray( self )
         }
 
         if .pad == UIDevice.current.userInterfaceIdiom {

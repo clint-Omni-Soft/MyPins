@@ -10,14 +10,11 @@
 import UIKit
 
 
-
-class TabBarViewController: UITabBarController,
-                            PinCentralDelegate
-{
+class TabBarViewController: UITabBarController {
+    
     // MARK: UIViewController Lifecycle Methods
     
-    override func viewDidLoad()
-    {
+    override func viewDidLoad() {
         logTrace()
         super.viewDidLoad()
 
@@ -25,10 +22,8 @@ class TabBarViewController: UITabBarController,
         tabBar.items![1].title = NSLocalizedString( "Title.Map",       comment: "Map"       )
         tabBar.items![2].title = NSLocalizedString( "Title.Settings",  comment: "Settings"  )
         
-        if .pad == UIDevice.current.userInterfaceIdiom
-        {
-            if 1 < ( viewControllers?.count )!
-            {
+        if .pad == UIDevice.current.userInterfaceIdiom {
+            if 1 < ( viewControllers?.count )! {
                 var     viewControllerArray = viewControllers
                 
                 
@@ -42,8 +37,7 @@ class TabBarViewController: UITabBarController,
         let     pinCentral = PinCentral.sharedInstance
         
         
-        if !pinCentral.didOpenDatabase
-        {
+        if !pinCentral.didOpenDatabase {
             pinCentral.delegate = self
             pinCentral.openDatabase()
         }
@@ -51,29 +45,28 @@ class TabBarViewController: UITabBarController,
     }
     
     
-    override func viewWillAppear(_ animated: Bool)
-    {
+    override func viewWillAppear(_ animated: Bool) {
         logTrace()
         super.viewWillAppear( animated )
     }
     
     
-    override func didReceiveMemoryWarning()
-    {
+    override func didReceiveMemoryWarning() {
         logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
     
+}
+
+
+
+// MARK: PinCentralDelegate Methods
+
+extension TabBarViewController: PinCentralDelegate {
     
-    
-    // MARK: PinCentralDelegate Methods
-    
-    func pinCentral( pinCentral: PinCentral,
-                     didOpenDatabase: Bool )
-    {
+    func pinCentral(_ pinCentral: PinCentral, didOpenDatabase: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
-        if !didOpenDatabase
-        {
+        if !didOpenDatabase {
             presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                           message: NSLocalizedString( "AlertMessage.CannotOpenDatabase", comment: "Fatal Error!  Cannot open database." ) )
         }
@@ -81,12 +74,9 @@ class TabBarViewController: UITabBarController,
     }
     
     
-    func pinCentralDidReloadPinArray( pinCentral: PinCentral )
-    {
+    func pinCentralDidReloadPinArray(_ pinCentral: PinCentral ) {
         logVerbose( "loaded [ %d ] pins", pinCentral.pinArray.count )
     }
-    
-    
     
     
 }

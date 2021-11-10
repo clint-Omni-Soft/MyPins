@@ -6,7 +6,9 @@
 //  Copyright © 2021 Omni-Soft, Inc. All rights reserved.
 //
 
+
 import UIKit
+
 
 class ListTableViewControllerCell: UITableViewCell {
 
@@ -76,5 +78,6 @@ class ListTableViewControllerCell: UITableViewCell {
         }
             
     }
+    
 
 }

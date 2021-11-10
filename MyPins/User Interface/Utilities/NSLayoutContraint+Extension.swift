@@ -10,10 +10,9 @@ import UIKit
 
 
 
-extension NSLayoutConstraint
-{
-    func description() -> String
-    {
+extension NSLayoutConstraint {
+    
+    func description() -> String {
         return String.init( format: "[ %@ ] = [ %f ]", self.identifier!, self.constant )
     }
     

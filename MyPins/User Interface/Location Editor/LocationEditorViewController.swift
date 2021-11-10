@@ -13,7 +13,6 @@ import MapKit
 
 protocol LocationEditorViewControllerDelegate: AnyObject {
     func locationEditorViewController(_ locationEditorViewController: LocationEditorViewController, didEditLocationData: Bool )
-    
     func locationEditorViewController(_ locationEditorViewController: LocationEditorViewController, wantsToCenterMapAt coordinate: CLLocationCoordinate2D )
 }
 
@@ -66,6 +65,7 @@ class LocationEditorViewController: UIViewController  {
     private var     originalPinColor          : Int16!      // Set in initializeVariables()
     private let     pinCentral                = PinCentral.sharedInstance
     private var     pinColor                  : Int16!      // Set in initializeVariables()
+    private var     replacingImage            = false
     private var     savedPinBeforeShowingMap  = false
     
     
@@ -78,6 +78,10 @@ class LocationEditorViewController: UIViewController  {
 
         title = NSLocalizedString( "Title.PinEditor", comment: "Pin Editor" )
         preferredContentSize = CGSize( width: 320, height: 460 )
+        
+        // I'm not sure why but without the following 2 lines, the navBar is Black
+        edgesForExtendedLayout = .all
+        navigationController?.navigationBar.isTranslucent = true
         
         initializeVariables()
     }
@@ -269,20 +273,20 @@ class LocationEditorViewController: UIViewController  {
     
 extension LocationEditorViewController: LocationDetailsTableViewCellDelegate {
     
-    func locationDetailsTableViewCell( locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingEditOfNameAndDetails: Bool ) {
+    func locationDetailsTableViewCell(_ locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingEditOfNameAndDetails: Bool ) {
         logTrace()
         editNameAndDetails( locationDetailsTableViewCell )
     }
 
     
     
-    func locationDetailsTableViewCell( locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingEditOfLocation: Bool ) {
+    func locationDetailsTableViewCell(_ locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingEditOfLocation: Bool ) {
         logTrace()
         editLatLongAndAlt( locationDetailsTableViewCell )
     }
     
     
-    func locationDetailsTableViewCell( locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingEditOfPinColor: Bool ) {
+    func locationDetailsTableViewCell(_ locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingEditOfPinColor: Bool ) {
         logTrace()
         detailsCell = locationDetailsTableViewCell
         
@@ -307,7 +311,7 @@ extension LocationEditorViewController: LocationDetailsTableViewCellDelegate {
     }
     
 
-    func locationDetailsTableViewCell( locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingShowPinOnMap: Bool ) {
+    func locationDetailsTableViewCell(_ locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingShowPinOnMap: Bool ) {
         logTrace()
         if name.isEmpty {
             logTrace( "ERROR:  Name field cannot be left blank!" )
@@ -428,7 +432,7 @@ extension LocationEditorViewController: LocationDetailsTableViewCellDelegate {
     
 extension LocationEditorViewController: LocationImageTableViewCellDelegate {
     
-    func locationImageTableViewCell( locationImageTableViewCell: LocationImageTableViewCell, cameraButtonTouched: Bool ) {
+    func locationImageTableViewCell(_ locationImageTableViewCell: LocationImageTableViewCell, cameraButtonTouched: Bool ) {
         logTrace()
         imageCell = locationImageTableViewCell
 
@@ -513,27 +517,9 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ImageDisposition", comment: "What would you like to do with this image?" ), message: nil, preferredStyle: .alert)
         
-        let     deleteAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Delete", comment: "Delete" ), style: .default )
+        let     inspectImageAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.InspectImage", comment: "Inspect Image" ), style: .default )
         { ( alertAction ) in
-            logTrace( "Delete Action" )
-            
-            self.deleteImage()
-            self.imageCell.initializeWith( imageName: self.imageName, self )
-        }
-        
-        let     replaceAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Replace", comment: "Replace" ), style: .default )
-        { ( alertAction ) in
-            logTrace( "Replace Action" )
-            
-            self.deleteImage()
-            self.imageCell.initializeWith( imageName: self.imageName, self )
-            
-            self.promptForImageSource()
-        }
-        
-        let     zoomAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.ZoomIn", comment: "Zoom In" ), style: .default )
-        { ( alertAction ) in
-            logTrace( "Zoom In Action" )
+            logTrace( "Inspect Image Action" )
             
             if self.dataChanged() {
                 self.loadingImageView = true
@@ -545,11 +531,30 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
 
         }
         
+        let     replaceAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Replace", comment: "Replace" ), style: .destructive )
+        { ( alertAction ) in
+            logTrace( "Replace Action" )
+            
+//            self.deleteImage()
+            self.replacingImage = true
+            self.imageCell.initializeWith( "", self )
+            
+            self.promptForImageSource()
+        }
+        
+        let     deleteAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Delete", comment: "Delete" ), style: .destructive )
+        { ( alertAction ) in
+            logTrace( "Delete Action" )
+            
+            self.deleteImage()
+            self.imageCell.initializeWith( self.imageName, self )
+        }
+        
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
         
-        alert.addAction( deleteAction  )
+        alert.addAction( inspectImageAction )
         alert.addAction( replaceAction )
-        alert.addAction( zoomAction    )
+        alert.addAction( deleteAction  )
         alert.addAction( cancelAction  )
         
         present( alert, animated: true, completion: nil )
@@ -574,8 +579,16 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
             self.openImagePickerFor( sourceType: .camera )
         }
         
-        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
-        
+        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel )
+        { ( alertAction ) in
+            logTrace( "Close Action" )
+            if self.replacingImage {
+                self.replacingImage = false
+                self.imageCell.initializeWith( self.imageName, self )
+            }
+            
+        }
+
         if UIImagePickerController.isSourceTypeAvailable( .camera ) {
             alert.addAction( cameraAction )
         }
@@ -596,19 +609,18 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
 
 extension LocationEditorViewController: PinCentralDelegate {
 
-    func pinCentral( pinCentral: PinCentral, didOpenDatabase: Bool ) {
+    func pinCentral(_ pinCentral: PinCentral, didOpenDatabase: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
     }
     
     
-    func pinCentralDidReloadPinArray( pinCentral: PinCentral ) {
+    func pinCentralDidReloadPinArray(_ pinCentral: PinCentral ) {
         logVerbose( "loaded [ %d ] pins ... indexOfItemBeingEdited[ %d ]", pinCentral.pinArray.count, indexOfItemBeingEdited )
         
-//        if GlobalConstants.newPin == indexOfItemBeingEdited
-//        {
-            logVerbose( "recovering pinIndex[ %d ] from pinCentral", pinCentral.newPinIndex )
+        if GlobalConstants.newPin == indexOfItemBeingEdited {
+            logVerbose( "recovering new pinIndex[ %d ] from pinCentral", pinCentral.newPinIndex )
             indexOfItemBeingEdited = pinCentral.newPinIndex
-//        }
+        }
         
         if loadingImageView {
             loadingImageView = false
@@ -654,6 +666,11 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
             dismiss( animated: true, completion: nil )
         }
         
+        if replacingImage {
+            replacingImage = false
+            imageCell.initializeWith( self.imageName, self )
+        }
+        
     }
     
     
@@ -695,13 +712,24 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
                                                message: NSLocalizedString( "AlertMessage.ImageSaveFailed", comment: "We were unable to save the image you selected." ) )
                         }
                         else {
+                            if self.replacingImage {
+                                self.replacingImage = false
+                                
+                                if !self.pinCentral.deleteImageWith( name: self.imageName ) {
+                                    logVerbose( "ERROR: Unable to delete image[ %@ ]!", self.imageName )
+                                    self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                                                       message: NSLocalizedString( "AlertMessage.UnableToDeleteImage", comment: "We were unable to delete the image you created." ) )
+                                }
+                                
+                            }
+
                             self.imageAssigned = false
                             self.imageName     = imageName
                             
                             logVerbose( "Saved image as [ %@ ]", imageName )
                             
-                            self.imageCell.initializeWith( imageName: self.imageName, self )
-
+                            self.imageCell.initializeWith( self.imageName, self )
+                            
                             self.updatePinCentral()
                         }
                         
@@ -919,7 +947,7 @@ extension LocationEditorViewController: UITableViewDataSource {
     //    logTrace()
         let imageCell = cell as! LocationImageTableViewCell
         
-        imageCell.initializeWith(imageName: imageName, self)
+        imageCell.initializeWith( imageName, self)
         
         return cell
     }

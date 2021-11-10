@@ -10,8 +10,7 @@ import UIKit
 
 
 protocol LocationImageTableViewCellDelegate: AnyObject {
-    func locationImageTableViewCell( locationImageTableViewCell: LocationImageTableViewCell,
-                                     cameraButtonTouched: Bool )
+    func locationImageTableViewCell(_ locationImageTableViewCell: LocationImageTableViewCell, cameraButtonTouched: Bool )
 }
 
 
@@ -54,15 +53,14 @@ class LocationImageTableViewCell: UITableViewCell {
 
     @IBAction func cameraButtonTouched(_ sender: UIButton) {
         logTrace()
-        delegate?.locationImageTableViewCell( locationImageTableViewCell: self,
-                                              cameraButtonTouched: true )
+        delegate?.locationImageTableViewCell( self, cameraButtonTouched: true )
     }
     
     
 
     // MARK: Public Initializer
     
-    func initializeWith( imageName: String, _ delegate: LocationImageTableViewCellDelegate ) {
+    func initializeWith(_ imageName: String, _ delegate: LocationImageTableViewCellDelegate ) {
 //        logTrace()
         cameraButton.setImage( ( imageName.isEmpty ? UIImage.init( named: Constants.cameraImage ) : nil ), for: .normal )
         cameraButton.backgroundColor = ( imageName.isEmpty ? .white : .clear )
@@ -83,9 +81,7 @@ class LocationImageTableViewCell: UITableViewCell {
         }
         
         if !imageLoaded {
-            let result = pinCentral.imageWith( name: Constants.missingImage )
-            
-            locationImageView.image = result.1
+            locationImageView.image = UIImage( named: Constants.missingImage )
         }
 
     }

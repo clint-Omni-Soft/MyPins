@@ -43,7 +43,7 @@ class MapViewController: UIViewController {
     private var routeColor               = UIColor.green
     private var selectedPointAnnotation  : PointAnnotation?
     private var showingDirectionsOverlay = false
-    private var showingPinEditor         = false
+//    private var showingPinEditor         = false
     
     
     
@@ -81,17 +81,15 @@ class MapViewController: UIViewController {
         loadBarButtonItems()
         pinCentral.delegate = self
         
-        if showingPinEditor {
-            showingPinEditor = false
+//        if showingPinEditor {
+//            showingPinEditor = false
+//        }
+
+        if !pinCentral.didOpenDatabase {
+            pinCentral.openDatabase()
         }
         else {
-            if !pinCentral.didOpenDatabase {
-                pinCentral.openDatabase()
-            }
-            else {
-                refreshMapAnnotations()
-            }
-
+            refreshMapAnnotations()
         }
         
         NotificationCenter.default.addObserver( self, selector: #selector( MapViewController.centerMap(   notification: ) ), name: NSNotification.Name( rawValue: Notifications.centerMap   ), object: nil )
@@ -111,7 +109,6 @@ class MapViewController: UIViewController {
         logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
-    
     
     
 
@@ -164,7 +161,6 @@ class MapViewController: UIViewController {
         
         refreshMapAnnotations()
     }
-    
     
     
     
@@ -277,7 +273,7 @@ class MapViewController: UIViewController {
             navigationController.popoverPresentationController?.sourceView               = view
         }
         
-        showingPinEditor = true
+//        showingPinEditor = true
     }
     
     
@@ -443,7 +439,7 @@ class MapViewController: UIViewController {
     
     
     private func refreshMapAnnotations() {
-//        logTrace()
+        logTrace()
         var     annotationArray:[PointAnnotation] = Array.init()
         
         myMapView.removeAnnotations( myMapView.annotations )
@@ -453,7 +449,7 @@ class MapViewController: UIViewController {
             let     annotation: PointAnnotation = PointAnnotation.init()
             
             
-            annotation.initWith( pin: pin, atIndex: index )
+            annotation.initWith( pin, atIndex: index )
             annotationArray.append( annotation )
         }
         
@@ -791,7 +787,7 @@ extension MapViewController: MKMapViewDelegate {
 
 extension MapViewController: PinCentralDelegate {
     
-    func pinCentral( pinCentral: PinCentral, didOpenDatabase: Bool ) {
+    func pinCentral(_ pinCentral: PinCentral, didOpenDatabase: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
         if didOpenDatabase {
             pinCentral.fetchPins()
@@ -804,7 +800,7 @@ extension MapViewController: PinCentralDelegate {
     }
     
     
-    func pinCentralDidReloadPinArray( pinCentral: PinCentral ) {
+    func pinCentralDidReloadPinArray(_ pinCentral: PinCentral ) {
         logVerbose( "loaded [ %d ] pins", pinCentral.pinArray.count )
         if ignoreRefresh {
             ignoreRefresh = false

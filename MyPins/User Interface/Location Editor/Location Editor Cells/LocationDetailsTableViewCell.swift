@@ -11,17 +11,10 @@ import CoreLocation
 
 
 protocol LocationDetailsTableViewCellDelegate: AnyObject {
-    func locationDetailsTableViewCell( locationDetailsTableViewCell: LocationDetailsTableViewCell,
-                                       requestingEditOfNameAndDetails: Bool )
-    
-    func locationDetailsTableViewCell( locationDetailsTableViewCell: LocationDetailsTableViewCell,
-                                       requestingEditOfLocation: Bool )
-    
-    func locationDetailsTableViewCell( locationDetailsTableViewCell: LocationDetailsTableViewCell,
-                                       requestingEditOfPinColor: Bool )
-    
-    func locationDetailsTableViewCell( locationDetailsTableViewCell: LocationDetailsTableViewCell,
-                                       requestingShowPinOnMap: Bool )
+    func locationDetailsTableViewCell(_ locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingEditOfNameAndDetails: Bool )
+    func locationDetailsTableViewCell(_ locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingEditOfLocation: Bool )
+    func locationDetailsTableViewCell(_ locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingEditOfPinColor: Bool )
+    func locationDetailsTableViewCell(_ locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingShowPinOnMap: Bool )
 }
 
 
@@ -86,29 +79,25 @@ class LocationDetailsTableViewCell: UITableViewCell {
     
     @IBAction func locationButtonTouched(_ sender: UIButton ) {
         logTrace()
-        delegate?.locationDetailsTableViewCell( locationDetailsTableViewCell: self,
-                                                requestingEditOfLocation: true )
+        delegate?.locationDetailsTableViewCell( self, requestingEditOfLocation: true )
     }
     
     
     @IBAction func nameOrDetailsButtonTouched(_ sender: UIButton ) {
         logTrace()
-        delegate?.locationDetailsTableViewCell( locationDetailsTableViewCell: self,
-                                                requestingEditOfNameAndDetails: true )
+        delegate?.locationDetailsTableViewCell( self, requestingEditOfNameAndDetails: true )
     }
     
     
     @IBAction func pinColorButtonTouched(_ sender: UIButton ) {
         logTrace()
-        delegate?.locationDetailsTableViewCell( locationDetailsTableViewCell: self,
-                                                requestingEditOfPinColor: true )
+        delegate?.locationDetailsTableViewCell( self, requestingEditOfPinColor: true )
     }
     
     
     @IBAction func showOnMapButtonTouched(_ sender: UIButton) {
         logTrace()
-        delegate?.locationDetailsTableViewCell( locationDetailsTableViewCell: self,
-                                                requestingShowPinOnMap: true )
+        delegate?.locationDetailsTableViewCell( self, requestingShowPinOnMap: true )
     }
     
     

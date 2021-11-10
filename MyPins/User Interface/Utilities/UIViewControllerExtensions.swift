@@ -13,8 +13,7 @@ import UIKit
 
 extension UIViewController {
     
-    func iPhoneViewControllerWithStoryboardId( storyboardId: String ) -> UIViewController
-    {
+    func iPhoneViewControllerWithStoryboardId( storyboardId: String ) -> UIViewController {
         logVerbose( "[ %@ ]", storyboardId )
         let     storyboardName = "Main_iPhone"
         let     storyboard     = UIStoryboard.init( name: storyboardName, bundle: nil )
@@ -25,8 +24,7 @@ extension UIViewController {
     }
 
 
-    func presentAlert( title: String, message: String )
-    {
+    func presentAlert( title: String, message: String ) {
         logVerbose( "[ %@ ][ %@ ]", title, message )
         let         alert    = UIAlertController.init( title: title, message: message, preferredStyle: .alert )
         let         okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ),
@@ -38,8 +36,7 @@ extension UIViewController {
     }
     
     
-    func viewControllerWithStoryboardId( storyboardId: String ) -> UIViewController
-    {
+    func viewControllerWithStoryboardId( storyboardId: String ) -> UIViewController {
         logVerbose( "[ %@ ]", storyboardId )
         let     storyboardName = ( ( .pad == UIDevice.current.userInterfaceIdiom ) ? "Main_iPad" : "Main_iPhone" )
         let     storyboard     = UIStoryboard.init( name: storyboardName, bundle: nil )

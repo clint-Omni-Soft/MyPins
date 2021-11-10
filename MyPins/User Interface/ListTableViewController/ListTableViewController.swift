@@ -169,7 +169,7 @@ extension ListTableViewController: LocationEditorViewControllerDelegate {
 
 extension ListTableViewController: PinCentralDelegate {
     
-    func pinCentral( pinCentral: PinCentral, didOpenDatabase: Bool ) {
+    func pinCentral(_ pinCentral: PinCentral, didOpenDatabase: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
         if didOpenDatabase {
             pinCentral.fetchPins()
@@ -182,7 +182,7 @@ extension ListTableViewController: PinCentralDelegate {
     }
     
     
-    func pinCentralDidReloadPinArray( pinCentral: PinCentral ) {
+    func pinCentralDidReloadPinArray(_ pinCentral: PinCentral ) {
         logVerbose( "loaded [ %d ] pins", pinCentral.pinArray.count )
         tableView.reloadData()
     }
