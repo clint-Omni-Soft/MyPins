@@ -70,7 +70,7 @@ class LocationImageTableViewCell: UITableViewCell {
         var     imageLoaded = false
 
         if !imageName.isEmpty {
-            let     result = pinCentral.imageWith( name: imageName )
+            let     result = pinCentral.imageNamed( imageName )
             
             imageLoaded = result.0
             

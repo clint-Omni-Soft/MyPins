@@ -224,7 +224,7 @@ extension ListTableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             logVerbose( "delete pin at row [ %d ]", indexPath.row )
-            pinCentral.deletePinAtIndex( index: indexPath.row )
+            pinCentral.deletePinAt( indexPath.row )
         }
         
     }

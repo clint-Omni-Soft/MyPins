@@ -90,7 +90,7 @@ class SettingsTableViewController: UITableViewController {
         for pin in pinCentral.pinArray {
             if let imageName = pin.imageName {
                 if !imageName.isEmpty {
-                    let result = pinCentral.imageWith(name: imageName )
+                    let result = pinCentral.imageNamed( imageName )
                     
                     if result.0 && result.2 > 500000 {
                         pinCentral.replaceImage(imageName, with: result.1 )

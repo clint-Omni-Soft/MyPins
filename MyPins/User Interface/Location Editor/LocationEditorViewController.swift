@@ -154,7 +154,7 @@ class LocationEditorViewController: UIViewController  {
     // MARK: Utility Methods
     
     private func deleteImage() {
-        if !pinCentral.deleteImageWith( name: imageName ) {
+        if !pinCentral.deleteImageNamed( imageName ) {
             logVerbose( "ERROR: Unable to delete image[ %@ ]!", self.imageName )
             presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                           message: NSLocalizedString( "AlertMessage.UnableToDeleteImage", comment: "We were unable to delete the image you created." ) )
@@ -239,13 +239,7 @@ class LocationEditorViewController: UIViewController  {
         pinCentral.delegate = self
         
         if GlobalConstants.newPin == indexOfItemBeingEdited {
-            pinCentral.addPin( name:      name,
-                               details:   details,
-                               latitude:  latitude,
-                               longitude: longitude,
-                               altitude:  altitude,
-                               imageName: imageName,
-                               pinColor:  Int16( pinColor ) )
+            pinCentral.addPinNamed( name, details: details, latitude: latitude, longitude: longitude, altitude: altitude, imageName: imageName, pinColor: Int16( pinColor ) )
         }
         else {
             let     pin = pinCentral.pinArray[indexOfItemBeingEdited]
@@ -258,7 +252,7 @@ class LocationEditorViewController: UIViewController  {
             pin.name      = name
             pin.pinColor  = Int16( pinColor )
             
-            pinCentral.saveUpdatedPin( pin: pin )
+            pinCentral.saveUpdated( pin )
         }
         
         imageAssigned = true
@@ -704,7 +698,7 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
 //                            UIImageWriteToSavedPhotosAlbum( myImageToSave, self, #selector( LocationEditorViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
 //                        }
                         
-                        let     imageName = self.pinCentral.saveImage( image: myImageToSave )
+                        let     imageName = self.pinCentral.save( myImageToSave )
                         
                         if imageName.isEmpty {
                             logTrace( "ERROR:  Image save FAILED!" )
@@ -715,7 +709,7 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
                             if self.replacingImage {
                                 self.replacingImage = false
                                 
-                                if !self.pinCentral.deleteImageWith( name: self.imageName ) {
+                                if !self.pinCentral.deleteImageNamed( self.imageName ) {
                                     logVerbose( "ERROR: Unable to delete image[ %@ ]!", self.imageName )
                                     self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                                                        message: NSLocalizedString( "AlertMessage.UnableToDeleteImage", comment: "We were unable to delete the image you created." ) )

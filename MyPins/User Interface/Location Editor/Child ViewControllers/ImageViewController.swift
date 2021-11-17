@@ -38,13 +38,13 @@ class ImageViewController: UIViewController, UIScrollViewDelegate
         logTrace()
         super.viewWillAppear( animated )
         
-        var     result = pinCentral.imageWith( name: imageName )
+        var     result = pinCentral.imageNamed( imageName )
         
         if result.0 {
             imageView.image = result.1
         }
         else {
-            result = pinCentral.imageWith( name: "missingImage" )
+            result = pinCentral.imageNamed( "missingImage" )
             
             imageView.image = result.1
         }

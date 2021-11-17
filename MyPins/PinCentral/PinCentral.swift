@@ -102,7 +102,7 @@ class PinCentral: NSObject {
     
     // MARK: Pin Access/Modifier Methods (Public)
     
-    func addPin( name:      String, details:   String, latitude:  Double, longitude: Double, altitude:  Double, imageName: String, pinColor:  Int16 ) {
+    func addPinNamed(_ name: String, details: String, latitude: Double, longitude: Double, altitude: Double, imageName: String, pinColor:  Int16 ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -132,7 +132,7 @@ class PinCentral: NSObject {
     }
     
     
-    func deletePinAtIndex( index: Int ) {
+    func deletePinAt(_ index: Int ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -165,7 +165,7 @@ class PinCentral: NSObject {
     }
     
     
-    func saveUpdatedPin( pin: Pin ) {
+    func saveUpdated(_ pin: Pin ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -183,7 +183,7 @@ class PinCentral: NSObject {
     
     // MARK: Image Convenience Methods (Public)
     
-    func deleteImageWith( name: String ) -> Bool {
+    func deleteImageNamed(_ name: String ) -> Bool {
 //        logTrace()
         let         directoryPath = pictureDirectoryPath()
         
@@ -222,7 +222,7 @@ class PinCentral: NSObject {
     }
     
     
-    func imageWith( name: String ) -> (Bool, UIImage, Int) {
+    func imageNamed(_ name: String ) -> (Bool, UIImage, Int) {
 //        logTrace()
         let     directoryPath = pictureDirectoryPath()
 
@@ -282,7 +282,7 @@ class PinCentral: NSObject {
     }
     
     
-    func saveImage( image: UIImage ) -> String {
+    func save(_ image: UIImage ) -> String {
 //        logTrace()
         let         directoryPath = pictureDirectoryPath()
         

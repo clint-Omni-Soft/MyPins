@@ -26,8 +26,9 @@ class MapViewController: UIViewController {
     // MARK: Private Variables
     
     private struct Constants {
-        static let mapTypeKey  = "MapType"
-        static let noSelection = -1
+        static let annotationIdentifier = "AnnotationIdentifier"
+        static let mapTypeKey           = "MapType"
+        static let noSelection          = -1
     }
 
     private struct StoryboardIds {
@@ -133,7 +134,16 @@ class MapViewController: UIViewController {
                         
                     }
                     else {
-                        logTrace( "ERROR: Could NOT convert annotation to PointAnnotation!" )
+                        if let name = annotation.title {
+                            if name != "My Location" {
+                                logVerbose( "ERROR: Could NOT convert annotation[ %@ ] to PointAnnotation!", name ?? "Unknown" )
+                            }
+                            
+                        }
+                        else {
+                            logVerbose( "ERROR: Could NOT convert annotation to PointAnnotation!" )
+                        }
+                        
                     }
                     
                 }
@@ -216,17 +226,20 @@ class MapViewController: UIViewController {
     
     // MARK: Utility Methods
     
-    private func examinePointAnnotation( pointAnnotation: PointAnnotation ) {
+    private func examine(_ pointAnnotation: PointAnnotation ) {
         if let pinIndex = pointAnnotation.pinIndex {
-            logVerbose( "Fetching annotation at index[ %d ]", pinIndex )
             let     pin = pinCentral.pinArray[pinIndex]
             
             if ( ( pointAnnotation.coordinate.latitude != pin.latitude ) || ( pointAnnotation.coordinate.longitude != pin.longitude ) ) {
                 self.ignoreRefresh = true
-                DispatchQueue.main.asyncAfter(deadline: ( .now() + 1.0 ), execute: {
+                
+                DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.5 ), execute: {
                     self.updatePinCoordinatesUsing( pointAnnotation: pointAnnotation )
                 } )
                 
+            }
+            else {
+//                logVerbose( "pin[ %d ] coordinates NOT changed!", pinIndex )
             }
             
         }
@@ -486,14 +499,14 @@ class MapViewController: UIViewController {
     
     private func updatePinCoordinatesUsing( pointAnnotation: PointAnnotation ) {
         if let pinIndex = pointAnnotation.pinIndex {
-            logVerbose( "pointAnnotation.pinIndex[ %d ]", pinIndex )
             let     pin = pinCentral.pinArray[pinIndex]
-            
+            logVerbose( "Changing pin[ %d ][ %f, %f ] -> [ %f, %f ]", pinIndex, pin.latitude, pin.longitude, pointAnnotation.coordinate.latitude, pointAnnotation.coordinate.longitude )
+
             pin.latitude  = pointAnnotation.coordinate.latitude
             pin.longitude = pointAnnotation.coordinate.longitude
             
             pinCentral.delegate = self
-            pinCentral.saveUpdatedPin( pin: pin )
+            pinCentral.saveUpdated( pin )
         }
         else {
             logVerbose( "ERROR: pointAnnotation.pinIndex cound NOT be unwrapped!" )
@@ -588,7 +601,7 @@ extension MapViewController: MKMapViewDelegate {
         if view.annotation is PointAnnotation {
             if let pointAnnotation = view.annotation as? PointAnnotation,
                let index           = pointAnnotation.pinIndex {
-//              logVerbose( "Requesting edit of pin at index[ %@ ]", String( index ) )
+              logVerbose( "Requesting edit of pin at index[ %@ ]", String( index ) )
                 launchLocationEditorForPinAt( index: index )
             }
             else {
@@ -597,7 +610,7 @@ extension MapViewController: MKMapViewDelegate {
 
         }
         else if view.annotation is MKUserLocation {
-//            logVerbose( "Got a MKUserLocation ... ignoring" )
+            logVerbose( "Got a MKUserLocation ... ignoring" )
         }
         else {
             logTrace( "Whazat???" )
@@ -608,19 +621,19 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationView.DragState, fromOldState oldState: MKAnnotationView.DragState ) {
         if let pointAnnotation = view.annotation as? PointAnnotation {
-//        logVerbose( "[ %f, %f ]  [ %@ ]->[ %@ ]", pointAnnotation.coordinate.latitude, pointAnnotation.coordinate.longitude, titleForDragState( state: oldState ), titleForDragState( state: newState ) )
+//            logVerbose( "[ %f, %f ]  [ %@ ]->[ %@ ]", pointAnnotation.coordinate.latitude, pointAnnotation.coordinate.longitude, titleForDragState( state: oldState ), titleForDragState( state: newState ) )
             
             switch newState {
             case .dragging:             break
             case .starting:             view.dragState = .dragging
             case .canceling, .ending:   view.dragState = .none
-                                        examinePointAnnotation( pointAnnotation: pointAnnotation )
+                                        examine( pointAnnotation )
             default:    // .none
                 
                 // This ia KLUDGE!  For some reason we don't get .canceling or .end after some dragging events start
                 //  ... instead we get a .none even though the pin was moved!  This allows us to capture that data.
                 
-                examinePointAnnotation( pointAnnotation: pointAnnotation )
+                examine( pointAnnotation )
                 break
             }
 
@@ -633,7 +646,16 @@ extension MapViewController: MKMapViewDelegate {
     
     
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView ) {
-//        logTrace()
+        if let pointAnnotation = view.annotation as? PointAnnotation,
+           let _ = pointAnnotation.pinIndex {
+//            logVerbose( "pin[ %d ] @ [ %f, %f ] ", pinIndex, pointAnnotation.coordinate.latitude, pointAnnotation.coordinate.longitude )
+            
+            examine( pointAnnotation )
+        }
+//        else {
+//            logTrace( "ERROR: Could NOT convert view.annotation to PointAnnotation OR could NOT unwrap pointAnnotation.pinIndex!" )
+//        }
+
         directionsBarButtonItem.isEnabled = showingDirectionsOverlay
         selectedPointAnnotation           = nil
     }
@@ -645,11 +667,10 @@ extension MapViewController: MKMapViewDelegate {
         }
         
         if let pointAnnotation = view.annotation as? PointAnnotation,
-           let pinIndex        = pointAnnotation.pinIndex {
+           let _        = pointAnnotation.pinIndex {
+//            logVerbose( "pin[ %d ] @ [ %f, %f ] ", pinIndex, pointAnnotation.coordinate.latitude, pointAnnotation.coordinate.longitude )
             directionsBarButtonItem.isEnabled = true
             selectedPointAnnotation           = pointAnnotation
-            
-            logVerbose( "selected pin[ %d ]", pinIndex )
         }
         else {
             logTrace( "ERROR: Could NOT convert view.annotation to PointAnnotation OR could NOT unwrap pointAnnotation.pinIndex!" )
@@ -665,7 +686,7 @@ extension MapViewController: MKMapViewDelegate {
         if !locationEstablished {
             if centerMapOnUserLocation {
                 if let location = userLocation.location {
-                    logVerbose( "Setting map center [ %f, %f ] on user location", location.coordinate.latitude, location.coordinate.longitude )
+                    logVerbose( "Centering map on user location[ %f, %f ] ", location.coordinate.latitude, location.coordinate.longitude )
                     zoomInOn( coordinate: location.coordinate )
                 }
                 else {
@@ -673,7 +694,7 @@ extension MapViewController: MKMapViewDelegate {
                 }
             }
             else {
-                logVerbose( "Setting map center [ %f, %f ] on requested by PinEdit[0]", coordinateToCenterMapOn.longitude, coordinateToCenterMapOn.latitude )
+                logVerbose( "Centering map on [ %f, %f ] as requested by PinEdit[0]", coordinateToCenterMapOn.longitude, coordinateToCenterMapOn.latitude )
                 centerMapOnUserLocation = true
                 zoomInOn( coordinate: coordinateToCenterMapOn )
             }
@@ -681,7 +702,7 @@ extension MapViewController: MKMapViewDelegate {
             locationEstablished = true
         }
         else if !centerMapOnUserLocation {
-            logVerbose( "Setting map center [ %f, %f ] on requested by PinEdit[1]", coordinateToCenterMapOn.longitude, coordinateToCenterMapOn.latitude )
+            logVerbose( "Centering map on [ %f, %f ] as requested by PinEdit[1]", coordinateToCenterMapOn.longitude, coordinateToCenterMapOn.latitude )
             centerMapOnUserLocation = true
             zoomInOn( coordinate: coordinateToCenterMapOn )
         }
@@ -719,8 +740,7 @@ extension MapViewController: MKMapViewDelegate {
             return nil      // This allows us to retain the blue dot & circle animation for the user's location (instead of our mapPin image)
         }
         
-        let     annotationIdentifier = "AnnotationIdentifier"
-        let     annotationView       = mapView.dequeueReusableAnnotationView( withIdentifier: annotationIdentifier )
+        let     annotationView       = mapView.dequeueReusableAnnotationView( withIdentifier: Constants.annotationIdentifier )
         let     pinAnnotationView    : MKPinAnnotationView!
         let     pointAnnotation      = annotation as! PointAnnotation
         let     pin                  = pinCentral.pinArray[pointAnnotation.pinIndex!]
@@ -728,9 +748,9 @@ extension MapViewController: MKMapViewDelegate {
         
         guard annotationView != nil else {
 //            logTrace( "Creating New Pin" )
-            pinAnnotationView = MKPinAnnotationView( annotation: annotation, reuseIdentifier: annotationIdentifier )
+            pinAnnotationView = MKPinAnnotationView( annotation: annotation, reuseIdentifier: Constants.annotationIdentifier )
             
-//          pinAnnotationView.animatesDrop   = true
+            pinAnnotationView.animatesDrop   = true
             pinAnnotationView.canShowCallout = true
             pinAnnotationView.isDraggable    = true
             pinAnnotationView.pinTintColor   = pinColorArray[Int( pin.pinColor )]
@@ -742,8 +762,12 @@ extension MapViewController: MKMapViewDelegate {
         if let pinAnnotationView = annotationView as? MKPinAnnotationView {
 //            logTrace( "Use Existing Pin" )
             pinAnnotationView.annotation   = annotation
+            pinAnnotationView.animatesDrop   = true
+            pinAnnotationView.canShowCallout = true
+            pinAnnotationView.isDraggable    = true
             pinAnnotationView.pinTintColor = pinColorArray[Int( pin.pinColor )]
-            
+            pinAnnotationView.rightCalloutAccessoryView = UIButton( type: .detailDisclosure )
+
             return pinAnnotationView
         }
             
@@ -801,7 +825,7 @@ extension MapViewController: PinCentralDelegate {
     
     
     func pinCentralDidReloadPinArray(_ pinCentral: PinCentral ) {
-        logVerbose( "loaded [ %d ] pins", pinCentral.pinArray.count )
+        logVerbose( "loaded [ %d ] pins ... ignoreRefresh[ %@ ]", pinCentral.pinArray.count, stringFor( ignoreRefresh ) )
         if ignoreRefresh {
             ignoreRefresh = false
         }

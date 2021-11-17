@@ -61,7 +61,7 @@ class ListTableViewControllerCell: UITableViewCell {
         
         if let imageName = pin.imageName {
             if !imageName.isEmpty {
-                let result = self.pinCentral.imageWith( name: imageName )
+                let result = self.pinCentral.imageNamed( imageName )
 
                 imageLoaded = result.0
 
