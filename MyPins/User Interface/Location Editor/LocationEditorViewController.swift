@@ -37,11 +37,13 @@ class LocationEditorViewController: UIViewController  {
     private struct CellIds {
         static let details = "LocationDetailsTableViewCell"
         static let image   = "LocationImageTableViewCell"
+        static let notes   = "LocationNotesTableViewCell"
     }
 
     private struct StoryboardIds {
         static let colorSelector = "PinColorSelectorViewController"
         static let imageViewer   = "ImageViewController"
+        static let notes         = "NotesViewController"
     }
     
     private var     altitude                  = 0.0
@@ -56,6 +58,7 @@ class LocationEditorViewController: UIViewController  {
     private var     loadingImageView          = false
     private var     longitude                 = 0.0
     private var     name                      = String()
+    private var     notes                     = String()
     private var     originalAltitude          = 0.0
     private var     originalDetails           = String()
     private var     originalImageName         = String()
@@ -219,6 +222,7 @@ class LocationEditorViewController: UIViewController  {
             latitude    = pin.latitude
             longitude   = pin.longitude
             name        = pin.name      ?? ""
+            notes       = pin.notes     ?? ""
             pinColor    = pin.pinColor
         }
         
@@ -239,7 +243,7 @@ class LocationEditorViewController: UIViewController  {
         pinCentral.delegate = self
         
         if GlobalConstants.newPin == indexOfItemBeingEdited {
-            pinCentral.addPinNamed( name, details: details, latitude: latitude, longitude: longitude, altitude: altitude, imageName: imageName, pinColor: Int16( pinColor ) )
+            pinCentral.addPinNamed( name, details: details, latitude: latitude, longitude: longitude, altitude: altitude, imageName: imageName, pinColor: Int16( pinColor ), notes: notes )
         }
         else {
             let     pin = pinCentral.pinArray[indexOfItemBeingEdited]
@@ -250,6 +254,7 @@ class LocationEditorViewController: UIViewController  {
             pin.latitude  = latitude
             pin.longitude = longitude
             pin.name      = name
+            pin.notes     = notes
             pin.pinColor  = Int16( pinColor )
             
             pinCentral.saveUpdated( pin )
@@ -597,7 +602,52 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
 }
     
     
- 
+
+// MARK: LocationNotesTableViewCellDelegate Methods
+
+extension LocationEditorViewController: LocationNotesTableViewCellDelegate {
+    
+    func locationNotesTableViewCellWantsToEdit(_ LocationNotesTableViewCell: LocationNotesTableViewCell) {
+        logTrace()
+        launchNotesViewController()
+    }
+
+    
+    
+    // MARK: LocationNotesTableViewCellDelegate Utility Methods
+
+    private func launchNotesViewController() {
+        guard let notesViewController: NotesViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.notes ) as? NotesViewController else {
+            logTrace( "ERROR: Could NOT load NotesViewController!" )
+            return
+        }
+        
+        notesViewController.delegate     = self
+        notesViewController.originalText = notes
+        
+        navigationController?.pushViewController( notesViewController, animated: true )
+    }
+
+    
+}
+
+
+
+// MARK: NotesViewControllerDelegate Methods
+
+extension LocationEditorViewController: NotesViewControllerDelegate {
+    
+    func notesViewControllerDidUpdateText(_ notesViewController: NotesViewController, newText: String) {
+        logTrace()
+        notes = newText
+
+        updatePinCentral()
+    }
+    
+    
+}
+
+
 
 // MARK: PinCentralDelegate Methods
 
@@ -800,31 +850,30 @@ extension LocationEditorViewController: UIPopoverPresentationControllerDelegate 
 // MARK: UITableViewDataSource Methods
 
 extension LocationEditorViewController: UITableViewDataSource {
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        logTrace()
-        return 2
+        //        logTrace()
+        return 3
     }
-
-
+    
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        logVerbose( "row[ %d ]", indexPath.row)
+        //        logVerbose( "row[ %d ]", indexPath.row)
         let cell : UITableViewCell!
         
-        if indexPath.row == 0 {
-            cell = loadImageViewCell()
+        switch indexPath.row {
+        case 0:     cell = loadImageViewCell()
+        case 1:     cell = loadDetailsCell()
+        default:    cell = loadNotesCell()
         }
-        else {
-            cell = loadDetailsCell()
-        }
-
+        
         return cell
     }
-
-
     
-// MARK: UITableViewDataSource Utility Methods
-
+    
+    
+    // MARK: UITableViewDataSource Utility Methods
+    
     @objc private func editNameAndDetails(_ locationDetailsTableViewCell: LocationDetailsTableViewCell ) {
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditNameAndDetails", comment: "Edit name and details" ),
@@ -845,7 +894,7 @@ extension LocationEditorViewController: UITableViewDataSource {
                 if !textStringName.isEmpty {
                     logTrace( "We have a valid name" )
                     self.name = textStringName
-
+                    
                     if let textStringDetails = detailsTextField.text {
                         self.details = textStringDetails
                     }
@@ -857,7 +906,7 @@ extension LocationEditorViewController: UITableViewDataSource {
                     self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                                        message: NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank" ) )
                 }
-
+                
             }
             
         }
@@ -867,28 +916,28 @@ extension LocationEditorViewController: UITableViewDataSource {
         
         alert.addTextField
         { ( textField ) in
-                
-                if self.name.isEmpty {
-                    textField.placeholder = NSLocalizedString( "LabelText.Name", comment: "Name" )
-                }
-                else {
-                    textField.text = self.name
-                }
-                
-                textField.autocapitalizationType = .words
+            
+            if self.name.isEmpty {
+                textField.placeholder = NSLocalizedString( "LabelText.Name", comment: "Name" )
+            }
+            else {
+                textField.text = self.name
+            }
+            
+            textField.autocapitalizationType = .words
         }
         
         alert.addTextField
         { ( textField ) in
-                
-                if self.details.isEmpty {
-                    textField.placeholder = NSLocalizedString( "LabelText.Details", comment: "Address / Description" )
-                }
-                else {
-                    textField.text = self.details
-                }
-                
-                textField.autocapitalizationType = .words
+            
+            if self.details.isEmpty {
+                textField.placeholder = NSLocalizedString( "LabelText.Details", comment: "Address / Description" )
+            }
+            else {
+                textField.text = self.details
+            }
+            
+            textField.autocapitalizationType = .words
         }
         
         alert.addAction( saveAction   )
@@ -896,15 +945,15 @@ extension LocationEditorViewController: UITableViewDataSource {
         
         present( alert, animated: true, completion: nil )
     }
-
-
+    
+    
     private func loadDetailsCell() -> UITableViewCell {
         guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIds.details ) else {
             logVerbose("We FAILED to dequeueReusableCell")
             return UITableViewCell.init()
         }
         
-//        logTrace()
+//      logTrace()
         let detailsCell = cell as! LocationDetailsTableViewCell
         
         detailsCell.delegate = self
@@ -918,7 +967,7 @@ extension LocationEditorViewController: UITableViewDataSource {
         detailsCell.pinColor  = self.pinColor
         
         detailsCell.initialize()
-
+        
         if firstTimeIn && ( GlobalConstants.newPin == indexOfItemBeingEdited ) {
             firstTimeIn = false
             
@@ -930,23 +979,38 @@ extension LocationEditorViewController: UITableViewDataSource {
         
         return cell
     }
-
-
+    
+    
     private func loadImageViewCell() -> UITableViewCell {
         guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIds.image ) else {
             logVerbose("We FAILED to dequeueReusableCell")
             return UITableViewCell.init()
         }
         
-    //    logTrace()
+//      logTrace()
         let imageCell = cell as! LocationImageTableViewCell
         
         imageCell.initializeWith( imageName, self)
         
         return cell
     }
-
-
+    
+    
+    private func loadNotesCell() -> UITableViewCell {
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIds.notes ) else {
+            logVerbose("We FAILED to dequeueReusableCell")
+            return UITableViewCell.init()
+        }
+        
+//      logTrace()
+        let notesCell = cell as! LocationNotesTableViewCell
+        
+        notesCell.initializeWith( notes, self )
+        
+        return cell
+    }
+    
+    
 }
 
 

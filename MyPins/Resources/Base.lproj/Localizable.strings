@@ -69,6 +69,7 @@
 "LabelText.Location"                = "Location";
 "LabelText.Longitude"               = "Longitude";
 "LabelText.Name"                    = "Name";
+"LabelText.Notes"                   = "Notes";
 
 "PinColor.Black"                    = "Black";
 "PinColor.Blue"                     = "Blue";
@@ -88,6 +89,7 @@
 "Title.App"                         = "Where Was That?";
 "Title.HowToUse"                    = "How to Use";
 "Title.Map"                         = "Map";
+"Title.NotesEditor"                 = "Notes Editor";
 "Title.PinEditor"                   = "Pin Editor";
 "Title.PinList"                     = "Pin List";
 "Title.ReduceImageSize"             = "Reduce Image Size";

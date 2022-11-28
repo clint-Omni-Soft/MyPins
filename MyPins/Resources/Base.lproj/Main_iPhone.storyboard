@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bjp-AP-9w6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bjp-AP-9w6">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,7 +19,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ListTableViewControllerCell" rowHeight="66" id="DgK-BG-oFa" customClass="ListTableViewControllerCell" customModule="MyPins" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44.5" width="375" height="66"/>
+                                <rect key="frame" x="0.0" y="50" width="375" height="66"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DgK-BG-oFa" id="7G2-51-rBI">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="66"/>
@@ -93,7 +94,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SettingsTableViewControllerCell" textLabel="p8U-m2-7jJ" style="IBUITableViewCellStyleDefault" id="K3S-Ng-qTN">
-                                <rect key="frame" x="0.0" y="44.5" width="375" height="43.5"/>
+                                <rect key="frame" x="0.0" y="50" width="375" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="K3S-Ng-qTN" id="TIe-lw-3E4">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -267,7 +268,42 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Zj-Cg-bTx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2648.8000000000002" y="-13.043478260869566"/>
+            <point key="canvasLocation" x="2786" y="-289"/>
+        </scene>
+        <!--Notes Editor-->
+        <scene sceneID="9wX-IR-Dsv">
+            <objects>
+                <viewController storyboardIdentifier="NotesViewController" title="Notes Editor" id="km4-nZ-n3M" customClass="NotesViewController" customModule="MyPins" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Hpo-5M-JCV">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="bQm-jp-0Be">
+                                <rect key="frame" x="16" y="44" width="343" height="574"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="a85-59-7he"/>
+                        <color key="backgroundColor" systemColor="systemGray5Color"/>
+                        <constraints>
+                            <constraint firstItem="a85-59-7he" firstAttribute="trailing" secondItem="bQm-jp-0Be" secondAttribute="trailing" constant="16" id="1me-hz-hek"/>
+                            <constraint firstItem="bQm-jp-0Be" firstAttribute="bottom" secondItem="a85-59-7he" secondAttribute="bottom" id="KUn-2Z-7v1"/>
+                            <constraint firstItem="bQm-jp-0Be" firstAttribute="top" secondItem="a85-59-7he" secondAttribute="top" id="YTj-V9-pDx"/>
+                            <constraint firstItem="bQm-jp-0Be" firstAttribute="leading" secondItem="a85-59-7he" secondAttribute="leading" constant="16" id="ttK-au-YZG"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Y51-9n-rbE"/>
+                    <connections>
+                        <outlet property="notesTextView" destination="bQm-jp-0Be" id="rl6-w1-7Pv"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="A1I-TG-Fw9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2781.5999999999999" y="398.95052473763121"/>
         </scene>
         <!--Pin Editor-->
         <scene sceneID="J1d-cd-7UO">
@@ -328,13 +364,6 @@
                                     <constraint firstAttribute="height" constant="30" id="lMO-BN-1ku"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yhh-kk-tgn" userLabel="Show on Map Button">
-                                <rect key="frame" x="18" y="418" width="339" height="30"/>
-                                <state key="normal" title="Show on Map"/>
-                                <connections>
-                                    <action selector="showOnMapButtonTouched:" destination="8Yk-Rs-MWa" eventType="touchUpInside" id="Rlv-Oh-WsD"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ane-v1-o8J" userLabel="Units Button">
                                 <rect key="frame" x="257" y="380" width="100" height="30"/>
                                 <constraints>
@@ -344,6 +373,13 @@
                                 <state key="normal" title="Units"/>
                                 <connections>
                                     <action selector="unitsButtonTouched:" destination="8Yk-Rs-MWa" eventType="touchUpInside" id="rfN-qp-MGd"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yhh-kk-tgn" userLabel="Show on Map Button">
+                                <rect key="frame" x="18" y="418" width="339" height="30"/>
+                                <state key="normal" title="Show on Map"/>
+                                <connections>
+                                    <action selector="showOnMapButtonTouched:" destination="8Yk-Rs-MWa" eventType="touchUpInside" id="Rlv-Oh-WsD"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -392,7 +428,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H7T-1k-iXv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3598" y="-13"/>
+            <point key="canvasLocation" x="3597.5999999999999" y="-13.043478260869566"/>
         </scene>
         <!--Pin Editor-->
         <scene sceneID="i1u-44-RT5">
@@ -407,7 +443,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LocationImageTableViewCell" id="6KY-D6-Wbv" userLabel="LocationImageTableViewCell" customClass="LocationImageTableViewCell" customModule="MyPins" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="44.5" width="333" height="240"/>
+                                        <rect key="frame" x="0.0" y="50" width="333" height="240"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6KY-D6-Wbv" id="dSt-Y2-b87">
                                             <rect key="frame" x="0.0" y="0.0" width="333" height="240"/>
@@ -442,7 +478,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LocationDetailsTableViewCell" id="mwO-Bo-nay" userLabel="LocationDetailsTableViewCell" customClass="LocationDetailsTableViewCell" customModule="MyPins" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="284.5" width="333" height="240"/>
+                                        <rect key="frame" x="0.0" y="290" width="333" height="240"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mwO-Bo-nay" id="J25-li-TsV">
                                             <rect key="frame" x="0.0" y="0.0" width="333" height="240"/>
@@ -540,6 +576,48 @@
                                             <outlet property="unitsButton" destination="ffu-HD-9eg" id="SB2-SW-a3E"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LocationNotesTableViewCell" id="qW8-Sp-dAt" userLabel="LocationNotesTableViewCell" customClass="LocationNotesTableViewCell" customModule="MyPins" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="530" width="333" height="240"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qW8-Sp-dAt" id="k3g-RO-dDR">
+                                            <rect key="frame" x="0.0" y="0.0" width="333" height="240"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J2g-RE-Fl9" userLabel="notes Button">
+                                                    <rect key="frame" x="0.0" y="0.0" width="317" height="24"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="24" id="zrB-J0-ieU"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain" title="fred"/>
+                                                    <connections>
+                                                        <action selector="notesButtonTouched:" destination="qW8-Sp-dAt" eventType="touchUpInside" id="uMt-qd-L8t"/>
+                                                    </connections>
+                                                </button>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QYt-tt-v30" userLabel="notesTextView">
+                                                    <rect key="frame" x="16" y="32" width="301" height="197"/>
+                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                                    <color key="textColor" systemColor="labelColor"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="J2g-RE-Fl9" secondAttribute="trailing" constant="16" id="HlN-qk-VUM"/>
+                                                <constraint firstItem="QYt-tt-v30" firstAttribute="trailing" secondItem="k3g-RO-dDR" secondAttribute="trailingMargin" id="JNx-55-kgh"/>
+                                                <constraint firstItem="QYt-tt-v30" firstAttribute="bottom" secondItem="k3g-RO-dDR" secondAttribute="bottomMargin" id="NmH-01-s87"/>
+                                                <constraint firstItem="QYt-tt-v30" firstAttribute="top" secondItem="J2g-RE-Fl9" secondAttribute="bottom" constant="8" symbolic="YES" id="UdC-Sh-8E3"/>
+                                                <constraint firstItem="J2g-RE-Fl9" firstAttribute="top" secondItem="k3g-RO-dDR" secondAttribute="top" id="Vai-mT-VWf"/>
+                                                <constraint firstItem="QYt-tt-v30" firstAttribute="leading" secondItem="k3g-RO-dDR" secondAttribute="leadingMargin" id="ZBt-QQ-kos"/>
+                                                <constraint firstItem="J2g-RE-Fl9" firstAttribute="leading" secondItem="k3g-RO-dDR" secondAttribute="leading" id="yPd-lW-Dli"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="notesButton" destination="J2g-RE-Fl9" id="jGb-X5-mO6"/>
+                                            <outlet property="notesTextView" destination="QYt-tt-v30" id="0EB-3o-1rj"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="vBv-SU-pXm" id="Ifx-NE-yqF"/>
@@ -560,6 +638,7 @@
                     <connections>
                         <outlet property="myTableView" destination="DoB-iA-Gn2" id="nhN-hx-8gc"/>
                         <segue destination="t0k-DY-6rQ" kind="show" identifier="ImageViewController" id="vCs-cD-T5Q"/>
+                        <segue destination="km4-nZ-n3M" kind="show" identifier="NotesViewController" id="CMC-9b-Kzt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CKr-1M-YHs" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -823,6 +902,15 @@
         <image name="settings" width="13" height="13"/>
         <systemColor name="groupTableViewBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="labelColor">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray5Color">
+            <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

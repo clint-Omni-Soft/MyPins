@@ -27,6 +27,9 @@
 		F48A45C720698D0400C27F03 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F48A45C920698D0400C27F03 /* Main_iPhone.storyboard */; };
 		F48A45CA20698FDE00C27F03 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F48A45CC20698FDE00C27F03 /* Main_iPad.storyboard */; };
 		F49766AD205B11AE00A76F9D /* PointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49766AC205B11AE00A76F9D /* PointAnnotation.swift */; };
+		F497BAD829353CAC00878E1F /* LocationNotesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F497BAD729353CAC00878E1F /* LocationNotesTableViewCell.swift */; };
+		F497BAE32935493200878E1F /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F497BAE22935493200878E1F /* Pin+CoreDataProperties.swift */; };
+		F497BAE529355B4800878E1F /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F497BAE429355B4800878E1F /* NotesViewController.swift */; };
 		F4982F6A207BEF9B00A30D40 /* PinColorSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */; };
 		F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */; };
 		F49B9A59207D406B007598F9 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */; };
@@ -37,7 +40,6 @@
 		F4B47FF5205745130027755B /* PinCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FF4205745130027755B /* PinCentral.swift */; };
 		F4B47FF9205746A80027755B /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FF7205746A80027755B /* Pin.swift */; };
 		F4D7FE0422D91EEE00D61B8B /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */; };
-		F4FD7501207A61D800C264A0 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FD74FF207A61D800C264A0 /* Pin+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +75,10 @@
 		F48A45D12069904900C27F03 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main_iPad.strings; sourceTree = "<group>"; };
 		F48A45D22069904900C27F03 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main_iPhone.strings; sourceTree = "<group>"; };
 		F49766AC205B11AE00A76F9D /* PointAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotation.swift; sourceTree = "<group>"; };
+		F497BAD729353CAC00878E1F /* LocationNotesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationNotesTableViewCell.swift; sourceTree = "<group>"; };
+		F497BAD9293546DE00878E1F /* MyPins 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MyPins 2.xcdatamodel"; sourceTree = "<group>"; };
+		F497BAE22935493200878E1F /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F497BAE429355B4800878E1F /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinColorSelectorViewController.swift; sourceTree = "<group>"; };
 		F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutContraint+Extension.swift"; sourceTree = "<group>"; };
 		F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
@@ -83,7 +89,6 @@
 		F4B47FF4205745130027755B /* PinCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCentral.swift; sourceTree = "<group>"; };
 		F4B47FF7205746A80027755B /* Pin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 		F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
-		F4FD74FF207A61D800C264A0 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +224,7 @@
 			children = (
 				F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */,
 				F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */,
+				F497BAD729353CAC00878E1F /* LocationNotesTableViewCell.swift */,
 			);
 			path = "Location Editor Cells";
 			sourceTree = "<group>";
@@ -228,6 +234,7 @@
 			children = (
 				F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */,
 				F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */,
+				F497BAE429355B4800878E1F /* NotesViewController.swift */,
 			);
 			path = "Child ViewControllers";
 			sourceTree = "<group>";
@@ -261,8 +268,8 @@
 		F4B47FF62057467D0027755B /* CoreData Entities */ = {
 			isa = PBXGroup;
 			children = (
+				F497BAE22935493200878E1F /* Pin+CoreDataProperties.swift */,
 				F4B47FF7205746A80027755B /* Pin.swift */,
-				F4FD74FF207A61D800C264A0 /* Pin+CoreDataProperties.swift */,
 			);
 			path = "CoreData Entities";
 			sourceTree = "<group>";
@@ -346,9 +353,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F497BAD829353CAC00878E1F /* LocationNotesTableViewCell.swift in Sources */,
+				F497BAE32935493200878E1F /* Pin+CoreDataProperties.swift in Sources */,
 				F4B47FEB205734880027755B /* ListTableViewController.swift in Sources */,
 				F4766CE7243D238A0054CD97 /* Logger.swift in Sources */,
-				F4FD7501207A61D800C264A0 /* Pin+CoreDataProperties.swift in Sources */,
 				F400B4CC20572E0000556F51 /* MyPins.xcdatamodeld in Sources */,
 				F49766AD205B11AE00A76F9D /* PointAnnotation.swift in Sources */,
 				F445000A22D3A8DD00988667 /* LocationImageTableViewCell.swift in Sources */,
@@ -366,6 +374,7 @@
 				F4B47FF5205745130027755B /* PinCentral.swift in Sources */,
 				F49B9A59207D406B007598F9 /* SplashScreenViewController.swift in Sources */,
 				F4B47FED205734A80027755B /* MapViewController.swift in Sources */,
+				F497BAE529355B4800878E1F /* NotesViewController.swift in Sources */,
 				F427FF87209A2A6B00DBA3CD /* SettingsTableViewController.swift in Sources */,
 				F4982F6A207BEF9B00A30D40 /* PinColorSelectorViewController.swift in Sources */,
 				F438F6DC2061D0B10032F465 /* SplitViewController.swift in Sources */,
@@ -548,7 +557,7 @@
 				INFOPLIST_FILE = MyPins/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.4;
+				MARKETING_VERSION = 2.5;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -576,7 +585,7 @@
 				INFOPLIST_FILE = MyPins/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.4;
+				MARKETING_VERSION = 2.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -614,9 +623,10 @@
 		F400B4CA20572E0000556F51 /* MyPins.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F497BAD9293546DE00878E1F /* MyPins 2.xcdatamodel */,
 				F400B4CB20572E0000556F51 /* MyPins.xcdatamodel */,
 			);
-			currentVersion = F400B4CB20572E0000556F51 /* MyPins.xcdatamodel */;
+			currentVersion = F497BAD9293546DE00878E1F /* MyPins 2.xcdatamodel */;
 			path = MyPins.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

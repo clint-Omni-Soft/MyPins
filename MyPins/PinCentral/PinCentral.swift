@@ -102,7 +102,7 @@ class PinCentral: NSObject {
     
     // MARK: Pin Access/Modifier Methods (Public)
     
-    func addPinNamed(_ name: String, details: String, latitude: Double, longitude: Double, altitude: Double, imageName: String, pinColor:  Int16 ) {
+    func addPinNamed(_ name: String, details: String, latitude: Double, longitude: Double, altitude: Double, imageName: String, pinColor: Int16, notes: String ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -117,10 +117,11 @@ class PinCentral: NSObject {
             pin.details         = details
             pin.guid            = UUID().uuidString
             pin.imageName       = imageName
-            pin.lastModified    = NSDate.init()
+            pin.lastModified    = Date()  //NSDate.init()
             pin.latitude        = latitude
             pin.longitude       = longitude
             pin.name            = name
+            pin.notes           = notes
             pin.pinColor        = pinColor
             
             self.newPinGuid = pin.guid ?? "Unwrapping Failed"
@@ -398,7 +399,9 @@ class PinCentral: NSObject {
         logVerbose( "storeURL[ %@ ]", storeURL.path )
 
         do {
-            try persistentStoreCoordinator.addPersistentStore( ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil )
+            let options = [NSMigratePersistentStoresAutomaticallyOption: true, NSInferMappingModelAutomaticallyOption: true]
+
+            try persistentStoreCoordinator.addPersistentStore( ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options )
             
             self.didOpenDatabase = true
 //            logTrace( "added Pins store to coordinator" )
