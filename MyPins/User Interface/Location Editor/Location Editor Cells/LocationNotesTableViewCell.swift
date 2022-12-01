@@ -35,6 +35,7 @@ class LocationNotesTableViewCell: UITableViewCell {
         super.awakeFromNib()
     }
 
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(false, animated: animated)
     }
@@ -56,7 +57,7 @@ class LocationNotesTableViewCell: UITableViewCell {
         delegate           = cellDelegate
         notesTextView.text = notes
 
-        notesButton.setTitle( NSLocalizedString( "LabelText.Notes", comment: "NOTES" ), for: .normal )
+        notesButton.setTitle( NSLocalizedString( "LabelText.Notes", comment: "Notes" ), for: .normal )
     }
     
     

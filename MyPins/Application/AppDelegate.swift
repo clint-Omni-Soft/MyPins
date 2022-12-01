@@ -29,8 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         locationManager = CLLocationManager()
         locationManager?.requestWhenInUseAuthorization()
         
-        setupLogging()
-        
+        LogCentral.sharedInstance.setupLogging()
+
         return true
     }
     

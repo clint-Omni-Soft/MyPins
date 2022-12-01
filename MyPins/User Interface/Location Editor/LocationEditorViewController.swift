@@ -40,6 +40,12 @@ class LocationEditorViewController: UIViewController  {
         static let notes   = "LocationNotesTableViewCell"
     }
 
+    private struct RowHeights {
+        static let details  = CGFloat( 210.0 )
+        static let image    = CGFloat( 240.0 )
+        static let notes    = CGFloat( 240.0 )
+    }
+    
     private struct StoryboardIds {
         static let colorSelector = "PinColorSelectorViewController"
         static let imageViewer   = "ImageViewController"
@@ -65,6 +71,7 @@ class LocationEditorViewController: UIViewController  {
     private var     originalLatitude          = 0.0
     private var     originalLongitude         = 0.0
     private var     originalName              = String()
+    private var     originalNotes             = String()
     private var     originalPinColor          : Int16!      // Set in initializeVariables()
     private let     pinCentral                = PinCentral.sharedInstance
     private var     pinColor                  : Int16!      // Set in initializeVariables()
@@ -232,6 +239,7 @@ class LocationEditorViewController: UIViewController  {
         originalLatitude    = latitude
         originalLongitude   = longitude
         originalName        = name
+        originalNotes       = notes
         originalPinColor    = pinColor
         
         imageAssigned = true
@@ -351,7 +359,8 @@ extension LocationEditorViewController: LocationDetailsTableViewCellDelegate {
         var     dataChanged  = false
 
         if ( ( name      != originalName      ) || ( details   != originalDetails   ) || ( altitude  != originalAltitude  ) ||
-             ( imageName != originalImageName ) || ( latitude  != originalLatitude  ) || ( longitude != originalLongitude ) || ( pinColor  != originalPinColor  ) ) {
+             ( imageName != originalImageName ) || ( latitude  != originalLatitude  ) || ( longitude != originalLongitude ) ||
+             ( notes     != originalNotes     ) || ( pinColor  != originalPinColor  ) ) {
             dataChanged = true
         }
 
@@ -1013,5 +1022,24 @@ extension LocationEditorViewController: UITableViewDataSource {
     
 }
 
+
+
+// MARK: UITableViewDataSource Methods
+
+extension LocationEditorViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        var     rowHeight = CGFloat( 0.0 )
+        
+        switch indexPath.row {
+        case 0:     rowHeight = RowHeights.image
+        case 1:     rowHeight = RowHeights.details
+        default:    rowHeight = RowHeights.notes
+        }
+        
+        return rowHeight
+    }
+    
+}
 
 

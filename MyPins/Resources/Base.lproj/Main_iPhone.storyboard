@@ -584,12 +584,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J2g-RE-Fl9" userLabel="notes Button">
-                                                    <rect key="frame" x="0.0" y="0.0" width="317" height="24"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="333" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="zrB-J0-ieU"/>
                                                     </constraints>
-                                                    <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain" title="fred"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <state key="normal" title="Notes"/>
                                                     <connections>
                                                         <action selector="notesButtonTouched:" destination="qW8-Sp-dAt" eventType="touchUpInside" id="uMt-qd-L8t"/>
                                                     </connections>
@@ -604,7 +605,7 @@
                                                 </textView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="J2g-RE-Fl9" secondAttribute="trailing" constant="16" id="HlN-qk-VUM"/>
+                                                <constraint firstAttribute="trailing" secondItem="J2g-RE-Fl9" secondAttribute="trailing" id="HlN-qk-VUM"/>
                                                 <constraint firstItem="QYt-tt-v30" firstAttribute="trailing" secondItem="k3g-RO-dDR" secondAttribute="trailingMargin" id="JNx-55-kgh"/>
                                                 <constraint firstItem="QYt-tt-v30" firstAttribute="bottom" secondItem="k3g-RO-dDR" secondAttribute="bottomMargin" id="NmH-01-s87"/>
                                                 <constraint firstItem="QYt-tt-v30" firstAttribute="top" secondItem="J2g-RE-Fl9" secondAttribute="bottom" constant="8" symbolic="YES" id="UdC-Sh-8E3"/>
