@@ -82,7 +82,6 @@ class LogCentral : NSObject {
    // MARK: AppDelegate Methods
 
     func setupLogging() {
-        monitorLogFiles()
         if currentLogFileOpened() {
             logFileOpen = true
 //            print( "LogCentral::setupLogging()" )
