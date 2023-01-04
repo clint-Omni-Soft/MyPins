@@ -54,6 +54,7 @@
 "LabelText.About"                   = "Sur";
 "LabelText.Altitude"                = "Altitude";
 "LabelText.ContactUs"               = "Tous les droits sont réservés. Contactez-nous à";
+"LabelText.Destination"             = "Destination";
 "LabelText.Details"                 = "Adresse / Description";
 "LableText.HowToUse01"              = "LISTE PIN\n\nAjouter un épingle - Appuyez sur le signe plus (+) pour accéder à l'éditeur de broches où vous pouvez associer des informations sur cette broche.\n\n\n";
 "LableText.HowToUse02"              = "ÉDITEUR DE BROCHES\n\nPermet de (a) associer une image à la broche, (b) lui attribuer un nom, (c) une adresse et / ou une description, (d) modifier ses coordonnées et / ou son altitude, ";

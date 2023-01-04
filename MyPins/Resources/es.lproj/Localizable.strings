@@ -54,6 +54,7 @@
 "LabelText.About"                   = "Acerca de";
 "LabelText.Altitude"                = "Altitud";
 "LabelText.ContactUs"               = "Todos los derechos reservados. Contactanos en";
+"LabelText.Destination"             = "Destino";
 "LabelText.Details"                 = "Descripción de la dirección";
 "LableText.HowToUse01"              = "LISTA DE PIN\n\nAgrega un Pin - Al tocar el signo más (+), accederá al Editor de pines, donde puede asociar, proporcionar información sobre ese pin.\n\n\n";
 "LableText.HowToUse02"              = "EDITOR DE PIN\n\nProporciona la capacidad de (a) asociar una imagen con el pin, (b) asignarle un nombre, (c) dirección y / o descripción, (d) modificar sus coordenadas y / o altitud, ";

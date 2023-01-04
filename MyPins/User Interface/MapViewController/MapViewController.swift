@@ -206,7 +206,12 @@ class MapViewController: UIViewController {
     
     @IBAction @objc func directionsBarButtonItemTouched(_ sender: UIBarButtonItem ) {
         logTrace()
-        manageDirectionsOverlay()
+//        manageDirectionsOverlay()
+        let coordinate = CLLocationCoordinate2DMake( (selectedPointAnnotation?.coordinate.latitude)!, (selectedPointAnnotation?.coordinate.longitude)! )
+        let mapItem    = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary: nil) )
+        
+        mapItem.name = NSLocalizedString( "LabelText.Destination", comment: "Destination"  )
+        mapItem.openInMaps( launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving] )
     }
     
     
@@ -601,7 +606,7 @@ extension MapViewController: MKMapViewDelegate {
         if view.annotation is PointAnnotation {
             if let pointAnnotation = view.annotation as? PointAnnotation,
                let index           = pointAnnotation.pinIndex {
-              logVerbose( "Requesting edit of pin at index[ %@ ]", String( index ) )
+                logVerbose( "Requesting edit of pin at index[ %@ ]", String( index ) )
                 launchLocationEditorForPinAt( index: index )
             }
             else {
@@ -648,7 +653,7 @@ extension MapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView ) {
         if let pointAnnotation = view.annotation as? PointAnnotation,
            let _ = pointAnnotation.pinIndex {
-//            logVerbose( "pin[ %d ] @ [ %f, %f ] ", pinIndex, pointAnnotation.coordinate.latitude, pointAnnotation.coordinate.longitude )
+//            logVerbose( "pin[ %d ] @ [ %f, %f ] ", pointAnnotation.pinIndex!, pointAnnotation.coordinate.latitude, pointAnnotation.coordinate.longitude )
             
             examine( pointAnnotation )
         }
