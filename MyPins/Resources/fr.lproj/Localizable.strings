@@ -89,6 +89,7 @@
 
 "Title.App"                         = "Où était-ce?";
 "Title.HowToUse"                    = "Comment utiliser";
+"Title.LogViewer"                   = "Visionneuse de journal";
 "Title.Map"                         = "Carte";
 "Title.NotesEditor"                 = "Éditeur de notes";
 "Title.PinEditor"                   = "Éditeur de broche";

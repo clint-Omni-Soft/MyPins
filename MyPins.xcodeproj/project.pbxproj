@@ -34,6 +34,7 @@
 		F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */; };
 		F49B9A59207D406B007598F9 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */; };
 		F49B9A5B207D587E007598F9 /* appIcon MASTER in Resources */ = {isa = PBXBuildFile; fileRef = F49B9A5A207D587D007598F9 /* appIcon MASTER */; };
+		F4A6552929AEB23400DDC813 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A6552829AEB23400DDC813 /* LogViewController.swift */; };
 		F4B47FEB205734880027755B /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FEA205734880027755B /* ListTableViewController.swift */; };
 		F4B47FED205734A80027755B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FEC205734A80027755B /* MapViewController.swift */; };
 		F4B47FF2205734F40027755B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B47FF1205734F40027755B /* MapKit.framework */; };
@@ -83,6 +84,7 @@
 		F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutContraint+Extension.swift"; sourceTree = "<group>"; };
 		F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		F49B9A5A207D587D007598F9 /* appIcon MASTER */ = {isa = PBXFileReference; lastKnownFileType = file; name = "appIcon MASTER"; path = "AppIcon/appIcon MASTER"; sourceTree = "<group>"; };
+		F4A6552829AEB23400DDC813 /* LogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
 		F4B47FEA205734880027755B /* ListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
 		F4B47FEC205734A80027755B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		F4B47FF1205734F40027755B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -184,6 +186,7 @@
 		F483C5332671349300224D53 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				F4A6552829AEB23400DDC813 /* LogViewController.swift */,
 				F4766CE6243D238A0054CD97 /* Logger.swift */,
 				F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */,
 				F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */,
@@ -356,6 +359,7 @@
 				F497BAD829353CAC00878E1F /* LocationNotesTableViewCell.swift in Sources */,
 				F497BAE32935493200878E1F /* Pin+CoreDataProperties.swift in Sources */,
 				F4B47FEB205734880027755B /* ListTableViewController.swift in Sources */,
+				F4A6552929AEB23400DDC813 /* LogViewController.swift in Sources */,
 				F4766CE7243D238A0054CD97 /* Logger.swift in Sources */,
 				F400B4CC20572E0000556F51 /* MyPins.xcdatamodeld in Sources */,
 				F49766AD205B11AE00A76F9D /* PointAnnotation.swift in Sources */,
@@ -557,7 +561,7 @@
 				INFOPLIST_FILE = MyPins/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.6;
+				MARKETING_VERSION = 2.7;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -585,7 +589,7 @@
 				INFOPLIST_FILE = MyPins/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.6;
+				MARKETING_VERSION = 2.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

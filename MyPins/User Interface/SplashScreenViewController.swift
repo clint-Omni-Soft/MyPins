@@ -13,12 +13,23 @@ import UIKit
 
 class SplashScreenViewController: UIViewController, UIGestureRecognizerDelegate {
     
+    
+    // MARK: Public Variables
+
     @IBOutlet weak var contactUsLabel       : UILabel!
     @IBOutlet      var downGestureRecognizer: UISwipeGestureRecognizer!
     @IBOutlet weak var titleLabel           : UILabel!
     @IBOutlet weak var versionLabel         : UILabel!
+
     
     
+    // MARK: Private Variables
+    
+    private struct StoryboardId {
+        static let logViewer = "LogViewController"
+    }
+
+
     
     // MARK: UIViewController Lifecycle Methods
     
@@ -26,8 +37,12 @@ class SplashScreenViewController: UIViewController, UIGestureRecognizerDelegate 
         logTrace()
         super.viewDidLoad()
         
-        navigationItem.title = NSLocalizedString( "LabelText.About", comment: "About" )
-        
+        navigationItem.title              = NSLocalizedString( "LabelText.About", comment: "About" )
+        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title : NSLocalizedString( "ButtonTitle.Back", comment: "Back" ),
+                                                                  style : .plain,
+                                                                  target: self,
+                                                                  action: #selector( backBarButtonTouched ) )
+
         contactUsLabel  .text = NSLocalizedString( "LabelText.ContactUs", comment: "All rights reserved.  Contact us at" )
         titleLabel      .text = NSLocalizedString( "Title.App",           comment: "Where Was That?"                     )
         
@@ -52,20 +67,25 @@ class SplashScreenViewController: UIViewController, UIGestureRecognizerDelegate 
     }
     
     
-    override func viewWillDisappear(_ animated: Bool ) {
-        logTrace()
-        super.viewWillDisappear( animated )
-    }
-    
-    
-    override func didReceiveMemoryWarning() {
-        logTrace( "MEMORY WARNING!!!" )
-        super.didReceiveMemoryWarning()
-    }
-    
-    
     
     // MARK: Target/Action Methods
+    
+    @IBAction func backBarButtonTouched( sender : UIBarButtonItem ) {
+        logTrace()
+        navigationController?.popViewController( animated: true )
+    }
+    
+    
+    @IBAction func invisibleButtonTouched(_ sender: UIButton) {
+        guard let logVC: LogViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardId.logViewer ) as? LogViewController else {
+            logTrace( "ERROR: Could NOT load LogViewController!" )
+            return
+        }
+        
+        logTrace()
+        navigationController?.pushViewController( logVC, animated: true )
+    }
+
     
     @IBAction func respondToDownSwipeGesture(_ sender: UISwipeGestureRecognizer ) {
         logTrace()

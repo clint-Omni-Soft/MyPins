@@ -89,6 +89,7 @@
 
 "Title.App"                         = "Where Was That?";
 "Title.HowToUse"                    = "How to Use";
+"Title.LogViewer"                   = "Log Viewer";
 "Title.Map"                         = "Map";
 "Title.NotesEditor"                 = "Notes Editor";
 "Title.PinEditor"                   = "Pin Editor";

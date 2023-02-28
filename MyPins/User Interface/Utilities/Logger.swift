@@ -1,9 +1,9 @@
 //
 //  Logger.swift
-//  Chefbook
+//  ClubLengths
 //
-//  Created by Clint Shank on 4/6/20.
-//  Copyright © 2020 Omni-Soft, Inc. All rights reserved.
+//  Copied from WineStock by Clint Shank on 1/6/2023.
+//  Copyright © 2023 Omni-Soft, Inc. All rights reserved.
 //
 
 import UIKit
@@ -11,6 +11,21 @@ import UIKit
 
 
 // MARK: Global Logging Methods (Public)
+
+func logContents() -> String {
+    var     contentsText = ""
+    let     logFileUrl   = LogCentral.sharedInstance.getLogFileUrl()
+    
+    do {
+        contentsText = try String(contentsOf: logFileUrl, encoding: .utf8)
+    }
+    catch {
+        contentsText = String( format: "Unable to read logfile at [ %@ ]", logFileUrl.path )
+    }
+
+    return contentsText
+}
+
 
 func logTrace( filename   : String = #file,
                function   : String = #function,
@@ -51,7 +66,7 @@ func logVerbose( filename   : String = #file,
 // MARK: LogCentral Class Declaration
 
 class LogCentral : NSObject {
-    
+
     // MARK: Our Singleton
     
     static let sharedInstance = LogCentral()        // Prevents anyone else from creating an instance
@@ -72,10 +87,11 @@ class LogCentral : NSObject {
     static let writeFailed           = -1
     }
     
-    private var logFileSize  : UInt64 = 0
-    private var logFileOpen  = false
-    private var logFileUrl   : URL!
-    private var outputStream : OutputStream!
+    private let fileManager         = FileManager.default
+    private var logFileSize: UInt64 = 0
+    private var logFileOpen         = false
+    private var logFileUrl: URL!
+    private var outputStream: OutputStream!
 
 
     
@@ -84,20 +100,22 @@ class LogCentral : NSObject {
     func setupLogging() {
         if currentLogFileOpened() {
             logFileOpen = true
-//            print( "LogCentral::setupLogging()" )
         }
         else {
             print( "LogCentral::setupLogging()\n\n     >>> ERROR!  Unable to start file logging! <<< \n\n" )
         }
       
-        let     headerString = headerText()
-      
-        log( headerString )
+        log( headerText() )
     }
 
 
 
     // MARK: Primary Interface Methods
+    
+    func getLogFileUrl() -> URL {
+        return logFileUrl
+    }
+    
     
     func log(_ message : String ) {
         print( message )
@@ -200,11 +218,10 @@ class LogCentral : NSObject {
         logFileUrl  = nil
 
         if logFilePath.isEmpty {
-            print( "LogCentral::currentLogFileOpened()  logFilePath.isEmpty" )
            return false
         }
           
-        var     currentLogFileName = ""
+        var currentLogFileName = ""
         
         if let logFileName = UserDefaults.standard.object( forKey: Constants.userDefaultsKey ) {
             currentLogFileName = logFileName as! String
@@ -214,9 +231,8 @@ class LogCentral : NSObject {
            currentLogFileName = newLogFileName()
         }
           
-        let     fileManager = FileManager.default
-        var     logUrl      = URL( fileURLWithPath: logFilePath )
-        var     logOpened   = false
+        var     logUrl    = URL( fileURLWithPath: logFilePath )
+        var     logOpened = false
 
         logUrl.appendPathComponent( currentLogFileName )
         
@@ -250,7 +266,7 @@ class LogCentral : NSObject {
                 outputStream = stream
                 
                 do {
-                    let     attributesArray = try FileManager.default.attributesOfItem( atPath: logUrl.path )
+                    let     attributesArray = try fileManager.attributesOfItem( atPath: logUrl.path )
 
                     logFileSize = attributesArray[FileAttributeKey.size] as! UInt64
                 }
@@ -311,8 +327,6 @@ class LogCentral : NSObject {
     
     
     private func logsDirectoryPath() -> String {
-        let         fileManager = FileManager.default
-        
         if let documentDirectoryURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
             let     logsDirectoryURL = documentDirectoryURL.appendingPathComponent( Constants.logDirectoryName )
             
@@ -338,7 +352,6 @@ class LogCentral : NSObject {
 
 
     private func monitorLogFiles() {
-        let     fileManager   = FileManager.default
         var     filenameArray : [String] = []
         var     filesDeleted  = 0
         
@@ -348,6 +361,7 @@ class LogCentral : NSObject {
             do {
                 try filenameArray = fileManager.contentsOfDirectory( atPath: logFileUrl.path )
                 
+                print( "LogCentral::monitorLogFiles() - Found [ \(filenameArray.count) ] log files" )
                 filenameArray = filenameArray.sorted(by: {
                     (filename1, filename2) -> Bool in
                     
@@ -370,8 +384,8 @@ class LogCentral : NSObject {
                     
                 }
 
+                print( "LogCentral::monitorLogFiles() - Deleted [ \(filesDeleted) ] log files" )
             }
-            
             catch let error as NSError {
                 print( "LogCentral::monitorLogFiles() - ERROR!  Unable to get contents of Logs directory [ \(error) ]" )
             }
