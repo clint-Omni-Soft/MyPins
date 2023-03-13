@@ -523,6 +523,9 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
     
     private func promptForImageDispostion() {
         logTrace()
+        let     result      = pinCentral.imageNamed( imageName )
+        let     imageLoaded = result.0
+
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ImageDisposition", comment: "What would you like to do with this image?" ), message: nil, preferredStyle: .alert)
         
         let     inspectImageAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.InspectImage", comment: "Inspect Image" ), style: .default )
@@ -539,6 +542,14 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
 
         }
         
+        let     saveImageAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.SaveImageToLibrary", comment: "Save Image to Photo Library" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Save Image Action" )
+            let     thisImage = result.1
+            
+            UIImageWriteToSavedPhotosAlbum( thisImage, self, #selector( LocationEditorViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
+        }
+
         let     replaceAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Replace", comment: "Replace" ), style: .destructive )
         { ( alertAction ) in
             logTrace( "Replace Action" )
@@ -561,6 +572,11 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
         
         alert.addAction( inspectImageAction )
+
+        if imageLoaded {
+            alert.addAction( saveImageAction )
+        }
+        
         alert.addAction( replaceAction )
         alert.addAction( deleteAction  )
         alert.addAction( cancelAction  )
@@ -794,7 +810,7 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
                 }
                 else {
                     logVerbose( "ERROR:  Invalid media type[ %@ ]", mediaType )
-                    self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                    self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                                        message: NSLocalizedString( "AlertMessage.InvalidMediaType", comment: "We can't save the item you selected.  We can only save photos." ) )
                 }
                 
@@ -812,18 +828,11 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
     // MARK: UIImageWrite Completion Methods
     
     @objc func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer ) {
-        guard error == nil else {
-            if let myError = error {
-                logVerbose( "ERROR:  Save to photo album failed!  Error[ %@ ]", myError.localizedDescription )
-            }
-            else {
-                logTrace( "ERROR:  Save to photo album failed!  Error[ Unknown ]" )
-            }
-            
-            return
-        }
+        let message = error == nil ? NSLocalizedString( "AlertMessage.PhotoSaved",      comment: "Image saved to photo album"  ) :
+                                     NSLocalizedString( "AlertMessage.PhotoSaveFailed", comment: "Save to photo album failed!" )
+        let title   = error == nil ? NSLocalizedString( "AlertTitle.Success", comment: "Success!" ) : NSLocalizedString( "AlertTitle.Error", comment: "Error!" )
         
-        logTrace( "Image successfully saved to photo album" )
+        presentAlert(title: title, message: message )
     }
     
     

@@ -13,7 +13,10 @@
 "AlertMessage.LocationNotYetSet"    = "Your location has not yet been established.  Please try again later.";
 "AlertMessage.NameCannotBeBlank"    = "Name field cannot be left blank";
 "AlertMessage.NoRoutesAvailable"    = "Unable to find a route to this location.";
+"AlertMessage.PhotoSaved"           = "Image saved to photo album";
+"AlertMessage.PhotoSaveFailed"      = "Save to photo album failed!";
 "AlertMessage.UnableToDeleteImage"  = "We were unable to delete the image you created.";
+
 "AlertTitle.AreYouSure"             = "Are you sure you want to discard your changes?";
 "AlertTitle.CurrentCoordinates"     = "Current Coordinates";
 "AlertTitle.Error"                  = "Error";
@@ -22,6 +25,7 @@
 "AlertTitle.ImageDisposition"       = "What would you like to do with this image?";
 "AlertTitle.SelectMapType"          = "Select Map Type";
 "AlertTitle.SelectMediaSource"      = "Select Media Source for Photo";
+"AlertTitle.Success"                = "Success!";
 
 "ButtonTitle.Back"                  = "Back";
 "ButtonTitle.Camera"                = "Camera";
@@ -44,6 +48,7 @@
 "ButtonTitle.Satellite"             = "Satellite";
 "ButtonTitle.SatelliteFlyover"      = "Satellite Flyover";
 "ButtonTitle.Save"                  = "Save";
+"ButtonTitle.SaveImageToLibrary"    = "Save Image to Photo Library";
 "ButtonTitle.ShowOnMap"             = "Show on Map";
 "ButtonTitle.Standard"              = "Standard";
 "ButtonTitle.ToggleUnits"           = "Toggle Units";

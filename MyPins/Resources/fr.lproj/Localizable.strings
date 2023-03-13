@@ -13,7 +13,10 @@
 "AlertMessage.LocationNotYetSet"    = "Votre position n'a pas encore été établie.  Veuillez réessayer plus tard.";
 "AlertMessage.NameCannotBeBlank"    = "Le champ Nom ne peut pas être laissé vide";
 "AlertMessage.NoRoutesAvailable"    = "Impossible de trouver un itinéraire vers cet emplacement.";
+"AlertMessage.PhotoSaved"           = "Image enregistrée dans l'album photo";
+"AlertMessage.PhotoSaveFailed"      = "Échec de l'enregistrement dans l'album photo!";
 "AlertMessage.UnableToDeleteImage"  = "Nous n'avons pas pu supprimer l'image que vous avez créée.";
+
 "AlertTitle.AreYouSure"             = "Êtes-vous sûr de vouloir annuler vos modifications?";
 "AlertTitle.CurrentCoordinates"     = "Coordonnées actuelles";
 "AlertTitle.Error"                  = "Erreur!";
@@ -22,6 +25,7 @@
 "AlertTitle.ImageDisposition"       = "Que voudriez-vous faire avec cette image?";
 "AlertTitle.SelectMapType"          = "Sélectionner le type de carte";
 "AlertTitle.SelectMediaSource"      = "Sélectionnez la source multimédia pour la photo";
+"AlertTitle.Success"                = "Succès!";
 
 "ButtonTitle.Back"                  = "Retour";
 "ButtonTitle.Cancel"                = "Annuler";
@@ -44,6 +48,7 @@
 "ButtonTitle.Satellite"             = "Satellite";
 "ButtonTitle.SatelliteFlyover"      = "Survol satellite";
 "ButtonTitle.Save"                  = "Sauvegarder";
+"ButtonTitle.SaveImageToLibrary"    = "Enregistrer l'image dans la photothèque";
 "ButtonTitle.ShowOnMap"             = "Afficher sur la carte";
 "ButtonTitle.Standard"              = "la norme";
 "ButtonTitle.ToggleUnits"           = "Toggle Unités";

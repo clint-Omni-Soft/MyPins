@@ -61,8 +61,7 @@ class ImageViewController: UIViewController, UIScrollViewDelegate
     
     // MARK: UIScrollViewDelegate Methods
     
-    func viewForZooming(in scrollView: UIScrollView) -> UIView?
-    {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
 //        logTrace()
         return imageView
     }
