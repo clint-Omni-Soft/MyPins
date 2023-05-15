@@ -13,10 +13,6 @@
 		F400B4D120572E0000556F51 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F400B4CF20572E0000556F51 /* LaunchScreen.storyboard */; };
 		F403EF8822C17780000D9ABD /* LocationEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F403EF8722C17780000D9ABD /* LocationEditorViewController.swift */; };
 		F418E69029CB6B9A00E3A016 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F418E68F29CB6B9A00E3A016 /* CoreData.framework */; };
-		F418E69629CB6BE000E3A016 /* SMBCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F418E69229CB6BDF00E3A016 /* SMBCentral.swift */; };
-		F418E69729CB6BE000E3A016 /* CloudCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F418E69329CB6BDF00E3A016 /* CloudCentral.swift */; };
-		F418E69829CB6BE000E3A016 /* NASCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F418E69429CB6BDF00E3A016 /* NASCentral.swift */; };
-		F418E69929CB6BE000E3A016 /* DeviceAccessControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F418E69529CB6BDF00E3A016 /* DeviceAccessControl.swift */; };
 		F418E6A629CB9C8800E3A016 /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F418E6A529CB9C8700E3A016 /* SMBClient.framework */; };
 		F418E6A729CB9C8800E3A016 /* SMBClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F418E6A529CB9C8700E3A016 /* SMBClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF84209A293600DBA3CD /* HowToUseViewController.swift */; };
@@ -28,6 +24,10 @@
 		F445000A22D3A8DD00988667 /* LocationImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */; };
 		F44B60792A004EA0000C35E9 /* ColorMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44B60782A004EA0000C35E9 /* ColorMappingViewController.swift */; };
 		F461B8882670209200A2C53A /* ListTableViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F461B8872670209200A2C53A /* ListTableViewControllerCell.swift */; };
+		F47571EC2A12E447002E7E18 /* CloudCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47571EB2A12E447002E7E18 /* CloudCentral.swift */; };
+		F47571EE2A12E4BF002E7E18 /* DeviceAccessControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47571ED2A12E4BF002E7E18 /* DeviceAccessControl.swift */; };
+		F47571F02A12E4D9002E7E18 /* NASCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47571EF2A12E4D9002E7E18 /* NASCentral.swift */; };
+		F47571F22A12E4EC002E7E18 /* SMBCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47571F12A12E4EC002E7E18 /* SMBCentral.swift */; };
 		F4766CE7243D238A0054CD97 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4766CE6243D238A0054CD97 /* Logger.swift */; };
 		F4820DFE206998E800780C2D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4820DFC206998E800780C2D /* Localizable.strings */; };
 		F483C53B2671812600224D53 /* GlobalDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F483C53A2671812600224D53 /* GlobalDefinitions.swift */; };
@@ -87,10 +87,6 @@
 		F40319FC20A3C3B900D33372 /* MyPins-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyPins-Bridging-Header.h"; sourceTree = "<group>"; };
 		F403EF8722C17780000D9ABD /* LocationEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEditorViewController.swift; sourceTree = "<group>"; };
 		F418E68F29CB6B9A00E3A016 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		F418E69229CB6BDF00E3A016 /* SMBCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBCentral.swift; sourceTree = "<group>"; };
-		F418E69329CB6BDF00E3A016 /* CloudCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudCentral.swift; sourceTree = "<group>"; };
-		F418E69429CB6BDF00E3A016 /* NASCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NASCentral.swift; sourceTree = "<group>"; };
-		F418E69529CB6BDF00E3A016 /* DeviceAccessControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceAccessControl.swift; sourceTree = "<group>"; };
 		F418E6A529CB9C8700E3A016 /* SMBClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SMBClient.framework; path = "../ZKits/ZKits-Debug/SMBClient.framework"; sourceTree = "<group>"; };
 		F427FF84209A293600DBA3CD /* HowToUseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseViewController.swift; sourceTree = "<group>"; };
 		F427FF86209A2A6B00DBA3CD /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -101,6 +97,10 @@
 		F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationImageTableViewCell.swift; sourceTree = "<group>"; };
 		F44B60782A004EA0000C35E9 /* ColorMappingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorMappingViewController.swift; sourceTree = "<group>"; };
 		F461B8872670209200A2C53A /* ListTableViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewControllerCell.swift; sourceTree = "<group>"; };
+		F47571EB2A12E447002E7E18 /* CloudCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudCentral.swift; sourceTree = "<group>"; };
+		F47571ED2A12E4BF002E7E18 /* DeviceAccessControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAccessControl.swift; sourceTree = "<group>"; };
+		F47571EF2A12E4D9002E7E18 /* NASCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASCentral.swift; sourceTree = "<group>"; };
+		F47571F12A12E4EC002E7E18 /* SMBCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBCentral.swift; sourceTree = "<group>"; };
 		F4766CE6243D238A0054CD97 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		F4820DFD206998E800780C2D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F4820E022069991700780C2D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -185,7 +185,7 @@
 				F40319FC20A3C3B900D33372 /* MyPins-Bridging-Header.h */,
 				F40319BF20A38A2D00D33372 /* MyPins-Prefix.pch */,
 				F400B4D820572E2700556F51 /* Application */,
-				F418E69129CB6BDF00E3A016 /* External Devices */,
+				F47571EA2A12E403002E7E18 /* External Devices */,
 				F4B47FF3205744F40027755B /* PinCentral */,
 				F400B4D920572E2F00556F51 /* Resources */,
 				F400B4DA20572E3900556F51 /* User Interface */,
@@ -231,17 +231,6 @@
 			path = "User Interface";
 			sourceTree = "<group>";
 		};
-		F418E69129CB6BDF00E3A016 /* External Devices */ = {
-			isa = PBXGroup;
-			children = (
-				F418E69329CB6BDF00E3A016 /* CloudCentral.swift */,
-				F418E69529CB6BDF00E3A016 /* DeviceAccessControl.swift */,
-				F418E69429CB6BDF00E3A016 /* NASCentral.swift */,
-				F418E69229CB6BDF00E3A016 /* SMBCentral.swift */,
-			);
-			path = "External Devices";
-			sourceTree = "<group>";
-		};
 		F44B60772A004E81000C35E9 /* Color Mapping */ = {
 			isa = PBXGroup;
 			children = (
@@ -265,6 +254,17 @@
 				F49B9A58207D406B007598F9 /* AboutViewController.swift */,
 			);
 			path = About;
+			sourceTree = "<group>";
+		};
+		F47571EA2A12E403002E7E18 /* External Devices */ = {
+			isa = PBXGroup;
+			children = (
+				F47571EB2A12E447002E7E18 /* CloudCentral.swift */,
+				F47571ED2A12E4BF002E7E18 /* DeviceAccessControl.swift */,
+				F47571EF2A12E4D9002E7E18 /* NASCentral.swift */,
+				F47571F12A12E4EC002E7E18 /* SMBCentral.swift */,
+			);
+			path = "External Devices";
 			sourceTree = "<group>";
 		};
 		F483C5332671349300224D53 /* Utilities */ = {
@@ -506,32 +506,32 @@
 				F497BAD829353CAC00878E1F /* LocationNotesTableViewCell.swift in Sources */,
 				F497BAE32935493200878E1F /* Pin+CoreDataProperties.swift in Sources */,
 				F4B47FEB205734880027755B /* ListTableViewController.swift in Sources */,
+				F47571EE2A12E4BF002E7E18 /* DeviceAccessControl.swift in Sources */,
 				F4A6552929AEB23400DDC813 /* LogViewController.swift in Sources */,
-				F418E69829CB6BE000E3A016 /* NASCentral.swift in Sources */,
 				F4766CE7243D238A0054CD97 /* Logger.swift in Sources */,
 				F49F1AC82A12E2B8000AD67B /* PleaseWaitViewController.swift in Sources */,
-				F418E69729CB6BE000E3A016 /* CloudCentral.swift in Sources */,
 				F400B4CC20572E0000556F51 /* MyPins.xcdatamodeld in Sources */,
 				F4EB06A62A00575000B159E1 /* PinColor+CoreDataProperties.swift in Sources */,
 				F49766AD205B11AE00A76F9D /* PointAnnotation.swift in Sources */,
 				F445000A22D3A8DD00988667 /* LocationImageTableViewCell.swift in Sources */,
-				F418E69629CB6BE000E3A016 /* SMBCentral.swift in Sources */,
 				F4B76F5E29CCFE9C002D2060 /* NasDriveSelectorViewController.swift in Sources */,
 				F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */,
 				F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */,
 				F44B60792A004EA0000C35E9 /* ColorMappingViewController.swift in Sources */,
 				F4EB06A52A00575000B159E1 /* PinColor.swift in Sources */,
 				F4B47FF9205746A80027755B /* Pin.swift in Sources */,
-				F418E69929CB6BE000E3A016 /* DeviceAccessControl.swift in Sources */,
 				F483C53B2671812600224D53 /* GlobalDefinitions.swift in Sources */,
 				F4B76F5429CCEBAC002D2060 /* DataStoreLocationViewController.swift in Sources */,
 				F400B4C420572E0000556F51 /* AppDelegate.swift in Sources */,
 				F4B0B7212A0432CE007D78C7 /* ImageRequest.swift in Sources */,
 				F461B8882670209200A2C53A /* ListTableViewControllerCell.swift in Sources */,
+				F47571F02A12E4D9002E7E18 /* NASCentral.swift in Sources */,
+				F47571F22A12E4EC002E7E18 /* SMBCentral.swift in Sources */,
 				F4D7FE0422D91EEE00D61B8B /* ImageViewController.swift in Sources */,
 				F4B76F6029CD06BA002D2060 /* UIImage+Cropping.swift in Sources */,
 				F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */,
 				F445000822D3A8C200988667 /* LocationDetailsTableViewCell.swift in Sources */,
+				F47571EC2A12E447002E7E18 /* CloudCentral.swift in Sources */,
 				F4B0B7222A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift in Sources */,
 				F403EF8822C17780000D9ABD /* LocationEditorViewController.swift in Sources */,
 				F4B76F5529CCEBAC002D2060 /* TransferProgressViewController.swift in Sources */,
