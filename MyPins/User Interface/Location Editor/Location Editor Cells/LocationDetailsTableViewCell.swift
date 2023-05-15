@@ -22,12 +22,13 @@ protocol LocationDetailsTableViewCellDelegate: AnyObject {
 class LocationDetailsTableViewCell: UITableViewCell {
     
     // MARK: Public Variables ... these are guaranteed to be set by our creator
+    
     var altitude    = 0.0
     var details     : String!
     var latitude    = 0.0
     var longitude   = 0.0
     var name        : String!
-    var pinColor    : Int16 = 0
+    var colorIndex  : Int16 = 0
 
     weak var delegate: LocationDetailsTableViewCellDelegate?
     
@@ -38,6 +39,11 @@ class LocationDetailsTableViewCell: UITableViewCell {
     @IBOutlet weak var showOnMapButton  : UIButton!
     @IBOutlet weak var unitsButton      : UIButton!
 
+    
+    // MARK: Private Variables
+    
+    private let pinCentral = PinCentral.sharedInstance
+    
     
     
     // MARK: UITableViewCell Lifecycle Methods
@@ -57,9 +63,10 @@ class LocationDetailsTableViewCell: UITableViewCell {
     
     func initialize() {
 //        logTrace()
-        let         units                  = PinCentral.sharedInstance.displayUnits()
+        let         units                  = pinCentral.displayUnits()
         let         altitudeInDesiredUnits = ( ( DisplayUnits.meters == units ) ? altitude : ( altitude * GlobalConstants.feetPerMeter ) )
         let         altitudeText           = String( format: "%7.1f", altitudeInDesiredUnits ).trimmingCharacters(in: .whitespaces)
+        let         pinColor               = pinCentral.colorArray[Int( colorIndex )]
 
         detailsButton  .setTitle( ( details.isEmpty ? NSLocalizedString( "LabelText.Details", comment: "Address / Description" ) : details ), for: .normal )
         nameButton     .setTitle( ( name   .isEmpty ? NSLocalizedString( "LabelText.Name",    comment: "Name"                  ) : name    ), for: .normal )
@@ -68,7 +75,7 @@ class LocationDetailsTableViewCell: UITableViewCell {
         showOnMapButton.setTitle( NSLocalizedString( "ButtonTitle.ShowOnMap", comment: "Show on Map" ), for: .normal )
         unitsButton    .setTitle( NSLocalizedString( "ButtonTitle.Units",     comment: "Units"       ), for: .normal )
         
-        pinColorButton .setTitleColor( pinColorArray[Int( pinColor )], for: .normal)
+        pinColorButton .setTitleColor( pinColorArray[Int( pinColor.colorId )], for: .normal)
         
         setPinColorButtonBackgroundImage()
     }
@@ -114,8 +121,9 @@ class LocationDetailsTableViewCell: UITableViewCell {
         let size = pinColorButton.frame.size
         let rect = CGRect( x: 0, y: 0, width: size.width, height: size.height )
         var backgroundColor : UIColor = .white
-        
-        if ( ( pinColor == PinColors.pinWhite ) || ( pinColor == PinColors.pinYellow ) ) {
+        let pinColor = pinCentral.colorArray[Int( colorIndex )]
+
+        if ( ( pinColor.colorId == PinColors.pinWhite ) || ( pinColor.colorId == PinColors.pinYellow ) ) {
             backgroundColor = .lightGray
         }
         

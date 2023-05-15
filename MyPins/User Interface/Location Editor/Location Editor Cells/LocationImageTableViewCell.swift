@@ -70,7 +70,7 @@ class LocationImageTableViewCell: UITableViewCell {
         var     imageLoaded = false
 
         if !imageName.isEmpty {
-            let     result = pinCentral.imageNamed( imageName )
+            let     result = pinCentral.imageNamed( imageName, descriptor: "", self )
             
             imageLoaded = result.0
             
@@ -85,5 +85,24 @@ class LocationImageTableViewCell: UITableViewCell {
         }
 
     }
+    
+    
+    
+}
+
+
+
+// MARK: PinCentralDelegate Methods
+
+extension LocationImageTableViewCell: PinCentralDelegate {
+    
+    func pinCentral(_ pinCentral: PinCentral, didFetchImage: Bool, filename: String, image: UIImage) {
+        logTrace()
+        if didFetchImage {
+            locationImageView.image = image
+        }
+        
+    }
+    
     
 }

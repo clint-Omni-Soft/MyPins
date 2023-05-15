@@ -12,15 +12,22 @@
 		F400B4CE20572E0000556F51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F400B4CD20572E0000556F51 /* Assets.xcassets */; };
 		F400B4D120572E0000556F51 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F400B4CF20572E0000556F51 /* LaunchScreen.storyboard */; };
 		F403EF8822C17780000D9ABD /* LocationEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F403EF8722C17780000D9ABD /* LocationEditorViewController.swift */; };
+		F418E69029CB6B9A00E3A016 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F418E68F29CB6B9A00E3A016 /* CoreData.framework */; };
+		F418E69629CB6BE000E3A016 /* SMBCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F418E69229CB6BDF00E3A016 /* SMBCentral.swift */; };
+		F418E69729CB6BE000E3A016 /* CloudCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F418E69329CB6BDF00E3A016 /* CloudCentral.swift */; };
+		F418E69829CB6BE000E3A016 /* NASCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F418E69429CB6BDF00E3A016 /* NASCentral.swift */; };
+		F418E69929CB6BE000E3A016 /* DeviceAccessControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F418E69529CB6BDF00E3A016 /* DeviceAccessControl.swift */; };
+		F418E6A629CB9C8800E3A016 /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F418E6A529CB9C8700E3A016 /* SMBClient.framework */; };
+		F418E6A729CB9C8800E3A016 /* SMBClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F418E6A529CB9C8700E3A016 /* SMBClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF84209A293600DBA3CD /* HowToUseViewController.swift */; };
-		F427FF87209A2A6B00DBA3CD /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF86209A2A6B00DBA3CD /* SettingsTableViewController.swift */; };
+		F427FF87209A2A6B00DBA3CD /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF86209A2A6B00DBA3CD /* SettingsViewController.swift */; };
 		F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */; };
 		F427FF8B209A51C400DBA3CD /* appIcon 76x2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F427FF8A209A51C400DBA3CD /* appIcon 76x2x.png */; };
 		F438F6DC2061D0B10032F465 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F438F6DB2061D0B10032F465 /* SplitViewController.swift */; };
 		F445000822D3A8C200988667 /* LocationDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */; };
 		F445000A22D3A8DD00988667 /* LocationImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */; };
+		F44B60792A004EA0000C35E9 /* ColorMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44B60782A004EA0000C35E9 /* ColorMappingViewController.swift */; };
 		F461B8882670209200A2C53A /* ListTableViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F461B8872670209200A2C53A /* ListTableViewControllerCell.swift */; };
-		F46B387220599BDB005347AC /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */; };
 		F4766CE7243D238A0054CD97 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4766CE6243D238A0054CD97 /* Logger.swift */; };
 		F4820DFE206998E800780C2D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4820DFC206998E800780C2D /* Localizable.strings */; };
 		F483C53B2671812600224D53 /* GlobalDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F483C53A2671812600224D53 /* GlobalDefinitions.swift */; };
@@ -32,16 +39,42 @@
 		F497BAE529355B4800878E1F /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F497BAE429355B4800878E1F /* NotesViewController.swift */; };
 		F4982F6A207BEF9B00A30D40 /* PinColorSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */; };
 		F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */; };
-		F49B9A59207D406B007598F9 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */; };
+		F49B9A59207D406B007598F9 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49B9A58207D406B007598F9 /* AboutViewController.swift */; };
 		F49B9A5B207D587E007598F9 /* appIcon MASTER in Resources */ = {isa = PBXBuildFile; fileRef = F49B9A5A207D587D007598F9 /* appIcon MASTER */; };
 		F4A6552929AEB23400DDC813 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A6552829AEB23400DDC813 /* LogViewController.swift */; };
+		F4B0B7212A0432CE007D78C7 /* ImageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B0B71F2A0432CE007D78C7 /* ImageRequest.swift */; };
+		F4B0B7222A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B0B7202A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift */; };
 		F4B47FEB205734880027755B /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FEA205734880027755B /* ListTableViewController.swift */; };
 		F4B47FED205734A80027755B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FEC205734A80027755B /* MapViewController.swift */; };
 		F4B47FF2205734F40027755B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B47FF1205734F40027755B /* MapKit.framework */; };
 		F4B47FF5205745130027755B /* PinCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FF4205745130027755B /* PinCentral.swift */; };
 		F4B47FF9205746A80027755B /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FF7205746A80027755B /* Pin.swift */; };
+		F4B76F5429CCEBAC002D2060 /* DataStoreLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B76F4B29CCEBAC002D2060 /* DataStoreLocationViewController.swift */; };
+		F4B76F5529CCEBAC002D2060 /* TransferProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B76F4D29CCEBAC002D2060 /* TransferProgressViewController.swift */; };
+		F4B76F5629CCEBAC002D2060 /* NasLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B76F5029CCEBAC002D2060 /* NasLoginViewController.swift */; };
+		F4B76F5A29CCFB64002D2060 /* PleaseWait.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4B76F5929CCFB64002D2060 /* PleaseWait.storyboard */; };
+		F4B76F5D29CCFBCE002D2060 /* PleaseWaitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B76F5C29CCFBCE002D2060 /* PleaseWaitViewController.swift */; };
+		F4B76F5E29CCFE9C002D2060 /* NasDriveSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B76F5329CCEBAC002D2060 /* NasDriveSelectorViewController.swift */; };
+		F4B76F6029CD06BA002D2060 /* UIImage+Cropping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B76F5F29CD06BA002D2060 /* UIImage+Cropping.swift */; };
+		F4CACD9D29D39F8E00BCFF79 /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CACD9C29D39F8E00BCFF79 /* UIKitExtensions.swift */; };
 		F4D7FE0422D91EEE00D61B8B /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */; };
+		F4EB06A52A00575000B159E1 /* PinColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB06A32A00575000B159E1 /* PinColor.swift */; };
+		F4EB06A62A00575000B159E1 /* PinColor+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB06A42A00575000B159E1 /* PinColor+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F418E6A829CB9C8800E3A016 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F418E6A729CB9C8800E3A016 /* SMBClient.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		F400B4C020572E0000556F51 /* MyPins.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyPins.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -53,15 +86,21 @@
 		F40319BF20A38A2D00D33372 /* MyPins-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyPins-Prefix.pch"; sourceTree = "<group>"; };
 		F40319FC20A3C3B900D33372 /* MyPins-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyPins-Bridging-Header.h"; sourceTree = "<group>"; };
 		F403EF8722C17780000D9ABD /* LocationEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEditorViewController.swift; sourceTree = "<group>"; };
+		F418E68F29CB6B9A00E3A016 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F418E69229CB6BDF00E3A016 /* SMBCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBCentral.swift; sourceTree = "<group>"; };
+		F418E69329CB6BDF00E3A016 /* CloudCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudCentral.swift; sourceTree = "<group>"; };
+		F418E69429CB6BDF00E3A016 /* NASCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NASCentral.swift; sourceTree = "<group>"; };
+		F418E69529CB6BDF00E3A016 /* DeviceAccessControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceAccessControl.swift; sourceTree = "<group>"; };
+		F418E6A529CB9C8700E3A016 /* SMBClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SMBClient.framework; path = "../ZKits/ZKits-Debug/SMBClient.framework"; sourceTree = "<group>"; };
 		F427FF84209A293600DBA3CD /* HowToUseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseViewController.swift; sourceTree = "<group>"; };
-		F427FF86209A2A6B00DBA3CD /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		F427FF86209A2A6B00DBA3CD /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		F427FF8A209A51C400DBA3CD /* appIcon 76x2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appIcon 76x2x.png"; path = "AppIcon/appIcon 76x2x.png"; sourceTree = "<group>"; };
 		F438F6DB2061D0B10032F465 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailsTableViewCell.swift; sourceTree = "<group>"; };
 		F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationImageTableViewCell.swift; sourceTree = "<group>"; };
+		F44B60782A004EA0000C35E9 /* ColorMappingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorMappingViewController.swift; sourceTree = "<group>"; };
 		F461B8872670209200A2C53A /* ListTableViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewControllerCell.swift; sourceTree = "<group>"; };
-		F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		F4766CE6243D238A0054CD97 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		F4820DFD206998E800780C2D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F4820E022069991700780C2D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -82,15 +121,29 @@
 		F497BAE429355B4800878E1F /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinColorSelectorViewController.swift; sourceTree = "<group>"; };
 		F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutContraint+Extension.swift"; sourceTree = "<group>"; };
-		F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
+		F49B9A58207D406B007598F9 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		F49B9A5A207D587D007598F9 /* appIcon MASTER */ = {isa = PBXFileReference; lastKnownFileType = file; name = "appIcon MASTER"; path = "AppIcon/appIcon MASTER"; sourceTree = "<group>"; };
 		F4A6552829AEB23400DDC813 /* LogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
+		F4B0B71E2A0431FE007D78C7 /* MyPins 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MyPins 4.xcdatamodel"; sourceTree = "<group>"; };
+		F4B0B71F2A0432CE007D78C7 /* ImageRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRequest.swift; sourceTree = "<group>"; };
+		F4B0B7202A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageRequest+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F4B47FEA205734880027755B /* ListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
 		F4B47FEC205734A80027755B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		F4B47FF1205734F40027755B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		F4B47FF4205745130027755B /* PinCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCentral.swift; sourceTree = "<group>"; };
 		F4B47FF7205746A80027755B /* Pin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
+		F4B76F4B29CCEBAC002D2060 /* DataStoreLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStoreLocationViewController.swift; sourceTree = "<group>"; };
+		F4B76F4D29CCEBAC002D2060 /* TransferProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferProgressViewController.swift; sourceTree = "<group>"; };
+		F4B76F5029CCEBAC002D2060 /* NasLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NasLoginViewController.swift; sourceTree = "<group>"; };
+		F4B76F5329CCEBAC002D2060 /* NasDriveSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NasDriveSelectorViewController.swift; sourceTree = "<group>"; };
+		F4B76F5929CCFB64002D2060 /* PleaseWait.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PleaseWait.storyboard; sourceTree = "<group>"; };
+		F4B76F5C29CCFBCE002D2060 /* PleaseWaitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PleaseWaitViewController.swift; sourceTree = "<group>"; };
+		F4B76F5F29CD06BA002D2060 /* UIImage+Cropping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Cropping.swift"; sourceTree = "<group>"; };
+		F4CACD9C29D39F8E00BCFF79 /* UIKitExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtensions.swift; sourceTree = "<group>"; };
 		F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
+		F4EB06A22A00550200B159E1 /* MyPins 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MyPins 3.xcdatamodel"; sourceTree = "<group>"; };
+		F4EB06A32A00575000B159E1 /* PinColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinColor.swift; sourceTree = "<group>"; };
+		F4EB06A42A00575000B159E1 /* PinColor+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PinColor+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,7 +151,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F418E69029CB6B9A00E3A016 /* CoreData.framework in Frameworks */,
 				F4B47FF2205734F40027755B /* MapKit.framework in Frameworks */,
+				F418E6A629CB9C8800E3A016 /* SMBClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,6 +185,7 @@
 				F40319FC20A3C3B900D33372 /* MyPins-Bridging-Header.h */,
 				F40319BF20A38A2D00D33372 /* MyPins-Prefix.pch */,
 				F400B4D820572E2700556F51 /* Application */,
+				F418E69129CB6BDF00E3A016 /* External Devices */,
 				F4B47FF3205744F40027755B /* PinCentral */,
 				F400B4D920572E2F00556F51 /* Resources */,
 				F400B4DA20572E3900556F51 /* User Interface */,
@@ -155,6 +211,7 @@
 				F4820DFC206998E800780C2D /* Localizable.strings */,
 				F48A45CC20698FDE00C27F03 /* Main_iPad.storyboard */,
 				F48A45C920698D0400C27F03 /* Main_iPhone.storyboard */,
+				F4B76F5929CCFB64002D2060 /* PleaseWait.storyboard */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -162,16 +219,35 @@
 		F400B4DA20572E3900556F51 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
-				F483C5362671364C00224D53 /* MapViewController */,
-				F461B8862670205000A2C53A /* ListTableViewController */,
-				F483C5342671351700224D53 /* Location Editor */,
-				F483C5352671353E00224D53 /* Settings */,
-				F483C5332671349300224D53 /* Utilities */,
-				F49B9A58207D406B007598F9 /* SplashScreenViewController.swift */,
 				F438F6DB2061D0B10032F465 /* SplitViewController.swift */,
 				F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */,
+				F461B8862670205000A2C53A /* ListTableViewController */,
+				F483C5342671351700224D53 /* Location Editor */,
+				F483C5362671364C00224D53 /* MapViewController */,
+				F4B76F5B29CCFBCE002D2060 /* Please Wait */,
+				F483C5352671353E00224D53 /* Settings */,
+				F483C5332671349300224D53 /* Utilities */,
 			);
 			path = "User Interface";
+			sourceTree = "<group>";
+		};
+		F418E69129CB6BDF00E3A016 /* External Devices */ = {
+			isa = PBXGroup;
+			children = (
+				F418E69329CB6BDF00E3A016 /* CloudCentral.swift */,
+				F418E69529CB6BDF00E3A016 /* DeviceAccessControl.swift */,
+				F418E69429CB6BDF00E3A016 /* NASCentral.swift */,
+				F418E69229CB6BDF00E3A016 /* SMBCentral.swift */,
+			);
+			path = "External Devices";
+			sourceTree = "<group>";
+		};
+		F44B60772A004E81000C35E9 /* Color Mapping */ = {
+			isa = PBXGroup;
+			children = (
+				F44B60782A004EA0000C35E9 /* ColorMappingViewController.swift */,
+			);
+			path = "Color Mapping";
 			sourceTree = "<group>";
 		};
 		F461B8862670205000A2C53A /* ListTableViewController */ = {
@@ -183,13 +259,22 @@
 			path = ListTableViewController;
 			sourceTree = "<group>";
 		};
+		F46B330C29D4F2D500D14E86 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				F49B9A58207D406B007598F9 /* AboutViewController.swift */,
+			);
+			path = About;
+			sourceTree = "<group>";
+		};
 		F483C5332671349300224D53 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
 				F4A6552829AEB23400DDC813 /* LogViewController.swift */,
 				F4766CE6243D238A0054CD97 /* Logger.swift */,
 				F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */,
-				F46B387120599BDB005347AC /* UIViewControllerExtensions.swift */,
+				F4B76F5F29CD06BA002D2060 /* UIImage+Cropping.swift */,
+				F4CACD9C29D39F8E00BCFF79 /* UIKitExtensions.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -207,8 +292,11 @@
 		F483C5352671353E00224D53 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				F427FF86209A2A6B00DBA3CD /* SettingsTableViewController.swift */,
-				F427FF84209A293600DBA3CD /* HowToUseViewController.swift */,
+				F427FF86209A2A6B00DBA3CD /* SettingsViewController.swift */,
+				F46B330C29D4F2D500D14E86 /* About */,
+				F44B60772A004E81000C35E9 /* Color Mapping */,
+				F4B76F4A29CCEBAC002D2060 /* Data Store Location */,
+				F4B76F4829CCEB8A002D2060 /* How to Use */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -253,7 +341,9 @@
 		F4B47FF0205734F40027755B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F418E68F29CB6B9A00E3A016 /* CoreData.framework */,
 				F4B47FF1205734F40027755B /* MapKit.framework */,
+				F418E6A529CB9C8700E3A016 /* SMBClient.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -271,10 +361,65 @@
 		F4B47FF62057467D0027755B /* CoreData Entities */ = {
 			isa = PBXGroup;
 			children = (
-				F497BAE22935493200878E1F /* Pin+CoreDataProperties.swift */,
+				F4B0B71F2A0432CE007D78C7 /* ImageRequest.swift */,
+				F4B0B7202A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift */,
 				F4B47FF7205746A80027755B /* Pin.swift */,
+				F497BAE22935493200878E1F /* Pin+CoreDataProperties.swift */,
+				F4EB06A32A00575000B159E1 /* PinColor.swift */,
+				F4EB06A42A00575000B159E1 /* PinColor+CoreDataProperties.swift */,
 			);
 			path = "CoreData Entities";
+			sourceTree = "<group>";
+		};
+		F4B76F4829CCEB8A002D2060 /* How to Use */ = {
+			isa = PBXGroup;
+			children = (
+				F427FF84209A293600DBA3CD /* HowToUseViewController.swift */,
+			);
+			path = "How to Use";
+			sourceTree = "<group>";
+		};
+		F4B76F4A29CCEBAC002D2060 /* Data Store Location */ = {
+			isa = PBXGroup;
+			children = (
+				F4B76F4B29CCEBAC002D2060 /* DataStoreLocationViewController.swift */,
+				F4B76F4C29CCEBAC002D2060 /* Transfer Progress */,
+				F4B76F4E29CCEBAC002D2060 /* NAS Drive Selector */,
+			);
+			path = "Data Store Location";
+			sourceTree = "<group>";
+		};
+		F4B76F4C29CCEBAC002D2060 /* Transfer Progress */ = {
+			isa = PBXGroup;
+			children = (
+				F4B76F4D29CCEBAC002D2060 /* TransferProgressViewController.swift */,
+			);
+			path = "Transfer Progress";
+			sourceTree = "<group>";
+		};
+		F4B76F4E29CCEBAC002D2060 /* NAS Drive Selector */ = {
+			isa = PBXGroup;
+			children = (
+				F4B76F5329CCEBAC002D2060 /* NasDriveSelectorViewController.swift */,
+				F4B76F4F29CCEBAC002D2060 /* NAS Login Controller */,
+			);
+			path = "NAS Drive Selector";
+			sourceTree = "<group>";
+		};
+		F4B76F4F29CCEBAC002D2060 /* NAS Login Controller */ = {
+			isa = PBXGroup;
+			children = (
+				F4B76F5029CCEBAC002D2060 /* NasLoginViewController.swift */,
+			);
+			path = "NAS Login Controller";
+			sourceTree = "<group>";
+		};
+		F4B76F5B29CCFBCE002D2060 /* Please Wait */ = {
+			isa = PBXGroup;
+			children = (
+				F4B76F5C29CCFBCE002D2060 /* PleaseWaitViewController.swift */,
+			);
+			path = "Please Wait";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -287,6 +432,7 @@
 				F400B4BC20572E0000556F51 /* Sources */,
 				F400B4BD20572E0000556F51 /* Frameworks */,
 				F400B4BE20572E0000556F51 /* Resources */,
+				F418E6A829CB9C8800E3A016 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -342,6 +488,7 @@
 				F48A45C720698D0400C27F03 /* Main_iPhone.storyboard in Resources */,
 				F49B9A5B207D587E007598F9 /* appIcon MASTER in Resources */,
 				F4820DFE206998E800780C2D /* Localizable.strings in Resources */,
+				F4B76F5A29CCFB64002D2060 /* PleaseWait.storyboard in Resources */,
 				F48A45CA20698FDE00C27F03 /* Main_iPad.storyboard in Resources */,
 				F427FF8B209A51C400DBA3CD /* appIcon 76x2x.png in Resources */,
 				F400B4D120572E0000556F51 /* LaunchScreen.storyboard in Resources */,
@@ -360,26 +507,41 @@
 				F497BAE32935493200878E1F /* Pin+CoreDataProperties.swift in Sources */,
 				F4B47FEB205734880027755B /* ListTableViewController.swift in Sources */,
 				F4A6552929AEB23400DDC813 /* LogViewController.swift in Sources */,
+				F418E69829CB6BE000E3A016 /* NASCentral.swift in Sources */,
 				F4766CE7243D238A0054CD97 /* Logger.swift in Sources */,
+				F418E69729CB6BE000E3A016 /* CloudCentral.swift in Sources */,
 				F400B4CC20572E0000556F51 /* MyPins.xcdatamodeld in Sources */,
+				F4EB06A62A00575000B159E1 /* PinColor+CoreDataProperties.swift in Sources */,
 				F49766AD205B11AE00A76F9D /* PointAnnotation.swift in Sources */,
 				F445000A22D3A8DD00988667 /* LocationImageTableViewCell.swift in Sources */,
-				F46B387220599BDB005347AC /* UIViewControllerExtensions.swift in Sources */,
+				F418E69629CB6BE000E3A016 /* SMBCentral.swift in Sources */,
+				F4B76F5E29CCFE9C002D2060 /* NasDriveSelectorViewController.swift in Sources */,
 				F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */,
 				F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */,
+				F44B60792A004EA0000C35E9 /* ColorMappingViewController.swift in Sources */,
+				F4EB06A52A00575000B159E1 /* PinColor.swift in Sources */,
 				F4B47FF9205746A80027755B /* Pin.swift in Sources */,
+				F418E69929CB6BE000E3A016 /* DeviceAccessControl.swift in Sources */,
 				F483C53B2671812600224D53 /* GlobalDefinitions.swift in Sources */,
+				F4B76F5429CCEBAC002D2060 /* DataStoreLocationViewController.swift in Sources */,
 				F400B4C420572E0000556F51 /* AppDelegate.swift in Sources */,
+				F4B0B7212A0432CE007D78C7 /* ImageRequest.swift in Sources */,
 				F461B8882670209200A2C53A /* ListTableViewControllerCell.swift in Sources */,
 				F4D7FE0422D91EEE00D61B8B /* ImageViewController.swift in Sources */,
+				F4B76F6029CD06BA002D2060 /* UIImage+Cropping.swift in Sources */,
 				F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */,
 				F445000822D3A8C200988667 /* LocationDetailsTableViewCell.swift in Sources */,
+				F4B0B7222A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift in Sources */,
 				F403EF8822C17780000D9ABD /* LocationEditorViewController.swift in Sources */,
+				F4B76F5529CCEBAC002D2060 /* TransferProgressViewController.swift in Sources */,
+				F4B76F5D29CCFBCE002D2060 /* PleaseWaitViewController.swift in Sources */,
 				F4B47FF5205745130027755B /* PinCentral.swift in Sources */,
-				F49B9A59207D406B007598F9 /* SplashScreenViewController.swift in Sources */,
+				F4B76F5629CCEBAC002D2060 /* NasLoginViewController.swift in Sources */,
+				F4CACD9D29D39F8E00BCFF79 /* UIKitExtensions.swift in Sources */,
+				F49B9A59207D406B007598F9 /* AboutViewController.swift in Sources */,
 				F4B47FED205734A80027755B /* MapViewController.swift in Sources */,
 				F497BAE529355B4800878E1F /* NotesViewController.swift in Sources */,
-				F427FF87209A2A6B00DBA3CD /* SettingsTableViewController.swift in Sources */,
+				F427FF87209A2A6B00DBA3CD /* SettingsViewController.swift in Sources */,
 				F4982F6A207BEF9B00A30D40 /* PinColorSelectorViewController.swift in Sources */,
 				F438F6DC2061D0B10032F465 /* SplitViewController.swift in Sources */,
 			);
@@ -556,13 +718,16 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YEJQTHXY7Y;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "";
+				"EXCLUDED_ARCHS[sdk=*]" = x86_64;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				FRAMEWORK_SEARCH_PATHS = "../ZKits/ZKits-Debug";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MyPins/MyPins-Prefix.pch";
 				INFOPLIST_FILE = MyPins/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.8;
-				ONLY_ACTIVE_ARCH = NO;
+				MARKETING_VERSION = 2.9;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -584,12 +749,13 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YEJQTHXY7Y;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = "../ZKits/ZKits-Debug";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MyPins/MyPins-Prefix.pch";
 				INFOPLIST_FILE = MyPins/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.8;
+				MARKETING_VERSION = 2.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -627,10 +793,12 @@
 		F400B4CA20572E0000556F51 /* MyPins.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F4B0B71E2A0431FE007D78C7 /* MyPins 4.xcdatamodel */,
+				F4EB06A22A00550200B159E1 /* MyPins 3.xcdatamodel */,
 				F497BAD9293546DE00878E1F /* MyPins 2.xcdatamodel */,
 				F400B4CB20572E0000556F51 /* MyPins.xcdatamodel */,
 			);
-			currentVersion = F497BAD9293546DE00878E1F /* MyPins 2.xcdatamodel */;
+			currentVersion = F4B0B71E2A0431FE007D78C7 /* MyPins 4.xcdatamodel */;
 			path = MyPins.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

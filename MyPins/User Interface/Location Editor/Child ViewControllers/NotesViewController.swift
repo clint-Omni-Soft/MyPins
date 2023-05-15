@@ -28,7 +28,7 @@ class NotesViewController: UIViewController {
     
     // MARK: Private Variables
     
-    private var     currentText = ""
+    private var currentText = ""
     
       
     
@@ -37,7 +37,7 @@ class NotesViewController: UIViewController {
     override func viewDidLoad() {
         logTrace()
         super.viewDidLoad()
-        title = NSLocalizedString( "Title.NotesEditor", comment: "Notes Editor" )
+        navigationItem.title = NSLocalizedString( "Title.NotesEditor", comment: "Notes Editor" )
         
         navigationItem.rightBarButtonItem = UIBarButtonItem.init( barButtonSystemItem: .trash, target: self, action: #selector( trashBarButtonItemTouched(_:) ) )
     }

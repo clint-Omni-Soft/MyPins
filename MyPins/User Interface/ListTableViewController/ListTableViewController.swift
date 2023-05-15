@@ -18,7 +18,7 @@ class ListTableViewController: UITableViewController {
         
     private struct Constants {
         static let cellID    = "ListTableViewControllerCell"
-        static let rowHeight = CGFloat.init( 66.0 )
+        static let rowHeight = CGFloat.init( 72.0 )
     }
 
     private struct StoryboardIds {
@@ -26,7 +26,8 @@ class ListTableViewController: UITableViewController {
         static let map            = "MapViewController"
     }
     
-    private let pinCentral = PinCentral.sharedInstance
+    private let deviceAccessControl = DeviceAccessControl.sharedInstance
+    private let pinCentral          = PinCentral.sharedInstance
     
     
     
@@ -36,7 +37,7 @@ class ListTableViewController: UITableViewController {
         logTrace()
         super.viewDidLoad()
         
-        title = NSLocalizedString( "Title.PinList", comment: "Pin List" )
+        navigationItem.title = NSLocalizedString( "Title.PinList", comment: "Pin List" )
     }
     
     
@@ -44,21 +45,16 @@ class ListTableViewController: UITableViewController {
         logTrace()
         super.viewWillAppear( animated )
         
-        pinCentral.delegate = self
-
+        loadBarButtonItems()
+        
         if !pinCentral.didOpenDatabase {
-            pinCentral.openDatabase()
+            pinCentral.openDatabaseWith( self )
         }
         else {
             tableView.reloadData()
         }
 
-        loadBarButtonItems()
-        
-        NotificationCenter.default.addObserver( self,
-                                                selector: #selector( ListTableViewController.pinsUpdated( notification: ) ),
-                                                name:     NSNotification.Name( rawValue: Notifications.pinsUpdated ),
-                                                object:   nil )
+        NotificationCenter.default.addObserver( self, selector: #selector( self.pinsUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: nil )
     }
 
     
@@ -69,12 +65,6 @@ class ListTableViewController: UITableViewController {
         NotificationCenter.default.removeObserver( self )
     }
     
-    
-    override func didReceiveMemoryWarning() {
-        logTrace( "MEMORY WARNING!!!" )
-        super.didReceiveMemoryWarning()
-    }
-
     
     
     
@@ -106,8 +96,8 @@ class ListTableViewController: UITableViewController {
     private func launchLocationEditorForPinAt( index: Int ) {
         logVerbose( "[ %d ]", index )
         if let locationEditorVC: LocationEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.locationEditor ) as? LocationEditorViewController {
-            locationEditorVC.delegate                = self
-            locationEditorVC.indexOfItemBeingEdited  = index
+            locationEditorVC.delegate               = self
+            locationEditorVC.indexOfItemBeingEdited = index
             locationEditorVC.launchedFromDetailView = false
             
             navigationController?.pushViewController( locationEditorVC, animated: true )
@@ -135,7 +125,6 @@ extension ListTableViewController: LocationEditorViewControllerDelegate {
     
     func locationEditorViewController(_ locationEditorViewController: LocationEditorViewController, didEditLocationData: Bool ) {
         logVerbose( "didEditLocationData[ %@ ]", stringFor( didEditLocationData ) )
-        pinCentral.delegate = self
         
         if didEditLocationData {
             tableView.reloadData()
@@ -172,10 +161,10 @@ extension ListTableViewController: PinCentralDelegate {
     func pinCentral(_ pinCentral: PinCentral, didOpenDatabase: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
         if didOpenDatabase {
-            pinCentral.fetchPins()
+            pinCentral.fetchPinsWith( self )
         }
         else {
-            presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+            presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                           message: NSLocalizedString( "AlertMessage.CannotOpenDatabase", comment: "Fatal Error!  Cannot open database." ) )
         }
         
@@ -217,14 +206,14 @@ extension ListTableViewController {
 
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+        return deviceAccessControl.byMe
     }
 
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             logVerbose( "delete pin at row [ %d ]", indexPath.row )
-            pinCentral.deletePinAt( indexPath.row )
+            pinCentral.deletePinAt( indexPath.row, self )
         }
         
     }
@@ -240,7 +229,10 @@ extension ListTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         logTrace()
-        launchLocationEditorForPinAt( index: indexPath.row )
+        if deviceAccessControl.byMe {
+            launchLocationEditorForPinAt( index: indexPath.row )
+        }
+        
     }
     
     

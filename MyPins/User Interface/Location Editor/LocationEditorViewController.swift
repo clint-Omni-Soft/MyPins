@@ -74,7 +74,7 @@ class LocationEditorViewController: UIViewController  {
     private var     originalNotes             = String()
     private var     originalPinColor          : Int16!      // Set in initializeVariables()
     private let     pinCentral                = PinCentral.sharedInstance
-    private var     pinColor                  : Int16!      // Set in initializeVariables()
+    private var     pinColorIndex             : Int16!      // Set in initializeVariables()
     private var     replacingImage            = false
     private var     savedPinBeforeShowingMap  = false
     
@@ -86,8 +86,8 @@ class LocationEditorViewController: UIViewController  {
         logTrace()
         super.viewDidLoad()
 
-        title = NSLocalizedString( "Title.PinEditor", comment: "Pin Editor" )
-        preferredContentSize = CGSize( width: 320, height: 460 )
+        navigationItem.title = NSLocalizedString( "Title.PinEditor", comment: "Pin Editor" )
+        preferredContentSize = CGSize( width: 400, height: 500 )
         
         // I'm not sure why but without the following 2 lines, the navBar is Black
         edgesForExtendedLayout = .all
@@ -101,14 +101,10 @@ class LocationEditorViewController: UIViewController  {
         logTrace()
         super.viewWillAppear( animated )
         
-        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: ( launchedFromDetailView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back", comment: "Back" ) ),
-                                                                  style: .plain,
-                                                                  target: self,
-                                                                  action: #selector( doneBarButtonTouched ) )
-        NotificationCenter.default.addObserver( self,
-                                                selector: #selector( LocationEditorViewController.pinsUpdated( notification: ) ),
-                                                name:     NSNotification.Name( rawValue: Notifications.pinsUpdated ),
-                                                object:   nil )
+        loadBarButtonItems()
+        
+        NotificationCenter.default.addObserver( self, selector: #selector( self.pinsUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: nil )
+
         myTableView.reloadData()
     }
     
@@ -136,9 +132,16 @@ class LocationEditorViewController: UIViewController  {
     // MARK: NSNotification Methods
     
     @objc func pinsUpdated( notification: NSNotification ) {
-        logVerbose( "recovering pinIndex[ %d ] from pinCentral", pinCentral.newPinIndex )
-        indexOfItemBeingEdited = pinCentral.newPinIndex
+        logVerbose( "pinCentral.pinIndex[ %d ]", pinCentral.newPinIndex )
+        
+        if pinCentral.newPinIndex != GlobalConstants.newPin {
+            indexOfItemBeingEdited = pinCentral.newPinIndex
+        }
 
+        if UIDevice.current.userInterfaceIdiom == .pad  {
+            return
+        }
+        
         // The reason we are using Notifications is because this view can be up in two different places on the iPad at the same time.
         // This approach allows a change in one to immediately be reflected in the other.
         
@@ -166,7 +169,7 @@ class LocationEditorViewController: UIViewController  {
     private func deleteImage() {
         if !pinCentral.deleteImageNamed( imageName ) {
             logVerbose( "ERROR: Unable to delete image[ %@ ]!", self.imageName )
-            presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+            presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                           message: NSLocalizedString( "AlertMessage.UnableToDeleteImage", comment: "We were unable to delete the image you created." ) )
         }
         
@@ -218,19 +221,19 @@ class LocationEditorViewController: UIViewController  {
                 longitude = 0.0
             }
             
-            pinColor = PinColors.pinRed
+            pinColorIndex = PinColors.pinRed
         }
         else {
             let         pin = pinCentral.pinArray[indexOfItemBeingEdited]
             
-            altitude    = pin.altitude
-            details     = pin.details   ?? ""
-            imageName   = pin.imageName ?? ""
-            latitude    = pin.latitude
-            longitude   = pin.longitude
-            name        = pin.name      ?? ""
-            notes       = pin.notes     ?? ""
-            pinColor    = pin.pinColor
+            altitude        = pin.altitude
+            details         = pin.details   ?? ""
+            imageName       = pin.imageName ?? ""
+            latitude        = pin.latitude
+            longitude       = pin.longitude
+            name            = pin.name      ?? ""
+            notes           = pin.notes     ?? ""
+            pinColorIndex   = pin.pinColor
         }
         
         originalAltitude    = altitude
@@ -240,18 +243,24 @@ class LocationEditorViewController: UIViewController  {
         originalLongitude   = longitude
         originalName        = name
         originalNotes       = notes
-        originalPinColor    = pinColor
+        originalPinColor    = pinColorIndex
         
         imageAssigned = true
     }
     
     
+    private func loadBarButtonItems() {
+        logTrace()
+        let buttonTitle = launchedFromDetailView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back", comment: "Back" )
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem.init( title: buttonTitle, style: .plain, target: self, action: #selector( doneBarButtonTouched ) )
+    }
+    
+    
     private func updatePinCentral() {
         logTrace()
-        pinCentral.delegate = self
-        
         if GlobalConstants.newPin == indexOfItemBeingEdited {
-            pinCentral.addPinNamed( name, details: details, latitude: latitude, longitude: longitude, altitude: altitude, imageName: imageName, pinColor: Int16( pinColor ), notes: notes )
+            pinCentral.addPinNamed( name, details: details, latitude: latitude, longitude: longitude, altitude: altitude, imageName: imageName, pinColor: Int16( pinColorIndex ), notes: notes, self )
         }
         else {
             let     pin = pinCentral.pinArray[indexOfItemBeingEdited]
@@ -263,9 +272,9 @@ class LocationEditorViewController: UIViewController  {
             pin.longitude = longitude
             pin.name      = name
             pin.notes     = notes
-            pin.pinColor  = Int16( pinColor )
+            pin.pinColor  = Int16( pinColorIndex )
             
-            pinCentral.saveUpdated( pin )
+            pinCentral.saveUpdated( pin, self )
         }
         
         imageAssigned = true
@@ -300,17 +309,9 @@ extension LocationEditorViewController: LocationDetailsTableViewCellDelegate {
         if let  pinColorSelectorVC: PinColorSelectorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.colorSelector ) as? PinColorSelectorViewController {
             changingColors = true
             
-            pinColorSelectorVC.delegate         = self
-            pinColorSelectorVC.originalPinColor = pinColor
+            pinColorSelectorVC.delegate = self
             
-            pinColorSelectorVC.modalPresentationStyle = .formSheet
-            
-            present( pinColorSelectorVC, animated: true, completion: nil )
-            
-            pinColorSelectorVC.popoverPresentationController?.delegate                 = self
-            pinColorSelectorVC.popoverPresentationController?.permittedArrowDirections = .any
-            pinColorSelectorVC.popoverPresentationController?.sourceRect               = view.frame
-            pinColorSelectorVC.popoverPresentationController?.sourceView               = view
+            navigationController?.pushViewController( pinColorSelectorVC, animated: true )
         }
         else {
             logTrace( "ERROR:  Unable to load PinColorSelectorViewController!" )
@@ -322,8 +323,7 @@ extension LocationEditorViewController: LocationDetailsTableViewCellDelegate {
         logTrace()
         if name.isEmpty {
             logTrace( "ERROR:  Name field cannot be left blank!" )
-            presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                          message: NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank" ) )
+            presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank" ) )
             return
         }
         
@@ -360,7 +360,7 @@ extension LocationEditorViewController: LocationDetailsTableViewCellDelegate {
 
         if ( ( name      != originalName      ) || ( details   != originalDetails   ) || ( altitude  != originalAltitude  ) ||
              ( imageName != originalImageName ) || ( latitude  != originalLatitude  ) || ( longitude != originalLongitude ) ||
-             ( notes     != originalNotes     ) || ( pinColor  != originalPinColor  ) ) {
+             ( notes     != originalNotes     ) || ( pinColorIndex != originalPinColor  ) ) {
             dataChanged = true
         }
 
@@ -523,7 +523,7 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
     
     private func promptForImageDispostion() {
         logTrace()
-        let     result      = pinCentral.imageNamed( imageName )
+        let     result      = pinCentral.imageNamed( imageName, descriptor: "", self )
         let     imageLoaded = result.0
 
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ImageDisposition", comment: "What would you like to do with this image?" ), message: nil, preferredStyle: .alert)
@@ -684,6 +684,11 @@ extension LocationEditorViewController: PinCentralDelegate {
     
     
     func pinCentralDidReloadPinArray(_ pinCentral: PinCentral ) {
+        if UIDevice.current.userInterfaceIdiom == .pad  {
+            self.myTableView.reloadData()
+            return
+        }
+        
         logVerbose( "loaded [ %d ] pins ... indexOfItemBeingEdited[ %d ]", pinCentral.pinArray.count, indexOfItemBeingEdited )
         
         if GlobalConstants.newPin == indexOfItemBeingEdited {
@@ -710,9 +715,12 @@ extension LocationEditorViewController: PinCentralDelegate {
     
 extension LocationEditorViewController: PinColorSelectorViewControllerDelegate {
     
-    func pinColorSelectorViewController( pinColorSelectorVC: PinColorSelectorViewController, didSelect color: Int ) {
-        logVerbose( "[ %d ][ %@ ]", color, pinColorNameArray[color] )
-        pinColor = Int16( color )
+    func pinColorSelectorViewController(_ pinColorSelectorVC: PinColorSelectorViewController, didSelectColorAt index: Int ) {
+        let pinColor = pinCentral.colorArray[Int( index )]
+        let title    = pinColor.name! + " - " + pinColor.descriptor!
+        
+        logVerbose( "[ %d ] %@", index, title )
+        pinColorIndex = Int16( index )
         
         detailsCell.initialize()
         changingColors = false
@@ -773,11 +781,11 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
 //                            UIImageWriteToSavedPhotosAlbum( myImageToSave, self, #selector( LocationEditorViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
 //                        }
                         
-                        let     imageName = self.pinCentral.save( myImageToSave )
+                        let     imageName = self.pinCentral.saveImage( myImageToSave, compressed: true )
                         
                         if imageName.isEmpty {
                             logTrace( "ERROR:  Image save FAILED!" )
-                            self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                            self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                                                message: NSLocalizedString( "AlertMessage.ImageSaveFailed", comment: "We were unable to save the image you selected." ) )
                         }
                         else {
@@ -786,7 +794,7 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
                                 
                                 if !self.pinCentral.deleteImageNamed( self.imageName ) {
                                     logVerbose( "ERROR: Unable to delete image[ %@ ]!", self.imageName )
-                                    self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                                    self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                                                        message: NSLocalizedString( "AlertMessage.UnableToDeleteImage", comment: "We were unable to delete the image you created." ) )
                                 }
                                 
@@ -894,9 +902,7 @@ extension LocationEditorViewController: UITableViewDataSource {
     
     @objc private func editNameAndDetails(_ locationDetailsTableViewCell: LocationDetailsTableViewCell ) {
         logTrace()
-        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditNameAndDetails", comment: "Edit name and details" ),
-                                                message: nil,
-                                                preferredStyle: .alert)
+        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditNameAndDetails", comment: "Edit name and details" ), message: nil, preferredStyle: .alert)
         
         let     saveAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .default )
         { ( alertAction ) in
@@ -976,13 +982,13 @@ extension LocationEditorViewController: UITableViewDataSource {
         
         detailsCell.delegate = self
         
-        detailsCell.altitude  = self.altitude
-        detailsCell.delegate  = self
-        detailsCell.details   = self.details
-        detailsCell.latitude  = self.latitude
-        detailsCell.longitude = self.longitude
-        detailsCell.name      = self.name
-        detailsCell.pinColor  = self.pinColor
+        detailsCell.altitude   = self.altitude
+        detailsCell.delegate   = self
+        detailsCell.details    = self.details
+        detailsCell.latitude   = self.latitude
+        detailsCell.longitude  = self.longitude
+        detailsCell.name       = self.name
+        detailsCell.colorIndex = self.pinColorIndex
         
         detailsCell.initialize()
         

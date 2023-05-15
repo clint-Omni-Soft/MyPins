@@ -18,9 +18,8 @@ class MapViewController: UIViewController {
 
     @IBOutlet weak var myMapView: MKMapView!
     
-    @IBOutlet var addBarButtonItem       : UIBarButtonItem!
-    @IBOutlet var directionsBarButtonItem: UIBarButtonItem!
-    @IBOutlet var mapTypeBarButtonItem   : UIBarButtonItem!
+    @IBOutlet var addBarButtonItem    : UIBarButtonItem!
+    @IBOutlet var mapTypeBarButtonItem: UIBarButtonItem!
 
 
     // MARK: Private Variables
@@ -36,6 +35,7 @@ class MapViewController: UIViewController {
     }
 
     private var coordinateToCenterMapOn  = CLLocationCoordinate2DMake( 0.0, 0.0 )
+    private let deviceAccessControl      = DeviceAccessControl.sharedInstance
     private var ignoreRefresh            = false
     private var locationEstablished      = false
     private var locationManager          : CLLocationManager?
@@ -43,8 +43,6 @@ class MapViewController: UIViewController {
     private let pinCentral               = PinCentral.sharedInstance
     private var routeColor               = UIColor.green
     private var selectedPointAnnotation  : PointAnnotation?
-    private var showingDirectionsOverlay = false
-//    private var showingPinEditor         = false
     
     
     
@@ -54,7 +52,7 @@ class MapViewController: UIViewController {
         logTrace()
         super.viewDidLoad()
         
-        title = NSLocalizedString( "Title.Map", comment: "Map" )
+        navigationItem.title = NSLocalizedString( "Title.Map", comment: "Map" )
         
         selectedPointAnnotation = nil
         
@@ -80,21 +78,20 @@ class MapViewController: UIViewController {
         super.viewWillAppear( animated )
         
         loadBarButtonItems()
-        pinCentral.delegate = self
         
 //        if showingPinEditor {
 //            showingPinEditor = false
 //        }
 
         if !pinCentral.didOpenDatabase {
-            pinCentral.openDatabase()
+            pinCentral.openDatabaseWith( self )
         }
         else {
             refreshMapAnnotations()
         }
         
-        NotificationCenter.default.addObserver( self, selector: #selector( MapViewController.centerMap(   notification: ) ), name: NSNotification.Name( rawValue: Notifications.centerMap   ), object: nil )
-        NotificationCenter.default.addObserver( self, selector: #selector( MapViewController.pinsUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.pinsUpdated ), object: nil )
+        NotificationCenter.default.addObserver( self, selector: #selector( MapViewController.centerMap(   notification: ) ), name: NSNotification.Name( rawValue: Notifications.centerMap   ),       object: nil )
+        NotificationCenter.default.addObserver( self, selector: #selector( MapViewController.pinsUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: nil )
     }
     
     
@@ -103,12 +100,6 @@ class MapViewController: UIViewController {
         super.viewWillDisappear( animated )
         
         NotificationCenter.default.removeObserver( self )
-    }
-    
-    
-    override func didReceiveMemoryWarning() {
-        logTrace( "MEMORY WARNING!!!" )
-        super.didReceiveMemoryWarning()
     }
     
     
@@ -178,8 +169,6 @@ class MapViewController: UIViewController {
     
     @IBAction @objc func addBarButtonItemTouched(_ sender: UIBarButtonItem ) {
         logTrace()
-        pinCentral.delegate = self
-        
         launchLocationEditorForPinAt( index: GlobalConstants.newPin )
    }
     
@@ -204,9 +193,8 @@ class MapViewController: UIViewController {
     }
     
     
-    @IBAction @objc func directionsBarButtonItemTouched(_ sender: UIBarButtonItem ) {
+    @IBAction @objc func compassBarButtonItemTouched(_ sender: UIBarButtonItem ) {
         logTrace()
-//        manageDirectionsOverlay()
         let coordinate = CLLocationCoordinate2DMake( (selectedPointAnnotation?.coordinate.latitude)!, (selectedPointAnnotation?.coordinate.longitude)! )
         let mapItem    = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary: nil) )
         
@@ -215,10 +203,20 @@ class MapViewController: UIViewController {
     }
     
     
-    
     @IBAction func homeZoomButtonTouched(_ sender: UIButton ) {
         logTrace()
         zoomInOnUser()
+    }
+    
+
+    @IBAction func infoBarButtonTouched(_ sender : UIBarButtonItem ) {
+        let     message = NSLocalizedString( "InfoText.Map1", comment: "MAP\n\nTouching the plus sign (+) bar button will take you to the Pin Editor where you can associate provide information about that pin.\n\n" ) +
+                          NSLocalizedString( "InfoText.Map2", comment: "Touching the 'Map' bar button will produce a popover that will allow you to choose from the supported map display modes.\n\n" ) +
+                          NSLocalizedString( "InfoText.Map3", comment: "Touching the 'Dart' bar button will produce a popover that will give the device's current latitude, longitude and altitude.\n\n" ) +
+                          NSLocalizedString( "InfoText.Map4", comment: "When you tap on a pin, its description will displayed above it on the map and the 'Compass' bar button will be displayed. " ) +
+                          NSLocalizedString( "InfoText.Map5", comment: "Touching the 'Compass' bar button will take you to the Apple Maps app which will display the available routes from your current position to the selected pin.  \n\n" )
+        
+        presentAlert( title: NSLocalizedString( "AlertTitle.GotAQuestion", comment: "Got a question?" ), message: message )
     }
     
     
@@ -291,98 +289,31 @@ class MapViewController: UIViewController {
             navigationController.popoverPresentationController?.sourceView               = view
         }
         
-//        showingPinEditor = true
     }
     
     
     private func loadBarButtonItems() {
         logTrace()
-        let     dartBarButtonItem = UIBarButtonItem.init( image:  UIImage.init(named: "dart" ), style: .plain, target: self, action: #selector( dartBarButtonItemTouched(_:) ) )
+        let dartBarButtonItem  = UIBarButtonItem.init( image: UIImage(named: "dart" ), style: .plain, target: self, action: #selector( dartBarButtonItemTouched(_:) ) )
+        let infoBarButtonItem  = UIBarButtonItem.init( image: UIImage(named: "info" ), style: .plain, target: self, action: #selector( infoBarButtonTouched(_:) ) )
+        var leftBarButtonItems = [infoBarButtonItem, dartBarButtonItem]
+        
+        if let _ = selectedPointAnnotation {
+            let compassBarButtonItem = UIBarButtonItem.init( image: UIImage(named: "compass" ), style: .plain, target: self, action: #selector( compassBarButtonItemTouched(_:) ) )
+            
+            leftBarButtonItems.append( compassBarButtonItem )
+        }
 
-        addBarButtonItem          = UIBarButtonItem.init( barButtonSystemItem: .add, target: self, action: #selector( addBarButtonItemTouched(_:) ) )
-        directionsBarButtonItem   = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Directions", comment: "Directions" ), style: .plain, target: self, action: #selector( directionsBarButtonItemTouched(_:) ) )
-        mapTypeBarButtonItem      = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.MapType",    comment: "Map Type"   ), style: .plain, target: self, action: #selector( mapTypeBarButtonItemTouched(_:) ) )
-        
-        navigationItem.leftBarButtonItems  = [dartBarButtonItem, directionsBarButtonItem]
-        navigationItem.rightBarButtonItems = [addBarButtonItem, mapTypeBarButtonItem]
-        
-        directionsBarButtonItem.isEnabled = false
+        addBarButtonItem     = UIBarButtonItem.init( barButtonSystemItem: .add,  target: self, action: #selector( addBarButtonItemTouched(_:) ) )
+        mapTypeBarButtonItem = UIBarButtonItem.init( image: UIImage(named: "mapType" ), style: .plain, target: self, action: #selector( mapTypeBarButtonItemTouched(_:) ) )
+
+        navigationItem.leftBarButtonItems  = leftBarButtonItems
+        navigationItem.rightBarButtonItems = deviceAccessControl.byMe ? [addBarButtonItem, mapTypeBarButtonItem] : [mapTypeBarButtonItem]
+
+//        directionsBarButtonItem.isEnabled = false
     }
 
 
-    private func manageDirectionsOverlay() {
-        logTrace()
-        if showingDirectionsOverlay {
-            for overlay in myMapView.overlays {
-                myMapView.removeOverlay( overlay )
-            }
-            
-            myMapView.setUserTrackingMode( .none, animated: true )
-
-            directionsBarButtonItem.title = NSLocalizedString( "ButtonTitle.Directions", comment: "Directions" )
-            showingDirectionsOverlay      = false
-            routeColor                    = UIColor.green   // Re-establishes the default
-            
-            zoomInOnUser()
-        }
-        else {
-            let     request = MKDirections.Request()
-            
-            if let myAnnotation = selectedPointAnnotation,
-               let location     = myMapView.userLocation.location {
-                request.destination             = MKMapItem( placemark: MKPlacemark( coordinate: myAnnotation.coordinate, addressDictionary: nil ) )
-                request.requestsAlternateRoutes = true
-                request.source                  = MKMapItem( placemark: MKPlacemark( coordinate: location.coordinate, addressDictionary: nil ) )
-                request.transportType           = .automobile
-                
-                let     directions = MKDirections( request: request )
-                
-                directions.calculate
-                { ( response, error ) -> Void in
-                    
-                    guard let response = response else {
-                        if let error = error {
-                            let         errorMessage = String.init( format: "%@\n%@", NSLocalizedString( "AlertMessage.NoRoutesAvailable", comment: "Unable to find a route to this location." ), error.localizedDescription )
-                            
-                            logVerbose( "ERROR: We failed to get directions!  [ %@ ]", error.localizedDescription )
-                            self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: errorMessage )
-                        }
-                        
-                        return
-                    }
-                    
-                    if ( 0 == response.routes.count ) {
-                        logTrace( "Can't get there from here!  No routes!" )
-                        self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                                           message: NSLocalizedString( "AlertMessage.NoRoutesAvailable", comment: "Unable to find a route to this location." ) )
-                    }
-                    else {
-                        self.myMapView.addOverlay( response.routes[0].polyline )
-                        
-                        if 1 < response.routes.count {
-                            self.myMapView.addOverlay( response.routes[1].polyline )
-                        }
-                        
-                        self.myMapView.mapType = .hybrid
-                        self.myMapView.setUserTrackingMode( .follow, animated: true )
-                        self.myMapView.setVisibleMapRect( response.routes[0].polyline.boundingMapRect, animated: true )
-                        
-                        self.directionsBarButtonItem.title = NSLocalizedString( "ButtonTitle.EndDirections", comment: "End Directions" )
-                        self.showingDirectionsOverlay      = true
-                    }
-                        
-                }
-
-            }
-            else {
-                logTrace( "ERROR: Count NOT assign selectedPointAnnotation OR unwrap myMapView.userLocation.location!" )
-            }
-            
-        }
-
-    }
-
-    
     private func presentMapOptions() {
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.SelectMapType", comment: "Select Map Type" ), message: nil, preferredStyle: .actionSheet )
@@ -425,19 +356,12 @@ class MapViewController: UIViewController {
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
 
-        if showingDirectionsOverlay {
-            alert.addAction( hybridAction           )
-            alert.addAction( standardAction         )
-        }
-        else {
-            alert.addAction( hybridAction           )
-            alert.addAction( hybridFlyoverAction    )
-            alert.addAction( mutedStandardAction    )
-            alert.addAction( satelliteAction        )
-            alert.addAction( satelliteFlyoverAction )
-            alert.addAction( standardAction         )
-        }
-        
+        alert.addAction( hybridAction           )
+        alert.addAction( hybridFlyoverAction    )
+        alert.addAction( mutedStandardAction    )
+        alert.addAction( satelliteAction        )
+        alert.addAction( satelliteFlyoverAction )
+        alert.addAction( standardAction         )
         alert.addAction( cancelAction )
         
         if .pad == UIDevice.current.userInterfaceIdiom {
@@ -510,8 +434,7 @@ class MapViewController: UIViewController {
             pin.latitude  = pointAnnotation.coordinate.latitude
             pin.longitude = pointAnnotation.coordinate.longitude
             
-            pinCentral.delegate = self
-            pinCentral.saveUpdated( pin )
+            pinCentral.saveUpdated( pin, self )
         }
         else {
             logVerbose( "ERROR: pointAnnotation.pinIndex cound NOT be unwrapped!" )
@@ -549,8 +472,7 @@ extension MapViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error ) {
         logVerbose( "[ %@ ]", error.localizedDescription )
-//        presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-//                      message: error.localizedDescription )
+//        presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: error.localizedDescription )
     }
     
     
@@ -572,7 +494,6 @@ extension MapViewController: LocationEditorViewControllerDelegate {
     
     func locationEditorViewController(_ locationEditorViewController: LocationEditorViewController, didEditLocationData: Bool ) {
         logVerbose( "didEditLocationData[ %@ ]", stringFor( didEditLocationData ) )
-        pinCentral.delegate = self
         
         refreshMapAnnotations()
         
@@ -603,6 +524,10 @@ extension MapViewController: LocationEditorViewControllerDelegate {
 extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl ) {
+        if !deviceAccessControl.byMe {
+            return
+        }
+        
         if view.annotation is PointAnnotation {
             if let pointAnnotation = view.annotation as? PointAnnotation,
                let index           = pointAnnotation.pinIndex {
@@ -661,8 +586,8 @@ extension MapViewController: MKMapViewDelegate {
 //            logTrace( "ERROR: Could NOT convert view.annotation to PointAnnotation OR could NOT unwrap pointAnnotation.pinIndex!" )
 //        }
 
-        directionsBarButtonItem.isEnabled = showingDirectionsOverlay
-        selectedPointAnnotation           = nil
+        selectedPointAnnotation = nil
+        loadBarButtonItems()
     }
     
     
@@ -672,10 +597,10 @@ extension MapViewController: MKMapViewDelegate {
         }
         
         if let pointAnnotation = view.annotation as? PointAnnotation,
-           let _        = pointAnnotation.pinIndex {
+           let _ = pointAnnotation.pinIndex {
 //            logVerbose( "pin[ %d ] @ [ %f, %f ] ", pinIndex, pointAnnotation.coordinate.latitude, pointAnnotation.coordinate.longitude )
-            directionsBarButtonItem.isEnabled = true
-            selectedPointAnnotation           = pointAnnotation
+            selectedPointAnnotation = pointAnnotation
+            loadBarButtonItems()
         }
         else {
             logTrace( "ERROR: Could NOT convert view.annotation to PointAnnotation OR could NOT unwrap pointAnnotation.pinIndex!" )
@@ -717,8 +642,7 @@ extension MapViewController: MKMapViewDelegate {
 
     func mapView(_ mapView: MKMapView, didFailToLocateUserWithError error: Error ) {
         logVerbose( "ERROR: [ %@ ]", error.localizedDescription )
-//        presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-//                      message: error.localizedDescription )
+//        presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: error.localizedDescription )
     }
     
     
@@ -818,11 +742,12 @@ extension MapViewController: PinCentralDelegate {
     
     func pinCentral(_ pinCentral: PinCentral, didOpenDatabase: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
+        
         if didOpenDatabase {
-            pinCentral.fetchPins()
+            pinCentral.fetchPinsWith( self )
         }
         else {
-            presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+            presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                           message: NSLocalizedString( "AlertMessage.CannotOpenDatabase", comment: "Fatal ERROR: Cannot open database." ) )
         }
 
@@ -831,6 +756,7 @@ extension MapViewController: PinCentralDelegate {
     
     func pinCentralDidReloadPinArray(_ pinCentral: PinCentral ) {
         logVerbose( "loaded [ %d ] pins ... ignoreRefresh[ %@ ]", pinCentral.pinArray.count, stringFor( ignoreRefresh ) )
+        
         if ignoreRefresh {
             ignoreRefresh = false
         }

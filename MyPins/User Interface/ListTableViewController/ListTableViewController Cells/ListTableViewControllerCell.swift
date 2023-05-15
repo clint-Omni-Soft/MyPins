@@ -14,15 +14,16 @@ class ListTableViewControllerCell: UITableViewCell {
 
     // MARK: Public Variables
     
+    @IBOutlet weak var dateLabel  : UILabel!
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var myImageView: UIImageView!
     @IBOutlet weak var nameLabel  : UILabel!
-
+    
     
     
     // MARK: Private Variables
     
-    private let     pinCentral = PinCentral.sharedInstance
+    private let pinCentral = PinCentral.sharedInstance
     
     
     
@@ -53,20 +54,18 @@ class ListTableViewControllerCell: UITableViewCell {
         nameLabel  .text = pin.name
 
         if let detailsText = pin.details {
-            if !detailsText.isEmpty {
-                detailLabel.text = String.init( format: "%@ - %@", detailsText, dateString )
-            }
-            
+            detailLabel.text = detailsText
+            dateLabel  .text = dateString
         }
         
         if let imageName = pin.imageName {
             if !imageName.isEmpty {
-                let result = self.pinCentral.imageNamed( imageName )
+                let result = self.pinCentral.imageNamed( imageName, descriptor: pinCentral.shortDescriptionFor( pin ), self )
 
                 imageLoaded = result.0
 
                 if imageLoaded {
-                    self.myImageView.image = result.1
+                    myImageView.image = result.1
                 }
 
             }
@@ -74,10 +73,27 @@ class ListTableViewControllerCell: UITableViewCell {
         }
         
         if !imageLoaded {
-            self.myImageView.image = UIImage( named: "missingImage" )
+            myImageView.image = UIImage( named: "missingImage" )
         }
             
     }
     
 
+}
+
+
+
+// MARK: PinCentralDelegate Methods
+
+extension ListTableViewControllerCell: PinCentralDelegate {
+    
+    func pinCentral(_ pinCentral: PinCentral, didFetchImage: Bool, filename: String, image: UIImage) {
+        logTrace()
+        if didFetchImage {
+            myImageView.image = image
+        }
+        
+    }
+    
+    
 }

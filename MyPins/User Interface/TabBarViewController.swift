@@ -12,6 +12,13 @@ import UIKit
 
 class TabBarViewController: UITabBarController {
     
+    
+    // MARK: Private Variables
+    
+    private let pinCentral = PinCentral.sharedInstance
+    
+
+    
     // MARK: UIViewController Lifecycle Methods
     
     override func viewDidLoad() {
@@ -24,22 +31,12 @@ class TabBarViewController: UITabBarController {
         
         if .pad == UIDevice.current.userInterfaceIdiom {
             if 1 < ( viewControllers?.count )! {
-                var     viewControllerArray = viewControllers
-                
+                var viewControllerArray = viewControllers
                 
                 viewControllerArray?.remove( at: 1 )
                 viewControllers = viewControllerArray
             }
             
-        }
-        
-        
-        let     pinCentral = PinCentral.sharedInstance
-        
-        
-        if !pinCentral.didOpenDatabase {
-            pinCentral.delegate = self
-            pinCentral.openDatabase()
         }
         
     }
@@ -48,6 +45,8 @@ class TabBarViewController: UITabBarController {
     override func viewWillAppear(_ animated: Bool) {
         logTrace()
         super.viewWillAppear( animated )
+
+        NotificationCenter.default.addObserver( self, selector: #selector( self.pleaseWaitingDone( notification: ) ), name: NSNotification.Name( rawValue: Notifications.pleaseWaitingDone ), object: nil )
     }
     
     
@@ -55,6 +54,19 @@ class TabBarViewController: UITabBarController {
         logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
+    
+    
+
+    // MARK: NSNotification Methods
+    
+    @objc func pleaseWaitingDone( notification: NSNotification ) {
+        logTrace()
+        if !pinCentral.didOpenDatabase {
+            pinCentral.openDatabaseWith( self )
+        }
+        
+    }
+
     
 }
 
@@ -66,7 +78,10 @@ extension TabBarViewController: PinCentralDelegate {
     
     func pinCentral(_ pinCentral: PinCentral, didOpenDatabase: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
-        if !didOpenDatabase {
+        if didOpenDatabase {
+            pinCentral.fetchPinsWith( self )
+        }
+        else {
             presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                           message: NSLocalizedString( "AlertMessage.CannotOpenDatabase", comment: "Fatal Error!  Cannot open database." ) )
         }
@@ -76,6 +91,7 @@ extension TabBarViewController: PinCentralDelegate {
     
     func pinCentralDidReloadPinArray(_ pinCentral: PinCentral ) {
         logVerbose( "loaded [ %d ] pins", pinCentral.pinArray.count )
+        NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: self )
     }
     
     

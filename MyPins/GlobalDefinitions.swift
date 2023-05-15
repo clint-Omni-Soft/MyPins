@@ -9,19 +9,48 @@
 import UIKit
 
 
+enum DataStoreLocation {
+    case device
+    case iCloud
+    case nas
+    case notAssigned
+    case shareCloud
+    case shareNas
+}
+
+struct DataStoreLocationName {
+    static let device       = "device"
+    static let iCloud       = "iCloud"
+    static let nas          = "nas"
+    static let notAssigned  = "notAssigned"
+    static let shareCloud   = "shareCloud"
+    static let shareNas     = "shareNas"
+}
+
+struct DirectoryNames {
+    static let root     = "MyPins"
+    static let pictures = "PinPictures"
+}
+
 struct DisplayUnits {
     static let altitude = "DisplayUnitsAltitude"
     static let feet     = "ft"
     static let meters   = "m"
 }
 
+struct Filenames {
+    static let database    = "PinsDB.sqlite"
+    static let databaseShm = "PinsDB.sqlite-shm"
+    static let databaseWal = "PinsDB.sqlite-wal"
+    static let lastUpdated = "LastUpdated"
+    static let lockFile    = "LockFile"
+}
 
 struct GlobalConstants {
     static let feetPerMeter = 3.28084
     static let newPin       = -1
     static let noSelection  = -1
 }
-
 
 struct MapTypes {
     static let eStandard         = 0
@@ -32,36 +61,21 @@ struct MapTypes {
     static let eMutedStandard    = 5
 }
 
-
 struct Notifications {
-    static let centerMap   = "CenterMap"
-    static let pinsUpdated = "PinsUpdated"
+    static let cannotSeeExternalDevice      = "CannotSeeExternalDevice"
+    static let centerMap                    = "CenterMap"
+    static let connectingToExternalDevice   = "ConnectingToExternalDevice"
+    static let enteringBackground           = "EnteringBackground"
+    static let enteringForeground           = "EnteringForeground"
+    static let externalDeviceLocked         = "ExternalDeviceLocked"
+    static let launchPinEditor              = "LaunchPinEditor"
+    static let pinsArrayReloaded            = "PinsArrayReloaded"
+    static let pleaseWaitingDone            = "PleaseWaitingDone"
+    static let ready                        = "Ready"
+    static let transferringDatabase         = "TransferringDatabase"
+    static let unableToConnect              = "UnableToConnect"
+    static let updatingExternalDevice       = "UpdatingExternalDevice"
 }
-
-
-struct PinColors {
-    static let pinBlack     = Int16( 0 )
-    static let pinBlue      = Int16( 1 )
-    static let pinBrown     = Int16( 2 )
-    static let pinCyan      = Int16( 3 )
-    static let pinDarkGray  = Int16( 4 )
-    static let pinGray      = Int16( 5 )
-    static let pinGreen     = Int16( 6 )
-    static let pinLightGray = Int16( 7 )
-    static let pinMagenta   = Int16( 8 )
-    static let pinOrange    = Int16( 9 )
-    static let pinPurple    = Int16( 10 )
-    static let pinRed       = Int16( 11 )
-    static let pinWhite     = Int16( 12 )
-    static let pinYellow    = Int16( 13 )
-};
-
-
-struct UserInfo {
-    static let latitude  = "Latitude"
-    static let longitude = "Longitude"
-}
-
 
 let pinColorArray: [UIColor] = [ .black,
                                  .blue,
@@ -78,20 +92,39 @@ let pinColorArray: [UIColor] = [ .black,
                                  .white,
                                  .yellow ]
 
+struct PinColors {
+    static let pinBlack     = Int16( 0 )
+    static let pinBlue      = Int16( 1 )
+    static let pinBrown     = Int16( 2 )
+    static let pinCyan      = Int16( 3 )
+    static let pinDarkGray  = Int16( 4 )
+    static let pinGray      = Int16( 5 )
+    static let pinGreen     = Int16( 6 )
+    static let pinLightGray = Int16( 7 )
+    static let pinMagenta   = Int16( 8 )
+    static let pinOrange    = Int16( 9 )
+    static let pinPurple    = Int16( 10 )
+    static let pinRed       = Int16( 11 )
+    static let pinWhite     = Int16( 12 )
+    static let pinYellow    = Int16( 13 )
+}
 
-let pinColorNameArray = [ NSLocalizedString( "PinColor.Black"    , comment:  "Black"      ),
-                          NSLocalizedString( "PinColor.Blue"     , comment:  "Blue"       ),
-                          NSLocalizedString( "PinColor.Brown"    , comment:  "Brown"      ),
-                          NSLocalizedString( "PinColor.Cyan"     , comment:  "Cyan"       ),
-                          NSLocalizedString( "PinColor.DarkGray" , comment:  "Dark Gray"  ),
-                          NSLocalizedString( "PinColor.Gray"     , comment:  "Gray"       ),
-                          NSLocalizedString( "PinColor.Green"    , comment:  "Green"      ),
-                          NSLocalizedString( "PinColor.LightGray", comment:  "Light Gray" ),
-                          NSLocalizedString( "PinColor.Magenta"  , comment:  "Magenta"    ),
-                          NSLocalizedString( "PinColor.Orange"   , comment:  "Orange"     ),
-                          NSLocalizedString( "PinColor.Purple"   , comment:  "Purple"     ),
-                          NSLocalizedString( "PinColor.Red"      , comment:  "Red"        ),
-                          NSLocalizedString( "PinColor.White"    , comment:  "White"      ),
-                          NSLocalizedString( "PinColor.Yellow"   , comment:  "Yellow"     )]
+
+struct UserDefaultKeys {
+    static let dataStoreLocation     = "DataStoreLocation"
+    static let howToUseShown         = "HowToUseShown"
+    static let lastComponentSelected = "LastComponentSelected"
+    static let lastTabSelected       = "LastTabSelected"
+    static let lastTextColor         = "LastTextColor"
+    static let nasDescriptor         = "NasDescriptor"
+    static let networkPath           = "NetworkPath"
+    static let updatedOffline        = "UpdatedOffline"
+    static let userHasBeenWarned     = "UserHasBeenWarned"
+}
+
+struct UserInfo {
+    static let latitude  = "Latitude"
+    static let longitude = "Longitude"
+}
 
 

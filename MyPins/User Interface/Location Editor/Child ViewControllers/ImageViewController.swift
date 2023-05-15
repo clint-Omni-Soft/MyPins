@@ -8,8 +8,9 @@
 
 import UIKit
 
-class ImageViewController: UIViewController, UIScrollViewDelegate
-{
+
+class ImageViewController: UIViewController, UIScrollViewDelegate {
+    
     var imageName : String!     // Set by our creator
     
     @IBOutlet weak var scrollView: UIScrollView!
@@ -19,7 +20,7 @@ class ImageViewController: UIViewController, UIScrollViewDelegate
     
     // MARK: Private Variables
     
-    private let     pinCentral = PinCentral.sharedInstance
+    private let pinCentral = PinCentral.sharedInstance
     
     
     
@@ -38,13 +39,13 @@ class ImageViewController: UIViewController, UIScrollViewDelegate
         logTrace()
         super.viewWillAppear( animated )
         
-        var     result = pinCentral.imageNamed( imageName )
+        var     result = pinCentral.imageNamed( imageName, descriptor: "", self )
         
         if result.0 {
             imageView.image = result.1
         }
         else {
-            result = pinCentral.imageNamed( "missingImage" )
+            result = pinCentral.imageNamed( "missingImage", descriptor: "", self )
             
             imageView.image = result.1
         }
@@ -64,6 +65,23 @@ class ImageViewController: UIViewController, UIScrollViewDelegate
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
 //        logTrace()
         return imageView
+    }
+    
+    
+}
+
+
+
+// MARK: PinCentralDelegate Methods
+
+extension ImageViewController: PinCentralDelegate {
+    
+    func pinCentral(_ pinCentral: PinCentral, didFetchImage: Bool, filename: String, image: UIImage) {
+        logTrace()
+        if didFetchImage {
+            imageView.image = image
+        }
+        
     }
     
     

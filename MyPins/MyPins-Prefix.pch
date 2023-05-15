@@ -12,6 +12,17 @@
 // Include any system framework and library headers here that should be included in all compilation units.
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
 
-
+import GlobalDefinitions.swift
 
 #endif /* MyPins_Prefix_pch */
+
+
+
+
+// !!! IMPORTANT !!!
+// To import SMBClient.framework
+//      Add External Devices directory to project
+//      Go to Project -> Build Settings -> Search Paths -> Framework Search Paths and fill it in with ../ZKits/ZKits-Debug
+//      In MyPins-Briding-Header.h add #import <SMBClient/SMBClient.h>
+//      In this file all we added was import GlobalDefinitions.swift
+

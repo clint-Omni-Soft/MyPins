@@ -1,35 +1,25 @@
 //
-//  PinColorSelectorViewController.swift
+//  ColorMappingViewController.swift
 //  MyPins
 //
-//  Created by Clint Shank on 4/9/18.
-//  Copyright © 2018 Omni-Soft, Inc. All rights reserved.
+//  Created by Clint Shank on 5/1/23.
+//  Copyright © 2023 Omni-Soft, Inc. All rights reserved.
 //
-
 
 import UIKit
 
+class ColorMappingViewController: UIViewController {
 
-
-protocol PinColorSelectorViewControllerDelegate: AnyObject {
-    func pinColorSelectorViewController(_ pinColorSelectorVC: PinColorSelectorViewController, didSelectColorAt index: Int )
-}
-
-
-
-class PinColorSelectorViewController: UIViewController {
-    
     // MARK: Public Variables
     
-    weak var delegate: PinColorSelectorViewControllerDelegate?
-    
     @IBOutlet weak var myTableView: UITableView!
+
     
     
     // MARK: Private Variables
-    
+        
     private struct Constants {
-        static let cellID    = "PinColorSelectorViewControllerCell"
+        static let cellID    = "ColorMappingViewControllerCell"
     }
 
     private let pinCentral = PinCentral.sharedInstance
@@ -42,7 +32,7 @@ class PinColorSelectorViewController: UIViewController {
         logTrace()
         super.viewDidLoad()
         
-        navigationItem.title = NSLocalizedString( "Title.SelectPinColor", comment: "Select Pin Color" )
+        navigationItem.title = NSLocalizedString( "Title.ColorMapping", comment: "Color Mapping" )
     }
     
     
@@ -54,7 +44,8 @@ class PinColorSelectorViewController: UIViewController {
     }
     
     
-    //MARK: Target/Action Methods
+    
+    // MARK: Target / Action Methods
     
     @IBAction func backBarButtonTouched( sender : UIBarButtonItem ) {
         logTrace()
@@ -75,9 +66,23 @@ class PinColorSelectorViewController: UIViewController {
 
 
 
+// MARK: PinCentralDelegate Methods
+
+extension ColorMappingViewController: PinCentralDelegate {
+    
+    func pinCentralDidReloadColorArray(_ pinCentral: PinCentral) {
+        logTrace()
+        myTableView.reloadData()
+    }
+    
+    
+}
+
+
+
 // MARK: UITableViewDataSource Methods
 
-extension PinColorSelectorViewController: UITableViewDataSource {
+extension ColorMappingViewController : UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return pinCentral.colorArray.count
@@ -106,7 +111,7 @@ extension PinColorSelectorViewController: UITableViewDataSource {
         cell.detailTextLabel?.font      = UIFont.systemFont(ofSize: 17.0 )
         cell.detailTextLabel?.text      = pinColor.descriptor!
         cell.detailTextLabel?.textColor = pinColorArray[Int( pinColor.colorId )]
-        
+
         return cell
     }
     
@@ -117,14 +122,49 @@ extension PinColorSelectorViewController: UITableViewDataSource {
 
 // MARK: UITableViewDelegate Methods
 
-extension PinColorSelectorViewController: UITableViewDelegate {
+extension ColorMappingViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false )
         
-        delegate?.pinColorSelectorViewController( self, didSelectColorAt: indexPath.row )
-        navigationController?.popViewController( animated: true )
+        promptForMappingFor( pinCentral.colorArray[indexPath.row] )
     }
     
+    
+    
+    // MARK: UITableViewDelegate Utility Methods
+
+    private func promptForMappingFor(_ pinColor: PinColor ) {
+        let     title = NSLocalizedString( "AlertTitle.EditMappingFor", comment: "Edit Mapping for " ) + pinColor.name!
+        let     alert = UIAlertController.init( title: title, message: nil, preferredStyle: .alert)
+
+        let     saveAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Save Action" )
+            let     nicknameTextField = alert.textFields![0] as UITextField
+            let     nickname = nicknameTextField.text ?? ""
+            
+            if nickname.isEmpty || nickname == "" {
+                self.presentAlert(title: NSLocalizedString( "AlertTitle.MappingCannotBeBlank", comment: "Mapping Descriptor Cannot be Blank!" ), message: "" )
+                return
+            }
+            
+            pinColor.descriptor = nickname
+            self.pinCentral.saveUpdated( pinColor, self )
+        }
+        
+        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
+        
+        alert.addTextField
+            { ( textField ) in
+                textField.text = pinColor.descriptor
+        }
+        
+        alert.addAction( saveAction   )
+        alert.addAction( cancelAction )
+        
+        present( alert, animated: true, completion: nil )
+    }
+
     
 }
