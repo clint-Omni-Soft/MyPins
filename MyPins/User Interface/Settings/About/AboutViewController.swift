@@ -81,7 +81,15 @@ class AboutViewController: UIViewController {
         }
         
         logTrace()
-        navigationController?.pushViewController( logVC, animated: true )
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            logVC.modalPresentationStyle = .fullScreen
+            
+            present( logVC, animated: true, completion: nil )
+        }
+        else {
+            navigationController?.pushViewController( logVC, animated: true )
+        }
+
     }
 
     

@@ -50,12 +50,23 @@ class LogViewController: UIViewController {
     }
 
     
+    @IBAction func doneBarButtonTouched(_ sender : UIBarButtonItem ) {
+        logTrace()
+        dismiss(animated: true )
+    }
+
     
+
     // MARK: Utility Methods
     
     private func loadBarButtonItems() {
 //        logTrace()
-        navigationItem.leftBarButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Back", comment: "Back" ), style : .plain, target: self, action: #selector( backBarButtonTouched(_:) ) )
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            navigationItem.leftBarButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Done", comment: "Done" ), style : .plain, target: self, action: #selector( doneBarButtonTouched(_:) ) )
+        }
+        else {
+            navigationItem.leftBarButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Back", comment: "Back" ), style : .plain, target: self, action: #selector( backBarButtonTouched(_:) ) )
+        }
     }
 
     
