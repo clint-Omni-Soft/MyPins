@@ -41,6 +41,7 @@
 		F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */; };
 		F49B9A59207D406B007598F9 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49B9A58207D406B007598F9 /* AboutViewController.swift */; };
 		F49B9A5B207D587E007598F9 /* appIcon MASTER in Resources */ = {isa = PBXBuildFile; fileRef = F49B9A5A207D587D007598F9 /* appIcon MASTER */; };
+		F49F1AC82A12E2B8000AD67B /* PleaseWaitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49F1AC72A12E2B8000AD67B /* PleaseWaitViewController.swift */; };
 		F4A6552929AEB23400DDC813 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A6552829AEB23400DDC813 /* LogViewController.swift */; };
 		F4B0B7212A0432CE007D78C7 /* ImageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B0B71F2A0432CE007D78C7 /* ImageRequest.swift */; };
 		F4B0B7222A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B0B7202A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift */; };
@@ -53,7 +54,6 @@
 		F4B76F5529CCEBAC002D2060 /* TransferProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B76F4D29CCEBAC002D2060 /* TransferProgressViewController.swift */; };
 		F4B76F5629CCEBAC002D2060 /* NasLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B76F5029CCEBAC002D2060 /* NasLoginViewController.swift */; };
 		F4B76F5A29CCFB64002D2060 /* PleaseWait.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4B76F5929CCFB64002D2060 /* PleaseWait.storyboard */; };
-		F4B76F5D29CCFBCE002D2060 /* PleaseWaitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B76F5C29CCFBCE002D2060 /* PleaseWaitViewController.swift */; };
 		F4B76F5E29CCFE9C002D2060 /* NasDriveSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B76F5329CCEBAC002D2060 /* NasDriveSelectorViewController.swift */; };
 		F4B76F6029CD06BA002D2060 /* UIImage+Cropping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B76F5F29CD06BA002D2060 /* UIImage+Cropping.swift */; };
 		F4CACD9D29D39F8E00BCFF79 /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CACD9C29D39F8E00BCFF79 /* UIKitExtensions.swift */; };
@@ -123,6 +123,7 @@
 		F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutContraint+Extension.swift"; sourceTree = "<group>"; };
 		F49B9A58207D406B007598F9 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		F49B9A5A207D587D007598F9 /* appIcon MASTER */ = {isa = PBXFileReference; lastKnownFileType = file; name = "appIcon MASTER"; path = "AppIcon/appIcon MASTER"; sourceTree = "<group>"; };
+		F49F1AC72A12E2B8000AD67B /* PleaseWaitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PleaseWaitViewController.swift; sourceTree = "<group>"; };
 		F4A6552829AEB23400DDC813 /* LogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
 		F4B0B71E2A0431FE007D78C7 /* MyPins 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MyPins 4.xcdatamodel"; sourceTree = "<group>"; };
 		F4B0B71F2A0432CE007D78C7 /* ImageRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRequest.swift; sourceTree = "<group>"; };
@@ -137,7 +138,6 @@
 		F4B76F5029CCEBAC002D2060 /* NasLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NasLoginViewController.swift; sourceTree = "<group>"; };
 		F4B76F5329CCEBAC002D2060 /* NasDriveSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NasDriveSelectorViewController.swift; sourceTree = "<group>"; };
 		F4B76F5929CCFB64002D2060 /* PleaseWait.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PleaseWait.storyboard; sourceTree = "<group>"; };
-		F4B76F5C29CCFBCE002D2060 /* PleaseWaitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PleaseWaitViewController.swift; sourceTree = "<group>"; };
 		F4B76F5F29CD06BA002D2060 /* UIImage+Cropping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Cropping.swift"; sourceTree = "<group>"; };
 		F4CACD9C29D39F8E00BCFF79 /* UIKitExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtensions.swift; sourceTree = "<group>"; };
 		F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
@@ -417,7 +417,7 @@
 		F4B76F5B29CCFBCE002D2060 /* Please Wait */ = {
 			isa = PBXGroup;
 			children = (
-				F4B76F5C29CCFBCE002D2060 /* PleaseWaitViewController.swift */,
+				F49F1AC72A12E2B8000AD67B /* PleaseWaitViewController.swift */,
 			);
 			path = "Please Wait";
 			sourceTree = "<group>";
@@ -509,6 +509,7 @@
 				F4A6552929AEB23400DDC813 /* LogViewController.swift in Sources */,
 				F418E69829CB6BE000E3A016 /* NASCentral.swift in Sources */,
 				F4766CE7243D238A0054CD97 /* Logger.swift in Sources */,
+				F49F1AC82A12E2B8000AD67B /* PleaseWaitViewController.swift in Sources */,
 				F418E69729CB6BE000E3A016 /* CloudCentral.swift in Sources */,
 				F400B4CC20572E0000556F51 /* MyPins.xcdatamodeld in Sources */,
 				F4EB06A62A00575000B159E1 /* PinColor+CoreDataProperties.swift in Sources */,
@@ -534,7 +535,6 @@
 				F4B0B7222A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift in Sources */,
 				F403EF8822C17780000D9ABD /* LocationEditorViewController.swift in Sources */,
 				F4B76F5529CCEBAC002D2060 /* TransferProgressViewController.swift in Sources */,
-				F4B76F5D29CCFBCE002D2060 /* PleaseWaitViewController.swift in Sources */,
 				F4B47FF5205745130027755B /* PinCentral.swift in Sources */,
 				F4B76F5629CCEBAC002D2060 /* NasLoginViewController.swift in Sources */,
 				F4CACD9D29D39F8E00BCFF79 /* UIKitExtensions.swift in Sources */,
