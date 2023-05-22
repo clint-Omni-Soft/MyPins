@@ -28,7 +28,9 @@ class ListTableViewController: UITableViewController {
     
     private let deviceAccessControl = DeviceAccessControl.sharedInstance
     private let pinCentral          = PinCentral.sharedInstance
-    
+    private var sectionIndexTitles  : [String] = []
+    private var sectionTitleIndexes : [Int]    = []
+
     
     
     // MARK: UIViewController Lifecycle Methods
@@ -51,6 +53,8 @@ class ListTableViewController: UITableViewController {
             pinCentral.openDatabaseWith( self )
         }
         else {
+            buildSectionTitleIndex()
+            
             tableView.reloadData()
         }
 
@@ -75,7 +79,8 @@ class ListTableViewController: UITableViewController {
         
         // The reason we are using Notifications is because this view can be up in two different places on the iPad at the same time.
         // This approach allows a change in one to immediately be reflected in the other.
-        
+        buildSectionTitleIndex()
+
         tableView.reloadData()
     }
     
@@ -92,6 +97,28 @@ class ListTableViewController: UITableViewController {
     
     
     // MARK: Utility Methods
+    
+    private func buildSectionTitleIndex() {
+        var     currentTitle = ""
+        var     index        = 0
+        
+        sectionIndexTitles .removeAll()
+        sectionTitleIndexes.removeAll()
+        
+        for pin in pinCentral.pinArray {
+            let     nameStartsWith: String = ( pin.name?.prefix(1).uppercased() )!
+            
+            if nameStartsWith != currentTitle {
+                currentTitle = nameStartsWith
+                sectionTitleIndexes.append( index )
+                sectionIndexTitles .append( nameStartsWith )
+            }
+            
+            index += 1
+        }
+        
+    }
+  
     
     private func launchLocationEditorForPinAt( index: Int ) {
         logVerbose( "[ %d ]", index )
@@ -173,6 +200,8 @@ extension ListTableViewController: PinCentralDelegate {
     
     func pinCentralDidReloadPinArray(_ pinCentral: PinCentral ) {
         logVerbose( "loaded [ %d ] pins", pinCentral.pinArray.count )
+        buildSectionTitleIndex()
+        
         tableView.reloadData()
     }
 
@@ -185,6 +214,11 @@ extension ListTableViewController: PinCentralDelegate {
 
 extension ListTableViewController {
 
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        return sectionIndexTitles
+    }
+    
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return pinCentral.pinArray.count
     }
@@ -216,6 +250,15 @@ extension ListTableViewController {
             pinCentral.deletePinAt( indexPath.row, self )
         }
         
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+        let     row = sectionTitleIndexes[index]
+            
+        tableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle , animated: true )
+        
+        return row
     }
     
     
