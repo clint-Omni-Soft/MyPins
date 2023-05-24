@@ -103,14 +103,11 @@ extension ColorMappingViewController : UITableViewDataSource {
         }
 
         cell.backgroundColor = backgroundColor
-        
-        cell.textLabel?.font      = UIFont.systemFont(ofSize: 17.0 )
-        cell.textLabel?.text      = pinColor.name!
-        cell.textLabel?.textColor = pinColorArray[Int( pinColor.colorId )]
 
-        cell.detailTextLabel?.font      = UIFont.systemFont(ofSize: 17.0 )
-        cell.detailTextLabel?.text      = pinColor.descriptor!
-        cell.detailTextLabel?.textColor = pinColorArray[Int( pinColor.colorId )]
+        cell.detailTextLabel?.text = pinColor.name!
+        cell.textLabel?.font       = UIFont.systemFont(ofSize: 17.0 )
+        cell.textLabel?.text       = pinColor.descriptor!
+        cell.textLabel?.textColor  = pinColorArray[Int( pinColor.colorId )]
 
         return cell
     }
