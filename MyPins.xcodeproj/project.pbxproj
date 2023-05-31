@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -449,8 +449,9 @@
 		F400B4B820572E0000556F51 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1430;
 				ORGANIZATIONNAME = "Omni-Soft, Inc.";
 				TargetAttributes = {
 					F400B4BF20572E0000556F51 = {
@@ -703,7 +704,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -725,7 +727,10 @@
 				GCC_PREFIX_HEADER = "MyPins/MyPins-Prefix.pch";
 				INFOPLIST_FILE = MyPins/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 3.1;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
@@ -754,7 +759,10 @@
 				GCC_PREFIX_HEADER = "MyPins/MyPins-Prefix.pch";
 				INFOPLIST_FILE = MyPins/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
