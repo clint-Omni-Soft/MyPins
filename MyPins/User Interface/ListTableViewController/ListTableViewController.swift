@@ -57,13 +57,16 @@ class ListTableViewController: UITableViewController {
             
             tableView.reloadData()
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0 ) {
-                let rowToScrollToTop = self.getIntValueFromUserDefaults( UserDefaultKeys.lastLocationRow )
-                let indexPath        = IndexPath(row: rowToScrollToTop, section: 0)
+            if pinCentral.pinArray.count != 0 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0 ) {
+                    let rowToScrollToTop = self.getIntValueFromUserDefaults( UserDefaultKeys.lastLocationRow )
+                    let indexPath        = IndexPath(row: rowToScrollToTop, section: 0)
+                    
+                    self.tableView.scrollToRow(at: indexPath, at: .top, animated: true )
+                }
                 
-                self.tableView.scrollToRow(at: indexPath, at: .top, animated: true )
             }
-            
+
         }
 
         NotificationCenter.default.addObserver( self, selector: #selector( self.pinsUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: nil )
