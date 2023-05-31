@@ -114,6 +114,7 @@ struct UserDefaultKeys {
     static let dataStoreLocation     = "DataStoreLocation"
     static let howToUseShown         = "HowToUseShown"
     static let lastComponentSelected = "LastComponentSelected"
+    static let lastLocationRow       = "LastLocationRow"
     static let lastTabSelected       = "LastTabSelected"
     static let lastTextColor         = "LastTextColor"
     static let nasDescriptor         = "NasDescriptor"

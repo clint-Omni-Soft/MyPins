@@ -78,6 +78,11 @@ extension UIViewController {
     }
     
     
+    func getIntValueFromUserDefaults(_ key: String ) -> Int {
+        return UserDefaults.standard.integer(forKey: key )
+    }
+    
+    
     func flagIsPresentInUserDefaults(_ key : String ) -> Bool {
         var     flagIsPresent = false
         
@@ -97,6 +102,12 @@ extension UIViewController {
     
     func saveFlagInUserDefaults(_ key: String ) {
         UserDefaults.standard.set( key, forKey: key )
+        UserDefaults.standard.synchronize()
+    }
+    
+    
+    func setIntValueInUserDefaults(_ value: Int, _ key: String ) {
+        UserDefaults.standard.set( value, forKey: key )
         UserDefaults.standard.synchronize()
     }
     

@@ -56,6 +56,14 @@ class ListTableViewController: UITableViewController {
             buildSectionTitleIndex()
             
             tableView.reloadData()
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0 ) {
+                let rowToScrollToTop = self.getIntValueFromUserDefaults( UserDefaultKeys.lastLocationRow )
+                let indexPath        = IndexPath(row: rowToScrollToTop, section: 0)
+                
+                self.tableView.scrollToRow(at: indexPath, at: .top, animated: true )
+            }
+            
         }
 
         NotificationCenter.default.addObserver( self, selector: #selector( self.pinsUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: nil )
@@ -274,6 +282,7 @@ extension ListTableViewController {
         logTrace()
         if deviceAccessControl.byMe {
             launchLocationEditorForPinAt( index: indexPath.row )
+            setIntValueInUserDefaults( indexPath.row, UserDefaultKeys.lastLocationRow )
         }
         
     }
