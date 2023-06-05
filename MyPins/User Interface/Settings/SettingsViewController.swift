@@ -86,7 +86,11 @@ class SettingsViewController: UIViewController {
             myActivityIndicator.isHidden = false
             myActivityIndicator.startAnimating()
         }
-        
+        else {
+            myActivityIndicator.isHidden = true
+            myActivityIndicator.stopAnimating()
+        }
+
         loadBarButtonItems()
         
         if showHowToUse {
@@ -184,26 +188,14 @@ extension SettingsViewController: UITableViewDelegate {
         logTrace()
         tableView.deselectRow( at: indexPath, animated: false )
         
-        if deviceAccessControl.byMe {
-            switch indexPath.row {
-                case CellIndexes.about:             pushViewControllerWith( StoryboardIds.about             )
-                case CellIndexes.colorMapping:      pushViewControllerWith( StoryboardIds.colorMapping      )
-                case CellIndexes.dataStoreLocation: pushViewControllerWith( StoryboardIds.dataStoreLocation )
-                case CellIndexes.howToUse:          pushViewControllerWith( StoryboardIds.howToUse          )
-                default:    break
-            }
+        switch indexPath.row {
+            case CellIndexes.about:             pushViewControllerWith( StoryboardIds.about             )
+            case CellIndexes.colorMapping:      pushViewControllerWith( StoryboardIds.colorMapping      )
+            case CellIndexes.dataStoreLocation: pushViewControllerWith( StoryboardIds.dataStoreLocation )
+            case CellIndexes.howToUse:          pushViewControllerWith( StoryboardIds.howToUse          )
+            default:    break
+        }
             
-        }
-        else {
-            switch indexPath.row {
-                case CellIndexes.about:     pushViewControllerWith( StoryboardIds.about    )
-                case CellIndexes.howToUse:  pushViewControllerWith( StoryboardIds.howToUse )
-                default:    break
-            }
-
-        }
-        
-        
     }
     
 
