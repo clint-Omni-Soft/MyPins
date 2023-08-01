@@ -1339,7 +1339,10 @@ extension PinCentral: NASCentralDelegate {
     func nasCentral(_ nasCentral: NASCentral, canSeeNasFolders: Bool) {
         logVerbose( "[ %@ ]", stringFor( canSeeNasFolders ) )
 
-        if canSeeNasFolders {
+        if stayOffline {
+            logTrace( "stay offline" )
+        }
+        else if canSeeNasFolders {
             nasCentral.startSession( self )
         }
         else {
@@ -1582,6 +1585,11 @@ extension PinCentral {
     func startTimer() {
         if dataStoreLocation == .device {
             logTrace( "Database on device ... do nothing!" )
+            return
+        }
+        
+        if stayOffline {
+            logTrace( "stay offline" )
             return
         }
         

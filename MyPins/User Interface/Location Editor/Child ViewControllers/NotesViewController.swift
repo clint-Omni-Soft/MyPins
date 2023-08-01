@@ -40,6 +40,7 @@ class NotesViewController: UIViewController {
         navigationItem.title = NSLocalizedString( "Title.NotesEditor", comment: "Notes Editor" )
         
         navigationItem.rightBarButtonItem = UIBarButtonItem.init( barButtonSystemItem: .trash, target: self, action: #selector( trashBarButtonItemTouched(_:) ) )
+        notesTextView.font = UIFont.systemFont(ofSize: 17.0 )
     }
     
     

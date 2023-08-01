@@ -55,6 +55,7 @@ class LocationNotesTableViewCell: UITableViewCell {
     func initializeWith(_ notes: String, _ cellDelegate: LocationNotesTableViewCellDelegate ) {
         logTrace()
         delegate           = cellDelegate
+        notesTextView.font = UIFont.systemFont(ofSize: 17.0 )
         notesTextView.text = notes
 
         notesButton.setTitle( NSLocalizedString( "LabelText.Notes", comment: "Notes" ), for: .normal )
