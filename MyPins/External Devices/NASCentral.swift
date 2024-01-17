@@ -9,36 +9,36 @@
 import UIKit
 
 
-protocol NASCentralDelegate : AnyObject {
+protocol NASCentralDelegate: AnyObject {
     
     // Access Methods
-    func nasCentral(_ nasCentral : NASCentral, canSeeNasFolders       : Bool )
-    func nasCentral(_ nasCentral : NASCentral, didCloseShareAndDevice : Bool )
-    func nasCentral(_ nasCentral : NASCentral, didConnectToDevice     : Bool, _ device         : SMBDevice   )
-    func nasCentral(_ nasCentral : NASCentral, didCreateDirectory     : Bool )
-    func nasCentral(_ nasCentral : NASCentral, didFetchDevices        : Bool, _ deviceArray    : [SMBDevice] )
-    func nasCentral(_ nasCentral : NASCentral, didFetchDirectories    : Bool, _ directoryArray : [SMBFile]   )
-    func nasCentral(_ nasCentral : NASCentral, didFetchFile           : Bool, _ data : Data )
-    func nasCentral(_ nasCentral : NASCentral, didFetchShares         : Bool, _ shareArray     : [SMBShare]  )
-    func nasCentral(_ nasCentral : NASCentral, didOpenShare           : Bool, _ share          : SMBShare    )
-    func nasCentral(_ nasCentral : NASCentral, didSaveAccessKey       : Bool )
-    func nasCentral(_ nasCentral : NASCentral, didSaveData            : Bool )
+    func nasCentral(_ nasCentral: NASCentral, canSeeNasFolders      : Bool )
+    func nasCentral(_ nasCentral: NASCentral, didCloseShareAndDevice: Bool )
+    func nasCentral(_ nasCentral: NASCentral, didConnectToDevice    : Bool, _ device        : SMBDevice   )
+    func nasCentral(_ nasCentral: NASCentral, didCreateDirectory    : Bool )
+    func nasCentral(_ nasCentral: NASCentral, didFetchDevices       : Bool, _ deviceArray   : [SMBDevice] )
+    func nasCentral(_ nasCentral: NASCentral, didFetchDirectories   : Bool, _ directoryArray: [SMBFile]   )
+    func nasCentral(_ nasCentral: NASCentral, didFetchFile          : Bool, _ data: Data )
+    func nasCentral(_ nasCentral: NASCentral, didFetchShares        : Bool, _ shareArray    : [SMBShare]  )
+    func nasCentral(_ nasCentral: NASCentral, didOpenShare          : Bool, _ share         : SMBShare    )
+    func nasCentral(_ nasCentral: NASCentral, didSaveAccessKey      : Bool )
+    func nasCentral(_ nasCentral: NASCentral, didSaveData           : Bool )
 
     // Session Methods
-    func nasCentral(_ nasCentral : NASCentral, didCompareLastUpdatedFiles      : Int )
-    func nasCentral(_ nasCentral : NASCentral, didFetch imageNames             : [String] )
-    func nasCentral(_ nasCentral : NASCentral, didCopyAllImagesFromDeviceToNas : Bool )
-    func nasCentral(_ nasCentral : NASCentral, didCopyAllImagesFromNasToDevice : Bool )
-    func nasCentral(_ nasCentral : NASCentral, didCopyDatabaseFromDeviceToNas  : Bool )
-    func nasCentral(_ nasCentral : NASCentral, didCopyDatabaseFromNasToDevice  : Bool )
-    func nasCentral(_ nasCentral : NASCentral, didDeleteImage   : Bool )
-    func nasCentral(_ nasCentral : NASCentral, didEndSession    : Bool )
-    func nasCentral(_ nasCentral : NASCentral, didFetchImage    : Bool, image : UIImage, filename : String )
-    func nasCentral(_ nasCentral : NASCentral, didLockNas       : Bool )
-    func nasCentral(_ nasCentral : NASCentral, didSaveImageData : Bool, filename : String )
-    func nasCentral(_ nasCentral : NASCentral, didStartSession  : Bool )
-    func nasCentral(_ nasCentral : NASCentral, didUnlockNas     : Bool )
-
+    func nasCentral(_ nasCentral: NASCentral, didCompareLastUpdatedFiles     : Int, lastUpdatedBy: String )
+    func nasCentral(_ nasCentral: NASCentral, didCopyAllImagesFromDeviceToNas: Bool )
+    func nasCentral(_ nasCentral: NASCentral, didCopyAllImagesFromNasToDevice: Bool )
+    func nasCentral(_ nasCentral: NASCentral, didCopyDatabaseFromDeviceToNas : Bool )
+    func nasCentral(_ nasCentral: NASCentral, didCopyDatabaseFromNasToDevice : Bool )
+    func nasCentral(_ nasCentral: NASCentral, didDeleteImage  : Bool )
+    func nasCentral(_ nasCentral: NASCentral, didFetch          imageNames: [String] )
+    func nasCentral(_ nasCentral: NASCentral, didEndSession   : Bool )
+    func nasCentral(_ nasCentral: NASCentral, didFetchImage   : Bool, image: UIImage, filename: String )
+    func nasCentral(_ nasCentral: NASCentral, didLockNas      : Bool )
+    func nasCentral(_ nasCentral: NASCentral, didSaveImageData: Bool, filename: String )
+    func nasCentral(_ nasCentral: NASCentral, didStartSession : Bool )
+    func nasCentral(_ nasCentral: NASCentral, didUnlockNas    : Bool )
+    func nasCentral(_ nasCentral: NASCentral, missingDbFiles  : [String] )
 }
 
 
@@ -46,33 +46,33 @@ protocol NASCentralDelegate : AnyObject {
 extension NASCentralDelegate {
     
     // Access Methods
-    func nasCentral(_ nasCentral : NASCentral, canSeeNasFolders       : Bool ) {}
-    func nasCentral(_ nasCentral : NASCentral, didCloseShareAndDevice : Bool ) {}
-    func nasCentral(_ nasCentral : NASCentral, didConnectToDevice     : Bool, _ device         : SMBDevice   ) {}
-    func nasCentral(_ nasCentral : NASCentral, didCreateDirectory     : Bool ) {}
-    func nasCentral(_ nasCentral : NASCentral, didFetchDevices        : Bool, _ deviceArray    : [SMBDevice] ) {}
-    func nasCentral(_ nasCentral : NASCentral, didFetchDirectories    : Bool, _ directoryArray : [SMBFile]   ) {}
-    func nasCentral(_ nasCentral : NASCentral, didFetchFile           : Bool, _ data : Data ) {}
-    func nasCentral(_ nasCentral : NASCentral, didFetchShares         : Bool, _ shareArray     : [SMBShare]  ) {}
-    func nasCentral(_ nasCentral : NASCentral, didOpenShare           : Bool, _ share          : SMBShare    ) {}
-    func nasCentral(_ nasCentral : NASCentral, didSaveAccessKey       : Bool ) {}
-    func nasCentral(_ nasCentral : NASCentral, didSaveData            : Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, canSeeNasFolders      : Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, didCloseShareAndDevice: Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, didConnectToDevice    : Bool, _ device        : SMBDevice   ) {}
+    func nasCentral(_ nasCentral: NASCentral, didCreateDirectory    : Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, didFetchDevices       : Bool, _ deviceArray   : [SMBDevice] ) {}
+    func nasCentral(_ nasCentral: NASCentral, didFetchDirectories   : Bool, _ directoryArray: [SMBFile]   ) {}
+    func nasCentral(_ nasCentral: NASCentral, didFetchFile          : Bool, _ data: Data ) {}
+    func nasCentral(_ nasCentral: NASCentral, didFetchShares        : Bool, _ shareArray    : [SMBShare]  ) {}
+    func nasCentral(_ nasCentral: NASCentral, didOpenShare          : Bool, _ share         : SMBShare    ) {}
+    func nasCentral(_ nasCentral: NASCentral, didSaveAccessKey      : Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, didSaveData           : Bool ) {}
 
     // Session Methods
-    func nasCentral(_ nasCentral : NASCentral, didCompareLastUpdatedFiles      : Int ) {}
-    func nasCentral(_ nasCentral : NASCentral, didFetch imageNames             : [String] ) {}
-    func nasCentral(_ nasCentral : NASCentral, didCopyAllImagesFromDeviceToNas : Bool ) {}
-    func nasCentral(_ nasCentral : NASCentral, didCopyAllImagesFromNasToDevice : Bool ) {}
-    func nasCentral(_ nasCentral : NASCentral, didCopyDatabaseFromDeviceToNas  : Bool ) {}
-    func nasCentral(_ nasCentral : NASCentral, didCopyDatabaseFromNasToDevice  : Bool ) {}
-    func nasCentral(_ nasCentral : NASCentral, didDeleteImage   : Bool ) {}
-    func nasCentral(_ nasCentral : NASCentral, didEndSession    : Bool ) {}
-    func nasCentral(_ nasCentral : NASCentral, didFetchImage    : Bool, image : UIImage, filename : String ) {}
-    func nasCentral(_ nasCentral : NASCentral, didLockNas       : Bool ) {}
-    func nasCentral(_ nasCentral : NASCentral, didSaveImageData : Bool, filename : String ) {}
-    func nasCentral(_ nasCentral : NASCentral, didStartSession  : Bool ) {}
-    func nasCentral(_ nasCentral : NASCentral, didUnlockNas     : Bool ) {}
-
+    func nasCentral(_ nasCentral: NASCentral, didCompareLastUpdatedFiles     : Int, lastUpdatedBy: String ) {}
+    func nasCentral(_ nasCentral: NASCentral, didCopyAllImagesFromDeviceToNas: Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, didCopyAllImagesFromNasToDevice: Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, didCopyDatabaseFromDeviceToNas : Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, didCopyDatabaseFromNasToDevice : Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, didDeleteImage  : Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, didEndSession   : Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, didFetch          imageNames: [String] ) {}
+    func nasCentral(_ nasCentral: NASCentral, didFetchImage   : Bool, image: UIImage, filename: String ) {}
+    func nasCentral(_ nasCentral: NASCentral, didLockNas      : Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, didSaveImageData: Bool, filename: String ) {}
+    func nasCentral(_ nasCentral: NASCentral, didStartSession : Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, didUnlockNas    : Bool ) {}
+    func nasCentral(_ nasCentral: NASCentral, missingDbFiles  : [String] ) {}
 }
 
 
@@ -81,7 +81,9 @@ class NASCentral: NSObject {
 
     // MARK: Public Variables
     
-    var nasAccessKey : NASDescriptor {
+    let lastUpdatedUnknown = NSLocalizedString( "Title.Unknown", comment: "Unknown" )
+    
+    var nasAccessKey: NASDescriptor {
         get {
             var     accessKey = NASDescriptor()
             
@@ -122,8 +124,8 @@ class NASCentral: NSObject {
     // MARK: Private Variables
     
     private struct Constants {  // NOTE: lastUpdated needs to be first (which is processed last) to prevent trashing the database in the event that the update fails
-        static let databaseFilenameArray   = [ Filenames.lastUpdated, Filenames.database, Filenames.databaseShm, Filenames.databaseWal ]
-        static let scanTime : TimeInterval = 3
+        static let databaseFilenameArray  = [ Filenames.lastUpdated, Filenames.database, Filenames.databaseShm, Filenames.databaseWal ]
+        static let scanTime: TimeInterval = 3
     }
     
     private enum Command {
@@ -149,6 +151,7 @@ class NASCentral: NSObject {
         case CopyDatabaseFromNasToDevice
         case DeleteImage
         case EndSession
+        case FetchDbFiles
         case FetchImage
         case FetchImageNames
         case LockNas
@@ -159,6 +162,7 @@ class NASCentral: NSObject {
     
     private var currentCommand          : Command!
     private var currentFilename         = ""
+    private var dbFilenameArray         = [""]
     private var delegate                : NASCentralDelegate?
     private let deviceAccessControl     = DeviceAccessControl.sharedInstance
     private var deviceUrlArray          = [URL].init()
@@ -166,15 +170,34 @@ class NASCentral: NSObject {
     private var deviceUrlsToDeleteArray = [URL].init()
     private var discoveryTimer          : Timer?
     private var documentDirectoryURL    : URL!
+    private var fileManager             = FileManager.default
+    private var missingDbFiles          = [String].init()
     private var nasImageFileArray       : [SMBFile] = []
     private var reEstablishConnection   = false
     private var requestQueue            : [[Any]] = []
     private var selectedDevice          : SMBDevice?
     private var selectedShare           : SMBShare?
     private var sessionActive           = false
+    private var smbCentral              = SMBCentral.sharedInstance
     private var workingAccessKey        = NASDescriptor()
+
+    private var deviceName: String {
+        get {
+            var     name = UIDevice.current.name
+
+            if let deviceNameString = UserDefaults.standard.string( forKey: UserDefaultKeys.deviceName ) {
+                if !deviceNameString.isEmpty && deviceNameString.count > 0 {
+                    name = deviceNameString
+                }
+
+            }
+            
+            return name
+        }
+        
+    }
     
-    
+
     
     // MARK: Our Singleton (Public)
     
@@ -189,57 +212,57 @@ extension NASCentral {
     
     // MARK: Access Methods (Public)
     
-    func canSeeNasFolders(_ delegate : NASCentralDelegate ) {
+    func canSeeNasFolders(_ delegate: NASCentralDelegate ) {
         addRequest( [Command.CanSeeNasFolders, delegate] )
     }
     
 
-    func closeShareAndDevice(_ delegate : NASCentralDelegate ) {
+    func closeShareAndDevice(_ delegate: NASCentralDelegate ) {
         addRequest( [Command.CloseShareAndDevice, delegate] )
     }
     
     
-    func connectTo(_ device : SMBDevice, _ userName : String, _ password : String, _ delegate : NASCentralDelegate ) {
+    func connectTo(_ device: SMBDevice, _ userName: String, _ password: String, _ delegate: NASCentralDelegate ) {
         addRequest( [Command.ConnectTo, device, userName, password, delegate] )
     }
     
     
-    func createDirectoryOn(_ share : SMBShare, _ path : String, _ delegate : NASCentralDelegate ) {
+    func createDirectoryOn(_ share: SMBShare, _ path: String, _ delegate: NASCentralDelegate ) {
         addRequest( [Command.CreateDirectoryOn, share, path, delegate] )
     }
     
     
-    func fetchConnectedDevices(_ delegate : NASCentralDelegate ) {
+    func fetchConnectedDevices(_ delegate: NASCentralDelegate ) {
         addRequest( [Command.FetchConnectedDevices, delegate] )
     }
     
     
-    func fetchDirectoriesFrom(_ share : SMBShare, _ atPath : String, _ delegate : NASCentralDelegate ) {
+    func fetchDirectoriesFrom(_ share: SMBShare, _ atPath: String, _ delegate: NASCentralDelegate ) {
         addRequest( [Command.FetchDirectoriesFrom, share, atPath, delegate] )
     }
     
     
-    func fetchFileOn(_ share : SMBShare, _ fullpath : String, _ delegate : NASCentralDelegate ) {
+    func fetchFileOn(_ share: SMBShare, _ fullpath: String, _ delegate: NASCentralDelegate ) {
         addRequest( [Command.FetchFileOn, share, fullpath, delegate] )
     }
     
     
-    func fetchShares(_ delegate : NASCentralDelegate ) {
+    func fetchShares(_ delegate: NASCentralDelegate ) {
         addRequest( [Command.FetchShares, delegate] )
     }
     
     
-    func openShare(_ share : SMBShare, _ delegate : NASCentralDelegate ) {
+    func openShare(_ share: SMBShare, _ delegate: NASCentralDelegate ) {
         addRequest( [Command.OpenShare, share, delegate] )
     }
     
     
-    func saveAccessKey(_ path : String, _ delegate : NASCentralDelegate  ) {
+    func saveAccessKey(_ path: String, _ delegate: NASCentralDelegate  ) {
         addRequest( [Command.SaveAccessKey, path, delegate] )
     }
     
     
-    func saveData(_ data : Data, _ share : SMBShare, _ fullPath : String, _ delegate : NASCentralDelegate ) {
+    func saveData(_ data: Data, _ share: SMBShare, _ fullPath: String, _ delegate: NASCentralDelegate ) {
         addRequest( [Command.SaveData, data, share, fullPath, delegate] )
     }
     
@@ -247,75 +270,101 @@ extension NASCentral {
     
     // MARK: Session Methods
     
-    func compareLastUpdatedFiles(_ delegate : NASCentralDelegate ) {
+    func compareLastUpdatedFiles(_ delegate: NASCentralDelegate ) {
         addRequest( [Command.CompareLastUpdatedFiles, delegate] )
     }
 
     
-    func fetchImageNames(_ delegate : NASCentralDelegate ) {
-        addRequest( [Command.FetchImageNames, delegate] )
-    }
-
-    
-    func copyAllImagesFromDeviceToNas(_ delegate : NASCentralDelegate ) {
+    func copyAllImagesFromDeviceToNas(_ delegate: NASCentralDelegate ) {
         addRequest( [Command.CopyAllImagesFromDeviceToNas, delegate] )
     }
     
     
-    func copyAllImagesFromNasToDevice(_ delegate : NASCentralDelegate ) {
+    func copyAllImagesFromNasToDevice(_ delegate: NASCentralDelegate ) {
         addRequest( [Command.CopyAllImagesFromNasToDevice, delegate] )
     }
     
     
-    func copyDatabaseFromDeviceToNas(_ delegate : NASCentralDelegate ) {
+    func copyDatabaseFromDeviceToNas(_ delegate: NASCentralDelegate ) {
         addRequest( [Command.CopyDatabaseFromDeviceToNas, delegate] )
     }
     
     
-    func copyDatabaseFromNasToDevice(_ delegate : NASCentralDelegate ) {
+    func copyDatabaseFromNasToDevice(_ delegate: NASCentralDelegate ) {
         addRequest( [Command.CopyDatabaseFromNasToDevice, delegate] )
     }
     
     
-    func deleteImage(_ filename : String, _ delegate : NASCentralDelegate ) {
+    func deleteImage(_ filename: String, _ delegate: NASCentralDelegate ) {
         addRequest( [Command.DeleteImage, filename, delegate] )
     }
     
     
-    func endSession(_ delegate : NASCentralDelegate ) {
+    func endSession(_ delegate: NASCentralDelegate ) {
         addRequest( [Command.EndSession, delegate] )
     }
     
     
-    func fetchImage(_ filename : String, _ delegate : NASCentralDelegate ) {
+    func fetchDbFiles(_ delegate: NASCentralDelegate ) {
+        addRequest( [Command.FetchDbFiles, delegate] )
+    }
+    
+    
+    func fetchImage(_ filename: String, _ delegate: NASCentralDelegate ) {
         addRequest( [Command.FetchImage, filename, delegate] )
     }
     
     
-    func lockNas(_ delegate : NASCentralDelegate ) {
+    func fetchImageNames(_ delegate: NASCentralDelegate ) {
+        addRequest( [Command.FetchImageNames, delegate] )
+    }
+
+    
+    func lockNas(_ delegate: NASCentralDelegate ) {
         addRequest( [Command.LockNas, delegate] )
     }
     
     
-    func saveImageData(_ imageData : Data, filename : String, _ delegate : NASCentralDelegate ) {
+    func saveImageData(_ imageData: Data, filename: String, _ delegate: NASCentralDelegate ) {
         addRequest( [Command.SaveImageData, imageData, filename, delegate] )
     }
     
     
-    func startSession(_ delegate : NASCentralDelegate  ) {
+    func startSession(_ delegate: NASCentralDelegate  ) {
         addRequest( [Command.StartSession, delegate] )
     }
 
     
-    func unlockNas(_ delegate : NASCentralDelegate ) {
+    func unlockNas(_ delegate: NASCentralDelegate ) {
         addRequest( [Command.UnlockNas, delegate] )
+    }
+
+    
+    
+    // MARK: Utility Methods (Public)
+    
+    func emptyQueue() {
+        var queueContents = ""
+        
+        for request in requestQueue {
+            let command = request[0] as! Command
+            
+            if !queueContents.isEmpty {
+                queueContents += ", "
+            }
+            
+            queueContents += stringForCommand( command )
+        }
+        
+        logVerbose( "queue contents[ %@ ]", queueContents )
+        requestQueue = []
     }
 
     
     
     // MARK: Utility Methods (Private)
     
-    private func addRequest(_ request : [Any] ) {
+    private func addRequest(_ request: [Any] ) {
         let     requestQueueIdle = requestQueue.isEmpty
         
         logVerbose( "[ %@ ] ... queued requests[ %d ]", stringForCommand( request[0] as! Command ), requestQueue.count )
@@ -331,7 +380,7 @@ extension NASCentral {
     }
     
     
-    private func isSessionCommand(_ command : Command ) -> Bool {
+    private func isSessionCommand(_ command: Command ) -> Bool {
         var isSession = true
         
         switch command {
@@ -344,7 +393,7 @@ extension NASCentral {
     }
     
     
-    private func processNextRequest(_ popHeadOfQueue : Bool = true ) {
+    private func processNextRequest(_ popHeadOfQueue: Bool = true ) {
         
         if popHeadOfQueue && !requestQueue.isEmpty {
             requestQueue.remove( at: 0 )
@@ -365,7 +414,7 @@ extension NASCentral {
         if !sessionActive && isSessionCommand( command ) && command != .StartSession {
             logTrace( "Re-establishing session" )
             reEstablishConnection = true
-            SMBCentral.sharedInstance.startSession( nasAccessKey, self )
+            smbCentral.startSession( nasAccessKey, self )
             return
         }
         
@@ -393,22 +442,23 @@ extension NASCentral {
         case .CopyAllImagesFromNasToDevice:     _copyAllImagesFromNasToDevice( request[1] as! NASCentralDelegate )
         case .CopyDatabaseFromDeviceToNas:      _copyDatabaseFromDeviceToNas(  request[1] as! NASCentralDelegate )
         case .CopyDatabaseFromNasToDevice:      _copyDatabaseFromNasToDevice(  request[1] as! NASCentralDelegate )
-        case .DeleteImage:                      _deleteImage( request[1] as! String, request[2] as! NASCentralDelegate )
-        case .EndSession:                       _endSession(  request[1] as! NASCentralDelegate )
-        case .FetchImage:                       _fetchImage(  request[1] as! String, request[2] as! NASCentralDelegate )
+        case .DeleteImage:                      _deleteImage(     request[1] as! String, request[2] as! NASCentralDelegate )
+        case .EndSession:                       _endSession(      request[1] as! NASCentralDelegate )
+        case .FetchDbFiles:                     _fetchDbFiles(    request[1] as! NASCentralDelegate )
+        case .FetchImage:                       _fetchImage(      request[1] as! String, request[2] as! NASCentralDelegate )
         case .FetchImageNames:                  _fetchImageNames( request[1] as! NASCentralDelegate )
-        case .LockNas:                          _lockNas(     request[1] as! NASCentralDelegate )
-        case .SaveImageData:                    _saveImageData( request[1] as! Data, filename : request[2] as! String, request[3] as! NASCentralDelegate )
-        case .StartSession:                     _startSession(  request[1] as! NASCentralDelegate )
-        case .UnlockNas:                        _unlockNas(     request[1] as! NASCentralDelegate )
-            
+        case .LockNas:                          _lockNas(         request[1] as! NASCentralDelegate )
+        case .SaveImageData:                    _saveImageData(   request[1] as! Data, filename: request[2] as! String, request[3] as! NASCentralDelegate )
+        case .StartSession:                     _startSession(    request[1] as! NASCentralDelegate )
+        case .UnlockNas:                        _unlockNas(       request[1] as! NASCentralDelegate )
+
         default:                                logTrace( "SBH!" )
         }
         
     }
     
     
-    private func stringForCommand(_ command : Command ) -> String {
+    private func stringForCommand(_ command: Command ) -> String {
         var     description = "Unknown"
         
         switch command {
@@ -424,6 +474,7 @@ extension NASCentral {
         case .DeleteImage:                      description = "DeleteImage"
         case .EndSession:                       description = "EndSession"
         case .FetchConnectedDevices:            description = "FetchConnectedDevices"
+        case .FetchDbFiles:                     description = "FetchDbFiles"
         case .FetchDirectoriesFrom:             description = "FetchDirectoriesFrom"
         case .FetchFileOn:                      description = "FetchFileOn"
         case .FetchImage:                       description = "FetchImage"
@@ -450,14 +501,14 @@ extension NASCentral {
 
 extension NASCentral {
     
-    private func _canSeeNasFolders(_ delegate : NASCentralDelegate ) {
+    private func _canSeeNasFolders(_ delegate: NASCentralDelegate ) {
 //        logTrace()
         self.delegate = delegate
-        SMBCentral.sharedInstance.findFolderAt( nasAccessKey, self )
+        smbCentral.findFolderAt( nasAccessKey, self )
     }
     
     
-    private func _closeShareAndDevice(_ delegate : NASCentralDelegate ) {
+    private func _closeShareAndDevice(_ delegate: NASCentralDelegate ) {
 //        logTrace()
         if let share = selectedShare {
             if share.isOpen {
@@ -469,14 +520,14 @@ extension NASCentral {
                     }
                         
                     if let _ = self.selectedDevice {
-                        SMBCentral.sharedInstance.disconnect()
+                        self.smbCentral.disconnect()
                     }
                    
                     DispatchQueue.main.async {
-                        delegate.nasCentral( self, didCloseShareAndDevice : true )
+                        delegate.nasCentral( self, didCloseShareAndDevice: true )
+                        self.processNextRequest()
                     }
 
-                    self.processNextRequest()
                 })
 
             }
@@ -484,14 +535,14 @@ extension NASCentral {
         }
         else {
             if let _ = self.selectedDevice {
-                SMBCentral.sharedInstance.disconnect()
+                smbCentral.disconnect()
              }
             
             DispatchQueue.main.async {
-                delegate.nasCentral( self, didCloseShareAndDevice : true )
+                delegate.nasCentral( self, didCloseShareAndDevice: true )
+                self.processNextRequest()
             }
             
-            self.processNextRequest()
         }
 
         self.selectedShare  = nil
@@ -499,7 +550,7 @@ extension NASCentral {
     }
     
     
-    private func _connectTo(_ device : SMBDevice, _ userName : String, _ password : String, _ delegate : NASCentralDelegate ) {
+    private func _connectTo(_ device: SMBDevice, _ userName: String, _ password: String, _ delegate: NASCentralDelegate ) {
 //       logTrace()
        self.delegate = delegate
        
@@ -513,23 +564,23 @@ extension NASCentral {
        workingAccessKey.share       = ""
        workingAccessKey.path        = ""
        
-       SMBCentral.sharedInstance.connectTo( device, userName, password, self )
+       smbCentral.connectTo( device, userName, password, self )
     }
        
        
-    private func _createDirectoryOn(_ share : SMBShare, _ path : String, _ delegate : NASCentralDelegate ) {
+    private func _createDirectoryOn(_ share: SMBShare, _ path: String, _ delegate: NASCentralDelegate ) {
 //       logTrace()
        self.delegate = delegate
 
-       SMBCentral.sharedInstance.createDirectoryOn( share, path, self )
+       smbCentral.createDirectoryOn( share, path, self )
     }
        
     
-    private func _fetchConnectedDevices(_ delegate : NASCentralDelegate ) {
+    private func _fetchConnectedDevices(_ delegate: NASCentralDelegate ) {
 //        logTrace()
         self.delegate = delegate
         
-        if SMBCentral.sharedInstance.startDiscoveryWith( self ) {
+        if smbCentral.startDiscoveryWith( self ) {
             DispatchQueue.main.async {
                 self.discoveryTimer = Timer.scheduledTimer( timeInterval: Constants.scanTime, target: self, selector: #selector( self.timerFired ), userInfo: nil, repeats: false )
             }
@@ -540,53 +591,53 @@ extension NASCentral {
             
             DispatchQueue.main.async {
                 delegate.nasCentral( self, didFetchDevices: false, [] )
+                self.processNextRequest()
             }
             
-            processNextRequest()
         }
         
     }
     
     
-    private func _fetchDirectoriesFrom(_ share : SMBShare, _ atPath : String, _ delegate : NASCentralDelegate ) {
+    private func _fetchDirectoriesFrom(_ share: SMBShare, _ atPath: String, _ delegate: NASCentralDelegate ) {
 //        logVerbose( "[ %@/%@ ]  returnCsvFiles[ %@ ]", share.name, atPath, stringFor( returnCsvFiles ) )
         if let share = selectedShare {
             self.delegate          = delegate
             workingAccessKey.share = share.name
             
-            SMBCentral.sharedInstance.returnCsvFiles = returnCsvFiles
-            SMBCentral.sharedInstance.fetchDirectoriesFor( share, atPath, self )
+            smbCentral.returnCsvFiles = returnCsvFiles
+            smbCentral.fetchDirectoriesFor( share, atPath, self )
         }
         else {
             logTrace( "ERROR!  selectedShare NOT set!" )
             
             DispatchQueue.main.async {
                 delegate.nasCentral( self, didFetchDirectories: false, [] )
+                self.processNextRequest()
             }
             
-            processNextRequest()
         }
         
     }
     
     
-    private func _fetchFileOn(_ share : SMBShare, _ fullpath : String, _ delegate : NASCentralDelegate ) {
+    private func _fetchFileOn(_ share: SMBShare, _ fullpath: String, _ delegate: NASCentralDelegate ) {
 //        logTrace()
         self.delegate = delegate
 
-        SMBCentral.sharedInstance.fetchFileOn( share, fullpath, self )
+        smbCentral.fetchFileOn( share, fullpath, self )
     }
     
     
-    private func _fetchShares(_ delegate : NASCentralDelegate ) {
+    private func _fetchShares(_ delegate: NASCentralDelegate ) {
 //        logTrace()
         self.delegate = delegate
 
-        SMBCentral.sharedInstance.fetchSharesOnConnectedDevice( self )
+        smbCentral.fetchSharesOnConnectedDevice( self )
     }
     
     
-    private func _openShare(_ share : SMBShare, _ delegate : NASCentralDelegate ) {
+    private func _openShare(_ share: SMBShare, _ delegate: NASCentralDelegate ) {
 //        logTrace()
         var didOpenShare = false
                 
@@ -607,32 +658,32 @@ extension NASCentral {
             
             DispatchQueue.main.async {
                 delegate.nasCentral( self, didOpenShare: didOpenShare, share )
+                self.processNextRequest()
             }
             
-            self.processNextRequest()
         }
         
     }
     
     
-    private func _saveAccessKey(_ path : String, _ delegate : NASCentralDelegate  ) {
+    private func _saveAccessKey(_ path: String, _ delegate: NASCentralDelegate  ) {
         logVerbose( "[ %@ ]", path )
         workingAccessKey.path = path
         nasAccessKey          = workingAccessKey
         
         DispatchQueue.main.async {
             delegate.nasCentral( self, didSaveAccessKey: true )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
-    private func _saveData(_ data : Data, _ share : SMBShare, _ fullpath : String, _ delegate : NASCentralDelegate  ) {
+    private func _saveData(_ data: Data, _ share: SMBShare, _ fullpath: String, _ delegate: NASCentralDelegate  ) {
 //        logTrace()
         self.delegate = delegate
 
-        SMBCentral.sharedInstance.saveData( data, selectedShare!, fullpath, self )
+        smbCentral.saveData( data, selectedShare!, fullpath, self )
     }
     
     
@@ -643,13 +694,13 @@ extension NASCentral {
         logTrace()
         discoveryTimer?.invalidate()
 
-        SMBCentral.sharedInstance.stopDiscovery()
+        smbCentral.stopDiscovery()
         
         DispatchQueue.main.async {
-            self.delegate?.nasCentral( self, didFetchDevices: true, SMBCentral.sharedInstance.deviceArray )
+            self.delegate?.nasCentral( self, didFetchDevices: true, self.smbCentral.deviceArray )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
 
     
@@ -661,28 +712,18 @@ extension NASCentral {
 
 extension NASCentral {
     
-    private func _compareLastUpdatedFiles(_ delegate : NASCentralDelegate ) {
+    private func _compareLastUpdatedFiles(_ delegate: NASCentralDelegate ) {
 //        logTrace()
         let     fullPath = nasAccessKey.path + "/" + Filenames.lastUpdated
         
         self.delegate = delegate
         currentFilename = Filenames.lastUpdated
         
-        SMBCentral.sharedInstance.readFileAt( fullPath, self )
+        smbCentral.readFileAt( fullPath, self )
     }
 
     
-    private func _fetchImageNames(_ delegate : NASCentralDelegate ) {
-//        logTrace()
-        let     fullPath = nasAccessKey.path + "/" + DirectoryNames.pictures
-        
-        self.delegate = delegate
-        
-        SMBCentral.sharedInstance.fetchFilesAt( fullPath, self )
-    }
-    
-    
-    private func _copyAllImagesFromDeviceToNas(_ delegate : NASCentralDelegate ) {
+    private func _copyAllImagesFromDeviceToNas(_ delegate: NASCentralDelegate ) {
 //        logTrace()
         self.delegate = delegate
         
@@ -691,17 +732,17 @@ extension NASCentral {
     }
     
 
-    private func _copyAllImagesFromNasToDevice(_ delegate : NASCentralDelegate ) {
+    private func _copyAllImagesFromNasToDevice(_ delegate: NASCentralDelegate ) {
 //        logTrace()
         let     fullPath = nasAccessKey.path + "/" + DirectoryNames.pictures
         
         self.delegate = delegate
         
-        SMBCentral.sharedInstance.fetchFilesAt( fullPath, self )
+        smbCentral.fetchFilesAt( fullPath, self )
     }
     
     
-    private func _copyDatabaseFromDeviceToNas(_ delegate : NASCentralDelegate ) {
+    private func _copyDatabaseFromDeviceToNas(_ delegate: NASCentralDelegate ) {
 //        logTrace()
         self.delegate = delegate
         
@@ -710,7 +751,7 @@ extension NASCentral {
     }
     
     
-    private func _copyDatabaseFromNasToDevice(_ delegate : NASCentralDelegate ) {
+    private func _copyDatabaseFromNasToDevice(_ delegate: NASCentralDelegate ) {
 //        logTrace()
         self.delegate = delegate
         
@@ -720,7 +761,7 @@ extension NASCentral {
     }
     
     
-    private func _deleteImage(_ filename : String, _ delegate : NASCentralDelegate ) {
+    private func _deleteImage(_ filename: String, _ delegate: NASCentralDelegate ) {
 //        logVerbose( "[ %@ ]", filename )
         currentFilename = filename
         self.delegate   = delegate
@@ -730,19 +771,31 @@ extension NASCentral {
         imageUrl = imageUrl.appendingPathComponent( DirectoryNames.pictures )
         imageUrl = imageUrl.appendingPathComponent( filename )
         
-        SMBCentral.sharedInstance.deleteFileAt( imageUrl.path, self )
+        smbCentral.deleteFileAt( imageUrl.path, self )
     }
     
     
-    private func _endSession(_ delegate : NASCentralDelegate ) {
+    private func _endSession(_ delegate: NASCentralDelegate ) {
 //        logTrace()
         self.delegate = delegate
 
-        SMBCentral.sharedInstance.endSession( self )
+        smbCentral.endSession( self )
     }
     
     
-    private func _fetchImage(_ filename : String, _ delegate : NASCentralDelegate ) {
+    private func _fetchDbFiles(_ delegate: NASCentralDelegate ) {
+        logTrace()
+        dbFilenameArray = [Filenames.database, Filenames.databaseShm, Filenames.databaseWal, Filenames.lastUpdated]
+        self.delegate   = delegate
+        missingDbFiles  = []
+
+        let     fullPath = nasAccessKey.path + "/" + Filenames.database
+
+        smbCentral.readFileAt( fullPath, self )
+    }
+    
+    
+    private func _fetchImage(_ filename: String, _ delegate: NASCentralDelegate ) {
         logVerbose( "[ %@ ] last[ %@ ]", filename, currentFilename )
 
         let     fullPath  = nasAccessKey.path + "/" + DirectoryNames.pictures + "/" + filename
@@ -750,37 +803,47 @@ extension NASCentral {
         currentFilename = filename
         self.delegate   = delegate
 
-        SMBCentral.sharedInstance.readFileAt( fullPath, self )
+        smbCentral.readFileAt( fullPath, self )
     }
     
     
-    private func _lockNas(_ delegate : NASCentralDelegate ) {
+    private func _fetchImageNames(_ delegate: NASCentralDelegate ) {
+//        logTrace()
+        let     fullPath = nasAccessKey.path + "/" + DirectoryNames.pictures
+        
+        self.delegate = delegate
+        
+        smbCentral.fetchFilesAt( fullPath, self )
+    }
+    
+    
+    private func _lockNas(_ delegate: NASCentralDelegate ) {
 //        logTrace()
         let     fullPath = nasAccessKey.path + "/" + Filenames.lockFile
         
         self.delegate   = delegate
         currentFilename = Filenames.lockFile
         
-        SMBCentral.sharedInstance.readFileAt( fullPath, self )
+        smbCentral.readFileAt( fullPath, self )
     }
     
     
-    private func _saveImageData(_ imageData : Data, filename : String, _ delegate : NASCentralDelegate ) {
+    private func _saveImageData(_ imageData: Data, filename: String, _ delegate: NASCentralDelegate ) {
 //        logTrace()
         let     fullPath  = nasAccessKey.path + "/" + DirectoryNames.pictures + "/" + filename
 
         currentFilename = filename
         self.delegate   = delegate
         
-        SMBCentral.sharedInstance.writeData( imageData, toFileAt: fullPath, self )
+        smbCentral.writeData( imageData, toFileAt: fullPath, self )
     }
     
     
-    private func _startSession(_ delegate : NASCentralDelegate ) {
+    private func _startSession(_ delegate: NASCentralDelegate ) {
 //        logTrace()
         self.delegate = delegate
 
-        if let url = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
+        if let url = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
             documentDirectoryURL = url
         }
         else {
@@ -788,15 +851,15 @@ extension NASCentral {
             documentDirectoryURL = URL( fileURLWithPath: "" )
         }
 
-        SMBCentral.sharedInstance.startSession( nasAccessKey, self )
+        smbCentral.startSession( nasAccessKey, self )
     }
     
     
-    private func _unlockNas(_ delegate : NASCentralDelegate ) {
+    private func _unlockNas(_ delegate: NASCentralDelegate ) {
 //        logTrace()
         let     fullPath = nasAccessKey.path + "/" + Filenames.lockFile
         
-        SMBCentral.sharedInstance.deleteFileAt( fullPath, self )
+        smbCentral.deleteFileAt( fullPath, self )
     }
 
     
@@ -805,8 +868,6 @@ extension NASCentral {
     
     private func deleteFilesFromDevice() {
 //        logTrace()
-        let     fileManager = FileManager.default
-        
         for fileUrl in deviceUrlsToDeleteArray {
             do {
                 if fileManager.fileExists(atPath: fileUrl.path ) {
@@ -829,9 +890,9 @@ extension NASCentral {
         
         
     private func deleteFilesFromNas() {
-        
+//        logTrace()
         if deviceUrlsToDeleteArray.isEmpty {
-            let     path = currentCommand == .CopyDatabaseFromDeviceToNas ? "" : DirectoryNames.pictures
+            let     path = currentCommand == .CopyDatabaseFromDeviceToNas ? "": DirectoryNames.pictures
             
             logTrace( "nothing to delete ... start transfer" )
             readAndWriteDeviceDataToNasAt( path )
@@ -848,7 +909,7 @@ extension NASCentral {
             deviceUrlsToDeleteArray.removeLast()
             logVerbose( "[ %@ ]", url.lastPathComponent )
 
-            SMBCentral.sharedInstance.deleteFileAt( fullPath, self )
+            smbCentral.deleteFileAt( fullPath, self )
         }
 
     }
@@ -878,13 +939,13 @@ extension NASCentral {
         deviceUrlArray         .removeAll()
         deviceUrlsToDeleteArray.removeAll()
 
-        if !FileManager.default.fileExists( atPath: picturesDirectoryURL.path ) {
+        if !fileManager.fileExists( atPath: picturesDirectoryURL.path ) {
             logVerbose( "Pictures directory does NOT exist!\n    [ %@ ] ", picturesDirectoryURL.path )
             return
         }
         
         do {
-            try filenameArray = FileManager.default.contentsOfDirectory( atPath: picturesDirectoryURL.path )
+            try filenameArray = fileManager.contentsOfDirectory( atPath: picturesDirectoryURL.path )
             
             for filename in filenameArray {
                 let     index             = filename.index( filename.startIndex, offsetBy: 1 )
@@ -900,7 +961,7 @@ extension NASCentral {
                 let     fileUrl      = picturesDirectoryURL.appendingPathComponent( filename )
                 var     isaDirectory = ObjCBool( false )
                 
-                if FileManager.default.fileExists( atPath: fileUrl.path, isDirectory : &isaDirectory ) {
+                if fileManager.fileExists( atPath: fileUrl.path, isDirectory: &isaDirectory ) {
                     if !isaDirectory.boolValue {
                         deviceUrlArray.append( fileUrl )
 //                        logVerbose( "[ %@ ]", fileUrl.path )
@@ -927,15 +988,15 @@ extension NASCentral {
             currentFilename = fileUrl.lastPathComponent
             logVerbose( "[ %@ ]", currentFilename )
             
-            SMBCentral.sharedInstance.readFileAt( fullPath, self )
+            smbCentral.readFileAt( fullPath, self )
         }
         else {
             logTrace( "ERROR!  Unable to unwrap deviceUrlArray.last!" )
             DispatchQueue.main.async {
                 self.delegate?.nasCentral( self, didCopyDatabaseFromNasToDevice: false )
+                self.processNextRequest()
             }
             
-            processNextRequest()
         }
         
     }
@@ -952,9 +1013,9 @@ extension NASCentral {
                     self.delegate?.nasCentral( self, didCopyAllImagesFromDeviceToNas: true )
                 }
                 
+                self.processNextRequest()
             }
             
-            processNextRequest()
         }
         else {
             if let imageFile = nasImageFileArray.last {
@@ -963,7 +1024,7 @@ extension NASCentral {
                 currentFilename = imageFile.name
                 logVerbose( "[ %@/%@ ]", DirectoryNames.pictures, currentFilename )
                 
-                SMBCentral.sharedInstance.readFileAt( fullPath, self )
+                smbCentral.readFileAt( fullPath, self )
             }
             else {
                 logTrace( "ERROR!  Unable to extract last object from nasImageArray" )
@@ -975,9 +1036,9 @@ extension NASCentral {
                         self.delegate?.nasCentral( self, didCopyAllImagesFromDeviceToNas: false )
                     }
                     
+                    self.processNextRequest()
                 }
                 
-                processNextRequest()
             }
 
         }
@@ -992,7 +1053,7 @@ extension NASCentral {
 
 // MARK: SMBCentralDelegate Methods
 
-extension NASCentral : SMBCentralDelegate {
+extension NASCentral: SMBCentralDelegate {
     
     // MARK: Access Callbacks
     
@@ -1001,9 +1062,9 @@ extension NASCentral : SMBCentralDelegate {
         
         DispatchQueue.main.async {
             self.delegate?.nasCentral( self, canSeeNasFolders: didFindFolder )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
@@ -1012,42 +1073,42 @@ extension NASCentral : SMBCentralDelegate {
 
         DispatchQueue.main.async {
             self.delegate?.nasCentral( self, didCloseShareAndDevice: true )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
-    func smbCentral(_ smbCentral : SMBCentral, didConnectToDevice : Bool ) {
+    func smbCentral(_ smbCentral: SMBCentral, didConnectToDevice: Bool ) {
 //        logVerbose( "[ %@ ]", stringFor( didConnectToDevice ) )
         
         DispatchQueue.main.async {
             self.delegate?.nasCentral( self, didConnectToDevice: didConnectToDevice, self.selectedDevice! )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
-    func smbCentral(_ smbCentral : SMBCentral, didCreateDirectory : Bool) {
+    func smbCentral(_ smbCentral: SMBCentral, didCreateDirectory: Bool) {
 //        logVerbose( "[ %@ ]", stringFor( didCreateDirectory ) )
         
         DispatchQueue.main.async {
             self.delegate?.nasCentral( self, didCreateDirectory: didCreateDirectory )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
         
 
-    func smbCentral(_ smbCentral : SMBCentral, didFetchDirectories : Bool, _ directoryArray : [SMBFile] ) {
+    func smbCentral(_ smbCentral: SMBCentral, didFetchDirectories: Bool, _ directoryArray: [SMBFile] ) {
 //        logVerbose( "[ %@ ]", stringFor( didFetchDirectories ) )
         
         DispatchQueue.main.async {
             self.delegate?.nasCentral( self, didFetchDirectories: didFetchDirectories, directoryArray )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
@@ -1056,27 +1117,27 @@ extension NASCentral : SMBCentralDelegate {
         
         DispatchQueue.main.async {
             self.delegate?.nasCentral( self, didFetchFile: didFetchFile, fileData )
-        }
+            self.processNextRequest()
+       }
         
-        processNextRequest()
     }
         
         
-    func smbCentral(_ smbCentral : SMBCentral, didFetchShares : Bool, _ shares : [SMBShare] ) {
+    func smbCentral(_ smbCentral: SMBCentral, didFetchShares: Bool, _ shares: [SMBShare] ) {
 //        logVerbose( "[ %@ ]", stringFor( didFetchShares ) )
         
         DispatchQueue.main.async {
             self.delegate?.nasCentral( self, didFetchShares: didFetchShares, shares )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
 
     
     // MARK: Session Callbacks
     
-    func smbCentral(_ smbCentral : SMBCentral, didDeleteFile : Bool, _ filename : String ) {
+    func smbCentral(_ smbCentral: SMBCentral, didDeleteFile: Bool, _ filename: String ) {
 //        logVerbose( "[ %@ ][ %@ ]", stringFor( didDeleteFile ), filename )
 
         if currentCommand == .CopyDatabaseFromDeviceToNas || currentCommand == .CopyAllImagesFromDeviceToNas {
@@ -1084,7 +1145,7 @@ extension NASCentral : SMBCentralDelegate {
                 deleteFilesFromNas()
             }
             else {
-                let     path = currentCommand == .CopyDatabaseFromDeviceToNas ? "" : DirectoryNames.pictures
+                let     path = currentCommand == .CopyDatabaseFromDeviceToNas ? "": DirectoryNames.pictures
                 
                 readAndWriteDeviceDataToNasAt( path )
             }
@@ -1093,16 +1154,16 @@ extension NASCentral : SMBCentralDelegate {
         else if currentCommand == .DeleteImage {
             DispatchQueue.main.async {
                 self.delegate?.nasCentral( self, didDeleteImage: didDeleteFile )
+                self.processNextRequest()
             }
             
-            processNextRequest()
         }
         else if currentCommand == .UnlockNas {
             DispatchQueue.main.async {
                 self.delegate?.nasCentral( self, didUnlockNas: didDeleteFile )
+                self.processNextRequest()
             }
             
-            processNextRequest()
         }
         else {
             logTrace( "SBH!" )
@@ -1117,14 +1178,14 @@ extension NASCentral : SMBCentralDelegate {
         
         DispatchQueue.main.async {
             self.delegate?.nasCentral( self, didEndSession: didEndSession )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
     func smbCentral(_ smbCentral: SMBCentral, didFetchFiles: Bool, _ fileArray: [SMBFile] ) {
-//        logVerbose( "[ %@ ] returned [ %d ] files", stringFor( didFetchFiles ), fileArray.count )
+        logVerbose( "[ %@ ] returned [ %d ] files", stringFor( didFetchFiles ), fileArray.count )
         
         if currentCommand == .FetchImageNames {
             var     imageNameArray = [String].init()
@@ -1135,9 +1196,9 @@ extension NASCentral : SMBCentralDelegate {
             
             DispatchQueue.main.async {
                 self.delegate?.nasCentral( self, didFetch: imageNameArray )
+                self.processNextRequest()
             }
             
-            processNextRequest()
         }
         else {
             if didFetchFiles {
@@ -1160,25 +1221,47 @@ extension NASCentral : SMBCentralDelegate {
         switch currentCommand {
         
         case .CompareLastUpdatedFiles:      if didReadFile {
-                                                compareLastUpdatedDates( fileData )
+                                                compareLastUpdatedFiles( fileData )
                                             }
                                             else {
                                                 DispatchQueue.main.async {
-                                                    self.delegate?.nasCentral( self, didCompareLastUpdatedFiles: LastUpdatedFileCompareResult.equal )
+                                                    self.delegate?.nasCentral( self, didCompareLastUpdatedFiles: LastUpdatedFileCompareResult.equal, lastUpdatedBy: self.lastUpdatedUnknown )
+                                                    self.processNextRequest()
                                                 }
                                                 
-                                                processNextRequest()
                                             }
          
         case .CopyAllImagesFromNasToDevice: if didReadFile {
                                                 writeNasImageDataToDevice( fileData )
                                             }
-                                            
+
                                             nasImageFileArray.removeLast()
                                             readNextImageFromNas()
 
         case .CopyDatabaseFromNasToDevice:  writeNasRootDataToDevice( fileData )
             
+        case .FetchDbFiles:                 let dbFilename = dbFilenameArray.first!
+            
+                                            if !didReadFile {
+                                                logVerbose( "FetchDbFiles - Could NOT Read [ %@ ] ", dbFilename )
+                                                missingDbFiles.append( dbFilename )
+                                            }
+            
+                                            dbFilenameArray.removeFirst()
+
+                                            if dbFilenameArray.isEmpty {
+                                                DispatchQueue.main.async {
+                                                    self.delegate?.nasCentral( self, missingDbFiles: self.missingDbFiles )
+                                                    self.processNextRequest()
+                                                }
+
+                                            }
+                                            else {
+                                                let fullPath = nasAccessKey.path + "/" + dbFilenameArray.first!
+                                                
+                                                smbCentral.readFileAt( fullPath, self )
+                                            }
+
         case .FetchImage:                   var     imageAvailable = false
                                             var     myImage        = UIImage.init()
 
@@ -1194,7 +1277,7 @@ extension NASCentral : SMBCentralDelegate {
                                             }
                                             
                                             DispatchQueue.main.async {
-                                                self.delegate?.nasCentral( self, didFetchImage: imageAvailable, image: myImage, filename : self.currentFilename )
+                                                self.delegate?.nasCentral( self, didFetchImage: imageAvailable, image: myImage, filename: self.currentFilename )
                                                 self.processNextRequest()
                                             }
                                             
@@ -1218,7 +1301,7 @@ extension NASCentral : SMBCentralDelegate {
     }
     
     
-    func smbCentral(_ smbCentral : SMBCentral, didStartSession : Bool ) {
+    func smbCentral(_ smbCentral: SMBCentral, didStartSession: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didStartSession ) )
         sessionActive = didStartSession
 
@@ -1230,9 +1313,9 @@ extension NASCentral : SMBCentralDelegate {
         else {
             DispatchQueue.main.async {
                 self.delegate?.nasCentral( self, didStartSession: didStartSession )
+                self.processNextRequest()
             }
             
-            processNextRequest()
         }
         
     }
@@ -1267,9 +1350,9 @@ extension NASCentral : SMBCentralDelegate {
                                                     self.delegate?.nasCentral( self, didCopyAllImagesFromDeviceToNas: true )
                                                 }
                                                 
+                                                self.processNextRequest()
                                             }
 
-                                            processNextRequest()
                                         }
 
                                     }
@@ -1284,9 +1367,9 @@ extension NASCentral : SMBCentralDelegate {
                                                 self.delegate?.nasCentral( self, didCopyAllImagesFromDeviceToNas: false )
                                             }
                                             
+                                            self.processNextRequest()
                                         }
                                         
-                                        processNextRequest()
                                     }
 
             
@@ -1295,30 +1378,27 @@ extension NASCentral : SMBCentralDelegate {
 
                                     if didWriteFile {
                                         deviceAccessControl.byMe      = true
-                                        deviceAccessControl.ownerName = UIDevice.current.name
-                                        logVerbose( "Created lock file ... %@", deviceAccessControl.descriptor() )
+                                        deviceAccessControl.ownerName = deviceName
+                                        logVerbose( "Created lock file\n    %@", deviceAccessControl.descriptor() )
                                     }
                                     else {
                                         deviceAccessControl.ownerName = "Unknown"
-                                        logVerbose( "ERROR!!!  Lock file create failed! ... %@", deviceAccessControl.descriptor() )
+                                        logVerbose( "ERROR!!!  Lock file create failed!\n    %@", deviceAccessControl.descriptor() )
                                     }
                                     
                                     DispatchQueue.main.async {
                                         self.delegate?.nasCentral( self, didLockNas: self.deviceAccessControl.byMe )
+                                        self.processNextRequest()
                                     }
                                     
-                                    processNextRequest()
-
             
         case .SaveImageData:        DispatchQueue.main.async {
                                         self.delegate?.nasCentral( self, didSaveImageData: didWriteFile, filename: self.currentFilename )
+                                        self.processNextRequest()
                                     }
-                                    
-                                    processNextRequest()
         
         
         default:                    logTrace( "SBH!" )
-
         }
         
     }
@@ -1329,32 +1409,31 @@ extension NASCentral : SMBCentralDelegate {
         
         DispatchQueue.main.async {
             self.delegate?.nasCentral( self, didSaveData: didSaveData )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
     
     // MARK: Session Callback Utility Methods
 
-    private func analyzeLockFile(_ fileData : Data ) {
-        let     lockFileContents    = String( decoding: fileData, as: UTF8.self )
-        let     components          = lockFileContents.components( separatedBy: "," )
-        let     thisDeviceId        = UIDevice.current.identifierForVendor?.uuidString ?? "Unknown"
-        let     thisDeviceName      = UIDevice.current.name
+    private func analyzeLockFile(_ fileData: Data ) {
+        let     lockFileContents = String( decoding: fileData, as: UTF8.self )
+        let     components       = lockFileContents.components( separatedBy: GlobalConstants.separatorForLockfileString )
+        let     deviceId         = UIDevice.current.identifierForVendor?.uuidString ?? "Unknown"
 
         deviceAccessControl.reset()
         
         if components.count == 2 {
             let     lockDeviceId   = components[1]
             let     lockDeviceName = components[0]
-            let     byMe           = ( thisDeviceName == lockDeviceName ) && ( thisDeviceId == lockDeviceId )
+            let     byMe           = ( deviceName == lockDeviceName ) && ( deviceId == lockDeviceId )
             
             deviceAccessControl.byMe      = byMe
             deviceAccessControl.locked    = true
             deviceAccessControl.ownerName = lockDeviceName
-            logVerbose( "From existing lock file ... %@", deviceAccessControl.descriptor() )
+            logVerbose( "From existing lock file\n    %@", deviceAccessControl.descriptor() )
         }
         else {
             logVerbose( "ERROR!  lockMessage NOT properly formatted\n    [ %@ ]", lockFileContents )
@@ -1364,8 +1443,8 @@ extension NASCentral : SMBCentralDelegate {
 
                 deviceAccessControl.byMe      = true
                 deviceAccessControl.locked    = true
-                deviceAccessControl.ownerName = thisDeviceName
-                logVerbose( "Overriding ... %@", deviceAccessControl.descriptor() )
+                deviceAccessControl.ownerName = deviceName
+                logVerbose( "Overriding\n    %@", deviceAccessControl.descriptor() )
             }
             
         }
@@ -1373,23 +1452,25 @@ extension NASCentral : SMBCentralDelegate {
     }
     
     
-    private func compareLastUpdatedDates(_ nasData : Data ) {
-        let     fileManager = FileManager.default
-        let     formatter   = DateFormatter()
-        
+    private func compareLastUpdatedFiles(_ nasData: Data ) {
+        var     compareResult = LastUpdatedFileCompareResult.fileNotFound
+        let     formatter     = DateFormatter()
+        var     updatedBy     = lastUpdatedUnknown
+
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
         if let documentDirectoryURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
             let     deviceFileUrl = documentDirectoryURL.appendingPathComponent( Filenames.lastUpdated )
             
-            if FileManager.default.fileExists(atPath: deviceFileUrl.path ) {
+            if fileManager.fileExists(atPath: deviceFileUrl.path ) {
                 
-                if let deviceFileData = FileManager.default.contents( atPath: deviceFileUrl.path ) {
-                    var     compareResult    = LastUpdatedFileCompareResult.equal
+                if let deviceFileData = fileManager.contents( atPath: deviceFileUrl.path ) {
                     let     deviceDateString = String( decoding: deviceFileData, as: UTF8.self )
-                    let     deviceDate       = formatter.date( from: deviceDateString )
+                    let     deviceComponents = deviceDateString.components(separatedBy: GlobalConstants.separatorForLastUpdatedString )
+                    let     deviceDate       = formatter.date( from: deviceComponents[0] )
                     let     nasDateString    = String( decoding: nasData, as: UTF8.self )
-                    let     nasDate          = formatter.date( from: nasDateString )
+                    let     nasComponents    = nasDateString.components(separatedBy: GlobalConstants.separatorForLastUpdatedString )
+                    let     nasDate          = formatter.date( from: nasComponents[0] )
                     
                     if let dateOnNas = nasDate?.timeIntervalSince1970, let dateOnDevice = deviceDate?.timeIntervalSince1970 {
                         if dateOnNas < dateOnDevice {
@@ -1398,20 +1479,20 @@ extension NASCentral : SMBCentralDelegate {
                         else if dateOnDevice < dateOnNas {
                             compareResult = LastUpdatedFileCompareResult.nasIsNewer
                         }
+                        else {
+                            compareResult = LastUpdatedFileCompareResult.equal
+                        }
+                        
+                        if nasComponents.count == 2 {
+                            updatedBy = nasComponents[1]
+                        }
                         
                     }
                     else {
                         logTrace( "ERROR!  Could NOT unwrap dateOnNas or dateOnDevice!" )
                     }
                     
-                    logVerbose( "[ %@ ]", descriptionForCompare( compareResult ) )
                     
-                    DispatchQueue.main.async {
-                        self.delegate?.nasCentral( self, didCompareLastUpdatedFiles: compareResult )
-                    }
-                    
-                    processNextRequest()
-                    return
                 }
                 else {
                     logTrace( "ERROR!  Could NOT unwrap deviceFileData!" )
@@ -1427,34 +1508,32 @@ extension NASCentral : SMBCentralDelegate {
             logTrace( "ERROR!  Could NOT unwrap documentDirectoryURL!" )
         }
 
-        logTrace( "defaulting to [ nasIsNewer ]" )
+        logVerbose( "[ %@ ] by [ %@ ]", descriptionForCompare( compareResult ), updatedBy )
         DispatchQueue.main.async {
-            self.delegate?.nasCentral( self, didCompareLastUpdatedFiles: LastUpdatedFileCompareResult.nasIsNewer )
-        }
-        
-        processNextRequest()
-    }
-    
-    
-    private func createLockFile() {
-//        logTrace()
-        let     deviceName  = UIDevice.current.name
-        let     deviceId    = UIDevice.current.identifierForVendor?.uuidString ?? "Unknown"
-        let     fullPath    = nasAccessKey.path + "/" + Filenames.lockFile
-        let     lockMessage = String( format: "%@,%@", deviceName, deviceId )
-        let     fileData    = Data( lockMessage.utf8 )
-        
-        currentFilename = Filenames.lockFile
-        
-        DispatchQueue.main.async {
-            SMBCentral.sharedInstance.writeData( fileData, toFileAt: fullPath, self )
+            self.delegate?.nasCentral( self, didCompareLastUpdatedFiles: compareResult, lastUpdatedBy: updatedBy )
+            self.processNextRequest()
         }
 
     }
     
     
-    private func readAndWriteDeviceDataToNasAt(_ localPath : String ) {
+    private func createLockFile() {
+//        logTrace()
+        let     deviceId    = UIDevice.current.identifierForVendor?.uuidString ?? "Unknown"
+        let     fullPath    = nasAccessKey.path + "/" + Filenames.lockFile
+        let     lockMessage = deviceName + GlobalConstants.separatorForLockfileString + deviceId
+        let     fileData    = Data( lockMessage.utf8 )
         
+        currentFilename = Filenames.lockFile
+        
+        DispatchQueue.main.async {
+            self.smbCentral.writeData( fileData, toFileAt: fullPath, self )
+        }
+
+    }
+    
+    
+    private func readAndWriteDeviceDataToNasAt(_ localPath: String ) {
         if deviceUrlArray.isEmpty {
 //            logTrace( "Done!" )
             DispatchQueue.main.async {
@@ -1465,15 +1544,15 @@ extension NASCentral : SMBCentralDelegate {
                     self.delegate?.nasCentral( self, didCopyAllImagesFromDeviceToNas: true )
                 }
                 
+                self.processNextRequest()
             }
             
-            processNextRequest()
             return
         }
         
         currentFilename = deviceUrlArray[deviceUrlArrayIndex].lastPathComponent
 
-        if let fileData = FileManager.default.contents( atPath: deviceUrlArray[deviceUrlArrayIndex].path ) {
+        if let fileData = fileManager.contents( atPath: deviceUrlArray[deviceUrlArrayIndex].path ) {
             var     fullPath = nasAccessKey.path + "/"
             
             if !localPath.isEmpty {
@@ -1484,7 +1563,7 @@ extension NASCentral : SMBCentralDelegate {
             
             logVerbose( "[ %@ ]", currentFilename )
             DispatchQueue.main.async {
-                SMBCentral.sharedInstance.writeData( fileData, toFileAt: fullPath, self )
+                self.smbCentral.writeData( fileData, toFileAt: fullPath, self )
             }
             
         }
@@ -1494,27 +1573,29 @@ extension NASCentral : SMBCentralDelegate {
             if currentCommand == .CopyDatabaseFromDeviceToNas {
                 DispatchQueue.main.async {
                     self.delegate?.nasCentral( self, didCopyDatabaseFromDeviceToNas: false )
+                    self.processNextRequest()
                 }
                 
             }
             else {
                 logTrace( "SBH!" )
+                processNextRequest()
             }
             
-            processNextRequest()
         }
         
     }
     
     
-    private func writeNasRootDataToDevice(_ fileData : Data ) {
+    private func writeNasRootDataToDevice(_ fileData: Data ) {
 //        logTrace()
         var     successFlag = true
         
         if let targetUrl = deviceUrlArray.last {
-            logVerbose( "[ %@ ]", targetUrl.lastPathComponent )
-            FileManager.default.createFile( atPath: targetUrl.path, contents: fileData, attributes: nil )
+            let result = fileManager.createFile( atPath: targetUrl.path, contents: fileData, attributes: nil )
             
+            logVerbose( "%@ [ %@ ]", (result ? "Created" : "FAILED to create" ), targetUrl.path )
+
             deviceUrlArray.removeLast()
             
             if deviceUrlArray.count != 0 {
@@ -1537,20 +1618,21 @@ extension NASCentral : SMBCentralDelegate {
             default:                                    logTrace( "SBH!" )
            }
             
+            self.processNextRequest()
         }
         
         logTrace( "Done!" )
-        processNextRequest()
     }
         
 
-    private func writeNasImageDataToDevice(_ fileData : Data ) {
+    private func writeNasImageDataToDevice(_ fileData: Data ) {
         var     targetUrl = documentDirectoryURL.appendingPathComponent( DirectoryNames.pictures )
         
         targetUrl = targetUrl.appendingPathComponent( currentFilename )
-        logVerbose( "[ %@ ]", targetUrl.path )
         
-        FileManager.default.createFile( atPath: targetUrl.path, contents: fileData, attributes: nil )
+        let result = fileManager.createFile( atPath: targetUrl.path, contents: fileData, attributes: nil )
+        
+        logVerbose( "%@ [ %@ ]", (result ? "Created" : "FAILED to create" ), targetUrl.path )
     }
     
 
@@ -1565,23 +1647,20 @@ struct LastUpdatedFileCompareResult {
     static let equal         = Int( 1 )
     static let nasIsNewer    = Int( 2 )
     static let cloudIsNewer  = Int( 3 )
+    static let fileNotFound  = Int( 4 )
 }
 
 
 func descriptionForCompare(_ lastUpdatedCompare: Int ) -> String {
     var     description = "Unknown"
     
-    if lastUpdatedCompare == LastUpdatedFileCompareResult.deviceIsNewer {
-        description = "Device is Newer"
-    }
-    else if lastUpdatedCompare == LastUpdatedFileCompareResult.equal {
-        description = "Equal"
-    }
-    else if lastUpdatedCompare == LastUpdatedFileCompareResult.nasIsNewer {
-        description = "NAS is Newer"
-    }
-    else if lastUpdatedCompare == LastUpdatedFileCompareResult.cloudIsNewer {
-        description = "Cloud is Newer"
+    switch lastUpdatedCompare {
+    case LastUpdatedFileCompareResult.deviceIsNewer:    description = "Device is Newer"
+    case LastUpdatedFileCompareResult.equal:            description = "Equal"
+    case LastUpdatedFileCompareResult.nasIsNewer:       description = "NAS is Newer"
+    case LastUpdatedFileCompareResult.cloudIsNewer:     description = "Cloud is Newer"
+    case LastUpdatedFileCompareResult.fileNotFound:     description = "File NOT Found"
+    default:    break
     }
 
     return description

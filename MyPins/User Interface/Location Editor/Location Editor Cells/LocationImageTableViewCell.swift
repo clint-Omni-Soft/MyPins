@@ -17,8 +17,11 @@ protocol LocationImageTableViewCellDelegate: AnyObject {
 
 class LocationImageTableViewCell: UITableViewCell {
     
-    // MARK: Public Variables ... these are guaranteed to be set by our creator
+    // MARK: Public Variables
     
+    var imageName  = ""
+    var imageState = ImageState.noName
+
     @IBOutlet weak var cameraButton      : UIButton!
     @IBOutlet weak var locationImageView : UIImageView!
     
@@ -27,12 +30,11 @@ class LocationImageTableViewCell: UITableViewCell {
     // MARK: Private Variables
         
     private struct Constants {
-        static let cameraImage  = "camera"
-        static let missingImage = "missingImage"
+        static let cameraImage = "camera"
     }
 
-    private var     delegate   : LocationImageTableViewCellDelegate!
-    private let     pinCentral = PinCentral.sharedInstance
+    private var delegate   : LocationImageTableViewCellDelegate!
+    private let pinCentral = PinCentral.sharedInstance
 
     
     
@@ -65,25 +67,19 @@ class LocationImageTableViewCell: UITableViewCell {
         cameraButton.setImage( ( imageName.isEmpty ? UIImage.init( named: Constants.cameraImage ) : nil ), for: .normal )
         cameraButton.backgroundColor = ( imageName.isEmpty ? .white : .clear )
         
-        self.delegate = delegate
-        
-        var     imageLoaded = false
+        self.delegate  = delegate
+        self.imageName = imageName
+
+        locationImageView.image = UIImage( named: GlobalConstants.noImage )
 
         if !imageName.isEmpty {
-            let     result = pinCentral.imageNamed( imageName, descriptor: "", self )
+            let result      = pinCentral.imageNamed( imageName, descriptor: "", self )
+            let imageLoaded = result.0
             
-            imageLoaded = result.0
-            
-            if imageLoaded {
-                locationImageView.image = result.1
-            }
-            
+            imageState              = imageLoaded ? ImageState.loaded : ImageState.missing
+            locationImageView.image = imageLoaded ? result.1 : UIImage( named: GlobalConstants.missingImage )
         }
         
-        if !imageLoaded {
-            locationImageView.image = UIImage( named: Constants.missingImage )
-        }
-
     }
     
     
@@ -97,7 +93,9 @@ class LocationImageTableViewCell: UITableViewCell {
 extension LocationImageTableViewCell: PinCentralDelegate {
     
     func pinCentral(_ pinCentral: PinCentral, didFetchImage: Bool, filename: String, image: UIImage) {
-        logTrace()
+        logVerbose( "[ %@ ]", stringFor( didFetchImage ) )
+        imageState = didFetchImage ? ImageState.loaded : ImageState.missing
+        
         if didFetchImage {
             locationImageView.image = image
         }

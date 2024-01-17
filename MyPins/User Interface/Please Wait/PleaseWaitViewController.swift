@@ -23,11 +23,11 @@ class PleaseWaitViewController: UIViewController {
     
     private let deviceAccessControl = DeviceAccessControl.sharedInstance
     private let pinCentral          = PinCentral.sharedInstance
+    private let notificationCenter  = NotificationCenter.default
     private var showingAlert        = false
     
     
-    
-    // MARK: UIViewController Lifecycle Methods
+        // MARK: UIViewController Lifecycle Methods
 
     override func viewDidLoad() {
         logTrace()
@@ -43,10 +43,9 @@ class PleaseWaitViewController: UIViewController {
         super.viewWillAppear( animated )
         
         activityIndicator.startAnimating()
-        
         registerForNotifications()
-        deviceAccessControl.reset()
         
+        deviceAccessControl.reset()
         pinCentral.stayOffline = false
     }
     
@@ -55,7 +54,7 @@ class PleaseWaitViewController: UIViewController {
         logTrace()
         super.viewWillDisappear( animated )
         
-        NotificationCenter.default.removeObserver( self )
+        notificationCenter.removeObserver( self )
     }
     
     
@@ -71,16 +70,16 @@ class PleaseWaitViewController: UIViewController {
     
     @objc func cannotSeeExternalDevice( notification: NSNotification ) {
         logTrace()
-        makeSureUserHasBeenWarned()
+        presentAlert(title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: NSLocalizedString( "AlertMessage.CannotSeeExternalDevice", comment: "We cannot see your external device.  Move closer to your WiFi network and try again." ) )
     }
 
     
     @objc func externalDeviceLocked( notification: NSNotification ) {
         logTrace()
-        let     format  = NSLocalizedString( "AlertMessage.ExternalDriveLocked", comment: "The database on your external drive is locked by another user [ %@ ].  You can look around but you will not be allowed to change anything until it is unlocked by the other user (closing the app unlocks it)." )
+        let     format  = NSLocalizedString( "AlertMessage.ExternalDriveLocked", comment: "The database on your external drive is locked by another user [ %@ ].  You can wait until the other user closes the app (which unlocks it) or make you changes offline and upload them when the drive is no longer locked." )
         let     message = String( format: format, deviceAccessControl.ownerName )
         
-        showAlertWith( NSLocalizedString( "AlertTitle.Warning", comment: "Warning!" ), message )
+        presentAlert(title: NSLocalizedString( "AlertTitle.Warning", comment: "Warning!" ), message: message )
     }
 
     
@@ -95,13 +94,13 @@ class PleaseWaitViewController: UIViewController {
     
     @objc func unableToConnectToExternalDevice( notification: NSNotification ) {
         logTrace()
-        makeSureUserHasBeenWarned()
+        presentAlert(title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: NSLocalizedString( "AlertMessage.UnableToConnect", comment: "We are unable to connect to your external device.  Move closer to your WiFi network and try again." ) )
     }
 
     
     @objc func updatingExternalDevice( notification: NSNotification ) {
         logTrace()
-        showAlertWith( "", NSLocalizedString( "AlertMessage.UpdatingExternalDevice", comment: "This device is updating the database on your external device.  Please wait a few minutes then try again." ) )
+        presentAlert(title: NSLocalizedString( "AlertMessage.UpdatingExternalDevice", comment: "This device is updating the database on your external device.  Please wait a few minutes then try again." ), message: "" )
     }
     
 
@@ -119,7 +118,7 @@ class PleaseWaitViewController: UIViewController {
         logTrace()
         disableControls()
 
-        if !flagIsPresentInUserDefaults( UserDefaultKeys.userHasBeenWarned ) {
+        if !flagIsPresentInUserDefaults( UserDefaultKeys.dontRemindMeAgain ) {
             warnUser()
         }
         else {
@@ -134,46 +133,11 @@ class PleaseWaitViewController: UIViewController {
 
     private func registerForNotifications() {
         logTrace()
-        NotificationCenter.default.addObserver( self,
-                                                selector : #selector( cannotSeeExternalDevice( notification: ) ),
-                                                name     : NSNotification.Name( rawValue: Notifications.cannotSeeExternalDevice ),
-                                                object   : nil )
-        NotificationCenter.default.addObserver( self,
-                                                selector : #selector( externalDeviceLocked( notification: ) ),
-                                                name     : NSNotification.Name( rawValue: Notifications.externalDeviceLocked ),
-                                                object   : nil )
-        NotificationCenter.default.addObserver( self,
-                                                selector : #selector( ready( notification: ) ),
-                                                name     : NSNotification.Name( rawValue: Notifications.ready ),
-                                                object   : nil )
-        NotificationCenter.default.addObserver( self,
-                                                selector : #selector( unableToConnectToExternalDevice( notification: ) ),
-                                                name     : NSNotification.Name( rawValue: Notifications.unableToConnect ),
-                                                object   : nil )
-        NotificationCenter.default.addObserver( self,
-                                                selector : #selector( updatingExternalDevice( notification: ) ),
-                                                name     : NSNotification.Name( rawValue: Notifications.updatingExternalDevice ),
-                                                object   : nil )
-    }
-    
-    
-    private func showAlertWith(_ title : String, _ message : String ) {
-        logVerbose( "[ %@ ]\n    [ %@ ]", title, message )
-        
-        disableControls()
-        showingAlert = true
-
-        let     alert    = UIAlertController.init( title: title, message: message, preferredStyle: .alert )
-        let     okAction = UIAlertAction.init(     title: NSLocalizedString( "ButtonTitle.OK",   comment: "OK" ), style: .default ) {
-            ( alertAction ) in
-            logTrace( "OK Action" )
-            
-            self.switchToMainApp()
-        }
-        
-        alert.addAction( okAction )
-
-        present( alert, animated: true, completion: nil )
+        notificationCenter.addObserver( self, selector: #selector( cannotSeeExternalDevice(         notification: ) ), name: NSNotification.Name( rawValue: Notifications.cannotSeeExternalDevice ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( externalDeviceLocked(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.externalDeviceLocked    ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( ready(                           notification: ) ), name: NSNotification.Name( rawValue: Notifications.ready                   ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( unableToConnectToExternalDevice( notification: ) ), name: NSNotification.Name( rawValue: Notifications.unableToConnect         ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( updatingExternalDevice(          notification: ) ), name: NSNotification.Name( rawValue: Notifications.updatingExternalDevice  ), object: nil )
     }
     
     
@@ -181,7 +145,6 @@ class PleaseWaitViewController: UIViewController {
         logTrace()
         let     appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.pleaseWaitingDone ), object: self )
         appDelegate.switchToMainApp()
     }
     
@@ -197,7 +160,16 @@ class PleaseWaitViewController: UIViewController {
         let     gotItAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.GotIt", comment: "Got it!" ), style: .default )
         { ( alertAction ) in
             logTrace( "Got It Action" )
-            self.saveFlagInUserDefaults( UserDefaultKeys.userHasBeenWarned )
+            self.deviceAccessControl.byMe = true
+            self.pinCentral.stayOffline   = true
+            
+            self.switchToMainApp()
+        }
+        
+        let     dontRemindMeAgainAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.DontRemindMeAgain", comment: "Don't remind me again." ), style: .destructive )
+        { ( alertAction ) in
+            logTrace( "Don't Remind Me Again Action" )
+            self.saveFlagInUserDefaults( UserDefaultKeys.dontRemindMeAgain )
             
             self.deviceAccessControl.byMe = true
             self.pinCentral.stayOffline   = true
@@ -207,6 +179,10 @@ class PleaseWaitViewController: UIViewController {
         
         alert.addAction( gotItAction )
         
+        if !flagIsPresentInUserDefaults( UserDefaultKeys.dontRemindMeAgain ) {
+            alert.addAction( dontRemindMeAgainAction )
+        }
+
         present( alert, animated: true, completion: nil )
     }
     

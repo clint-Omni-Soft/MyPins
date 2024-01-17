@@ -14,7 +14,6 @@ protocol LocationDetailsTableViewCellDelegate: AnyObject {
     func locationDetailsTableViewCell(_ locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingEditOfNameAndDetails: Bool )
     func locationDetailsTableViewCell(_ locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingEditOfLocation: Bool )
     func locationDetailsTableViewCell(_ locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingEditOfPinColor: Bool )
-    func locationDetailsTableViewCell(_ locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingShowPinOnMap: Bool )
 }
 
 
@@ -36,8 +35,6 @@ class LocationDetailsTableViewCell: UITableViewCell {
     @IBOutlet weak var locationButton   : UIButton!
     @IBOutlet weak var nameButton       : UIButton!
     @IBOutlet weak var pinColorButton   : UIButton!
-    @IBOutlet weak var showOnMapButton  : UIButton!
-    @IBOutlet weak var unitsButton      : UIButton!
 
     
     // MARK: Private Variables
@@ -72,8 +69,6 @@ class LocationDetailsTableViewCell: UITableViewCell {
         nameButton     .setTitle( ( name   .isEmpty ? NSLocalizedString( "LabelText.Name",    comment: "Name"                  ) : name    ), for: .normal )
         locationButton .setTitle( String( format: "%7.4f, %7.4f at %@ %@", latitude, longitude, altitudeText, units ), for: .normal )
         pinColorButton .setTitle( NSLocalizedString( "ButtonTitle.PinColor",  comment: "Pin Color"   ), for: .normal )
-        showOnMapButton.setTitle( NSLocalizedString( "ButtonTitle.ShowOnMap", comment: "Show on Map" ), for: .normal )
-        unitsButton    .setTitle( NSLocalizedString( "ButtonTitle.Units",     comment: "Units"       ), for: .normal )
         
         pinColorButton .setTitleColor( pinColorArray[Int( pinColor.colorId )], for: .normal)
         
@@ -99,18 +94,6 @@ class LocationDetailsTableViewCell: UITableViewCell {
     @IBAction func pinColorButtonTouched(_ sender: UIButton ) {
         logTrace()
         delegate?.locationDetailsTableViewCell( self, requestingEditOfPinColor: true )
-    }
-    
-    
-    @IBAction func showOnMapButtonTouched(_ sender: UIButton) {
-        logTrace()
-        delegate?.locationDetailsTableViewCell( self, requestingShowPinOnMap: true )
-    }
-    
-    
-    @IBAction func unitsButtonTouched(_ sender: UIButton) {
-        logTrace()
-        toggleDisplayUnits()
     }
     
     
@@ -140,18 +123,4 @@ class LocationDetailsTableViewCell: UITableViewCell {
     }
     
     
-    private func toggleDisplayUnits() {
-        var     units = PinCentral.sharedInstance.displayUnits()
-        
-        units = ( ( DisplayUnits.meters == units ) ? DisplayUnits.feet : DisplayUnits.meters )
-        
-        UserDefaults.standard.set( units, forKey: DisplayUnits.altitude )
-        UserDefaults.standard.synchronize()
-        
-        initialize()
-    }
-    
-    
-
-
 }

@@ -76,6 +76,33 @@ extension UIViewController {
         
         return simulator
     }
+
+    func viewControllerWithStoryboardId( storyboardId: String ) -> UIViewController {
+//        logVerbose( "[ %@ ]", storyboardId )
+        let     storyboardName = ( ( .pad == UIDevice.current.userInterfaceIdiom ) ? "Main_iPad" : "Main_iPhone" )
+        let     storyboard     = UIStoryboard.init( name: storyboardName, bundle: nil )
+        let     viewController = storyboard.instantiateViewController( withIdentifier: storyboardId )
+        
+        return viewController
+    }
+    
+    
+
+    // MARK: UserDefaults Convenience Methods
+    
+    func getIndexPathFromUserDefaults(_ key: String ) -> IndexPath {
+        var indexPath = GlobalIndexPaths.noSelection
+        
+        if let value = UserDefaults.standard.string( forKey: key ) {
+            let components = value.components(separatedBy: "/" )
+            let section    = Int( components[0] ) ?? 0
+            let row        = Int( components[1] ) ?? 0
+            
+            indexPath = IndexPath(row: row, section: section )
+        }
+
+        return indexPath
+    }
     
     
     func getIntValueFromUserDefaults(_ key: String ) -> Int {
@@ -100,8 +127,28 @@ extension UIViewController {
     }
     
     
+    func removeStringFromUserDefaults(_ key: String ) {
+        UserDefaults.standard.removeObject(forKey: key )
+        UserDefaults.standard.synchronize()
+    }
+    
+    
     func saveFlagInUserDefaults(_ key: String ) {
         UserDefaults.standard.set( key, forKey: key )
+        UserDefaults.standard.synchronize()
+    }
+    
+    
+    func saveIndexPathInUserDefaults(_ key: String, indexPath: IndexPath ) {
+        let value = String(format:  "%d/%d", indexPath.section, indexPath.row )
+        
+        UserDefaults.standard.set( value, forKey: key )
+        UserDefaults.standard.synchronize()
+    }
+    
+    
+    func saveStringInUserDefaults(_ key: String, value: String ) {
+        UserDefaults.standard.set( value, forKey: key )
         UserDefaults.standard.synchronize()
     }
     
@@ -109,16 +156,6 @@ extension UIViewController {
     func setIntValueInUserDefaults(_ value: Int, _ key: String ) {
         UserDefaults.standard.set( value, forKey: key )
         UserDefaults.standard.synchronize()
-    }
-    
-    
-    func viewControllerWithStoryboardId( storyboardId: String ) -> UIViewController {
-//        logVerbose( "[ %@ ]", storyboardId )
-        let     storyboardName = ( ( .pad == UIDevice.current.userInterfaceIdiom ) ? "Main_iPad" : "Main_iPhone" )
-        let     storyboard     = UIStoryboard.init( name: storyboardName, bundle: nil )
-        let     viewController = storyboard.instantiateViewController( withIdentifier: storyboardId )
-        
-        return viewController
     }
     
     
@@ -240,6 +277,11 @@ func stringFor(_ decimalValue: NSDecimalNumber, withCurrencySymbol: Bool ) -> St
     }
     
     return amountString
+}
+
+
+func stringFor(_ indexPath: IndexPath ) -> String {
+    return String( format: "%d, %d", indexPath.section, indexPath.row )
 }
 
 

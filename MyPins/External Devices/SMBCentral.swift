@@ -12,23 +12,23 @@ import Foundation
 protocol SMBCentralDelegate : AnyObject {
     
     // Access Methods
-    func smbCentral(_ smbCentral : SMBCentral, didConnectToDevice  : Bool )
-    func smbCentral(_ smbCentral : SMBCentral, didCreateDirectory  : Bool )
-    func smbCentral(_ smbCentral : SMBCentral, didFetchDirectories : Bool, _ directoryArray : [SMBFile] )
-    func smbCentral(_ smbCentral : SMBCentral, didFetchShares      : Bool, _ shares : [SMBShare] )
+    func smbCentral(_ smbCentral: SMBCentral, didConnectToDevice  : Bool )
+    func smbCentral(_ smbCentral: SMBCentral, didCreateDirectory  : Bool )
+    func smbCentral(_ smbCentral: SMBCentral, didFetchDirectories : Bool, _ directoryArray : [SMBFile] )
+    func smbCentral(_ smbCentral: SMBCentral, didFetchShares      : Bool, _ shares : [SMBShare] )
 
     // Session Methods
-    func smbCentral(_ smbCentral : SMBCentral, didDeleteFile   : Bool, _ filename  : String )
-    func smbCentral(_ smbCentral : SMBCentral, didEndSession   : Bool )
-    func smbCentral(_ smbCentral : SMBCentral, didFetchFiles   : Bool, _ fileArray : [SMBFile] )
-    func smbCentral(_ smbCentral : SMBCentral, didReadFile     : Bool, _ fileData  : Data )
-    func smbCentral(_ smbCentral : SMBCentral, didStartSession : Bool )
-    func smbCentral(_ smbCentral : SMBCentral, didWriteFile    : Bool )
+    func smbCentral(_ smbCentral: SMBCentral, didDeleteFile   : Bool, _ filename  : String )
+    func smbCentral(_ smbCentral: SMBCentral, didEndSession   : Bool )
+    func smbCentral(_ smbCentral: SMBCentral, didFetchFiles   : Bool, _ fileArray : [SMBFile] )
+    func smbCentral(_ smbCentral: SMBCentral, didReadFile     : Bool, _ fileData  : Data )
+    func smbCentral(_ smbCentral: SMBCentral, didStartSession : Bool )
+    func smbCentral(_ smbCentral: SMBCentral, didWriteFile    : Bool )
 
     // Self-Contained Methods
-    func smbCentral(_ smbCentral : SMBCentral, didFetchFile  : Bool, _ fileData : Data )
-    func smbCentral(_ smbCentral : SMBCentral, didFindFolder : Bool )
-    func smbCentral(_ smbCentral : SMBCentral, didSaveData   : Bool )
+    func smbCentral(_ smbCentral: SMBCentral, didFetchFile  : Bool, _ fileData : Data )
+    func smbCentral(_ smbCentral: SMBCentral, didFindFolder : Bool )
+    func smbCentral(_ smbCentral: SMBCentral, didSaveData   : Bool )
 }
 
 
@@ -36,23 +36,23 @@ protocol SMBCentralDelegate : AnyObject {
 extension SMBCentralDelegate {
     
     // Access Methods
-    func smbCentral(_ smbCentral : SMBCentral, didConnectToDevice  : Bool ) {}
-    func smbCentral(_ smbCentral : SMBCentral, didCreateDirectory  : Bool ) {}
-    func smbCentral(_ smbCentral : SMBCentral, didFetchDirectories : Bool, _ directoryArray : [SMBFile] ) {}
-    func smbCentral(_ smbCentral : SMBCentral, didFetchShares      : Bool, _ shares : [SMBShare] ) {}
+    func smbCentral(_ smbCentral: SMBCentral, didConnectToDevice  : Bool ) {}
+    func smbCentral(_ smbCentral: SMBCentral, didCreateDirectory  : Bool ) {}
+    func smbCentral(_ smbCentral: SMBCentral, didFetchDirectories : Bool, _ directoryArray : [SMBFile] ) {}
+    func smbCentral(_ smbCentral: SMBCentral, didFetchShares      : Bool, _ shares : [SMBShare] ) {}
     
     // Session Methods
-    func smbCentral(_ smbCentral : SMBCentral, didDeleteFile   : Bool, _ filename  : String  ) {}
-    func smbCentral(_ smbCentral : SMBCentral, didEndSession   : Bool ) {}
-    func smbCentral(_ smbCentral : SMBCentral, didFetchFiles   : Bool, _ fileArray : [SMBFile] ) {}
-    func smbCentral(_ smbCentral : SMBCentral, didReadFile     : Bool, _ fileData  : Data ) {}
-    func smbCentral(_ smbCentral : SMBCentral, didStartSession : Bool ) {}
-    func smbCentral(_ smbCentral : SMBCentral, didWriteFile    : Bool ) {}
+    func smbCentral(_ smbCentral: SMBCentral, didDeleteFile   : Bool, _ filename  : String  ) {}
+    func smbCentral(_ smbCentral: SMBCentral, didEndSession   : Bool ) {}
+    func smbCentral(_ smbCentral: SMBCentral, didFetchFiles   : Bool, _ fileArray : [SMBFile] ) {}
+    func smbCentral(_ smbCentral: SMBCentral, didReadFile     : Bool, _ fileData  : Data ) {}
+    func smbCentral(_ smbCentral: SMBCentral, didStartSession : Bool ) {}
+    func smbCentral(_ smbCentral: SMBCentral, didWriteFile    : Bool ) {}
 
     // Self-Contained Methods
-    func smbCentral(_ smbCentral : SMBCentral, didFetchFile  : Bool, _ fileData : Data ) {}
-    func smbCentral(_ smbCentral : SMBCentral, didFindFolder : Bool ) {}
-    func smbCentral(_ smbCentral : SMBCentral, didSaveData   : Bool ) {}
+    func smbCentral(_ smbCentral: SMBCentral, didFetchFile  : Bool, _ fileData : Data ) {}
+    func smbCentral(_ smbCentral: SMBCentral, didFindFolder : Bool ) {}
+    func smbCentral(_ smbCentral: SMBCentral, didSaveData   : Bool ) {}
 }
 
 
@@ -78,7 +78,7 @@ class SMBCentral: NSObject {
     var sharesArray   : [SMBShare]  = []
     var returnCsvFiles              = false
     var shareOpen                   = false
-
+    
     
     
     // MARK: Our Singleton (Public)
@@ -89,11 +89,16 @@ class SMBCentral: NSObject {
     
     // MARK: Private Variables
     
+    private struct Constants {
+        static let timerDuration = Double( 60 )
+    }
+    
     private var connectedDevice     : SMBDevice?
     private var connectedFileServer : SMBFileServer!
     private var connectedShare      : SMBShare?
     private var deviceSet           = Set<SMBDevice>()
     private var fileToBeDeleted     = ""
+    private var startSessionTimer   : Timer!
 
 }
 
@@ -103,7 +108,7 @@ extension SMBCentral {
     
     // MARK: Discovery Methods (non-protocol based)
 
-    func startDiscoveryWith(_ delegate : SMBCentralDelegate ) -> Bool {
+    func startDiscoveryWith(_ delegate: SMBCentralDelegate ) -> Bool {
         deviceArray.removeAll()
         deviceSet  .removeAll()
 
@@ -156,7 +161,7 @@ extension SMBCentral {
     
     // MARK: Access Methods
     
-    func close(_ share : SMBShare ) {
+    func close(_ share: SMBShare ) {
         if share.isOpen {
             share.close( nil )
 //            logVerbose( "share[ %@ ]", share.name )
@@ -166,7 +171,7 @@ extension SMBCentral {
     }
         
         
-    func connectTo(_ device : SMBDevice, _ userName : String, _ password : String, _ delegate : SMBCentralDelegate ) {
+    func connectTo(_ device: SMBDevice, _ userName: String, _ password: String, _ delegate: SMBCentralDelegate ) {
         connectedToDevice = false
         
         if let fileServer = SMBFileServer.init( host: device.host, netbiosName: device.netbiosName, group: device.group ) {
@@ -210,7 +215,7 @@ extension SMBCentral {
     }
     
     
-    func createDirectoryOn(_ share : SMBShare, _ path : String, _ delegate : SMBCentralDelegate ) {
+    func createDirectoryOn(_ share: SMBShare, _ path: String, _ delegate: SMBCentralDelegate ) {
         let     smbFile = SMBFile.init( path: path, share: share )
         
         smbFile?.createDirectory( {
@@ -231,7 +236,7 @@ extension SMBCentral {
     }
     
     
-    func fetchDirectoriesFor(_ share : SMBShare, _ startingPath : String, _ delegate : SMBCentralDelegate ) {
+    func fetchDirectoriesFor(_ share: SMBShare, _ startingPath: String, _ delegate: SMBCentralDelegate ) {
 //        logVerbose( "[ %@/%@ ]", share.name, startingPath )
         var     csvFileArray   : [SMBFile] = []
         var     directoryArray : [SMBFile] = []
@@ -289,7 +294,7 @@ extension SMBCentral {
     }
 
 
-    func fetchSharesOnConnectedDevice(_ delegate : SMBCentralDelegate ) {
+    func fetchSharesOnConnectedDevice(_ delegate: SMBCentralDelegate ) {
         sharesArray.removeAll()
         
         self.connectedFileServer.listShares({
@@ -321,7 +326,7 @@ extension SMBCentral {
     }
 
     
-    func openAndFetchDirectoriesOn(_ share : SMBShare, _ delegate : SMBCentralDelegate ) {
+    func openAndFetchDirectoriesOn(_ share: SMBShare, _ delegate: SMBCentralDelegate ) {
         shareOpen = false
         
         share.open {
@@ -352,7 +357,7 @@ extension SMBCentral {
 
 extension SMBCentral {
     
-    func deleteFileAt(_ path : String, _ delegate : SMBCentralDelegate ) {
+    func deleteFileAt(_ path: String, _ delegate: SMBCentralDelegate ) {
 
         if !connectedToDevice || !shareOpen {
             logVerbose( "ERROR!  We NOT in the right state!  connectedToDevice[ %@ ] shareOpen[ %@ ]", stringFor( connectedToDevice ), stringFor( shareOpen )  )
@@ -395,7 +400,7 @@ extension SMBCentral {
     }
     
     
-    func endSession(_ delegate : SMBCentralDelegate ) {
+    func endSession(_ delegate: SMBCentralDelegate ) {
 //        logVerbose( "shareOpen[ %@ ]  connectedToDevice[ %@ ]", stringFor( shareOpen ), stringFor( connectedToDevice ) )
         
         if shareOpen {
@@ -448,7 +453,7 @@ extension SMBCentral {
     }
         
         
-    func fetchFilesAt(_ startingPath : String, _ delegate : SMBCentralDelegate ) {
+    func fetchFilesAt(_ startingPath: String, _ delegate: SMBCentralDelegate ) {
         logVerbose( "[ %@/%@ ]", connectedShare!.name, startingPath )
         var     fileArray : [SMBFile] = []
 
@@ -495,7 +500,7 @@ extension SMBCentral {
     }
 
 
-    func readFileAt(_ path : String, _ delegate : SMBCentralDelegate ) {
+    func readFileAt(_ path: String, _ delegate: SMBCentralDelegate ) {
         var     fileData = Data.init()
         
         if !connectedToDevice || !shareOpen {
@@ -577,16 +582,34 @@ extension SMBCentral {
     }
         
         
-    func startSession(_ nasDescriptor : NASDescriptor, _ delegate : SMBCentralDelegate ) {
+    func startSession(_ nasDescriptor: NASDescriptor, _ delegate: SMBCentralDelegate ) {
         connectedToDevice = false
         shareOpen         = true
         
         logTrace()
         if let myFileServer = SMBFileServer.init( host: nasDescriptor.host, netbiosName: nasDescriptor.netbiosName, group: nasDescriptor.group ) {
-            
+            if let timer = startSessionTimer {
+                timer.invalidate()
+            }
+
+            DispatchQueue.main.async {
+                self.startSessionTimer = Timer.scheduledTimer( withTimeInterval: Constants.timerDuration, repeats: false ) {
+                    (timer) in
+                    logTrace( "Network Error!" )
+                    timer.invalidate()
+                    
+                    delegate.smbCentral( self, didStartSession: false )
+                }
+                
+            }
+
             myFileServer.connect( asUser: nasDescriptor.userName, password: nasDescriptor.password, completion: {
                 (guestFlag, error) in
                 
+                if let timer = self.startSessionTimer {
+                    timer.invalidate()
+                }
+
                 logVerbose( "connected to fileServer ... search for share[ %@ ]", nasDescriptor.share )
                 if !guestFlag && ( error == nil ) {
                     
@@ -601,7 +624,6 @@ extension SMBCentral {
                             delegate.smbCentral( self, didStartSession: false )
                         }
                         else {
-                            logTrace( "opening share" )
                             share?.open( {
                                 (error) in
 
@@ -612,7 +634,6 @@ extension SMBCentral {
                                     delegate.smbCentral( self, didStartSession: false )
                                 }
                                 else {
-                                    logTrace( "opened share" )
                                     self.connectedFileServer = myFileServer
                                     self.connectedShare      = share
                                     self.connectedToDevice   = true
@@ -647,8 +668,8 @@ extension SMBCentral {
     }
     
     
-    func writeData(_ data : Data, toFileAt path : String, _ delegate : SMBCentralDelegate ) {
-        
+    func writeData(_ data: Data, toFileAt path: String, _ delegate: SMBCentralDelegate ) {
+
         if !connectedToDevice || !shareOpen {
             logVerbose( "ERROR!  We NOT in the right state!  connectedToDevice[ %@ ] shareOpen[ %@ ]", stringFor( connectedToDevice ), stringFor( shareOpen )  )
             
@@ -727,7 +748,7 @@ extension SMBCentral {
 
 extension SMBCentral {
     
-    func fetchFileOn(_ share : SMBShare, _ path : String, _ delegate : SMBCentralDelegate ) {
+    func fetchFileOn(_ share: SMBShare, _ path: String, _ delegate: SMBCentralDelegate ) {
         var     fileData = Data.init()
         
         if let smbFile  = SMBFile.init( path: path, share: share ) {
@@ -802,7 +823,7 @@ extension SMBCentral {
     }
         
                 
-    func findFolderAt(_ nasDescriptor : NASDescriptor, _ delegate : SMBCentralDelegate ) {
+    func findFolderAt(_ nasDescriptor: NASDescriptor, _ delegate: SMBCentralDelegate ) {
         
         if nasDescriptor.host.isEmpty {
             // We really don't know what to tell the user, so this is our way of saying 'maybe'
@@ -896,7 +917,7 @@ extension SMBCentral {
     }
     
  
-    func saveData(_ data : Data, _ share : SMBShare, _ fullPath : String, _ delegate : SMBCentralDelegate ) {
+    func saveData(_ data: Data, _ share: SMBShare, _ fullPath: String, _ delegate: SMBCentralDelegate ) {
         let     smbFile         = SMBFile.init( path: fullPath, share: share )
         var     writeSuccessful = true
         

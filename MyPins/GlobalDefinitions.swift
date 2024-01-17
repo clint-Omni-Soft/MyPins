@@ -38,6 +38,12 @@ struct DisplayUnits {
     static let meters   = "m"
 }
 
+struct EntityNames {
+    static let imageRequest = "ImageRequest"
+    static let pin          = "Pin"
+    static let pinColor     = "PinColor"
+}
+
 struct Filenames {
     static let database    = "PinsDB.sqlite"
     static let databaseShm = "PinsDB.sqlite-shm"
@@ -47,9 +53,32 @@ struct Filenames {
 }
 
 struct GlobalConstants {
-    static let feetPerMeter = 3.28084
-    static let newPin       = -1
-    static let noSelection  = -1
+    static let feetPerMeter                     = 3.28084
+    static let missingImage                     = "missingImage"
+    static let newPin                           = -1
+    static let noImage                          = "noImage"
+    static let noSelection                      = -1
+    static let offlineColor                     = UIColor.init( red: 242/255, green: 242/255, blue: 242/255, alpha: 1.0 )
+    static let onlineColor                      = UIColor.init( red: 204/255, green: 255/255, blue: 204/255, alpha: 1.0 )
+    static let separatorForLastUpdatedString    = ","
+    static let separatorForLockfileString       = ","
+    static let separatorForSorts                = ";"
+    static let sortAscending                    = "↑"    // "▴"
+    static let sortAscendingFlag                = "A"
+    static let sortDescending                   = "↓"    // "▾"
+    static let sortDescendingFlag               = "D"
+    static let thumbNailPrefix                  = "tn"
+}
+
+struct ImageState {
+    static let noName  = 0
+    static let missing = 1
+    static let loaded  = 2
+}
+
+struct GlobalIndexPaths {
+    static let newPin      = IndexPath(row: GlobalConstants.newPin,      section: GlobalConstants.newPin      )
+    static let noSelection = IndexPath(row: GlobalConstants.noSelection, section: GlobalConstants.noSelection )
 }
 
 struct MapTypes {
@@ -62,15 +91,17 @@ struct MapTypes {
 }
 
 struct Notifications {
+    static let cannotReadAllDbFiles         = "CannotReadAllDbFiles"
     static let cannotSeeExternalDevice      = "CannotSeeExternalDevice"
     static let centerMap                    = "CenterMap"
     static let connectingToExternalDevice   = "ConnectingToExternalDevice"
+    static let deviceNameNotSet             = "DeviceNameNotSet"
+    static let enableThumbnails             = "EnableThumbnails"
     static let enteringBackground           = "EnteringBackground"
     static let enteringForeground           = "EnteringForeground"
     static let externalDeviceLocked         = "ExternalDeviceLocked"
     static let launchPinEditor              = "LaunchPinEditor"
     static let pinsArrayReloaded            = "PinsArrayReloaded"
-    static let pleaseWaitingDone            = "PleaseWaitingDone"
     static let ready                        = "Ready"
     static let transferringDatabase         = "TransferringDatabase"
     static let unableToConnect              = "UnableToConnect"
@@ -109,18 +140,35 @@ struct PinColors {
     static let pinYellow    = Int16( 13 )
 }
 
+struct SortOptions {
+    static let byDateLastModified = "byLastModified"
+    static let byName             = "byName"
+    static let byType             = "byType"
+}
+
+
+struct SortOptionNames {
+    static let byDateLastModified = NSLocalizedString( "SortOption.DateLastModified", comment: "Date Last Modified" )
+    static let byName             = NSLocalizedString( "SortOption.Name",             comment: "Name" )
+    static let byType             = NSLocalizedString( "SortOption.Type",             comment: "Type" )
+}
 
 struct UserDefaultKeys {
+    static let currentSortOption     = "CurrentSortOption"
     static let dataStoreLocation     = "DataStoreLocation"
+    static let deviceName            = "DeviceName"
+    static let dontRemindMeAgain     = "DontRemindMeAgain"
     static let howToUseShown         = "HowToUseShown"
+    static let lastAccessedPinsGuid  = "LastAccessedPinsGuid"
     static let lastComponentSelected = "LastComponentSelected"
-    static let lastLocationRow       = "LastLocationRow"
+    static let lastLocationIndexPath = "LastLocationIndexPath"
     static let lastTabSelected       = "LastTabSelected"
     static let lastTextColor         = "LastTextColor"
     static let nasDescriptor         = "NasDescriptor"
     static let networkPath           = "NetworkPath"
+    static let networkAccessGranted  = "NetworkAccessGranted"
     static let updatedOffline        = "UpdatedOffline"
-    static let userHasBeenWarned     = "UserHasBeenWarned"
+    static let usingThumbnails       = "UsingThumbnails"
 }
 
 struct UserInfo {

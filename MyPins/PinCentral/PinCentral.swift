@@ -42,16 +42,21 @@ class PinCentral: NSObject {
     
     // MARK: Public Variables
     
-    var colorArray          : [PinColor] = []
-    var currentAltitude     = 0.0
-    var currentLocation     = CLLocationCoordinate2DMake( 0.0, 0.0 )
-    var didOpenDatabase     = false
-    var indexOfSelectedPin  = GlobalConstants.noSelection
-    var locationEstablished = false
-    var newPinIndex         = GlobalConstants.newPin
-    var pinArray            = [Pin].init()
-    var resigningActive     = false
-    var stayOffline         = false
+    var colorArray: [PinColor]      = []
+    var currentAltitude             = 0.0
+    var currentLocation             = CLLocationCoordinate2DMake( 0.0, 0.0 )
+    var didOpenDatabase             = false
+    var externalDeviceLastUpdatedBy = ""
+    var indexPathOfSelectedPin      = GlobalIndexPaths.noSelection
+    var locationEstablished         = false
+    var missingDbFiles: [String]    = []
+    var numberOfPinsLoaded          = 0
+    var newPinIndexPath             = GlobalIndexPaths.newPin
+    var openInProgress              = false
+    var pinArrayOfArrays            = [[Pin]]()
+    var resigningActive             = false
+    var stayOffline                 = false
+    
     
     var dataStoreLocation : DataStoreLocation {
         get {
@@ -59,7 +64,7 @@ class PinCentral: NSObject {
                 return dataStoreLocationBacking
             }
             
-            if let locationString = UserDefaults.standard.string( forKey: UserDefaultKeys.dataStoreLocation ) {
+            if let locationString = userDefaults.string( forKey: UserDefaultKeys.dataStoreLocation ) {
                 return dataStoreLocationFor( locationString )
             }
             else {
@@ -70,26 +75,60 @@ class PinCentral: NSObject {
         
         set( newLocation ) {
             var     oldDataStore = DataStoreLocationName.device
-            let     newDataStore = nameForDataStoreLocation( newLocation )
+            var     newDataStore = ""
             
-            if let lastLocation = UserDefaults.standard.string( forKey: UserDefaultKeys.dataStoreLocation ) {
+            if let lastLocation = userDefaults.string( forKey: UserDefaultKeys.dataStoreLocation ) {
                 oldDataStore = lastLocation
             }
             
+            switch newLocation {
+            case .device:       newDataStore = DataStoreLocationName.device
+            case .iCloud:       newDataStore = DataStoreLocationName.iCloud
+            case .nas:          newDataStore = DataStoreLocationName.nas
+            case .shareCloud:   newDataStore = DataStoreLocationName.shareCloud
+            case .shareNas:     newDataStore = DataStoreLocationName.shareNas
+            default:            newDataStore = DataStoreLocationName.device
+            }
+
             logVerbose( "[ %@ ] -> [ %@ ]", oldDataStore, newDataStore )
+            
             dataStoreLocationBacking = newLocation
             
-            UserDefaults.standard.set( newDataStore, forKey: UserDefaultKeys.dataStoreLocation )
-            UserDefaults.standard.synchronize()
+            userDefaults.set( newDataStore, forKey: UserDefaultKeys.dataStoreLocation )
+            userDefaults.synchronize()
         }
         
     }
+    
+    
+    var deviceName: String {
+        get {
+            var     nameOfDevice = ""
+
+            if let deviceNameString = userDefaults.string( forKey: UserDefaultKeys.deviceName ) {
+                if !deviceNameString.isEmpty && deviceNameString.count > 0 {
+                    nameOfDevice = deviceNameString
+                }
+
+            }
+
+            return nameOfDevice
+        }
+        
+        
+        set( newName ) {
+            userDefaults.set( newName, forKey: UserDefaultKeys.deviceName )
+            userDefaults.synchronize()
+        }
+        
+    }
+    
     
     var nasDescriptor : NASDescriptor {
         get {
             var     descriptor = NASDescriptor()
             
-            if let descriptorString = UserDefaults.standard.string( forKey: UserDefaultKeys.nasDescriptor ) {
+            if let descriptorString = userDefaults.string( forKey: UserDefaultKeys.nasDescriptor ) {
                 let     components = descriptorString.components( separatedBy: "," )
                 
                 if components.count == 7 {
@@ -113,8 +152,35 @@ class PinCentral: NSObject {
                                                newDescriptor.userName,  newDescriptor.password,
                                                newDescriptor.share,     newDescriptor.path )
             
-            UserDefaults.standard.set( descriptorString, forKey: UserDefaultKeys.nasDescriptor )
-            UserDefaults.standard.synchronize()
+            userDefaults.set( descriptorString, forKey: UserDefaultKeys.nasDescriptor )
+            userDefaults.synchronize()
+        }
+        
+    }
+    
+    
+    var sortDescriptor: (String, Bool) {
+        get {
+            if let descriptorString = userDefaults.string(forKey: UserDefaultKeys.currentSortOption ) {
+                let sortComponents = descriptorString.components(separatedBy: GlobalConstants.separatorForSorts )
+                
+                if sortComponents.count == 2 {
+                    let     option    = sortComponents[0]
+                    let     direction = ( sortComponents[1] == GlobalConstants.sortAscendingFlag )
+                    
+                    return ( option, direction )
+                }
+
+            }
+                
+            return ( SortOptions.byName, true )
+        }
+        
+        set ( sortTuple ) {
+            let descriptorString = sortTuple.0 + GlobalConstants.separatorForSorts + ( sortTuple.1 ? GlobalConstants.sortAscendingFlag : GlobalConstants.sortDescendingFlag )
+           
+            userDefaults.set( descriptorString, forKey: UserDefaultKeys.currentSortOption )
+            userDefaults.synchronize()
         }
         
     }
@@ -123,24 +189,12 @@ class PinCentral: NSObject {
     
     // MARK: Private Variables
     
-    private struct Constants {
-        static let databaseModel = "MyPins"
-        static let primedFlag    = "Primed"
-        static let timerDuration = Double( 300 )
-    }
-    
-    private struct EntityNames {
-        static let imageRequest = "ImageRequest"
-        static let pin          = "Pin"
-        static let pinColor     = "PinColor"
-    }
+    private var databaseUpdated             = false
+    private var dataStoreLocationBacking    = DataStoreLocation.notAssigned
+    private var locationManager             : CLLocationManager?
+    private var newPinGuid                  = ""
+    private var updateTimer                 : Timer!
 
-    private struct OfflineImageRequestCommands {
-        static let delete = 1
-        static let fetch  = 2
-        static let save   = 3
-    }
-    
     private let pinColorNameArray = [ NSLocalizedString( "PinColor.Black"    , comment:  "Black"      ),
                                       NSLocalizedString( "PinColor.Blue"     , comment:  "Blue"       ),
                                       NSLocalizedString( "PinColor.Brown"    , comment:  "Brown"      ),
@@ -172,24 +226,38 @@ class PinCentral: NSObject {
                                                  NSLocalizedString( "DefaultColorNickname.White"     , comment: "Shopping"              ),
                                                  NSLocalizedString( "DefaultColorNickname.Yellow"    , comment: "Winery"                ) ]
 
-    private var backgroundTaskID            : UIBackgroundTaskIdentifier = .invalid
-    private var cloudCentral                = CloudCentral.sharedInstance
-    private var databaseUpdated             = false
-    private var dataStoreLocationBacking    = DataStoreLocation.notAssigned
-    private var delegate                    : PinCentralDelegate?
-    private let deviceAccessControl         = DeviceAccessControl.sharedInstance
-    private let fileManager                 = FileManager.default
-    private var imageRequestQueue           : [(String, PinCentralDelegate)] = []       // This queue is used to serialize transactions while online (both iCloud and NAS)
-    private var locationManager             : CLLocationManager?
-    private var managedObjectContext        : NSManagedObjectContext!
-    private var nasCentral                  = NASCentral.sharedInstance
-    private var newPinGuid                  = ""
-    private var offlineImageRequestQueue    : [ImageRequest] = []                       // This queue is used to flush offline NAS image transactions to disk after we reconnect
-    private var openInProgress              = false
-    private var persistentContainer         : NSPersistentContainer!
-    private var updateTimer                 : Timer!
+    
+    
+    // MARK: Definitions shared with CommonExtensions
 
-    private var updatedOffline: Bool {
+    struct Constants {
+        static let databaseModel = "MyPins"
+        static let primedFlag    = "Primed"
+        static let timerDuration = Double( 300 )
+    }
+    
+    struct OfflineImageRequestCommands {
+        static let delete = 1
+        static let fetch  = 2
+        static let save   = 3
+    }
+    
+    var backgroundTaskID        : UIBackgroundTaskIdentifier = .invalid
+    var cloudCentral            = CloudCentral.sharedInstance
+    var delegate                : PinCentralDelegate?
+    let deviceAccessControl     = DeviceAccessControl.sharedInstance
+    let fileManager             = FileManager.default
+    var imageRequestQueue       : [(String, PinCentralDelegate)] = []       // This queue is used to serialize transactions while online (both iCloud and NAS)
+    var managedObjectContext    : NSManagedObjectContext!
+    var nasCentral              = NASCentral.sharedInstance
+    var notificationCenter      = NotificationCenter.default
+    var offlineImageRequestQueue: [ImageRequest] = []                       // This queue is used to flush offline NAS image transactions to disk after we reconnect
+    var persistentContainer     : NSPersistentContainer!
+    var transferInProgress      = false
+    let userDefaults            = UserDefaults.standard
+
+    
+    var updatedOffline: Bool {
         get {
             return flagIsPresentInUserDefaults( UserDefaultKeys.updatedOffline )
         }
@@ -206,8 +274,8 @@ class PinCentral: NSObject {
         
     }
     
-
     
+
     // MARK: Our Singleton
     
     static let sharedInstance = PinCentral()        // Prevents anyone else from creating an instance
@@ -220,8 +288,9 @@ class PinCentral: NSObject {
         logTrace()
         resigningActive = true
         
-        NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.enteringBackground ), object: self )
+        notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.enteringBackground ), object: self )
         stopTimer()
+        locationManager?.stopUpdatingLocation()
     }
     
     
@@ -229,8 +298,9 @@ class PinCentral: NSObject {
         logTrace()
         resigningActive = false
         
-        NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.enteringForeground ), object: self )
-        canSeeExternalStorage()
+        notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.enteringForeground ), object: self )
+        canSeeExternalStorage()     // TODO: See if we need to check stayOffline
+        locationManager?.startUpdatingLocation()
     }
     
     
@@ -245,7 +315,7 @@ class PinCentral: NSObject {
         }
         
         if deviceAccessControl.updating {
-            logVerbose( "Updating ... try again later ... %@", deviceAccessControl.descriptor() )
+            logVerbose( "Updating ... try again later\n    %@", deviceAccessControl.descriptor() )
             return
         }
         
@@ -253,11 +323,11 @@ class PinCentral: NSObject {
         self.delegate       = delegate
         didOpenDatabase     = false
         openInProgress      = true
-        pinArray            = Array.init()
+        pinArrayOfArrays    = Array.init()
         persistentContainer = NSPersistentContainer( name: Constants.databaseModel )
         
         persistentContainer.loadPersistentStores( completionHandler:
-                                                    { ( storeDescription, error ) in
+        { ( storeDescription, error ) in
             
             if let error = error as NSError? {
                 logVerbose( "Unresolved error[ %@ ]", error.localizedDescription )
@@ -266,26 +336,17 @@ class PinCentral: NSObject {
                 self.loadCoreData()
                 
                 if !self.didOpenDatabase {      // This is just in case I screw up and don't properly version the data model
-                    self.deleteDatabase()
+                    self.deleteDatabase()       // TODO: Figure out if this is the right thing to do
                     self.loadCoreData()
                 }
                 
                 self.loadBasicData()
-                self.locationManager = CLLocationManager()
-                
-                if CLLocationManager.locationServicesEnabled() {
-                    self.locationManager?.delegate = self
-                    self.locationManager?.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-                    self.locationManager?.startUpdatingLocation()
-                }
-                
-                self.currentAltitude = 0.0
-                self.currentLocation = CLLocationCoordinate2DMake( 0.0, 0.0 )
+                self.setupLocationManager()
                 
                 self.startTimer()
             }
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.2 ), execute:  {
                 logVerbose( "didOpenDatabase[ %@ ]", stringFor( self.didOpenDatabase ) )
                 
                 self.openInProgress = false
@@ -298,13 +359,13 @@ class PinCentral: NSObject {
                     
                 }
                 
-            }
+            } )
             
         } )
         
     }
     
-        
+          
     
     // MARK: Pin Access/Modifier Methods (Public)
     
@@ -318,7 +379,7 @@ class PinCentral: NSObject {
         self.delegate = delegate
         
         persistentContainer.viewContext.perform {
-            let     pin = NSEntityDescription.insertNewObject( forEntityName: EntityNames.pin, into: self.managedObjectContext ) as! Pin
+            let     pin = NSEntityDescription.insertNewObject( forEntityName: EntityNames.pin , into: self.managedObjectContext ) as! Pin
             
             pin.altitude        = altitude
             pin.details         = details
@@ -340,18 +401,17 @@ class PinCentral: NSObject {
     }
     
     
-    func deletePinAt(_ index: Int, _ delegate: PinCentralDelegate ) {
+    func deletePinAt(_ indexPath: IndexPath, _ delegate: PinCentralDelegate ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
-        logVerbose( "deleting pin at [ %d ]", index )
+        logVerbose( "deleting pin at [ %@ ]", stringFor( indexPath ) )
         self.delegate = delegate
         
         persistentContainer.viewContext.perform {
-            let     pin = self.pinArray[index]
-            
+            let     pin = self.pinAt( indexPath )
             
             self.managedObjectContext.delete( pin )
             self.saveContext()
@@ -364,7 +424,7 @@ class PinCentral: NSObject {
     func displayUnits() -> String {
         var         units = DisplayUnits.meters
         
-        if let displayUnits = UserDefaults.standard.string( forKey: DisplayUnits.altitude ) {
+        if let displayUnits = userDefaults.string( forKey: DisplayUnits.altitude ) {
             if !displayUnits.isEmpty {
                 units = displayUnits
             }
@@ -381,13 +441,34 @@ class PinCentral: NSObject {
             return
         }
         
-        //        logTrace()
+//        logTrace()
         self.delegate = delegate
         
         persistentContainer.viewContext.perform {
             self.refetchPinsAndNotifyDelegate()
         }
         
+    }
+    
+    
+    func nameForSortType(_ sortType: String ) -> String {
+        var name = "Unknown"
+        
+        switch sortType {
+        case SortOptions.byDateLastModified: name = SortOptionNames.byDateLastModified
+        case SortOptions.byType:             name = SortOptionNames.byType
+        case SortOptions.byName:             name = SortOptionNames.byName
+        default:                             break
+        }
+        
+        return name
+    }
+    
+    
+    func pinAt(_ indexPath: IndexPath ) -> Pin {
+        let sectionArray = pinArrayOfArrays[indexPath.section]
+        
+        return sectionArray[indexPath.row]
     }
     
     
@@ -429,7 +510,135 @@ class PinCentral: NSObject {
     func shortDescriptionFor(_ pin: Pin ) -> String {
         return String(format: "%@ %@", pin.name!, pin.details ?? "" )
     }
+
     
+    
+    // MARK: Methods shared with CommonExtensions (Public)
+
+    func nameForImageRequest(_ command: Int ) -> String {
+        var     name = "Unknown"
+        
+        switch command {
+        case OfflineImageRequestCommands.delete:    name = "Delete"
+        case OfflineImageRequestCommands.fetch:     name = "Fetch"
+        default:                                    name = "Save"
+        }
+        
+        return name
+    }
+
+    
+    func pictureDirectoryPath() -> String {
+        if let documentDirectoryURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
+            let     picturesDirectoryURL = documentDirectoryURL.appendingPathComponent( "PinPictures" )
+            
+            if !fileManager.fileExists( atPath: picturesDirectoryURL.path ) {
+                do {
+                    try fileManager.createDirectory( atPath: picturesDirectoryURL.path, withIntermediateDirectories: true, attributes: nil )
+                }
+                
+                catch let error as NSError {
+                    logVerbose( "ERROR!  Failed to create photos directory ... Error[ %@ ]", error.localizedDescription )
+                    return ""
+                }
+                
+            }
+            
+            if !fileManager.fileExists( atPath: picturesDirectoryURL.path ) {
+                logTrace( "ERROR!  photos directory does NOT exist!" )
+                return ""
+            }
+            
+//            logVerbose( "picturesDirectory[ %@ ]", picturesDirectoryURL.path )
+            return picturesDirectoryURL.path
+        }
+        
+//        logTrace( "ERROR!  Could NOT find the documentDirectory!" )
+        return ""
+    }
+    
+    
+    // Must be called from within persistentContainer.viewContext
+    func processNextOfflineImageRequest() {
+        if offlineImageRequestQueue.isEmpty {
+            logTrace( "Done!" )
+            updatedOffline = false
+            
+            if backgroundTaskID != UIBackgroundTaskIdentifier.invalid {
+                nasCentral.unlockNas( self )
+            }
+
+            deviceAccessControl.updating = false
+            
+            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
+        }
+        else {
+            guard let imageRequest = offlineImageRequestQueue.first else {
+                logTrace( "ERROR!  Unable to remove request from front of queue!" )
+                updatedOffline = false
+                return
+            }
+            
+            let command  = Int( imageRequest.command )
+            let filename = imageRequest.filename ?? "Empty!"
+            
+            logVerbose( "pending[ %d ]  processing[ %@ ][ %@ ]", offlineImageRequestQueue.count, nameForImageRequest( command ), filename )
+            
+            switch command {
+                case OfflineImageRequestCommands.delete:    nasCentral.deleteImage( filename, self )
+                
+//                case OfflineImageRequestCommands.fetch:     imageRequestQueue.append( (filename, delegate! ) )
+//                                                            nasCentral.fetchImage( filename, self )
+
+                case OfflineImageRequestCommands.save:      let result = fetchFromDiskImageFileNamed( filename )
+                
+                                                            if result.0 {
+                                                                nasCentral.saveImageData( result.1, filename: filename, self )
+                                                            }
+                                                            else {
+                                                                logVerbose( "ERROR!  NAS does NOT have [ %@ ]", filename )
+                                                                DispatchQueue.main.async {
+                                                                    self.processNextOfflineImageRequest()
+                                                                }
+                                                                
+                                                            }
+                default:    break
+            }
+            
+            managedObjectContext.delete( imageRequest )
+            offlineImageRequestQueue.remove( at: 0 )
+
+            saveContext()
+        }
+        
+    }
+
+
+    func saveContext() {        // Must be called from within a persistentContainer.viewContext
+        if managedObjectContext.hasChanges {
+            do {
+                try managedObjectContext.save()
+                
+                if dataStoreLocation != .device {
+                    databaseUpdated = true
+                    
+                    if stayOffline {
+                        updatedOffline = true
+                    }
+
+                    createLastUpdatedFile()
+                }
+                
+           }
+            
+            catch let error as NSError {
+                logVerbose( "Unresolved error[ %@ ]", error.localizedDescription )
+            }
+            
+        }
+        
+    }
+
     
 
     // MARK: Utility Methods (Private)
@@ -437,11 +646,11 @@ class PinCentral: NSObject {
     private func canSeeExternalStorage() {
         if dataStoreLocation == .device {
             deviceAccessControl.initForDevice()
-            logVerbose( "on device ... %@", deviceAccessControl.descriptor() )
+            logVerbose( "on device\n    %@", deviceAccessControl.descriptor() )
             return
         }
             
-        logVerbose( "dataStoreLocation[ %@ ]", nameForDataStoreLocation( dataStoreLocation ) )
+        logVerbose( "[ %@ ]", nameForDataStoreLocation( dataStoreLocation ) )
 
         if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
             cloudCentral.canSeeCloud( self )
@@ -454,27 +663,11 @@ class PinCentral: NSObject {
                 
             }
 
+            nasCentral.emptyQueue()
             nasCentral.canSeeNasFolders( self )
         }
 
-        NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.connectingToExternalDevice ), object: self )
-    }
-    
-    
-    private func createImageRequestFor(_ command: Int, filename: String ) {
-        logVerbose( "Creating ImageRequest[ %@ ][ %@ ] ", nameForImageRequest( command ), filename )
-        self.persistentContainer.viewContext.perform {
-            let     imageRequest = NSEntityDescription.insertNewObject( forEntityName: EntityNames.imageRequest, into: self.managedObjectContext ) as! ImageRequest
-            
-            imageRequest.index    = Int16( self.offlineImageRequestQueue.count )
-            imageRequest.command  = Int16( command )
-            imageRequest.filename = filename
-            
-            self.saveContext()
-            
-            self.setFlagInUserDefaults( Constants.primedFlag )
-        }
-        
+        notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.connectingToExternalDevice ), object: self )
     }
     
     
@@ -487,8 +680,11 @@ class PinCentral: NSObject {
         let     storeURL = docURL.appendingPathComponent( Filenames.database )
         
         do {
+            logVerbose( "attempting to delete database @ [ %@ ]", storeURL.path )
             try fileManager.removeItem( at: storeURL )
-            logVerbose( "deleted database @ [ %@ ]", storeURL.path )
+            
+            userDefaults.removeObject( forKey: Constants.primedFlag )
+            userDefaults.synchronize()
         }
         
         catch let error as NSError {
@@ -536,36 +732,56 @@ class PinCentral: NSObject {
         catch {
             logTrace( "Error!  Fetch failed!" )
         }
-
+        
+        // TODO: Watch for crash here
         logVerbose( "Found [ %d ] requests", offlineImageRequestQueue.count )
     }
     
 
     // Must be called from within persistentContainer.viewContext
-    private func fetchAllPinObjects() {
+    private func fetchAllPins() {
+        newPinIndexPath    = GlobalIndexPaths.newPin
+        pinArrayOfArrays   = [[]]
+        numberOfPinsLoaded = 0
+
         do {
             let     request : NSFetchRequest<Pin> = Pin.fetchRequest()
             let     fetchedPins = try managedObjectContext.fetch( request )
             
-            pinArray = fetchedPins.sorted( by:
-                        { (pin1, pin2) -> Bool in
-                            pin1.name! < pin2.name!     // We can do this because the name is a required field that must be unique
-                        } )
+            logVerbose( "Retrieved %d pins ... sorting", fetchedPins.count )
+            numberOfPinsLoaded = fetchedPins.count
             
-            newPinIndex = GlobalConstants.newPin
+            let sortTuple     = sortDescriptor
+            let sortAscending = sortTuple.1
+            let sortOption    = sortTuple.0
+
+            switch sortOption {
+            case SortOptions.byType:                sortByType(             fetchedPins, sortAscending )
+            case SortOptions.byDateLastModified:    sortByDateLastModified( fetchedPins, sortAscending )
+            default:                                sortByName(             fetchedPins, sortAscending )
+            }
             
-            for index in 0..<self.pinArray.count {
-                if pinArray[index].guid == newPinGuid {
-                    newPinIndex = index
-                    break
-                }
+            var section        = 0
+            var stillSearching = true
+
+            while section < pinArrayOfArrays.count && stillSearching {
+                let sectionArray = pinArrayOfArrays[section]
                 
+                for row in 0..<sectionArray.count {
+                    if sectionArray[row].guid == newPinGuid {
+                        newPinIndexPath = IndexPath(row: row, section: section )
+                        stillSearching  = false
+                        break
+                    }
+                    
+                }
+
+                section += 1
             }
             
         }
             
         catch {
-            pinArray = [Pin]()
             logTrace( "Error!  Fetch failed!" )
         }
         
@@ -595,15 +811,15 @@ class PinCentral: NSObject {
             
             self.fetchAllColorObjects()
             self.fetchAllImageRequestObjects()
-
-            logVerbose( "Loaded Color[ %d ] and ImageRequest[ %d ] objects", self.colorArray.count, self.offlineImageRequestQueue.count )
+            
+            logVerbose( "Loaded Color[ %d ] & ImageRequest[ %d ] objects", self.colorArray.count, self.offlineImageRequestQueue.count )
         }
         
     }
 
 
     private func loadCoreData() {
-        guard let modelURL = Bundle.main.url( forResource: "MyPins", withExtension: "momd" ) else {
+        guard let modelURL = Bundle.main.url( forResource: Constants.databaseModel, withExtension: "momd" ) else {
             logTrace( "Error!  Could NOT load model from bundle!" )
             return
         }
@@ -645,205 +861,124 @@ class PinCentral: NSObject {
     }
     
     
-    private func normalize(_ image : UIImage ) -> UIImage {
-        var     rotation : Float = 0.0
-
-        switch image.imageOrientation {
-        case .down:             rotation = .pi
-        case .downMirrored:     rotation = .pi
-        case .left:             rotation = -.pi/2
-        case .leftMirrored:     rotation = -.pi/2
-        case .right:            rotation = .pi/2
-        case .rightMirrored:    rotation = .pi/2
-        case .up:               rotation = 0.0
-        case .upMirrored:       rotation = 0.0
-        default: break
-        }
-        
-        if rotation == 0.0 {
-            return image
-        }
-
-        logOrientationOf( image )
-        logVerbose( "rotation[ %f ]", rotation )
-        
-        let     naturalImage = UIImage( cgImage: (image.cgImage)!, scale: image.scale, orientation: .up )
-        let     rotatedImage = naturalImage.rotate( radians: rotation )!
-        
-        return rotatedImage
-    }
-    
-    
-    private func logOrientationOf(_ image : UIImage ) {
-        var  imageOrientation = "Unknown"
-        
-        switch image.imageOrientation {
-        case .down:             imageOrientation = "down"
-        case .downMirrored:     imageOrientation = "downMirrored"
-        case .left:             imageOrientation = "left"
-        case .leftMirrored:     imageOrientation = "leftMirrored"
-        case .right:            imageOrientation = "right"
-        case .rightMirrored:    imageOrientation = "rightMirrored"
-        case .up:               imageOrientation = "up"
-        case .upMirrored:       imageOrientation = "upMirrored"
-        default: break
-        }
-        
-        logVerbose( "imageOrientation[ %@ ]", imageOrientation )
-    }
-
-    
-    private func nameForImageRequest(_ command: Int ) -> String {
-        var     name = "Unknown"
-        
-        switch command {
-        case OfflineImageRequestCommands.delete:    name = "Delete"
-        case OfflineImageRequestCommands.fetch:     name = "Fetch"
-        default:                                    name = "Save"
-        }
-        
-        return name
-    }
-    
-    
-    private func pictureDirectoryPath() -> String {
-        if let documentDirectoryURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
-            let     picturesDirectoryURL = documentDirectoryURL.appendingPathComponent( "PinPictures" )
-            
-            if !fileManager.fileExists( atPath: picturesDirectoryURL.path ) {
-                do {
-                    try fileManager.createDirectory( atPath: picturesDirectoryURL.path, withIntermediateDirectories: true, attributes: nil )
-                }
-                
-                catch let error as NSError {
-                    logVerbose( "ERROR!  Failed to create photos directory ... Error[ %@ ]", error.localizedDescription )
-                    return ""
-                }
-                
-            }
-            
-            if !fileManager.fileExists( atPath: picturesDirectoryURL.path ) {
-                logTrace( "ERROR!  photos directory does NOT exist!" )
-                return ""
-            }
-            
-//            logVerbose( "picturesDirectory[ %@ ]", picturesDirectoryURL.path )
-            return picturesDirectoryURL.path
-        }
-        
-//        logTrace( "ERROR!  Could NOT find the documentDirectory!" )
-        return ""
-    }
-    
-    
-    // Must be called from within persistentContainer.viewContext
-    private func processNextOfflineImageRequest() {
-        
-        if offlineImageRequestQueue.isEmpty {
-            logTrace( "Done!" )
-            updatedOffline = false
-            
-            if backgroundTaskID != UIBackgroundTaskIdentifier.invalid {
-                nasCentral.unlockNas( self )
-            }
-
-            deviceAccessControl.updating = false
-            
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
-        }
-        else {
-            guard let imageRequest = offlineImageRequestQueue.first else {
-                logTrace( "ERROR!  Unable to remove request from front of queue!" )
-                updatedOffline = false
-                return
-            }
-            
-            let command  = Int( imageRequest.command )
-            var doNext   = false
-            let filename = imageRequest.filename!
-            
-            logVerbose( "pending[ %d ]  processing[ %@ ][ %@ ]", offlineImageRequestQueue.count, nameForImageRequest( command ), filename )
-            
-            switch command {
-                case OfflineImageRequestCommands.delete:    nasCentral.deleteImage( filename, self )
-                
-//                case OfflineImageRequestCommands.fetch:     imageRequestQueue.append( (filename, delegate! ) )
-//                                                            nasCentral.fetchImage( filename, self )
-
-                case OfflineImageRequestCommands.save:      let result = fetchFromDiskImageFileDataNamed( filename )
-                
-                                                            if result.0 {
-                                                                nasCentral.saveImageData( result.1, filename: filename, self )
-                                                            }
-                                                            else {
-                                                                logVerbose( "ERROR!  NAS does NOT have [ %@ ]", filename )
-                                                                doNext = true
-                                                            }
-                default:    break
-            }
-            
-            self.managedObjectContext.delete( imageRequest )
-            offlineImageRequestQueue.remove( at: 0 )
-
-            self.saveContext()
-            
-            if doNext {
-                doNext = false
-                
-                DispatchQueue.main.async {
-                    self.processNextOfflineImageRequest()
-                }
-                
-            }
-            
-        }
-        
-    }
-
-
     // Must be called from within a persistentContainer.viewContext
     private func refetchPinsAndNotifyDelegate() {
-        fetchAllPinObjects()
-        
+        fetchAllPins()
+
         DispatchQueue.main.async {
             self.delegate?.pinCentralDidReloadPinArray( self )
         }
 
         if .pad == UIDevice.current.userInterfaceIdiom {
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: self )
+            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: self )
         }
 
     }
     
 
-    private func saveContext() {
-        if managedObjectContext.hasChanges {
-            do {
-                try managedObjectContext.save()
-                
-                if dataStoreLocation != .device {
-                    databaseUpdated = true
-                    
-                    if stayOffline {
-                        updatedOffline = true
-                    }
+    private func setupLocationManager() {
+        locationManager = CLLocationManager()
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager?.delegate = self
+            locationManager?.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager?.startUpdatingLocation()
+        }
+        
+        currentAltitude = 0.0
+        currentLocation = CLLocationCoordinate2DMake( 0.0, 0.0 )
+    }
 
-                    createLastUpdatedFile()
-                }
-                
-           }
+    
+    private func sortByDateLastModified(_ fetchedPins: [Pin], _ sortAscending: Bool ) {
+        logVerbose( "sortAscending[ %@ ]", stringFor( sortAscending ) )
+        let sortedArray = fetchedPins.sorted( by:
+                    { (pin1, pin2) -> Bool in
+                        if sortAscending {
+                            pin1.lastModified! < pin2.lastModified!
+                        }
+                        else {
+                            pin1.lastModified! > pin2.lastModified!
+                        }
             
-            catch let error as NSError {
-                logVerbose( "Unresolved error[ %@ ]", error.localizedDescription )
+                    } )
+
+        pinArrayOfArrays = [sortedArray]
+    }
+    
+    
+    private func sortByName(_ fetchedPins: [Pin], _ sortAscending: Bool ) {
+        logVerbose( "sortAscending[ %@ ]", stringFor( sortAscending ) )
+        let sortedArray = fetchedPins.sorted( by:
+                    { (pin1, pin2) -> Bool in
+                        if sortAscending {
+                            pin1.name! < pin2.name!     // We can do this because the name is a required field that must be unique
+                        }
+                        else {
+                            pin1.name! > pin2.name!
+                        }
+            
+                    } )
+        
+        pinArrayOfArrays = [sortedArray]
+    }
+    
+    
+    private func sortByType(_ fetchedPins: [Pin], _ sortAscending: Bool ){
+        logVerbose( "sortAscending[ %@ ]", stringFor( sortAscending ) )
+        let sortedArray = fetchedPins.sorted( by:
+                    { (pin1, pin2) -> Bool in
+                        if sortAscending {
+                            pin1.pinColor < pin2.pinColor
+                        }
+                        else {
+                            pin1.pinColor > pin2.pinColor
+                        }
+            
+                    } )
+        
+        let delta        = sortAscending ? 1 : -1
+        var index        = 0
+        var section      = sortAscending ? 0 : ( colorArray.count - 1 )
+        var sectionArray = [Pin]()
+        
+//        logVerbose( "Starting with [ %@ ]", colorArray[section].descriptor! )
+        while index < sortedArray.count {
+            let pin = sortedArray[index]
+            
+            if pin.pinColor == section {
+                sectionArray.append( pin )
+//                logVerbose( "Section [ %d ][ %@ ] Added [ %@ ][ %@ ]", section, pinColorNameArray[ section ], pinColorNameArray[ Int( pin.pinColor ) ], pin.name! )
+                index += 1
+            }
+            else {
+                sectionArray = sectionArray.sorted( by:
+                            { (pin1, pin2) -> Bool in
+                                if sortAscending {
+                                    pin1.name! < pin2.name!
+                                }
+                                else {
+                                    pin1.name! > pin2.name!
+                                }
+                    
+                            } )
+                
+//                logVerbose( "Added an array of %d pins to section %d [ %@ / %@ ]", sectionArray.count, section, pinColorNameArray[section], colorArray[section].descriptor! )
+                pinArrayOfArrays.append( sectionArray )
+                sectionArray = []
+                section = section + delta
             }
             
         }
         
+            // Pick up the last section
+//        logVerbose( "Added an array of %d pins to section %d [ %@ / %@ ]", sectionArray.count, section, pinColorNameArray[section], colorArray[section].descriptor! )
+        pinArrayOfArrays.append( sectionArray )
+
     }
     
     
 }
-
 
 
 
@@ -878,707 +1013,7 @@ extension PinCentral: CLLocationManagerDelegate {
 
 
 
-// MARK: ClouldCentralDelegate Methods
-
-extension PinCentral: CloudCentralDelegate {
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, canSeeCloud: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( canSeeCloud ) )
-        
-        if stayOffline {
-            logTrace( "Stay Offline!" )
-        }
-        else if canSeeCloud {
-            cloudCentral.startSession( self )
-        }
-        else {
-            deviceAccessControl.initWith(ownerName: "Unknown", locked: true, byMe: false, updating: false)
-            logVerbose( "%@", deviceAccessControl.descriptor() )
-            
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.cannotSeeExternalDevice ), object: self )
-        }
-        
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didCompareLastUpdatedFiles: Int ) {
-        logVerbose( "[ %@ ]", descriptionForCompare( didCompareLastUpdatedFiles ) )
-        
-        if didCompareLastUpdatedFiles == LastUpdatedFileCompareResult.deviceIsNewer {
-            if deviceAccessControl.locked && deviceAccessControl.byMe {
-                deviceAccessControl.updating = true
-                
-                cloudCentral.copyDatabaseFromDeviceToCloud( self )
-            }
-            
-        }
-        else if didCompareLastUpdatedFiles == LastUpdatedFileCompareResult.cloudIsNewer {
-            deviceAccessControl.updating = true
-            
-            cloudCentral.copyDatabaseFromCloudToDevice( self )
-        }
-        else {
-            deviceAccessControl.updating = false
-            
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
-        }
-
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didCopyAllImagesFromCloudToDevice: Bool) {
-        logVerbose( "[ %@ ] ... SBH!", stringFor( didCopyAllImagesFromCloudToDevice ) )
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didCopyAllImagesFromDeviceToCloud: Bool) {
-        logVerbose( "[ %@ ] ... SBH!", stringFor( didCopyAllImagesFromDeviceToCloud ) )
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didCopyDatabaseFromCloudToDevice: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didCopyDatabaseFromCloudToDevice ) )
-        deviceAccessControl.updating = false
-
-        NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
-
-        if didCopyDatabaseFromCloudToDevice && !openInProgress {
-            let     appDelegate = UIApplication.shared.delegate as! AppDelegate
-            
-            logTrace( "opening database" )
-            openDatabaseWith( delegate != nil ? delegate! : appDelegate )
-        }
-        
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didCopyDatabaseFromDeviceToCloud: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didCopyDatabaseFromDeviceToCloud ) )
-        
-        if backgroundTaskID != UIBackgroundTaskIdentifier.invalid {
-            cloudCentral.unlockCloud( self )
-        }
-
-        deviceAccessControl.updating = false
-
-        NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didDeleteImage: Bool) {
-        logVerbose( "[ %@ ]", stringFor( didDeleteImage ) )
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didEndSession: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didEndSession ) )
-
-        if backgroundTaskID != UIBackgroundTaskIdentifier.invalid {
-            UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
-            
-            self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
-        }
-        
-    }
-
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didFetch imageNames: [String] ) {
-        logTrace()
-        delegate?.pinCentral( self, didFetch: imageNames )
-    }
-
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didFetchImage: Bool, filename: String, image: UIImage ) {
-//        logVerbose( "[ %@ ]  filename[ %@ ]", stringFor( didFetchImage ), filename )
-
-        if didFetchImage {
-            let     imageData            = image.pngData()!
-            let     picturesDirectoryURL = URL.init( fileURLWithPath: pictureDirectoryPath() )
-            let     pictureFileURL       = picturesDirectoryURL.appendingPathComponent( filename )
-            
-//            guard let imageData = image.jpegData( compressionQuality: 1.0 ) ?? image.pngData() else {
-//                logVerbose( "ERROR!  Could NOT convert UIImage to Data! [ %@ ]", filename )
-//                return
-//            }
-            
-            do {
-                try imageData.write( to: pictureFileURL, options: .atomic )
-                logVerbose( "Saved image to file named[ %@ ]", filename )
-            }
-            catch let error as NSError {
-                logVerbose( "ERROR!  Failed to save image for [ %@ ] ... Error[ %@ ]", filename, error.localizedDescription )
-            }
-            
-        }
-        
-        guard let imageRequest = imageRequestQueue.first else {
-            logTrace( "ERROR!  Unable to remove request from front of queue!" )
-            return
-        }
-
-        let     delegate  = imageRequest.1
-        let     imageName = imageRequest.0
-        
-        imageRequestQueue.remove( at: 0 )
-        
-        if imageName != filename {
-            logVerbose( "ERROR!  Image returned[ %@ ] is not what was requested [ %@ ]", filename, imageName )
-        }
-        
-        DispatchQueue.main.async {
-            delegate.pinCentral( self, didFetchImage: didFetchImage, filename: filename, image : image )
-
-            if self.imageRequestQueue.count == 0 {
-                NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
-            }
-
-        }
-        
-    }
- 
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didLockCloud: Bool ) {
-        logVerbose( "didLockCloud[ %@ ] ... %@", stringFor( didLockCloud ), deviceAccessControl.descriptor() )
-
-        if deviceAccessControl.updating {
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.updatingExternalDevice ), object: self )
-        }
-        else if deviceAccessControl.locked && !deviceAccessControl.byMe {
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.externalDeviceLocked ), object: self )
-        }
-        else {
-            cloudCentral.compareLastUpdatedFiles( self )
-        }
-
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didSaveImageData: Bool, filename: String) {
-        logVerbose( "[ %@ ]", stringFor( didSaveImageData ) )
-        self.delegate?.pinCentral( self, didSaveImageData: didSaveImageData )
-    }
-
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didStartSession: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didStartSession ) )
-        
-        if didStartSession {
-            cloudCentral.lockCloud( self )
-        }
-        else {
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.unableToConnect ), object: self )
-        }
-        
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didUnlockCloud: Bool) {
-        logVerbose( "[ %@ ]", stringFor( didUnlockCloud ) )
-
-        cloudCentral.endSession( self )
-    }
-    
-    
-}
-
-
-
-// MARK: Data Store Location Methods
-
-extension PinCentral {
-    
-    func createLastUpdatedFile() {
-        if let documentDirectoryURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
-            let     fileUrl   = documentDirectoryURL.appendingPathComponent( Filenames.lastUpdated )
-            let     formatter = DateFormatter()
-            
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            
-            let     dateString = formatter.string( from: Date() )
-            let     data       = dateString.data( using: .utf8 )
-            
-            if !fileManager.createFile( atPath: fileUrl.path, contents: data, attributes: nil ) {
-                logTrace( "ERROR!  Create failed!" )
-            }
-            
-        }
-        else {
-            logTrace( "ERROR!  Unable to unwrap documentDirectoryURL" )
-        }
-        
-    }
-    
-
-    func nameForDataStoreLocation(_ location : DataStoreLocation ) -> String {
-        var     name = "Undefined!"
-        
-        switch location {
-        case .device:       name = DataStoreLocationName.device
-        case .iCloud:       name = DataStoreLocationName.iCloud
-        case .nas:          name = DataStoreLocationName.nas
-        case .shareCloud:   name = DataStoreLocationName.shareCloud
-        case .shareNas:     name = DataStoreLocationName.shareNas
-        default:            name = DataStoreLocationName.notAssigned
-        }
-        
-        return name
-    }
-    
-    
-
-    // MARK: Data Store Location Utility Methods (Private)
-
-    private func dataStoreLocationFor(_ locationString : String ) -> DataStoreLocation {
-        var     location : DataStoreLocation = .notAssigned
-        
-        switch locationString {
-        case DataStoreLocationName.device:      location = .device
-        case DataStoreLocationName.iCloud:      location = .iCloud
-        case DataStoreLocationName.nas:         location = .nas
-        case DataStoreLocationName.shareCloud:  location = .shareCloud
-        case DataStoreLocationName.shareNas:    location = .shareNas
-        default:                                location = .notAssigned
-        }
-        
-        return location
-    }
-    
-    
-}
-
-
-
-// MARK: Image Convenience Methods (Public)
-
-extension PinCentral {
-    
-    func deleteImageNamed(_ name: String ) -> Bool {
-        //        logTrace()
-        let         directoryPath = pictureDirectoryPath()
-        var         result        = false
-        
-        if !directoryPath.isEmpty {
-            let     picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
-            let     imageFileURL         = picturesDirectoryURL.appendingPathComponent( name )
-            
-            if !fileManager.fileExists( atPath: imageFileURL.path ) {
-                logTrace( "Image does NOT exist!" )
-                result = true
-            }
-            else {
-                do {
-                    try fileManager.removeItem( at: imageFileURL )
-                    
-                    logVerbose( "deleted image named [ %@ ]", name )
-                    result = true
-                }
-                
-                catch let error as NSError {
-                    logVerbose( "ERROR!  Failed to delete image named [ %@ ] ... Error[ %@ ]", name, error.localizedDescription )
-                }
-                
-            }
-            
-        }
-        
-        if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-            logTrace( "Deleting from the Cloud" )
-            self.cloudCentral.deleteImage( name, self )
-        }
-        else if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
-            if stayOffline {
-                createImageRequestFor( OfflineImageRequestCommands.delete, filename: name )
-            }
-            else {
-                logTrace( "Deleting from NAS" )
-                nasCentral.deleteImage( name, self )
-            }
-
-        }
-        
-        return result
-    }
-    
-    
-    func imageNamed(_ name: String, descriptor: String, _ delegate: PinCentralDelegate ) -> (Bool, UIImage) {
-//        logTrace()
-        let result = fetchFromDiskImageNamed( name )
-        
-        if result.0 {
-            return result
-        }
-        else {
-            if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-                logVerbose( "Image for [ %@ ] not on disk!  Requesting from the Cloud [ %@ ]", descriptor, name )
-                imageRequestQueue.append( (name, delegate) )
-                cloudCentral.fetchImage( name, self )
-            }
-            else if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
-                if stayOffline {
-//                    createImageRequestFor( OfflineImageRequestCommands.fetch, filename: name )
-                }
-                else {
-                    logVerbose( "Image for [ %@ ] not on disk!  Requesting from NAS [ %@ ]", descriptor, name )
-                    imageRequestQueue.append( (name, delegate) )
-                    nasCentral.fetchImage( name, self )
-                }
-                
-            }
-            
-        }
-        
-        return ( false, UIImage( named: "missingImage" ) ?? .init() )
-    }
-    
-    
-    func saveImage(_ image: UIImage, compressed: Bool ) -> String {
-//        logTrace()
-        let         directoryPath = pictureDirectoryPath()
-        
-        if directoryPath.isEmpty {
-            logTrace( "ERROR!!!  directoryPath.isEmpty!" )
-            return ""
-        }
-        
-        let     normalizedImage      = normalize( image )
-        let     compressionQuality   : CGFloat = ( compressed ? 0.25 : 1.0 )
-        let     imageFilename        = UUID().uuidString + ".jpg"
-        let     picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
-        let     pictureFileURL       = picturesDirectoryURL.appendingPathComponent( imageFilename )
-        
-        guard let imageData = normalizedImage.jpegData( compressionQuality: compressionQuality ) else {
-            logTrace( "ERROR!  Could NOT convert UIImage to Data!" )
-            return ""
-        }
-        
-        do {
-            try imageData.write( to: pictureFileURL, options: .atomic )
-            
-            logVerbose( "saved compressed[ %@ ] image to [ %@ ]", stringFor( compressed ), imageFilename )
-            
-            if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-                cloudCentral.saveImageData( imageData, filename: imageFilename, self )
-            }
-            else if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
-                if stayOffline {
-                    createImageRequestFor( OfflineImageRequestCommands.save, filename: imageFilename )
-                }
-                else {
-                    nasCentral.saveImageData( imageData, filename: imageFilename, self )
-                }
-                
-            }
-            
-            return imageFilename
-        }
-        catch let error as NSError {
-            logVerbose( "ERROR!  Failed to save image for [ %@ ] ... Error[ %@ ]", imageFilename, error.localizedDescription )
-        }
-        
-        return ""
-    }
- 
-    
-    
-    // MARK: Image Convenience Utility Methods (Private)
-
-    private func fetchFromDiskImageNamed(_ name: String ) -> (Bool, UIImage) {
-        let result = fetchFromDiskImageFileDataNamed( name )
-        
-        if result.0 {
-            if let image = UIImage.init( data: result.1 ) {
-                return ( true, image )
-            }
-            else {
-                logVerbose( "ERROR!  Failed to un-wrap image for [ %@ ]", name )
-            }
-            
-        }
-
-        return ( false, UIImage( named: "missingImage" ) ?? .init() )
-    }
-    
-    
-
-    private func fetchFromDiskImageFileDataNamed(_ name: String ) -> (Bool, Data) {
-        let directoryPath = pictureDirectoryPath()
-        
-        if !directoryPath.isEmpty {
-            let     picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
-            let     imageFileURL         = picturesDirectoryURL.appendingPathComponent( name )
-            
-            if fileManager.fileExists( atPath: imageFileURL.path ) {
-                let     imageFileData = fileManager.contents( atPath: imageFileURL.path )
-                
-                if let imageData = imageFileData {
-                    return ( true, imageData )
-                }
-                else {
-                    logVerbose( "ERROR!  Failed to load data for image for [ %@ ]", name )
-                }
-                
-            }
-            
-        }
-        else {
-            logVerbose( "ERROR!  directoryPath is Empty!" )
-        }
-
-        return ( false, Data.init() )
-    }
-    
-    
-}
-
-
-
-// MARK: NASCentralDelegate Methods
-
-extension PinCentral: NASCentralDelegate {
-    
-    func nasCentral(_ nasCentral: NASCentral, canSeeNasFolders: Bool) {
-        logVerbose( "[ %@ ]", stringFor( canSeeNasFolders ) )
-
-        if stayOffline {
-            logTrace( "stay offline" )
-        }
-        else if canSeeNasFolders {
-            nasCentral.startSession( self )
-        }
-        else {
-            deviceAccessControl.initWith(ownerName: "Unknown", locked: true, byMe: false, updating: false )
-            logVerbose( "%@", deviceAccessControl.descriptor() )
-            
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.cannotSeeExternalDevice ), object: self )
-        }
-        
-    }
-    
-    
-    func nasCentral(_ nasCentral: NASCentral, didCompareLastUpdatedFiles: Int ) {
-        logVerbose( "[ %@ ]", descriptionForCompare( didCompareLastUpdatedFiles ) )
-        
-        if didCompareLastUpdatedFiles == LastUpdatedFileCompareResult.deviceIsNewer {
-            if deviceAccessControl.locked && deviceAccessControl.byMe {
-                NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.transferringDatabase ), object: self )
-                
-                deviceAccessControl.updating = true
-                
-                nasCentral.copyDatabaseFromDeviceToNas( self )
-            }
-            
-        }
-        else if didCompareLastUpdatedFiles == LastUpdatedFileCompareResult.nasIsNewer {
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.transferringDatabase ), object: self )
-            deviceAccessControl.updating = true
-
-            nasCentral.copyDatabaseFromNasToDevice( self )
-        }
-        else {
-            deviceAccessControl.updating = false
-            
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
-        }
-
-    }
-    
-    
-    func nasCentral(_ nasCentral: NASCentral, didCopyAllImagesFromDeviceToNas: Bool ) {
-        logVerbose( "[ %@ ] ... SBH!", stringFor( didCopyAllImagesFromDeviceToNas ) )
-    }
-        
-        
-    func nasCentral(_ nasCentral: NASCentral, didCopyAllImagesFromNasToDevice: Bool ) {
-        logVerbose( "[ %@ ] ... SBH!", stringFor( didCopyAllImagesFromNasToDevice ) )
-    }
-        
-        
-    func nasCentral(_ nasCentral: NASCentral, didCopyDatabaseFromDeviceToNas: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didCopyDatabaseFromDeviceToNas ) )
-        
-        if updatedOffline {
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4.0 ) {
-                self.persistentContainer.viewContext.perform {
-                    self.processNextOfflineImageRequest()
-                }
-
-            }
-           
-        }
-
-        if backgroundTaskID != UIBackgroundTaskIdentifier.invalid {
-            nasCentral.unlockNas( self )
-        }
-
-        deviceAccessControl.updating = false
-        
-        NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
-    }
-        
-        
-    func nasCentral(_ nasCentral: NASCentral, didCopyDatabaseFromNasToDevice: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didCopyDatabaseFromNasToDevice ) )
-        
-        deviceAccessControl.updating = false
-
-        NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
-
-        if didCopyDatabaseFromNasToDevice && !openInProgress {
-            let     appDelegate = UIApplication.shared.delegate as! AppDelegate
-            
-            logTrace( "opening database" )
-            openDatabaseWith( delegate != nil ? delegate! : appDelegate )
-        }
-        
-    }
-        
-        
-    func nasCentral(_ nasCentral: NASCentral, didDeleteImage: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didDeleteImage ) )
-        
-        if self.updatedOffline {
-            self.persistentContainer.viewContext.perform {
-                self.processNextOfflineImageRequest()
-            }
-            
-        }
-
-    }
-        
-        
-    func nasCentral(_ nasCentral: NASCentral, didEndSession: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didEndSession ) )
-        
-        if backgroundTaskID != UIBackgroundTaskIdentifier.invalid {
-            UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
-            
-            self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
-        }
-        
-        if !resigningActive {
-            logTrace( "re-establishing session" )
-            nasCentral.startSession( self )
-        }
-        
-    }
-        
-        
-    func nasCentral(_ nasCentral: NASCentral, didFetchImage: Bool, image: UIImage, filename: String ) {
-        logVerbose( "[ %@ ]  filename[ %@ ]", stringFor( didFetchImage ), filename )
-        
-        if didFetchImage {
-            let     imageData            = image.pngData()!
-            let     picturesDirectoryURL = URL.init( fileURLWithPath: pictureDirectoryPath() )
-            let     pictureFileURL       = picturesDirectoryURL.appendingPathComponent( filename )
-            
-            do {
-                try imageData.write( to: pictureFileURL, options: .atomic )
-                logVerbose( "Saved image to [ %@ ]", pictureFileURL.path )
-            }
-            catch let error as NSError {
-                logVerbose( "ERROR!  Failed to save image for [ %@ ] ... Error[ %@ ]", filename, error.localizedDescription )
-            }
-            
-        }
-
-        let     imageRequest = imageRequestQueue.first
-        let     delegate     = imageRequest!.1
-        let     imageName    = imageRequest!.0
-        
-        imageRequestQueue.removeFirst()
-        
-        if didFetchImage && imageName != filename {
-            logVerbose( "ERROR!  Image returned[ %@ ] is not what was requested [ %@ ]", filename, imageName )
-        }
-        
-
-        if self.imageRequestQueue.count == 0 {
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
-        }
-        
-        if self.updatedOffline {
-            self.persistentContainer.viewContext.perform {
-                self.processNextOfflineImageRequest()
-            }
-            
-        }
-        else {
-            DispatchQueue.main.async {
-                delegate.pinCentral( self, didFetchImage: didFetchImage, filename: filename, image : image )
-            }
-
-        }
-        
-    }
-    
-    
-    func nasCentral(_ nasCentral: NASCentral, didFetch imageNames: [String] ) {
-        logTrace()
-        DispatchQueue.main.async {
-            self.delegate?.pinCentral( self, didFetch: imageNames )
-        }
-
-    }
-        
-        
-    func nasCentral(_ nasCentral: NASCentral, didLockNas: Bool ) {
-        logVerbose( "didLockNas[ %@ ]", stringFor( didLockNas ) )
-
-        if deviceAccessControl.updating {
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.updatingExternalDevice ), object: self )
-        }
-        else if deviceAccessControl.locked && !deviceAccessControl.byMe {
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.externalDeviceLocked ), object: self )
-        }
-        else {
-            nasCentral.compareLastUpdatedFiles( self )
-        }
-
-    }
-        
-        
-    func nasCentral(_ nasCentral: NASCentral, didSaveImageData: Bool, filename: String ) {
-        logVerbose( "[ %@ ][ %@ ]", stringFor( didSaveImageData ), filename )
-        
-        if self.updatedOffline {
-            self.persistentContainer.viewContext.perform {
-                self.processNextOfflineImageRequest()
-            }
-            
-        }
-        else {
-            self.delegate?.pinCentral( self, didSaveImageData: didSaveImageData )
-        }
-        
-    }
-        
-        
-    func nasCentral(_ nasCentral: NASCentral, didStartSession: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didStartSession ) )
-        
-        if didStartSession {
-            nasCentral.lockNas( self )
-        }
-        else {
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.unableToConnect ), object: self )
-        }
-        
-    }
-        
-        
-    func nasCentral(_ nasCentral: NASCentral, didUnlockNas: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didUnlockNas ) )
-        
-        nasCentral.endSession( self )
-    }
-        
-
-}
-
-
-
-// MARK: Timer Methods
+// MARK: Timer Methods (Public)
 
 extension PinCentral {
     
@@ -1607,7 +1042,7 @@ extension PinCentral {
                 }
                 else if self.databaseUpdated {
                     self.databaseUpdated = false
-                    logVerbose( "databaseUpdated[ true ] ... %@", self.deviceAccessControl.descriptor() )
+                    logVerbose( "databaseUpdated[ true ]\n    %@", self.deviceAccessControl.descriptor() )
                     
                     if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
                         logVerbose( "copying database to iCloud" )
@@ -1649,7 +1084,7 @@ extension PinCentral {
             timer.invalidate()
         }
         
-        logVerbose( "databaseUpdated[ %@ ] ... %@", stringFor( databaseUpdated ), deviceAccessControl.descriptor() )
+        logVerbose( "databaseUpdated[ %@ ]\n    %@", stringFor( databaseUpdated ), deviceAccessControl.descriptor() )
         
         if databaseUpdated {
             
@@ -1657,6 +1092,7 @@ extension PinCentral {
                 DispatchQueue.global().async {
                     self.backgroundTaskID = UIApplication.shared.beginBackgroundTask( withName: "Finish copying DB to External Device" ) {
                         // The OS calls this block if we don't finish in time
+                        logTrace( "We ran out of time!  Killing background task..." )
                         UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
                         
                         self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
@@ -1686,7 +1122,6 @@ extension PinCentral {
             
         }
         else {
-            
             if !deviceAccessControl.byMe {
                 logTrace( "do nothing!" )
                 return
@@ -1695,6 +1130,7 @@ extension PinCentral {
             DispatchQueue.global().async {
                 self.backgroundTaskID = UIApplication.shared.beginBackgroundTask( withName: "Remove lock file" ) {
                     // The OS calls this block if we don't finish in time
+                    logTrace( "We ran out of time!  Killing background task #2..." )
                     UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
                     
                     self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
@@ -1721,34 +1157,5 @@ extension PinCentral {
     }
  
     
-}
-
-
-
-extension PinCentral {
-    
-    func flagIsPresentInUserDefaults(_ key : String ) -> Bool {
-        var     flagIsPresent = false
-        
-        if let _ = UserDefaults.standard.string( forKey: key ) {
-            flagIsPresent = true
-        }
-        
-        return flagIsPresent
-    }
-    
-    
-    func removeFlagFromUserDefaults(_ key: String ) {
-        UserDefaults.standard.removeObject(forKey: key )
-        UserDefaults.standard.synchronize()
-    }
-    
-    
-    func setFlagInUserDefaults(_ key: String ) {
-        UserDefaults.standard.set( key, forKey: key )
-        UserDefaults.standard.synchronize()
-    }
-    
-
 }
 

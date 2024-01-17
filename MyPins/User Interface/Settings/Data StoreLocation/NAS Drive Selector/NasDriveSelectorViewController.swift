@@ -553,6 +553,14 @@ extension NasDriveSelectorViewController : NASCentralDelegate {
         
         showActivityIndicator( false )
 
+        let networkAccessGranted = flagIsPresentInUserDefaults( UserDefaultKeys.networkAccessGranted )
+        
+        // This will only happen 1 time when the OS asks for permission for us to access devices on your network
+       if didFetchDevices && deviceArray.count == 0 && !networkAccessGranted {
+           saveFlagInUserDefaults( UserDefaultKeys.networkAccessGranted )
+           navigationController?.popViewController(animated: true )
+        }
+        
         if didFetchDevices {
             self.deviceArray = deviceArray
             loadDevices()

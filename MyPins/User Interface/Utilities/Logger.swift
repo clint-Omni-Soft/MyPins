@@ -291,6 +291,14 @@ class LogCentral : NSObject {
         let     userDefaults   = UserDefaults.standard
         var     runCounter     = userDefaults.integer(forKey: Constants.runCounterKey )
         let     vendorId       = UIDevice.current.identifierForVendor?.uuidString ?? "Unknown"
+        var     deviceName     = UIDevice.current.name
+
+        if let deviceNameString = userDefaults.string( forKey: UserDefaultKeys.deviceName ) {
+            if !deviceNameString.isEmpty && deviceNameString.count > 0 {
+                deviceName = deviceNameString
+            }
+
+        }
 
         runCounter += 1
         
@@ -314,7 +322,7 @@ class LogCentral : NSObject {
                                           """,
                                  infoDictionary[Constants.appName] as! String,
                                  dateFormatter.string( from : Date() ),
-                                 UIDevice.current.name,
+                                 deviceName,
                                  vendorId,
                                  UIDevice.current.systemVersion,
                                  infoDictionary[Constants.buildVersion] as! String,

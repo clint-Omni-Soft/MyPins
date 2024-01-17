@@ -28,8 +28,11 @@ class NotesViewController: UIViewController {
     
     // MARK: Private Variables
     
-    private var currentText = ""
-    
+    private var currentText        = ""
+    private var originalViewHeight = 0.0
+    private var greatestKeyboardHeight = 0.0
+    private var notificationCenter = NotificationCenter.default
+
       
     
     // MARK: UIViewController Lifecycle Methods
@@ -40,6 +43,7 @@ class NotesViewController: UIViewController {
         navigationItem.title = NSLocalizedString( "Title.NotesEditor", comment: "Notes Editor" )
         
         navigationItem.rightBarButtonItem = UIBarButtonItem.init( barButtonSystemItem: .trash, target: self, action: #selector( trashBarButtonItemTouched(_:) ) )
+ 
         notesTextView.font = UIFont.systemFont(ofSize: 17.0 )
     }
     
@@ -48,6 +52,9 @@ class NotesViewController: UIViewController {
         super.viewWillAppear(animated)
         
         notesTextView.text = originalText
+        originalViewHeight = view.frame.size.height
+        
+        notificationCenter.addObserver( self, selector: #selector( keyboardWillShow(notification: )), name: UIResponder.keyboardDidShowNotification, object: nil )
     }
     
     
@@ -60,8 +67,24 @@ class NotesViewController: UIViewController {
             delegate.notesViewControllerDidUpdateText( self, newText: currentText )
         }
         
+        notificationCenter.removeObserver( self )
     }
     
+    
+
+    // MARK: NSNotification Methods
+    
+    @objc func keyboardWillShow( notification: NSNotification ) {
+//        logTrace()
+        if notesTextView.text.count > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
+                self.notesTextView.scrollRangeToVisible( NSMakeRange( self.notesTextView.text.count - 1, 0 ) )
+            }
+            
+        }
+
+    }
+
     
     
     // MARK: Target/Action Methods

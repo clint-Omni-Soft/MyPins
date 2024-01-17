@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 53;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -23,6 +23,8 @@
 		F445000822D3A8C200988667 /* LocationDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */; };
 		F445000A22D3A8DD00988667 /* LocationImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */; };
 		F44B60792A004EA0000C35E9 /* ColorMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44B60782A004EA0000C35E9 /* ColorMappingViewController.swift */; };
+		F45FB94E2B041F8400FC6B6B /* SortOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45FB94D2B041F8400FC6B6B /* SortOptionsViewController.swift */; };
+		F45FE18B2B0BF99C006FD0D4 /* ListTableViewSectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45FE18A2B0BF99C006FD0D4 /* ListTableViewSectionCell.swift */; };
 		F461B8882670209200A2C53A /* ListTableViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F461B8872670209200A2C53A /* ListTableViewControllerCell.swift */; };
 		F47571EC2A12E447002E7E18 /* CloudCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47571EB2A12E447002E7E18 /* CloudCentral.swift */; };
 		F47571EE2A12E4BF002E7E18 /* DeviceAccessControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47571ED2A12E4BF002E7E18 /* DeviceAccessControl.swift */; };
@@ -49,6 +51,7 @@
 		F4A6552929AEB23400DDC813 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A6552829AEB23400DDC813 /* LogViewController.swift */; };
 		F4B0B7212A0432CE007D78C7 /* ImageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B0B71F2A0432CE007D78C7 /* ImageRequest.swift */; };
 		F4B0B7222A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B0B7202A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift */; };
+		F4B15A632B32134800557137 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B15A622B32134800557137 /* CommonExtensions.swift */; };
 		F4B47FEB205734880027755B /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FEA205734880027755B /* ListTableViewController.swift */; };
 		F4B47FED205734A80027755B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FEC205734A80027755B /* MapViewController.swift */; };
 		F4B47FF2205734F40027755B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B47FF1205734F40027755B /* MapKit.framework */; };
@@ -96,6 +99,8 @@
 		F445000722D3A8C200988667 /* LocationDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailsTableViewCell.swift; sourceTree = "<group>"; };
 		F445000922D3A8DD00988667 /* LocationImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationImageTableViewCell.swift; sourceTree = "<group>"; };
 		F44B60782A004EA0000C35E9 /* ColorMappingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorMappingViewController.swift; sourceTree = "<group>"; };
+		F45FB94D2B041F8400FC6B6B /* SortOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOptionsViewController.swift; sourceTree = "<group>"; };
+		F45FE18A2B0BF99C006FD0D4 /* ListTableViewSectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewSectionCell.swift; sourceTree = "<group>"; };
 		F461B8872670209200A2C53A /* ListTableViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewControllerCell.swift; sourceTree = "<group>"; };
 		F47571EB2A12E447002E7E18 /* CloudCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudCentral.swift; sourceTree = "<group>"; };
 		F47571ED2A12E4BF002E7E18 /* DeviceAccessControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAccessControl.swift; sourceTree = "<group>"; };
@@ -132,6 +137,7 @@
 		F4B0B71E2A0431FE007D78C7 /* MyPins 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MyPins 4.xcdatamodel"; sourceTree = "<group>"; };
 		F4B0B71F2A0432CE007D78C7 /* ImageRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRequest.swift; sourceTree = "<group>"; };
 		F4B0B7202A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageRequest+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F4B15A622B32134800557137 /* CommonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonExtensions.swift; sourceTree = "<group>"; };
 		F4B47FEA205734880027755B /* ListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
 		F4B47FEC205734A80027755B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		F4B47FF1205734F40027755B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -244,6 +250,7 @@
 			children = (
 				F4B47FEA205734880027755B /* ListTableViewController.swift */,
 				F483C53926717C3700224D53 /* ListTableViewController Cells */,
+				F4B777DC2B3DEF9D0095B5A7 /* Child ViewControllers */,
 			);
 			path = ListTableViewController;
 			sourceTree = "<group>";
@@ -305,8 +312,8 @@
 		F483C5332671349300224D53 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				F4A6552829AEB23400DDC813 /* LogViewController.swift */,
 				F4766CE6243D238A0054CD97 /* Logger.swift */,
+				F4A6552829AEB23400DDC813 /* LogViewController.swift */,
 				F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */,
 				F4B76F5F29CD06BA002D2060 /* UIImage+Cropping.swift */,
 				F4CACD9C29D39F8E00BCFF79 /* UIKitExtensions.swift */,
@@ -359,8 +366,8 @@
 			isa = PBXGroup;
 			children = (
 				F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */,
-				F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */,
 				F497BAE429355B4800878E1F /* NotesViewController.swift */,
+				F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */,
 			);
 			path = "Child ViewControllers";
 			sourceTree = "<group>";
@@ -369,6 +376,7 @@
 			isa = PBXGroup;
 			children = (
 				F461B8872670209200A2C53A /* ListTableViewControllerCell.swift */,
+				F45FE18A2B0BF99C006FD0D4 /* ListTableViewSectionCell.swift */,
 			);
 			path = "ListTableViewController Cells";
 			sourceTree = "<group>";
@@ -387,6 +395,7 @@
 			isa = PBXGroup;
 			children = (
 				F4B47FF4205745130027755B /* PinCentral.swift */,
+				F4B15A622B32134800557137 /* CommonExtensions.swift */,
 				F400B4CA20572E0000556F51 /* MyPins.xcdatamodeld */,
 				F4B47FF62057467D0027755B /* CoreData Entities */,
 			);
@@ -422,6 +431,14 @@
 			path = "Please Wait";
 			sourceTree = "<group>";
 		};
+		F4B777DC2B3DEF9D0095B5A7 /* Child ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				F45FB94D2B041F8400FC6B6B /* SortOptionsViewController.swift */,
+			);
+			path = "Child ViewControllers";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -451,7 +468,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "Omni-Soft, Inc.";
 				TargetAttributes = {
 					F400B4BF20572E0000556F51 = {
@@ -538,9 +555,12 @@
 				F4B0B7222A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift in Sources */,
 				F403EF8822C17780000D9ABD /* LocationEditorViewController.swift in Sources */,
 				F4B47FF5205745130027755B /* PinCentral.swift in Sources */,
+				F4B15A632B32134800557137 /* CommonExtensions.swift in Sources */,
 				F4CACD9D29D39F8E00BCFF79 /* UIKitExtensions.swift in Sources */,
+				F45FE18B2B0BF99C006FD0D4 /* ListTableViewSectionCell.swift in Sources */,
 				F49B9A59207D406B007598F9 /* AboutViewController.swift in Sources */,
 				F4B47FED205734A80027755B /* MapViewController.swift in Sources */,
+				F45FB94E2B041F8400FC6B6B /* SortOptionsViewController.swift in Sources */,
 				F497BAE529355B4800878E1F /* NotesViewController.swift in Sources */,
 				F427FF87209A2A6B00DBA3CD /* SettingsViewController.swift in Sources */,
 				F4982F6A207BEF9B00A30D40 /* PinColorSelectorViewController.swift in Sources */,
@@ -632,6 +652,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -693,6 +714,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -731,7 +753,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.2;
+				MARKETING_VERSION = 4.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -763,7 +785,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.2;
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

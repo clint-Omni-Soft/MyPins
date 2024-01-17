@@ -9,53 +9,53 @@
 import UIKit
 
 
-protocol CloudCentralDelegate : AnyObject {
+protocol CloudCentralDelegate: AnyObject {
     
     // Discovery Methods
-    func cloudCentral(_ cloudCentral : CloudCentral, canSeeCloud            : Bool )
-    func cloudCentral(_ cloudCentral : CloudCentral, didCreateDirectoryTree : Bool )
-    func cloudCentral(_ cloudCentral : CloudCentral, rootDirectoryIsPresent : Bool )
+    func cloudCentral(_ cloudCentral: CloudCentral, canSeeCloud           : Bool )
+    func cloudCentral(_ cloudCentral: CloudCentral, didCreateDirectoryTree: Bool )
+    func cloudCentral(_ cloudCentral: CloudCentral, rootDirectoryIsPresent: Bool )
 
     // Session Methods
-    func cloudCentral(_ cloudCentral : CloudCentral, didCompareLastUpdatedFiles        : Int )
-    func cloudCentral(_ cloudCentral : CloudCentral, didFetch imageNames               : [String] )
-    func cloudCentral(_ cloudCentral : CloudCentral, didCopyAllImagesFromCloudToDevice : Bool )
-    func cloudCentral(_ cloudCentral : CloudCentral, didCopyAllImagesFromDeviceToCloud : Bool )
-    func cloudCentral(_ cloudCentral : CloudCentral, didCopyDatabaseFromCloudToDevice  : Bool )
-    func cloudCentral(_ cloudCentral : CloudCentral, didCopyDatabaseFromDeviceToCloud  : Bool )
-    func cloudCentral(_ cloudCentral : CloudCentral, didDeleteImage   : Bool )
-    func cloudCentral(_ cloudCentral : CloudCentral, didEndSession    : Bool )
-    func cloudCentral(_ cloudCentral : CloudCentral, didFetchImage    : Bool, filename : String, image : UIImage )
-    func cloudCentral(_ cloudCentral : CloudCentral, didLockCloud     : Bool )
-    func cloudCentral(_ cloudCentral : CloudCentral, didSaveImageData : Bool, filename : String )
-    func cloudCentral(_ cloudCentral : CloudCentral, didStartSession  : Bool )
-    func cloudCentral(_ cloudCentral : CloudCentral, didUnlockCloud   : Bool )
-    
+    func cloudCentral(_ cloudCentral: CloudCentral, didCompareLastUpdatedFiles       : Int, lastUpdatedBy: String )
+    func cloudCentral(_ cloudCentral: CloudCentral, didCopyAllImagesFromCloudToDevice: Bool )
+    func cloudCentral(_ cloudCentral: CloudCentral, didCopyAllImagesFromDeviceToCloud: Bool )
+    func cloudCentral(_ cloudCentral: CloudCentral, didCopyDatabaseFromCloudToDevice : Bool )
+    func cloudCentral(_ cloudCentral: CloudCentral, didCopyDatabaseFromDeviceToCloud : Bool )
+    func cloudCentral(_ cloudCentral: CloudCentral, didDeleteImage  : Bool )
+    func cloudCentral(_ cloudCentral: CloudCentral, didEndSession   : Bool )
+    func cloudCentral(_ cloudCentral: CloudCentral, didFetch imageNames: [String] )
+    func cloudCentral(_ cloudCentral: CloudCentral, didFetchImage   : Bool, filename: String, image: UIImage )
+    func cloudCentral(_ cloudCentral: CloudCentral, didLockCloud    : Bool )
+    func cloudCentral(_ cloudCentral: CloudCentral, didSaveImageData: Bool, filename: String )
+    func cloudCentral(_ cloudCentral: CloudCentral, didStartSession : Bool )
+    func cloudCentral(_ cloudCentral: CloudCentral, didUnlockCloud  : Bool )
+    func cloudCentral(_ cloudCentral: CloudCentral, missingDbFiles  : [String] )
 }
 
 // Now we supply we provide a default implementation which makes them all optional
 extension CloudCentralDelegate {
     
     // Discovery Methods
-    func cloudCentral(_ cloudCentral : CloudCentral, canSeeCloud            : Bool ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, didCreateDirectoryTree : Bool ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, rootDirectoryIsPresent : Bool ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, canSeeCloud           : Bool ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, didCreateDirectoryTree: Bool ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, rootDirectoryIsPresent: Bool ) {}
 
     // Session Methods
-    func cloudCentral(_ cloudCentral : CloudCentral, didCompareLastUpdatedFiles        : Int  ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, didFetch imageNames               : [String] ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, didCopyAllImagesFromCloudToDevice : Bool ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, didCopyAllImagesFromDeviceToCloud : Bool ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, didCopyDatabaseFromCloudToDevice  : Bool ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, didCopyDatabaseFromDeviceToCloud  : Bool ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, didDeleteImage   : Bool ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, didEndSession    : Bool ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, didFetchImage    : Bool, filename : String, image : UIImage ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, didLockCloud     : Bool ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, didSaveImageData : Bool, filename : String ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, didStartSession  : Bool ) {}
-    func cloudCentral(_ cloudCentral : CloudCentral, didUnlockCloud   : Bool ) {}
-    
+    func cloudCentral(_ cloudCentral: CloudCentral, didCompareLastUpdatedFiles       : Int, lastUpdatedBy: String ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, didCopyAllImagesFromCloudToDevice: Bool ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, didCopyAllImagesFromDeviceToCloud: Bool ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, didCopyDatabaseFromCloudToDevice : Bool ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, didCopyDatabaseFromDeviceToCloud : Bool ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, didDeleteImage  : Bool ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, didEndSession   : Bool ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, didFetch imageNames: [String] ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, didFetchImage   : Bool, filename: String, image: UIImage ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, didLockCloud    : Bool ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, didSaveImageData: Bool, filename: String ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, didStartSession : Bool ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, didUnlockCloud  : Bool ) {}
+    func cloudCentral(_ cloudCentral: CloudCentral, missingDbFiles  : [String] ) {}
 }
 
 
@@ -78,6 +78,7 @@ class CloudCentral: NSObject {
         case CopyDatabaseFromDeviceToCloud
         case DeleteImage
         case EndSession
+        case FetchDbFiles
         case FetchImage
         case FetchImageNames
         case LockCloud
@@ -90,41 +91,57 @@ class CloudCentral: NSObject {
         static let databaseFilenameArray   = [ Filenames.lastUpdated, Filenames.database, Filenames.databaseShm, Filenames.databaseWal ]
     }
     
-    private var cloudDefaultUrl : URL {
+    private var cloudDefaultUrl: URL {
         get {
             return FileManager.default.url( forUbiquityContainerIdentifier: nil )!
         }
         
     }
     
-    private var cloudPicturesUrl : URL {
+    private var cloudPicturesUrl: URL {
         get {
             return cloudRootUrl.appendingPathComponent( DirectoryNames.pictures )
         }
         
     }
     
-    private var cloudRootUrl : URL {
+    private var cloudRootUrl: URL {
         get {
             return cloudDefaultUrl.appendingPathComponent( DirectoryNames.root )
         }
         
     }
     
-    private var cloudImageFileArray     : [String] = []
-    private var currentCommand          : Command!
-    private var currentFilename         = ""
-    private var delegate                : CloudCentralDelegate!
-    private var deviceAccessControl     = DeviceAccessControl.sharedInstance
-    private var documentDirectoryURL    : URL!
-    private let fileManager             = FileManager.default
-    private var fileUrlArray            = [URL].init()
-    private var filesToDeleteUrlArray   = [URL].init()
-    private var reEstablishConnection   = false
-    private var requestQueue            : [[Any]] = []
-    private var sessionActive           = false
+    private var deviceName: String {
+        get {
+            var     name = UIDevice.current.name
 
+            if let deviceNameString = UserDefaults.standard.string( forKey: UserDefaultKeys.deviceName ) {
+                if !deviceNameString.isEmpty && deviceNameString.count > 0 {
+                    name = deviceNameString
+                }
+
+            }
+            
+            return name
+        }
+        
+    }
     
+    private var cloudImageFileArray   : [String] = []
+    private var currentCommand        : Command!
+    private var currentFilename       = ""
+    private var delegate              : CloudCentralDelegate!
+    private var deviceAccessControl   = DeviceAccessControl.sharedInstance
+    private var documentDirectoryURL  : URL!
+    private let fileManager           = FileManager.default
+    private var fileUrlArray          = [URL].init()
+    private var filesToDeleteUrlArray = [URL].init()
+    private var reEstablishConnection = false
+    private var requestQueue: [[Any]] = []
+    private var sessionActive         = false
+
+
     
     // MARK: Our Singleton (Public)
     
@@ -138,83 +155,88 @@ class CloudCentral: NSObject {
 extension CloudCentral {
     
     // Discovery Methods
-    func canSeeCloud(_ delegate : CloudCentralDelegate ) {
+    func canSeeCloud(_ delegate: CloudCentralDelegate ) {
         addRequest( [Command.CanSeeCloud, delegate] )
     }
     
     
-    func createDrirectoryTree(_ delegate : CloudCentralDelegate ) {
+    func createDrirectoryTree(_ delegate: CloudCentralDelegate ) {
         addRequest( [Command.CreateDrirectoryTree, delegate] )
     }
 
     
-    func isRootDirectoryPresent(_ delegate : CloudCentralDelegate ) {
+    func isRootDirectoryPresent(_ delegate: CloudCentralDelegate ) {
         addRequest( [Command.IsRootDirectoryPresent, delegate] )
     }
 
 
     // Session Methods
-    func compareLastUpdatedFiles(_ delegate : CloudCentralDelegate ) {
+    func compareLastUpdatedFiles(_ delegate: CloudCentralDelegate ) {
         addRequest( [Command.CompareLastUpdatedFiles, delegate] )
     }
 
     
-    func fetchImageNames(_ delegate : CloudCentralDelegate ) {
-        addRequest( [Command.FetchImageNames, delegate] )
-    }
-
-    
-    func copyAllImagesFromCloudToDevice(_ delegate : CloudCentralDelegate ) {
+    func copyAllImagesFromCloudToDevice(_ delegate: CloudCentralDelegate ) {
         addRequest( [Command.CopyAllImagesFromCloudToDevice, delegate] )
     }
     
     
-    func copyAllImagesFromDeviceToCloud(_ delegate : CloudCentralDelegate ) {
+    func copyAllImagesFromDeviceToCloud(_ delegate: CloudCentralDelegate ) {
         addRequest( [Command.CopyAllImagesFromDeviceToCloud, delegate] )
     }
     
     
-    func copyDatabaseFromCloudToDevice(_ delegate : CloudCentralDelegate ) {
+    func copyDatabaseFromCloudToDevice(_ delegate: CloudCentralDelegate ) {
         addRequest( [Command.CopyDatabaseFromCloudToDevice, delegate] )
     }
     
     
-    func copyDatabaseFromDeviceToCloud(_ delegate : CloudCentralDelegate ) {
+    func copyDatabaseFromDeviceToCloud(_ delegate: CloudCentralDelegate ) {
         addRequest( [Command.CopyDatabaseFromDeviceToCloud, delegate] )
     }
     
     
-    func deleteImage(_ filename : String, _ delegate : CloudCentralDelegate ) {
+    func deleteImage(_ filename: String, _ delegate: CloudCentralDelegate ) {
         addRequest( [Command.DeleteImage, filename, delegate] )
     }
     
     
-    func endSession(_ delegate : CloudCentralDelegate ) {
+    func endSession(_ delegate: CloudCentralDelegate ) {
         addRequest( [Command.EndSession, delegate] )
     }
     
     
-    func fetchImage(_ filename : String, _ delegate : CloudCentralDelegate ) {
+    func fetchDbFiles(_ delegate: CloudCentralDelegate ) {
+        addRequest( [Command.FetchDbFiles, delegate] )
+    }
+    
+    
+    func fetchImage(_ filename: String, _ delegate: CloudCentralDelegate ) {
         addRequest( [Command.FetchImage, filename, delegate] )
     }
     
     
-    func lockCloud(_ delegate : CloudCentralDelegate ) {
+    func fetchImageNames(_ delegate: CloudCentralDelegate ) {
+        addRequest( [Command.FetchImageNames, delegate] )
+    }
+
+    
+    func lockCloud(_ delegate: CloudCentralDelegate ) {
         addRequest( [Command.LockCloud, delegate] )
     }
     
     
-    func saveImageData(_ imageData : Data, filename : String, _ delegate : CloudCentralDelegate ) {
+    func saveImageData(_ imageData: Data, filename: String, _ delegate: CloudCentralDelegate ) {
         addRequest( [Command.SaveImageData, imageData, filename, delegate] )
     }
     
     
-    func startSession(_ delegate : CloudCentralDelegate  ) {
+    func startSession(_ delegate: CloudCentralDelegate  ) {
         addRequest( [Command.StartSession, delegate] )
     }
 
     
-    func unlockCloud(_ delegate : CloudCentralDelegate ) {
+    func unlockCloud(_ delegate: CloudCentralDelegate ) {
         addRequest( [Command.UnlockCloud, delegate] )
     }
 
@@ -222,7 +244,7 @@ extension CloudCentral {
     
     // MARK: Utility Methods (Private)
     
-    private func addRequest(_ request : [Any] ) {
+    private func addRequest(_ request: [Any] ) {
         let     requestQueueIdle = requestQueue.isEmpty
         
         logVerbose( "[ %@ ] ... queued requests[ %d ]", stringForCommand( request[0] as! Command ), requestQueue.count )
@@ -238,7 +260,7 @@ extension CloudCentral {
     }
     
     
-    private func isSessionCommand(_ command : Command ) -> Bool {
+    private func isSessionCommand(_ command: Command ) -> Bool {
         var isSession = true
         
         switch command {
@@ -251,7 +273,7 @@ extension CloudCentral {
     }
     
     
-    private func processNextRequest(_ popHeadOfQueue : Bool = true ) {
+    private func processNextRequest(_ popHeadOfQueue: Bool = true ) {
 
         if popHeadOfQueue {
             logTrace( "Popping head of requestQueue" )
@@ -293,36 +315,38 @@ extension CloudCentral {
         case .CopyAllImagesFromDeviceToCloud:   _copyAllImagesFromDeviceToCloud( request[1] as! CloudCentralDelegate )
         case .CopyDatabaseFromCloudToDevice:    _copyDatabaseFromCloudToDevice(  request[1] as! CloudCentralDelegate )
         case .CopyDatabaseFromDeviceToCloud:    _copyDatabaseFromDeviceToCloud(  request[1] as! CloudCentralDelegate )
-        case .DeleteImage:                      _deleteImage(   request[1] as! String, request[2] as! CloudCentralDelegate )
-        case .EndSession:                       _endSession(    request[1] as! CloudCentralDelegate )
-        case .FetchImage:                       _fetchImage(    request[1] as! String, request[2] as! CloudCentralDelegate )
+        case .DeleteImage:                      _deleteImage(     request[1] as! String, request[2] as! CloudCentralDelegate )
+        case .EndSession:                       _endSession(      request[1] as! CloudCentralDelegate )
+        case .FetchDbFiles:                     _fetchDbFiles(    request[1] as! CloudCentralDelegate )
+        case .FetchImage:                       _fetchImage(      request[1] as! String, request[2] as! CloudCentralDelegate )
         case .FetchImageNames:                  _fetchImageNames( request[1] as! CloudCentralDelegate )
-        case .LockCloud:                        _lockCloud(     request[1] as! CloudCentralDelegate )
-        case .SaveImageData:                    _saveImageData( request[1] as! Data, filename : request[2] as! String, request[3] as! CloudCentralDelegate )
-        case .StartSession:                     _startSession(  request[1] as! CloudCentralDelegate )
-        case .UnlockCloud:                      _unlockCloud(   request[1] as! CloudCentralDelegate )
-            
+        case .LockCloud:                        _lockCloud(       request[1] as! CloudCentralDelegate )
+        case .SaveImageData:                    _saveImageData(   request[1] as! Data, filename: request[2] as! String, request[3] as! CloudCentralDelegate )
+        case .StartSession:                     _startSession(    request[1] as! CloudCentralDelegate )
+        case .UnlockCloud:                      _unlockCloud(     request[1] as! CloudCentralDelegate )
+
         default:                               logTrace( "SBH!" )
         }
         
     }
     
     
-    private func stringForCommand(_ command : Command ) -> String {
+    private func stringForCommand(_ command: Command ) -> String {
         var     description = "Unknown"
         
         switch command {
         case .CanSeeCloud:                      description = "CanSeeCloud"
         case .CreateDrirectoryTree:             description = "CreateDrirectoryTree"
         case .CompareLastUpdatedFiles:          description = "CompareLastUpdatedFiles"
-        case .FetchImageNames:                  description = "FetchImageNames"
         case .CopyAllImagesFromDeviceToCloud:   description = "CopyAllImagesFromDeviceToCloud"
         case .CopyAllImagesFromCloudToDevice:   description = "CopyAllImagesFromCloudToDevice"
         case .CopyDatabaseFromDeviceToCloud:    description = "CopyDatabaseFromDeviceToCloud"
         case .CopyDatabaseFromCloudToDevice:    description = "CopyDatabaseFromCloudToDevice"
         case .DeleteImage:                      description = "DeleteImage"
         case .EndSession:                       description = "EndSession"
+        case .FetchDbFiles:                     description = "FetchDbFiles"
         case .FetchImage:                       description = "FetchImage"
+        case .FetchImageNames:                  description = "FetchImageNames"
         case .IsRootDirectoryPresent:           description = "IsRootDirectoryPresent"
         case .LockCloud:                        description = "LockCloud"
         case .SaveImageData:                    description = "SaveImageData"
@@ -342,20 +366,20 @@ extension CloudCentral {
 
 extension CloudCentral {
     
-    private func _canSeeCloud(_ delegate : CloudCentralDelegate ) {
+    private func _canSeeCloud(_ delegate: CloudCentralDelegate ) {
         let canSeeCloud = ( fileManager.ubiquityIdentityToken != nil )
         
         logVerbose( "[ %@ ]", stringFor( canSeeCloud ) )
         
         DispatchQueue.main.async {
             delegate.cloudCentral( self, canSeeCloud: canSeeCloud )
+            self.processNextRequest()
         }
 
-        processNextRequest()
     }
     
     
-    private func _createDrirectoryTree(_ delegate : CloudCentralDelegate ) {
+    private func _createDrirectoryTree(_ delegate: CloudCentralDelegate ) {
         var     didCreateDirectoryTree = false
 
         if fileManager.fileExists( atPath: cloudRootUrl.path ) {
@@ -385,13 +409,13 @@ extension CloudCentral {
             
         DispatchQueue.main.async {
             delegate.cloudCentral( self, didCreateDirectoryTree: didCreateDirectoryTree )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
 
     
-    private func _isRootDirectoryPresent(_ delegate : CloudCentralDelegate ) {
+    private func _isRootDirectoryPresent(_ delegate: CloudCentralDelegate ) {
         var     rootDirectoryIsPresent = false
 
         if fileManager.fileExists( atPath: cloudRootUrl.path, isDirectory: nil ) {
@@ -405,9 +429,9 @@ extension CloudCentral {
         
         DispatchQueue.main.async {
             delegate.cloudCentral( self, rootDirectoryIsPresent: rootDirectoryIsPresent )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
@@ -420,20 +444,20 @@ extension CloudCentral {
 
 extension CloudCentral {
     
-    private func _compareLastUpdatedFiles(_ delegate : CloudCentralDelegate ) {
-        let compareResult = compareLastUpdatedDates()
+    private func _compareLastUpdatedFiles(_ delegate: CloudCentralDelegate ) {
+        let compareResult = compareLastUpdatedFiles()
         
-        logVerbose( "[ %@ ]", descriptionForCompare( compareResult ) )
+        logVerbose( "[ %@ ] lastUpdatedBy: [ %@ ]", descriptionForCompare( compareResult.0 ), compareResult.1 )
         
         DispatchQueue.main.async {
-            delegate.cloudCentral( self, didCompareLastUpdatedFiles: compareResult )
+            delegate.cloudCentral( self, didCompareLastUpdatedFiles: compareResult.0, lastUpdatedBy: compareResult.1 )
+            self.processNextRequest()
         }
-        
-        processNextRequest()
+
     }
 
     
-    private func _copyAllImagesFromCloudToDevice(_ delegate : CloudCentralDelegate ) {
+    private func _copyAllImagesFromCloudToDevice(_ delegate: CloudCentralDelegate ) {
         loadCloudImagesIntoFileUrlArray()
         deleteFiles()
         
@@ -443,13 +467,13 @@ extension CloudCentral {
         
         DispatchQueue.main.async {
             delegate.cloudCentral( self, didCopyAllImagesFromCloudToDevice: didCopyAllImagesFromCloudToDevice )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
-    private func _copyAllImagesFromDeviceToCloud(_ delegate : CloudCentralDelegate ) {
+    private func _copyAllImagesFromDeviceToCloud(_ delegate: CloudCentralDelegate ) {
         loadDeviceImagesIntoFileUrlArray()
         deleteFiles()
 
@@ -459,13 +483,13 @@ extension CloudCentral {
         
         DispatchQueue.main.async {
             delegate.cloudCentral( self, didCopyAllImagesFromDeviceToCloud: didCopyAllImagesFromDeviceToCloud )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
-    private func _copyDatabaseFromCloudToDevice(_ delegate : CloudCentralDelegate ) {
+    private func _copyDatabaseFromCloudToDevice(_ delegate: CloudCentralDelegate ) {
         loadDatabaseFilesIntoFileUrlArray()
         deleteFiles()
         
@@ -475,13 +499,13 @@ extension CloudCentral {
         
         DispatchQueue.main.async {
             delegate.cloudCentral( self, didCopyDatabaseFromCloudToDevice: didCopyDatabaseFromCloudToDevice )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
-    private func _copyDatabaseFromDeviceToCloud(_ delegate : CloudCentralDelegate ) {
+    private func _copyDatabaseFromDeviceToCloud(_ delegate: CloudCentralDelegate ) {
         loadDatabaseFilesIntoFileUrlArray()
         deleteCloudDatabaseFiles()
         
@@ -491,13 +515,13 @@ extension CloudCentral {
         
         DispatchQueue.main.async {
             delegate.cloudCentral( self, didCopyDatabaseFromDeviceToCloud: didCopyDatabaseFromDeviceToCloud )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
-    private func _deleteImage(_ filename : String, _ delegate : CloudCentralDelegate ) {
+    private func _deleteImage(_ filename: String, _ delegate: CloudCentralDelegate ) {
         let     cloudUrl       = cloudRootUrl.appendingPathComponent( DirectoryNames.pictures )
         var     didDeleteImage = false
         let     imageUrl       = cloudUrl.appendingPathComponent( filename )
@@ -519,25 +543,52 @@ extension CloudCentral {
 
         DispatchQueue.main.async {
             delegate.cloudCentral( self, didDeleteImage: didDeleteImage )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
-    private func _endSession(_ delegate : CloudCentralDelegate ) {
+    private func _endSession(_ delegate: CloudCentralDelegate ) {
         logTrace()
         sessionActive = false
 
         DispatchQueue.main.async {
             delegate.cloudCentral( self, didEndSession: true )
+            self.processNextRequest()
         }
         
-        processNextRequest()
     }
     
     
-    private func _fetchImage(_ filename : String, _ delegate : CloudCentralDelegate ) {
+    private func _fetchDbFiles(_ delegate: CloudCentralDelegate ) {
+        logTrace()
+        let     dbFilenameArray = [Filenames.database, Filenames.databaseShm, Filenames.databaseWal, Filenames.lastUpdated]
+        var     missingDbFiles  = [String].init()
+
+        for filename in dbFilenameArray {
+            let     dbFileUrl  = cloudRootUrl.appendingPathComponent( filename )
+            let     dbFileData = fileManager.contents( atPath: dbFileUrl.path )
+
+            if let _ = dbFileData {
+                logVerbose( "Read contents of [ %@ ]!", filename )
+            }
+            else {
+                logVerbose( "ERROR!!!  Could NOT read contents of [ %@ ]!", filename )
+                missingDbFiles.append( filename )
+            }
+            
+        }
+
+        DispatchQueue.main.async {
+            delegate.cloudCentral( self, missingDbFiles: missingDbFiles )
+            self.processNextRequest()
+        }
+        
+    }
+
+    
+    private func _fetchImage(_ filename: String, _ delegate: CloudCentralDelegate ) {
         let     cloudPicturesUrl = cloudRootUrl.appendingPathComponent( DirectoryNames.pictures )
         var     didFetchImage    = false
         var     image            = UIImage.init()
@@ -562,225 +613,9 @@ extension CloudCentral {
 
         DispatchQueue.main.async {
             delegate.cloudCentral( self, didFetchImage: didFetchImage, filename: filename, image: image )
+            self.processNextRequest()
         }
         
-        processNextRequest()
-    }
-    
-    
-    private func _lockCloud(_ delegate : CloudCentralDelegate ) {
-        logTrace()
-        let     lockFileUrl     = cloudRootUrl.appendingPathComponent( Filenames.lockFile )
-        let     thisDeviceId    = UIDevice.current.identifierForVendor?.uuidString ?? "Unknown"
-        let     thisDeviceName  = UIDevice.current.name
-
-        deviceAccessControl.reset()
-        deviceAccessControl.locked = true
-
-        if !fileManager.fileExists( atPath: lockFileUrl.path, isDirectory: nil ) {
-            createLockFile()
-        }
-        else {
-            
-            do {
-                var     fileData : Data!
-                
-                try fileData = Data( contentsOf: lockFileUrl )
-                
-                let     lockMessage  = String( decoding: fileData, as: UTF8.self )
-                let     components   = lockMessage.components( separatedBy: "," )
-                
-                if components.count == 2 {
-                    let     lockDeviceId   = components[1]
-                    let     lockDeviceName = components[0]
-                    let     byMe           = ( thisDeviceName == lockDeviceName ) && ( thisDeviceId == lockDeviceId )
-
-                    deviceAccessControl.byMe      = byMe
-                    deviceAccessControl.ownerName = lockDeviceName
-                    logVerbose( "From existing lock file ... %@", deviceAccessControl.descriptor() )
-                }
-                else {
-                    logVerbose( "ERROR!  lockMessage NOT properly formatted\n    [ %@ ]", lockMessage )
-
-                    if lockMessage.count == 0 {
-                        createLockFile()
-
-                        deviceAccessControl.byMe      = true
-                        deviceAccessControl.locked    = true
-                        deviceAccessControl.ownerName = thisDeviceName
-                        logVerbose( "Overriding ... %@", deviceAccessControl.descriptor() )
-                    }
-                    
-                }
-
-            }
-            
-            catch let error as NSError {
-                logVerbose( "ERROR!  Failed to read from lock file ... Error[ %@ ]", error.localizedDescription )
-            }
-
-        }
-
-        DispatchQueue.main.async {
-            delegate.cloudCentral( self, didLockCloud: self.deviceAccessControl.byMe )
-        }
-        
-        processNextRequest()
-    }
-    
-    
-    private func createLockFile() {
-        let     lockFileUrl     = cloudRootUrl.appendingPathComponent( Filenames.lockFile )
-        let     thisDeviceId    = UIDevice.current.identifierForVendor?.uuidString ?? "Unknown"
-        let     thisDeviceName  = UIDevice.current.name
-        let     lockMessage     = String( format: "%@,%@", thisDeviceName, thisDeviceId )
-        let     fileData        = Data( lockMessage.utf8 )
-        
-        do {
-            try fileData.write( to: lockFileUrl )
-            
-            deviceAccessControl.byMe      = true
-            deviceAccessControl.ownerName = thisDeviceName
-            logVerbose( "Created lock file ... %@", deviceAccessControl.descriptor() )
-        }
-        catch let error as NSError {
-            deviceAccessControl.ownerName = "Unknown"
-            logVerbose( "ERROR!!!  Lock file create failed! ... [ %@ ]", error.localizedDescription )
-        }
-
-    }
-    
-    
-    private func _saveImageData(_ imageData : Data, filename : String, _ delegate : CloudCentralDelegate ) {
-        var     didSaveImageData = false
-        let     cloudPicturesUrl = cloudRootUrl.appendingPathComponent( DirectoryNames.pictures )
-        let     imageFileUrl     = cloudPicturesUrl.appendingPathComponent( filename )
-                    
-        do {
-            try imageData.write( to: imageFileUrl, options: .atomic )
-            
-            didSaveImageData = true
-            logVerbose( "Saved image to file named[ %@ ]", filename )
-        }
-        catch let error as NSError {
-            logVerbose( "ERROR!  Failed to write image data ... Error[ %@ ]", error.localizedDescription )
-        }
-
-        DispatchQueue.main.async {
-            delegate.cloudCentral( self, didSaveImageData: didSaveImageData, filename: filename )
-        }
-        
-        processNextRequest()
-    }
-    
-    
-    private func _startSession(_ delegate : CloudCentralDelegate ) {
-        if let url = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
-            documentDirectoryURL = url
-        }
-        else {
-            logTrace( "ERROR:  Unable to load documentDirectoryURL" )
-            documentDirectoryURL = URL( fileURLWithPath: "" )
-        }
-        
-        sessionActive = ( fileManager.ubiquityIdentityToken != nil )
-        
-        logVerbose( "didStartSession[ %@ ]", stringFor( sessionActive ) )
-        
-        if reEstablishConnection {
-            reEstablishConnection = false
-        }
-        else {
-            DispatchQueue.main.async {
-                delegate.cloudCentral( self, didStartSession: self.sessionActive )
-            }
-            
-        }
-        
-        processNextRequest()
-    }
-
-    
-    private func _unlockCloud(_ delegate : CloudCentralDelegate ) {
-        var     didUnlockCloud = false
-        let     lockFileUrl    = cloudRootUrl.appendingPathComponent( Filenames.lockFile )
-
-        if !fileManager.fileExists( atPath: lockFileUrl.path, isDirectory: nil ) {
-            didUnlockCloud = true
-            logTrace( "ERROR!  Lock file does NOT exist!" )
-        }
-        else {
-            
-            do {
-                try fileManager.removeItem(at: lockFileUrl )
-
-                didUnlockCloud = true
-                logTrace( "Lock file removed" )
-            }
-            catch let error as NSError {
-                logVerbose( "ERROR!  [ %@ ]", error.localizedDescription )
-            }
-            
-        }
-        
-        DispatchQueue.main.async {
-            delegate.cloudCentral( self, didUnlockCloud: didUnlockCloud )
-        }
-        
-        processNextRequest()
-    }
-    
-    
-    
-    // MARK: Session Utility Methods (Private)
-    
-     private func compareLastUpdatedDates() -> Int {
-         var     compareResult = LastUpdatedFileCompareResult.equal
-         let     deviceFileUrl = documentDirectoryURL.appendingPathComponent( Filenames.lastUpdated )
-         let     formatter     = DateFormatter()
-
-         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-         
-         if fileManager.fileExists( atPath: deviceFileUrl.path ) {
-             
-             if let deviceFileData = fileManager.contents( atPath: deviceFileUrl.path ) {
-                 let     cloudFileUrl     = cloudRootUrl.appendingPathComponent( Filenames.lastUpdated )
-                 let     deviceDateString = String( decoding: deviceFileData, as: UTF8.self )
-                 let     deviceDate       = formatter.date( from: deviceDateString )
-
-                 if let cloudFileData = fileManager.contents( atPath: cloudFileUrl.path ) {
-                     let     cloudDateString = String( decoding: cloudFileData, as: UTF8.self )
-                     let     cloudDate       = formatter.date( from: cloudDateString )
-                     
-                     if let dateOnCloud = cloudDate?.timeIntervalSince1970, let dateOnDevice = deviceDate?.timeIntervalSince1970 {
-                         if dateOnCloud < dateOnDevice {
-                             compareResult = LastUpdatedFileCompareResult.deviceIsNewer
-                         }
-                         else if dateOnDevice < dateOnCloud {
-                             compareResult = LastUpdatedFileCompareResult.cloudIsNewer
-                         }
-                         
-                     }
-                     else {
-                         logTrace( "ERROR!  Could NOT unwrap dateOnCloud or dateOnDevice!" )
-                     }
-
-                 }
-                 else {
-                     logTrace( "ERROR!  Could NOT unwrap cloudFileData!" )
-                 }
-
-             }
-             else {
-                 logTrace( "ERROR!  Could NOT unwrap deviceFileData!" )
-             }
-             
-         }
-         else {
-             logTrace( "LastUpdated file does NOT Exist on Device" )
-         }
-             
-        return compareResult
     }
     
     
@@ -812,7 +647,7 @@ extension CloudCentral {
                 let     fileUrl      = picturesDirectoryURL.appendingPathComponent( filename )
                 var     isaDirectory = ObjCBool( false )
                 
-                if fileManager.fileExists( atPath: fileUrl.path, isDirectory : &isaDirectory ) {
+                if fileManager.fileExists( atPath: fileUrl.path, isDirectory: &isaDirectory ) {
                     if !isaDirectory.boolValue {
                         imageNameArray.append( filename )
 //                        logVerbose( "[ %@ ]", fileUrl.path )
@@ -830,14 +665,215 @@ extension CloudCentral {
 
         DispatchQueue.main.async {
             delegate.cloudCentral( self, didFetch: imageNameArray )
+            self.processNextRequest()
         }
         
-        processNextRequest()
+    }
+
+    
+    private func _lockCloud(_ delegate: CloudCentralDelegate ) {
+        logTrace()
+        let     lockFileUrl = cloudRootUrl.appendingPathComponent( Filenames.lockFile )
+        let     deviceId    = UIDevice.current.identifierForVendor?.uuidString ?? "Unknown"
+
+        deviceAccessControl.reset()
+        deviceAccessControl.locked = true
+
+        if !fileManager.fileExists( atPath: lockFileUrl.path, isDirectory: nil ) {
+            createLockFile()
+        }
+        else {
+            
+            do {
+                var     fileData: Data!
+                
+                try fileData = Data( contentsOf: lockFileUrl )
+                
+                let     lockMessage  = String( decoding: fileData, as: UTF8.self )
+                let     components   = lockMessage.components( separatedBy: "," )
+                
+                if components.count == 2 {
+                    let     lockDeviceId   = components[1]
+                    let     lockDeviceName = components[0]
+                    let     byMe           = ( deviceName == lockDeviceName ) && ( deviceId == lockDeviceId )
+
+                    deviceAccessControl.byMe      = byMe
+                    deviceAccessControl.ownerName = lockDeviceName
+                    logVerbose( "From existing lock file ... %@", deviceAccessControl.descriptor() )
+                }
+                else {
+                    logVerbose( "ERROR!  lockMessage NOT properly formatted\n    [ %@ ]", lockMessage )
+
+                    if lockMessage.count == 0 {
+                        createLockFile()
+
+                        deviceAccessControl.byMe      = true
+                        deviceAccessControl.locked    = true
+                        deviceAccessControl.ownerName = deviceName
+                        logVerbose( "Overriding ... %@", deviceAccessControl.descriptor() )
+                    }
+                    
+                }
+
+            }
+            
+            catch let error as NSError {
+                logVerbose( "ERROR!  Failed to read from lock file ... Error[ %@ ]", error.localizedDescription )
+            }
+
+        }
+
+        DispatchQueue.main.async {
+            delegate.cloudCentral( self, didLockCloud: self.deviceAccessControl.byMe )
+            self.processNextRequest()
+        }
+        
     }
     
     
+    private func _saveImageData(_ imageData: Data, filename: String, _ delegate: CloudCentralDelegate ) {
+        var     didSaveImageData = false
+        let     cloudPicturesUrl = cloudRootUrl.appendingPathComponent( DirectoryNames.pictures )
+        let     imageFileUrl     = cloudPicturesUrl.appendingPathComponent( filename )
+                    
+        do {
+            try imageData.write( to: imageFileUrl, options: .atomic )
+            
+            didSaveImageData = true
+            logVerbose( "Saved image to file named[ %@ ]", filename )
+        }
+        catch let error as NSError {
+            logVerbose( "ERROR!  Failed to write image data ... Error[ %@ ]", error.localizedDescription )
+        }
+
+        DispatchQueue.main.async {
+            delegate.cloudCentral( self, didSaveImageData: didSaveImageData, filename: filename )
+            self.processNextRequest()
+        }
+        
+    }
+    
+    
+    private func _startSession(_ delegate: CloudCentralDelegate ) {
+        if let url = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
+            documentDirectoryURL = url
+        }
+        else {
+            logTrace( "ERROR:  Unable to load documentDirectoryURL" )
+            documentDirectoryURL = URL( fileURLWithPath: "" )
+        }
+        
+        sessionActive = ( fileManager.ubiquityIdentityToken != nil )
+        
+        logVerbose( "didStartSession[ %@ ]", stringFor( sessionActive ) )
+        
+        if reEstablishConnection {
+            reEstablishConnection = false
+            processNextRequest()
+        }
+        else {
+            DispatchQueue.main.async {
+                delegate.cloudCentral( self, didStartSession: self.sessionActive )
+                self.processNextRequest()
+            }
+            
+        }
+        
+    }
+
+    
+    private func _unlockCloud(_ delegate: CloudCentralDelegate ) {
+        var     didUnlockCloud = false
+        let     lockFileUrl    = cloudRootUrl.appendingPathComponent( Filenames.lockFile )
+
+        if !fileManager.fileExists( atPath: lockFileUrl.path, isDirectory: nil ) {
+            didUnlockCloud = true
+            logTrace( "ERROR!  Lock file does NOT exist!" )
+        }
+        else {
+            
+            do {
+                try fileManager.removeItem(at: lockFileUrl )
+
+                didUnlockCloud = true
+                logTrace( "Lock file removed" )
+            }
+            catch let error as NSError {
+                logVerbose( "ERROR!  [ %@ ]", error.localizedDescription )
+            }
+            
+        }
+        
+        DispatchQueue.main.async {
+            delegate.cloudCentral( self, didUnlockCloud: didUnlockCloud )
+            self.processNextRequest()
+        }
+        
+    }
+    
+    
+    
+    // MARK: Session Utility Methods (Private)
+    
+    private func compareLastUpdatedFiles() -> (Int, String) {
+        var     compareResult = LastUpdatedFileCompareResult.fileNotFound
+        let     deviceFileUrl = documentDirectoryURL.appendingPathComponent( Filenames.lastUpdated )
+        let     formatter     = DateFormatter()
+        var     updatedBy     = NSLocalizedString( "Title.Unknown", comment: "Unknown" )
+
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        if fileManager.fileExists( atPath: deviceFileUrl.path ) {
+            
+            if let deviceFileData = fileManager.contents( atPath: deviceFileUrl.path ) {
+                let     cloudFileUrl     = cloudRootUrl.appendingPathComponent( Filenames.lastUpdated )
+                let     deviceDateString = String( decoding: deviceFileData, as: UTF8.self )
+                let     deviceComponents = deviceDateString.components(separatedBy: GlobalConstants.separatorForLastUpdatedString )
+                let     deviceDate       = formatter.date( from: deviceComponents[0] )
+
+                if let cloudFileData = fileManager.contents( atPath: cloudFileUrl.path ) {
+                    let    cloudDateString = String( decoding: cloudFileData, as: UTF8.self )
+                    let    cloudComponents = cloudDateString.components(separatedBy: GlobalConstants.separatorForLastUpdatedString )
+                    let    cloudDate       = formatter.date( from: cloudComponents[0] )
+                    
+                    if let dateOnCloud = cloudDate?.timeIntervalSince1970, let dateOnDevice = deviceDate?.timeIntervalSince1970 {
+                        if dateOnCloud < dateOnDevice {
+                            compareResult = LastUpdatedFileCompareResult.deviceIsNewer
+                        }
+                        else if dateOnDevice < dateOnCloud {
+                            compareResult = LastUpdatedFileCompareResult.cloudIsNewer
+                        }
+                        
+                        if cloudComponents.count == 2 {
+                            updatedBy = cloudComponents[1]
+                        }
+                        
+                    }
+                    else {
+                        logTrace( "ERROR!  Could NOT unwrap dateOnCloud or dateOnDevice!" )
+                    }
+
+                }
+                else {
+                    logTrace( "ERROR!  Could NOT unwrap cloudFileData!" )
+                }
+
+            }
+            else {
+                logTrace( "ERROR!  Could NOT unwrap deviceFileData!" )
+            }
+            
+        }
+        else {
+            logTrace( "LastUpdated file does NOT Exist on Device" )
+        }
+            
+       return (compareResult, updatedBy)
+   }
+   
+   
     private func copyDatabaseFromCloudToDevice() -> Bool {
-        var     result      = true
+        var     result = true
         
         for fileUrl in fileUrlArray {
             let     cloudUrl = cloudRootUrl.appendingPathComponent( fileUrl.lastPathComponent )
@@ -886,8 +922,8 @@ extension CloudCentral {
 
             }
             else {
-                result = fileUrl.lastPathComponent == Filenames.lastUpdated
-                logVerbose( "%@Unable to read device file[ %@ ] ", result ? "" : "ERROR!  ", fileUrl.lastPathComponent )
+                logVerbose( "ERROR!  Unable to read device file[ %@ ] ", fileUrl.lastPathComponent )
+                result = false
             }
 
         }
@@ -953,6 +989,27 @@ extension CloudCentral {
         }
       
         return result
+    }
+    
+    
+    private func createLockFile() {
+        let     lockFileUrl     = cloudRootUrl.appendingPathComponent( Filenames.lockFile )
+        let     thisDeviceId    = UIDevice.current.identifierForVendor?.uuidString ?? "Unknown"
+        let     lockMessage     = String( format: "%@,%@", deviceName, thisDeviceId )
+        let     fileData        = Data( lockMessage.utf8 )
+        
+        do {
+            try fileData.write( to: lockFileUrl )
+            
+            deviceAccessControl.byMe      = true
+            deviceAccessControl.ownerName = deviceName
+            logVerbose( "Created lock file ... %@", deviceAccessControl.descriptor() )
+        }
+        catch let error as NSError {
+            deviceAccessControl.ownerName = "Unknown"
+            logVerbose( "ERROR!!!  Lock file create failed! ... [ %@ ]", error.localizedDescription )
+        }
+
     }
     
     
@@ -1064,7 +1121,7 @@ extension CloudCentral {
                 let     fileUrl      = picturesDirectoryURL.appendingPathComponent( filename )
                 var     isaDirectory = ObjCBool( false )
                 
-                if fileManager.fileExists( atPath: fileUrl.path, isDirectory : &isaDirectory ) {
+                if fileManager.fileExists( atPath: fileUrl.path, isDirectory: &isaDirectory ) {
                     if !isaDirectory.boolValue {
                         fileUrlArray.append( fileUrl )
 //                        logVerbose( "[ %@ ]", fileUrl.path )

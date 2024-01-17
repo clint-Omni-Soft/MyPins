@@ -14,6 +14,8 @@ class ListTableViewControllerCell: UITableViewCell {
 
     // MARK: Public Variables
     
+    var imageState = ImageState.noName
+
     @IBOutlet weak var dateLabel  : UILabel!
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var myImageView: UIImageView!
@@ -24,7 +26,7 @@ class ListTableViewControllerCell: UITableViewCell {
     // MARK: Private Variables
     
     private let pinCentral = PinCentral.sharedInstance
-    
+
     
     
     // MARK: UITableViewCell Lifecycle Methods
@@ -44,7 +46,6 @@ class ListTableViewControllerCell: UITableViewCell {
     
     func initializeWith(_ pin: Pin ) {
         var     dateString  = ""
-        var     imageLoaded = false
         
         if let lastModified = pin.lastModified as Date? {
             dateString = DateFormatter.localizedString( from: lastModified as Date, dateStyle: DateFormatter.Style.short, timeStyle: DateFormatter.Style.short )
@@ -58,24 +59,26 @@ class ListTableViewControllerCell: UITableViewCell {
             dateLabel  .text = dateString
         }
         
+        myImageView.image = UIImage( named: GlobalConstants.noImage )
+
         if let imageName = pin.imageName {
             if !imageName.isEmpty {
-                let result = self.pinCentral.imageNamed( imageName, descriptor: pinCentral.shortDescriptionFor( pin ), self )
-
-                imageLoaded = result.0
-
-                if imageLoaded {
-                    myImageView.image = result.1
+                var     usingThumbnails = false
+                
+                if let _ = UserDefaults.standard.string( forKey: UserDefaultKeys.usingThumbnails ) {
+                    usingThumbnails = true
                 }
 
+                let imageToFetch = usingThumbnails ? ( GlobalConstants.thumbNailPrefix + imageName ) : imageName
+                let result       = self.pinCentral.imageNamed( imageToFetch, descriptor: pinCentral.shortDescriptionFor( pin ), self )
+                let imageLoaded  = result.0
+                
+                imageState        = imageLoaded ? ImageState.loaded : ImageState.missing
+                myImageView.image = imageLoaded ? result.1 : UIImage( named: GlobalConstants.missingImage )
             }
 
         }
         
-        if !imageLoaded {
-            myImageView.image = UIImage( named: "missingImage" )
-        }
-            
     }
     
 
@@ -88,7 +91,9 @@ class ListTableViewControllerCell: UITableViewCell {
 extension ListTableViewControllerCell: PinCentralDelegate {
     
     func pinCentral(_ pinCentral: PinCentral, didFetchImage: Bool, filename: String, image: UIImage) {
-        logTrace()
+        logVerbose( "didFetchImage[ %@ ] [ %@ ]", stringFor( didFetchImage ), filename )
+        imageState = didFetchImage ? ImageState.loaded : ImageState.missing
+
         if didFetchImage {
             myImageView.image = image
         }

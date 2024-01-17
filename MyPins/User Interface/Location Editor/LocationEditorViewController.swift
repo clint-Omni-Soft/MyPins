@@ -13,7 +13,6 @@ import MapKit
 
 protocol LocationEditorViewControllerDelegate: AnyObject {
     func locationEditorViewController(_ locationEditorViewController: LocationEditorViewController, didEditLocationData: Bool )
-    func locationEditorViewController(_ locationEditorViewController: LocationEditorViewController, wantsToCenterMapAt coordinate: CLLocationCoordinate2D )
 }
 
 
@@ -27,7 +26,7 @@ class LocationEditorViewController: UIViewController  {
     weak var delegate: LocationEditorViewControllerDelegate?
     
     var     centerOfMap:                CLLocationCoordinate2D!     // Only set by MapViewController when indexOfItemBeingEdited == GlobalConstants.newPin
-    var     indexOfItemBeingEdited:     Int!                        // Set by delegate
+    var     indexPathOfItemBeingEdited: IndexPath!                  // Set by delegate
     var     launchedFromDetailView    = false                       // Set by delegate
     var     useCenterOfMap            = false                       // Only set by MapViewController when indexOfItemBeingEdited == GlobalConstants.newPin
     
@@ -41,7 +40,7 @@ class LocationEditorViewController: UIViewController  {
     }
 
     private struct RowHeights {
-        static let details  = CGFloat( 210.0 )
+        static let details  = CGFloat( 165.0 )
         static let image    = CGFloat( 240.0 )
         static let notes    = CGFloat( 240.0 )
     }
@@ -53,7 +52,6 @@ class LocationEditorViewController: UIViewController  {
     }
     
     private var     altitude                  = 0.0
-    private var     changingColors            = false
     private var     details                   = String()
     private var     detailsCell               : LocationDetailsTableViewCell!   // Set in LocationDetailsTableViewCellDelegate Method
     private var     firstTimeIn               = true
@@ -75,7 +73,6 @@ class LocationEditorViewController: UIViewController  {
     private var     originalPinColor          : Int16!      // Set in initializeVariables()
     private let     pinCentral                = PinCentral.sharedInstance
     private var     pinColorIndex             : Int16!      // Set in initializeVariables()
-    private var     replacingImage            = false
     private var     savedPinBeforeShowingMap  = false
     
     
@@ -87,7 +84,7 @@ class LocationEditorViewController: UIViewController  {
         super.viewDidLoad()
 
         navigationItem.title = NSLocalizedString( "Title.PinEditor", comment: "Pin Editor" )
-        preferredContentSize = CGSize( width: 400, height: 500 )
+        preferredContentSize = CGSize( width: 400, height: 600 )
         
         // I'm not sure why but without the following 2 lines, the navBar is Black
         edgesForExtendedLayout = .all
@@ -102,23 +99,7 @@ class LocationEditorViewController: UIViewController  {
         super.viewWillAppear( animated )
         
         loadBarButtonItems()
-        
-        NotificationCenter.default.addObserver( self, selector: #selector( self.pinsUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: nil )
-
         myTableView.reloadData()
-    }
-    
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        logTrace()
-        super.viewWillDisappear( animated )
-        
-        NotificationCenter.default.removeObserver( self )
-        
-        if !imageAssigned && !changingColors {
-            deleteImage()
-        }
-        
     }
     
     
@@ -132,52 +113,50 @@ class LocationEditorViewController: UIViewController  {
     // MARK: NSNotification Methods
     
     @objc func pinsUpdated( notification: NSNotification ) {
-        logVerbose( "pinCentral.pinIndex[ %d ]", pinCentral.newPinIndex )
-        
-        if pinCentral.newPinIndex != GlobalConstants.newPin {
-            indexOfItemBeingEdited = pinCentral.newPinIndex
-        }
-
-        if UIDevice.current.userInterfaceIdiom == .pad  {
-            return
-        }
-        
-        // The reason we are using Notifications is because this view can be up in two different places on the iPad at the same time.
-        // This approach allows a change in one to immediately be reflected in the other.
-        
-        if !imageAssigned {
-            deleteImage()
-        }
-        
-        initializeVariables()
-        myTableView.reloadData()
+        logVerbose( "pinCentral.newPinIndexPath[ %@ ]", stringFor( pinCentral.newPinIndexPath ) )
    }
     
     
     
     // MARK: Target/Action Methods
     
-    @IBAction func doneBarButtonTouched( sender: UIBarButtonItem ) {
+    @IBAction func cancelBarButtonTouched( sender: UIBarButtonItem ) {
         logTrace()
-        dismissView()
+        if dataChanged() {
+            promptToDiscardChanges()
+        }
+        else {
+            dismissView()
+        }
+        
+    }
+    
+    
+    @IBAction func saveBarButtonTouched( sender: UIBarButtonItem ) {
+       logTrace()
+        if dataChanged() {
+            updatePinCentral()
+        }
+        
+       dismissView()
     }
     
     
 
     // MARK: Utility Methods
     
-    private func deleteImage() {
-        if !pinCentral.deleteImageNamed( imageName ) {
-            logVerbose( "ERROR: Unable to delete image[ %@ ]!", self.imageName )
-            presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                          message: NSLocalizedString( "AlertMessage.UnableToDeleteImage", comment: "We were unable to delete the image you created." ) )
+    private func dataChanged() -> Bool {
+        var     dataChanged  = false
+
+        if ( ( name      != originalName      ) || ( details   != originalDetails   ) || ( altitude  != originalAltitude  ) ||
+             ( imageName != originalImageName ) || ( latitude  != originalLatitude  ) || ( longitude != originalLongitude ) ||
+             ( notes     != originalNotes     ) || ( pinColorIndex != originalPinColor  ) ) {
+            dataChanged = true
         }
-        
-        imageName     = String.init()
-        imageAssigned = true
-        
-        updatePinCentral()
-   }
+
+//        logVerbose( "[ %@ ]", stringFor( dataChanged ) )
+        return dataChanged
+    }
     
     
     private func dismissView() {
@@ -192,8 +171,82 @@ class LocationEditorViewController: UIViewController  {
     }
     
     
-    private func initializeVariables() {
+    @objc private func editNameAndDetails(_ locationDetailsTableViewCell: LocationDetailsTableViewCell ) {
 //        logTrace()
+        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditNameAndDetails", comment: "Edit name and details" ), message: nil, preferredStyle: .alert)
+        
+        let     saveAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Save Action" )
+            let     nameTextField    = alert.textFields![0] as UITextField
+            let     detailsTextField = alert.textFields![1] as UITextField
+            
+            
+            if var textStringName = nameTextField.text {
+                textStringName = textStringName.trimmingCharacters( in: .whitespacesAndNewlines )
+                
+                if !textStringName.isEmpty {
+                    logVerbose( "Location name[ %@ ]" , textStringName )
+                    self.name = textStringName
+                    
+                    if let textStringDetails = detailsTextField.text {
+                        logVerbose( "Location details[ %@ ]" , textStringDetails )
+                        self.details = textStringDetails
+                    }
+                    
+                    self.myTableView.reloadData()
+                    self.loadBarButtonItems()
+                }
+                else {
+                    logTrace( "ERROR:  Name field cannot be left blank!" )
+                    self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                                       message: NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank" ) )
+                }
+                
+            }
+            
+        }
+        
+        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel )
+        { ( alertAction ) in
+            logTrace( "Cancel Action" )
+        }
+        
+        alert.addTextField
+        { ( textField ) in
+            
+            if self.name.isEmpty {
+                textField.placeholder = NSLocalizedString( "LabelText.Name", comment: "Name" )
+            }
+            else {
+                textField.text = self.name
+            }
+            
+            textField.autocapitalizationType = .words
+        }
+        
+        alert.addTextField
+        { ( textField ) in
+            
+            if self.details.isEmpty {
+                textField.placeholder = NSLocalizedString( "LabelText.Details", comment: "Address / Description" )
+            }
+            else {
+                textField.text = self.details
+            }
+            
+            textField.autocapitalizationType = .words
+        }
+        
+        alert.addAction( saveAction   )
+        alert.addAction( cancelAction )
+        
+        present( alert, animated: true, completion: nil )
+    }
+    
+    
+    private func initializeVariables() {
+        logTrace()
         var         frame = CGRect.zero
         
         frame.size.height = .leastNormalMagnitude
@@ -201,11 +254,11 @@ class LocationEditorViewController: UIViewController  {
         myTableView.tableFooterView = UIView(frame: frame)
         myTableView.contentInsetAdjustmentBehavior = .never
         
-        if GlobalConstants.newPin == indexOfItemBeingEdited {
+        if GlobalConstants.newPin == indexPathOfItemBeingEdited.section {
             altitude  = 0.0
-            details   = String.init()
-            imageName = String.init()
-            name      = String.init()
+            details   = ""
+            imageName = ""
+            name      = ""
             
             if useCenterOfMap {
                 latitude  = centerOfMap.latitude
@@ -224,7 +277,9 @@ class LocationEditorViewController: UIViewController  {
             pinColorIndex = PinColors.pinRed
         }
         else {
-            let         pin = pinCentral.pinArray[indexOfItemBeingEdited]
+            let     pin = pinCentral.pinAt( indexPathOfItemBeingEdited )
+            
+            saveStringInUserDefaults( UserDefaultKeys.lastAccessedPinsGuid, value: pin.guid! )
             
             altitude        = pin.altitude
             details         = pin.details   ?? ""
@@ -244,26 +299,50 @@ class LocationEditorViewController: UIViewController  {
         originalName        = name
         originalNotes       = notes
         originalPinColor    = pinColorIndex
-        
-        imageAssigned = true
     }
     
     
     private func loadBarButtonItems() {
         logTrace()
-        let buttonTitle = launchedFromDetailView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back", comment: "Back" )
+        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .plain, target: self, action: #selector( cancelBarButtonTouched ) )
+        navigationItem.rightBarButtonItem = nil
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem.init( title: buttonTitle, style: .plain, target: self, action: #selector( doneBarButtonTouched ) )
+        if dataChanged() {
+            navigationItem.rightBarButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Save",   comment: "Save"   ), style: .plain, target: self, action: #selector( saveBarButtonTouched   ) )
+        }
+    
     }
     
     
+    private func promptToDiscardChanges() {
+        let     alert     = UIAlertController.init( title: NSLocalizedString( "AlertTitle.DiscardChanges", comment: "Do you want to discard your changes?" ), message: nil, preferredStyle: .alert)
+        
+        let     yesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Yes", comment: "Yes" ), style: .destructive )
+        { ( alertAction ) in
+            logTrace( "Yes Action" )
+
+            self.dismissView()
+        }
+        
+        let     noAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.No", comment: "No" ), style: .cancel )
+        { ( alertAction ) in
+            logTrace( "No Action" )
+        }
+
+        alert.addAction( yesAction  )
+        alert.addAction( noAction )
+        
+        present( alert, animated: true, completion: nil )
+    }
+
+
     private func updatePinCentral() {
         logTrace()
-        if GlobalConstants.newPin == indexOfItemBeingEdited {
+        if GlobalConstants.newPin == indexPathOfItemBeingEdited.section {
             pinCentral.addPinNamed( name, details: details, latitude: latitude, longitude: longitude, altitude: altitude, imageName: imageName, pinColor: Int16( pinColorIndex ), notes: notes, self )
         }
         else {
-            let     pin = pinCentral.pinArray[indexOfItemBeingEdited]
+            let     pin = pinCentral.pinAt( indexPathOfItemBeingEdited )
             
             pin.altitude  = altitude
             pin.details   = details
@@ -277,9 +356,8 @@ class LocationEditorViewController: UIViewController  {
             pinCentral.saveUpdated( pin, self )
         }
         
-        imageAssigned = true
     }
-    
+        
     
 }
     
@@ -307,8 +385,6 @@ extension LocationEditorViewController: LocationDetailsTableViewCellDelegate {
         detailsCell = locationDetailsTableViewCell
         
         if let  pinColorSelectorVC: PinColorSelectorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.colorSelector ) as? PinColorSelectorViewController {
-            changingColors = true
-            
             pinColorSelectorVC.delegate = self
             
             navigationController?.pushViewController( pinColorSelectorVC, animated: true )
@@ -319,55 +395,8 @@ extension LocationEditorViewController: LocationDetailsTableViewCellDelegate {
     }
     
 
-    func locationDetailsTableViewCell(_ locationDetailsTableViewCell: LocationDetailsTableViewCell, requestingShowPinOnMap: Bool ) {
-        logTrace()
-        if name.isEmpty {
-            logTrace( "ERROR:  Name field cannot be left blank!" )
-            presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank" ) )
-            return
-        }
-        
-        if dataChanged() {
-            updatePinCentral()
-            
-            savedPinBeforeShowingMap = true
-            
-            logVerbose( "indexOfSelectedPin[ %d ] = indexOfItemBeingEdited[ %d ]", pinCentral.indexOfSelectedPin, indexOfItemBeingEdited )
-            pinCentral.indexOfSelectedPin = indexOfItemBeingEdited
-        
-            logTrace( "waiting for update from pinCentral" )
-        }
-        else {
-            if .phone == UIDevice.current.userInterfaceIdiom {
-                tabBarController?.selectedIndex = 1
-                dismissView()
-            }
-
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01 ) {
-            self.delegate?.locationEditorViewController( self, wantsToCenterMapAt: CLLocationCoordinate2DMake( self.latitude, self.longitude ) )
-        }
-        
-    }
- 
-    
     
     // MARK: LocationDetailsTableViewCellDelegate Utility Methods
-    
-    private func dataChanged() -> Bool {
-        var     dataChanged  = false
-
-        if ( ( name      != originalName      ) || ( details   != originalDetails   ) || ( altitude  != originalAltitude  ) ||
-             ( imageName != originalImageName ) || ( latitude  != originalLatitude  ) || ( longitude != originalLongitude ) ||
-             ( notes     != originalNotes     ) || ( pinColorIndex != originalPinColor  ) ) {
-            dataChanged = true
-        }
-
-//        logVerbose( "[ %@ ]", stringFor( dataChanged ) )
-        return dataChanged
-    }
-    
     
     @objc private func editLatLongAndAlt(_ locationDetailsTableViewCell: LocationDetailsTableViewCell ) {
         logTrace()
@@ -389,7 +418,8 @@ extension LocationEditorViewController: LocationDetailsTableViewCellDelegate {
                 self.altitude = ( self.altitude / GlobalConstants.feetPerMeter )
             }
             
-            self.updatePinCentral()
+            self.myTableView.reloadData()
+            self.loadBarButtonItems()
         }
         
         let     useCurrentAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.UseCurrent", comment: "Use Current Location" ), style: .default )
@@ -399,7 +429,8 @@ extension LocationEditorViewController: LocationDetailsTableViewCellDelegate {
             self.longitude = self.pinCentral.currentLocation.longitude
             self.altitude  = self.pinCentral.currentAltitude
             
-            self.updatePinCentral()
+            self.myTableView.reloadData()
+            self.loadBarButtonItems()
         }
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
@@ -444,7 +475,7 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
         logTrace()
         imageCell = locationImageTableViewCell
 
-        if imageName.isEmpty {
+        if imageCell.imageState == ImageState.noName {
             promptForImageSource()
         }
         else {
@@ -511,10 +542,11 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
         imagePickerVC.delegate      = self
         imagePickerVC.sourceType    = sourceType
         
-        imagePickerVC.modalPresentationStyle = ( ( .camera == sourceType ) ? .overFullScreen : .popover )
+        imagePickerVC.modalPresentationStyle = .overFullScreen // ( ( .camera == sourceType ) ? .overFullScreen : .popover )
         
         present( imagePickerVC, animated: true, completion: nil )
         
+        imagePickerVC.popoverPresentationController?.delegate                 = self
         imagePickerVC.popoverPresentationController?.permittedArrowDirections = .any
         imagePickerVC.popoverPresentationController?.sourceRect               = myTableView.frame
         imagePickerVC.popoverPresentationController?.sourceView               = myTableView
@@ -523,18 +555,15 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
     
     private func promptForImageDispostion() {
         logTrace()
-        let     result      = pinCentral.imageNamed( imageName, descriptor: "", self )
-        let     imageLoaded = result.0
+        let     alert    = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ImageDisposition", comment: "What would you like to do with this image?" ), message: nil, preferredStyle: .alert)
+        let     onDevice = pinCentral.dataStoreLocation == .device
 
-        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ImageDisposition", comment: "What would you like to do with this image?" ), message: nil, preferredStyle: .alert)
-        
         let     inspectImageAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.InspectImage", comment: "Inspect Image" ), style: .default )
         { ( alertAction ) in
             logTrace( "Inspect Image Action" )
             
             if self.dataChanged() {
                 self.loadingImageView = true
-                self.updatePinCentral()
             }
             else {
                 self.launchImageViewController()
@@ -542,10 +571,20 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
 
         }
         
+        let     reloadImageAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.ReloadImage", comment: "Reload Image" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Reload Image Action" )
+            let result      = self.pinCentral.imageNamed( self.imageCell.imageName, descriptor: "Reloading image", self )
+            let imageLoaded = result.0
+            
+            self.imageCell.imageState              = imageLoaded ? ImageState.loaded : ImageState.missing
+            self.imageCell.locationImageView.image = imageLoaded ? result.1 : UIImage( named: GlobalConstants.missingImage )
+        }
+        
         let     saveImageAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.SaveImageToLibrary", comment: "Save Image to Photo Library" ), style: .default )
         { ( alertAction ) in
             logTrace( "Save Image Action" )
-            let     thisImage = result.1
+            let     thisImage = self.imageCell.locationImageView.image!
             
             UIImageWriteToSavedPhotosAlbum( thisImage, self, #selector( LocationEditorViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
         }
@@ -554,31 +593,21 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
         { ( alertAction ) in
             logTrace( "Replace Action" )
             
-//            self.deleteImage()
-            self.replacingImage = true
-            self.imageCell.initializeWith( "", self )
-            
             self.promptForImageSource()
-        }
-        
-        let     deleteAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Delete", comment: "Delete" ), style: .destructive )
-        { ( alertAction ) in
-            logTrace( "Delete Action" )
-            
-            self.deleteImage()
-            self.imageCell.initializeWith( self.imageName, self )
         }
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
         
-        alert.addAction( inspectImageAction )
-
-        if imageLoaded {
+        if imageCell.imageState == ImageState.loaded {
+            alert.addAction( inspectImageAction )
             alert.addAction( saveImageAction )
         }
         
+        if !onDevice && imageCell.imageState == ImageState.missing {
+            alert.addAction( reloadImageAction )
+        }
+        
         alert.addAction( replaceAction )
-        alert.addAction( deleteAction  )
         alert.addAction( cancelAction  )
         
         present( alert, animated: true, completion: nil )
@@ -605,12 +634,7 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel )
         { ( alertAction ) in
-            logTrace( "Close Action" )
-            if self.replacingImage {
-                self.replacingImage = false
-                self.imageCell.initializeWith( self.imageName, self )
-            }
-            
+            logTrace( "Cancel Action" )
         }
 
         if UIImagePickerController.isSourceTypeAvailable( .camera ) {
@@ -665,8 +689,7 @@ extension LocationEditorViewController: NotesViewControllerDelegate {
     func notesViewControllerDidUpdateText(_ notesViewController: NotesViewController, newText: String) {
         logTrace()
         notes = newText
-
-        updatePinCentral()
+        loadBarButtonItems()
     }
     
     
@@ -689,19 +712,24 @@ extension LocationEditorViewController: PinCentralDelegate {
             return
         }
         
-        logVerbose( "loaded [ %d ] pins ... indexOfItemBeingEdited[ %d ]", pinCentral.pinArray.count, indexOfItemBeingEdited )
+        logVerbose( "loaded [ %d ] pins ... indexPathOfItemBeingEdited[ %@ ]", pinCentral.numberOfPinsLoaded, stringFor( indexPathOfItemBeingEdited ) )
         
-        if GlobalConstants.newPin == indexOfItemBeingEdited {
-            logVerbose( "recovering new pinIndex[ %d ] from pinCentral", pinCentral.newPinIndex )
-            indexOfItemBeingEdited = pinCentral.newPinIndex
+        if GlobalConstants.newPin == indexPathOfItemBeingEdited.section {
+            logVerbose( "recovering new pinIndex[ %@ ] from pinCentral", stringFor( pinCentral.newPinIndexPath ) )
+            indexPathOfItemBeingEdited = pinCentral.newPinIndexPath
         }
+        
+        let pin = pinCentral.pinAt( indexPathOfItemBeingEdited )
+        
+        saveStringInUserDefaults( UserDefaultKeys.lastAccessedPinsGuid, value: pin.guid! )
         
         if loadingImageView {
             loadingImageView = false
             launchImageViewController()
         }
         else {
-            self.myTableView.reloadData()
+            myTableView.reloadData()
+            loadBarButtonItems()
         }
         
     }
@@ -723,9 +751,9 @@ extension LocationEditorViewController: PinColorSelectorViewControllerDelegate {
         pinColorIndex = Int16( index )
         
         detailsCell.initialize()
-        changingColors = false
 
-        updatePinCentral()
+        myTableView.reloadData()
+        loadBarButtonItems()
     }
     
     
@@ -741,11 +769,6 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
         logTrace()
         if nil != presentedViewController {
             dismiss( animated: true, completion: nil )
-        }
-        
-        if replacingImage {
-            replacingImage = false
-            imageCell.initializeWith( self.imageName, self )
         }
         
     }
@@ -789,25 +812,23 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
                                                message: NSLocalizedString( "AlertMessage.ImageSaveFailed", comment: "We were unable to save the image you selected." ) )
                         }
                         else {
-                            if self.replacingImage {
-                                self.replacingImage = false
-                                
-                                if !self.pinCentral.deleteImageNamed( self.imageName ) {
-                                    logVerbose( "ERROR: Unable to delete image[ %@ ]!", self.imageName )
-                                    self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                                                       message: NSLocalizedString( "AlertMessage.UnableToDeleteImage", comment: "We were unable to delete the image you created." ) )
+                            if !self.pinCentral.createThumbnailFrom( imageName ) {
+                                logTrace( "ERROR:  Thumbnail create FAILED!" )
+                                self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                                                   message: NSLocalizedString( "AlertMessage.ThumbnailCreateFailed", comment: "We were unable to create a thumbnail for the image you selected." ) )
+                            }
+                            else {
+                                if !self.flagIsPresentInUserDefaults( UserDefaultKeys.usingThumbnails ) {
+                                    self.saveFlagInUserDefaults( UserDefaultKeys.usingThumbnails )
                                 }
                                 
                             }
-
-                            self.imageAssigned = false
-                            self.imageName     = imageName
                             
                             logVerbose( "Saved image as [ %@ ]", imageName )
                             
+                            self.imageName = imageName
                             self.imageCell.initializeWith( self.imageName, self )
-                            
-                            self.updatePinCentral()
+                            self.loadBarButtonItems()
                         }
                         
                     }
@@ -848,9 +869,10 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
     // MARK: Helper function inserted by Swift 4.2 migrator.
 
     fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
-        return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+        return Dictionary( uniqueKeysWithValues: input.map { key, value in (key.rawValue, value) } )
     }
 
+    
     fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
         return input.rawValue
     }
@@ -878,13 +900,11 @@ extension LocationEditorViewController: UIPopoverPresentationControllerDelegate 
 extension LocationEditorViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //        logTrace()
         return 3
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //        logVerbose( "row[ %d ]", indexPath.row)
         let cell : UITableViewCell!
         
         switch indexPath.row {
@@ -899,77 +919,6 @@ extension LocationEditorViewController: UITableViewDataSource {
     
     
     // MARK: UITableViewDataSource Utility Methods
-    
-    @objc private func editNameAndDetails(_ locationDetailsTableViewCell: LocationDetailsTableViewCell ) {
-        logTrace()
-        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditNameAndDetails", comment: "Edit name and details" ), message: nil, preferredStyle: .alert)
-        
-        let     saveAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .default )
-        { ( alertAction ) in
-            logTrace( "Save Action" )
-            let     nameTextField    = alert.textFields![0] as UITextField
-            let     detailsTextField = alert.textFields![1] as UITextField
-            
-            
-            if var textStringName = nameTextField.text
-            {
-                textStringName = textStringName.trimmingCharacters( in: .whitespacesAndNewlines )
-                
-                if !textStringName.isEmpty {
-                    logTrace( "We have a valid name" )
-                    self.name = textStringName
-                    
-                    if let textStringDetails = detailsTextField.text {
-                        self.details = textStringDetails
-                    }
-                    
-                    self.updatePinCentral()
-                }
-                else {
-                    logTrace( "ERROR:  Name field cannot be left blank!" )
-                    self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                                       message: NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank" ) )
-                }
-                
-            }
-            
-        }
-        
-        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
-        
-        
-        alert.addTextField
-        { ( textField ) in
-            
-            if self.name.isEmpty {
-                textField.placeholder = NSLocalizedString( "LabelText.Name", comment: "Name" )
-            }
-            else {
-                textField.text = self.name
-            }
-            
-            textField.autocapitalizationType = .words
-        }
-        
-        alert.addTextField
-        { ( textField ) in
-            
-            if self.details.isEmpty {
-                textField.placeholder = NSLocalizedString( "LabelText.Details", comment: "Address / Description" )
-            }
-            else {
-                textField.text = self.details
-            }
-            
-            textField.autocapitalizationType = .words
-        }
-        
-        alert.addAction( saveAction   )
-        alert.addAction( cancelAction )
-        
-        present( alert, animated: true, completion: nil )
-    }
-    
     
     private func loadDetailsCell() -> UITableViewCell {
         guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIds.details ) else {
@@ -992,7 +941,7 @@ extension LocationEditorViewController: UITableViewDataSource {
         
         detailsCell.initialize()
         
-        if firstTimeIn && ( GlobalConstants.newPin == indexOfItemBeingEdited ) {
+        if firstTimeIn && ( GlobalConstants.newPin == indexPathOfItemBeingEdited.section ) {
             firstTimeIn = false
             
             DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.2 ) ) {
@@ -1049,7 +998,8 @@ extension LocationEditorViewController: UITableViewDelegate {
         switch indexPath.row {
         case 0:     rowHeight = RowHeights.image
         case 1:     rowHeight = RowHeights.details
-        default:    rowHeight = RowHeights.notes
+        default:    let notesHeight = tableView.frame.size.height - RowHeights.image - RowHeights.details
+                    rowHeight = notesHeight > 0.0 ? notesHeight : RowHeights.notes
         }
         
         return rowHeight

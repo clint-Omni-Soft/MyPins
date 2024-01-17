@@ -39,17 +39,10 @@ class ImageViewController: UIViewController, UIScrollViewDelegate {
         logTrace()
         super.viewWillAppear( animated )
         
-        var     result = pinCentral.imageNamed( imageName, descriptor: "", self )
+        let result      = pinCentral.imageNamed( imageName, descriptor: "", self )
+        let imageLoaded = result.0
         
-        if result.0 {
-            imageView.image = result.1
-        }
-        else {
-            result = pinCentral.imageNamed( "missingImage", descriptor: "", self )
-            
-            imageView.image = result.1
-        }
-        
+        imageView.image = imageLoaded ? result.1 : UIImage( named: GlobalConstants.missingImage )
     }
     
     

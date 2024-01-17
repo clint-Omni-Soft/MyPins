@@ -51,20 +51,11 @@ class TransferProgressViewController: UIViewController {
     
     
     
-    // MARK: NSNotification Methods
-    
-    @objc func transferComplete( notification: NSNotification ) {
-        logTrace()
-        dismiss( animated: true, completion: nil )
-    }
-    
-    
-    
     // MARK: Utility Methods
     
     private func presentReadyToRestartPrompt() {
         let     alert = UIAlertController.init( title:   NSLocalizedString( "AlertTitle.TransferComplete", comment: "Transfer Complete!" ),
-                                                message: NSLocalizedString( "AlertMessage.ReadyToRestart", comment: "Ready to Restart" ), preferredStyle: .alert )
+                                                message: NSLocalizedString( "AlertMessage.ReadyToRestart", comment: "Ready to Restart"   ), preferredStyle: .alert )
 
         let     okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ), style: .cancel )
         { ( alertAction ) in
@@ -76,6 +67,7 @@ class TransferProgressViewController: UIViewController {
         
         present( alert, animated: true, completion: nil )
     }
+    
     
 }
 
@@ -148,6 +140,8 @@ extension TransferProgressViewController : CloudCentralDelegate {
             cloudCentral.copyDatabaseFromDeviceToCloud( self )
         }
         else {
+            let _ = pinCentral.imageExistsWith( "BogusName" ) // This will create the pictures sub-Directory
+            
             cloudCentral.copyDatabaseFromCloudToDevice( self )
         }
         
@@ -162,19 +156,19 @@ extension TransferProgressViewController : CloudCentralDelegate {
 
 extension TransferProgressViewController : NASCentralDelegate {
         
-    func nasCentral(_ nasCentral : NASCentral, didCopyAllImagesFromDeviceToNas : Bool ) {
+    func nasCentral(_ nasCentral : NASCentral, didCopyAllImagesFromDeviceToNas: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didCopyAllImagesFromDeviceToNas ) )
         nasCentral.unlockNas( self )
     }
     
     
-    func nasCentral(_ nasCentral : NASCentral, didCopyAllImagesFromNasToDevice : Bool ) {
+    func nasCentral(_ nasCentral : NASCentral, didCopyAllImagesFromNasToDevice: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didCopyAllImagesFromNasToDevice ) )
         nasCentral.unlockNas( self )
     }
     
     
-    func nasCentral(_ nasCentral : NASCentral, didCopyDatabaseFromDeviceToNas : Bool ) {
+    func nasCentral(_ nasCentral : NASCentral, didCopyDatabaseFromDeviceToNas: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didCopyDatabaseFromDeviceToNas ) )
 
         if didCopyDatabaseFromDeviceToNas {
@@ -187,7 +181,7 @@ extension TransferProgressViewController : NASCentralDelegate {
     }
 
     
-    func nasCentral(_ nasCentral : NASCentral, didCopyDatabaseFromNasToDevice : Bool ) {
+    func nasCentral(_ nasCentral : NASCentral, didCopyDatabaseFromNasToDevice: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didCopyDatabaseFromNasToDevice ) )
 
         if didCopyDatabaseFromNasToDevice {
@@ -217,6 +211,8 @@ extension TransferProgressViewController : NASCentralDelegate {
             nasCentral.copyDatabaseFromDeviceToNas( self )
         }
         else {
+            let _ = pinCentral.imageExistsWith( "BogusName" ) // This will create the pictures sub-Directory
+            
             nasCentral.copyDatabaseFromNasToDevice( self )
         }
         

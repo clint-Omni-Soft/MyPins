@@ -13,11 +13,11 @@ import MapKit
 
 
 class PointAnnotation: MKPointAnnotation {
-    var      pinIndex: Int?
+    var      pinIndexPath: IndexPath?
     
     
-    func initWith(_ pin: Pin, atIndex: Int ) {
-        pinIndex   = atIndex    // The reason we derived this class in the first place
+    func initWith(_ pin: Pin, atIndexPath: IndexPath ) {
+        pinIndexPath = atIndexPath    // The reason we derived this class in the first place
         
         coordinate = CLLocationCoordinate2D( latitude: pin.latitude, longitude: pin.longitude )
         subtitle   = pin.details

@@ -29,7 +29,7 @@ class PinColorSelectorViewController: UIViewController {
     // MARK: Private Variables
     
     private struct Constants {
-        static let cellID    = "PinColorSelectorViewControllerCell"
+        static let cellID = "PinColorSelectorViewControllerCell"
     }
 
     private let pinCentral = PinCentral.sharedInstance
