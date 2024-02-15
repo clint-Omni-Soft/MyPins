@@ -1127,25 +1127,28 @@ extension PinCentral {
                 return
             }
             
-            DispatchQueue.global().async {
-                self.backgroundTaskID = UIApplication.shared.beginBackgroundTask( withName: "Remove lock file" ) {
-                    // The OS calls this block if we don't finish in time
-                    logTrace( "We ran out of time!  Killing background task #2..." )
-                    UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
-                    
-                    self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
-                }
-                
-                if self.deviceAccessControl.updating {
-                    logTrace( "we are updating the external device ... do nothing, just let the process complete!" )
-                }
-                else {
-                    logTrace( "removing lock file" )
-                    if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
-                        self.cloudCentral.unlockCloud( self )
+            if !stayOffline {
+                DispatchQueue.global().async {
+                    self.backgroundTaskID = UIApplication.shared.beginBackgroundTask( withName: "Remove lock file" ) {
+                        // The OS calls this block if we don't finish in time
+                        logTrace( "We ran out of time!  Killing background task #2..." )
+                        UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
+                        
+                        self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
                     }
-                    else {  // .nas
-                        self.nasCentral.unlockNas( self )
+                    
+                    if self.deviceAccessControl.updating {
+                        logTrace( "we are updating the external device ... do nothing, just let the process complete!" )
+                    }
+                    else {
+                        logTrace( "removing lock file" )
+                        if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
+                            self.cloudCentral.unlockCloud( self )
+                        }
+                        else {  // .nas
+                            self.nasCentral.unlockNas( self )
+                        }
+                        
                     }
                     
                 }

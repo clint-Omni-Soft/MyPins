@@ -767,12 +767,14 @@ extension PinCentral {
 extension PinCentral: NASCentralDelegate {
     
     func nasCentral(_ nasCentral: NASCentral, canSeeNasFolders: Bool) {
+        if stayOffline {
+            logVerbose( "[ %@ ]  Stay Offline!", stringFor( canSeeNasFolders ) )
+            return
+        }
+        
         logVerbose( "[ %@ ]", stringFor( canSeeNasFolders ) )
 
-        if stayOffline {
-            logTrace( "stay offline" )
-        }
-        else if canSeeNasFolders {
+        if canSeeNasFolders {
             nasCentral.startSession( self )
         }
         else {

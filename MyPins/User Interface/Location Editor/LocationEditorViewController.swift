@@ -812,6 +812,7 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
                                                message: NSLocalizedString( "AlertMessage.ImageSaveFailed", comment: "We were unable to save the image you selected." ) )
                         }
                         else {
+                            logVerbose( "Saved image as [ %@ ]", imageName )
                             if !self.pinCentral.createThumbnailFrom( imageName ) {
                                 logTrace( "ERROR:  Thumbnail create FAILED!" )
                                 self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),

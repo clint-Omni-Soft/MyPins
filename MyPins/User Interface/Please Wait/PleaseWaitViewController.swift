@@ -22,9 +22,9 @@ class PleaseWaitViewController: UIViewController {
     // MARK: Private Variables
     
     private let deviceAccessControl = DeviceAccessControl.sharedInstance
+    private var displayingAlert     = false
     private let pinCentral          = PinCentral.sharedInstance
     private let notificationCenter  = NotificationCenter.default
-    private var showingAlert        = false
     
     
         // MARK: UIViewController Lifecycle Methods
@@ -70,7 +70,7 @@ class PleaseWaitViewController: UIViewController {
     
     @objc func cannotSeeExternalDevice( notification: NSNotification ) {
         logTrace()
-        presentAlert(title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: NSLocalizedString( "AlertMessage.CannotSeeExternalDevice", comment: "We cannot see your external device.  Move closer to your WiFi network and try again." ) )
+        displayAlert(title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: NSLocalizedString( "AlertMessage.CannotSeeExternalDevice", comment: "We cannot see your external device.  Move closer to your WiFi network and try again." ) )
     }
 
     
@@ -79,13 +79,13 @@ class PleaseWaitViewController: UIViewController {
         let     format  = NSLocalizedString( "AlertMessage.ExternalDriveLocked", comment: "The database on your external drive is locked by another user [ %@ ].  You can wait until the other user closes the app (which unlocks it) or make you changes offline and upload them when the drive is no longer locked." )
         let     message = String( format: format, deviceAccessControl.ownerName )
         
-        presentAlert(title: NSLocalizedString( "AlertTitle.Warning", comment: "Warning!" ), message: message )
+        displayAlert(title: NSLocalizedString( "AlertTitle.Warning", comment: "Warning!" ), message: message )
     }
 
     
     @objc func ready( notification: NSNotification ) {
         logTrace()
-        if !showingAlert {
+        if !displayingAlert {
             switchToMainApp()
         }
 
@@ -94,13 +94,13 @@ class PleaseWaitViewController: UIViewController {
     
     @objc func unableToConnectToExternalDevice( notification: NSNotification ) {
         logTrace()
-        presentAlert(title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: NSLocalizedString( "AlertMessage.UnableToConnect", comment: "We are unable to connect to your external device.  Move closer to your WiFi network and try again." ) )
+        displayAlert(title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: NSLocalizedString( "AlertMessage.UnableToConnect", comment: "We are unable to connect to your external device.  Move closer to your WiFi network and try again." ) )
     }
 
     
     @objc func updatingExternalDevice( notification: NSNotification ) {
         logTrace()
-        presentAlert(title: NSLocalizedString( "AlertMessage.UpdatingExternalDevice", comment: "This device is updating the database on your external device.  Please wait a few minutes then try again." ), message: "" )
+        displayAlert(title: NSLocalizedString( "AlertMessage.UpdatingExternalDevice", comment: "This device is updating the database on your external device.  Please wait a few minutes then try again." ), message: "" )
     }
     
 
@@ -111,6 +111,27 @@ class PleaseWaitViewController: UIViewController {
         activityIndicator.stopAnimating()
         activityIndicator.isHidden = true
         pleaseWaitLabel  .isHidden = true
+    }
+    
+    
+    private func displayAlert( title: String, message: String ) {
+        if displayingAlert {
+            logVerbose( "displayingAlert!  Suppressing this one.\n    [ %@ ][ %@ ]", title, message )
+            return
+        }
+        
+        let     alert = UIAlertController.init( title: title, message: message, preferredStyle: .alert )
+        
+        let     okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "OK Action" )
+            self.displayingAlert = false
+        }
+        
+        displayingAlert = true
+        alert.addAction( okAction )
+        
+        present( alert, animated: true, completion: nil )
     }
     
     
