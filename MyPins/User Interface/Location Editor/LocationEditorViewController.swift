@@ -84,7 +84,6 @@ class LocationEditorViewController: UIViewController  {
         super.viewDidLoad()
 
         navigationItem.title = NSLocalizedString( "Title.PinEditor", comment: "Pin Editor" )
-        preferredContentSize = CGSize( width: 400, height: 600 )
         
         // I'm not sure why but without the following 2 lines, the navBar is Black
         edgesForExtendedLayout = .all

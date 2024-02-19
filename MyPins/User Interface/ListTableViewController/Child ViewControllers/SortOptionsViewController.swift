@@ -52,8 +52,6 @@ class SortOptionsViewController: UIViewController {
         logTrace()
         super.viewDidLoad()
 
-        preferredContentSize = CGSize(width: 375, height: 300 )
-
         titleLabel        .text = NSLocalizedString( "Title.SelectSortOptions",   comment: "Select Sort Options" )
         sortAscendingLabel.text = NSLocalizedString( "ButtonTitle.SortAscending", comment: "Sort Ascending"      )
         

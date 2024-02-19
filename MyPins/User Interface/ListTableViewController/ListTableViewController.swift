@@ -294,6 +294,8 @@ class ListTableViewController: UIViewController {
         sortOptionsVC.delegate = self
         
         sortOptionsVC.modalPresentationStyle = .popover
+        sortOptionsVC.preferredContentSize   = CGSize(width: myTableView.frame.width, height: 300 )
+
         sortOptionsVC.popoverPresentationController!.delegate                 = self
         sortOptionsVC.popoverPresentationController?.permittedArrowDirections = .any
         sortOptionsVC.popoverPresentationController?.sourceRect               = sortButton.frame

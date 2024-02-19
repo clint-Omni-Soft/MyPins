@@ -38,7 +38,6 @@ class HowToUseViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.title = NSLocalizedString( "Title.HowToUse", comment: "How to Use" )
-        preferredContentSize = CGSize.init( width: 320, height: 480 )
         
         myTextView.text = contents
     }

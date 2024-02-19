@@ -880,14 +880,14 @@ extension NasDriveSelectorViewController : UITableViewDelegate {
         nasLoginVC.delegate = self
         nasLoginVC.device   = device
         
-        nasLoginVC.preferredContentSize   = CGSize( width: 250, height: 300 )
-        nasLoginVC.modalPresentationStyle = .formSheet
+        nasLoginVC.modalPresentationStyle = .popover
+        nasLoginVC.preferredContentSize   = CGSize( width: myTableView.frame.width, height: 300 )
         
         nasLoginVC.popoverPresentationController?.delegate                 = self
-        nasLoginVC.popoverPresentationController?.permittedArrowDirections = .up
-        nasLoginVC.popoverPresentationController?.sourceRect               = myTableView.frame
-        nasLoginVC.popoverPresentationController?.sourceView               = myTableView
-        
+        nasLoginVC.popoverPresentationController?.permittedArrowDirections = .any
+        nasLoginVC.popoverPresentationController?.sourceRect               = CGRectMake( 50, 50, 50, 50 )
+        nasLoginVC.popoverPresentationController?.sourceView               = view
+
         present( nasLoginVC, animated: true, completion: nil )
     }
     

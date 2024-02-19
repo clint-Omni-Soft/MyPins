@@ -278,7 +278,8 @@ class MapViewController: UIViewController {
             let     navigationController = UINavigationController.init( rootViewController: locationEditorVC )
             
             navigationController.modalPresentationStyle = .popover
-            
+            navigationController.preferredContentSize   = CGSize( width: 400, height: 600 )
+
             navigationController.popoverPresentationController?.delegate                 = self
             navigationController.popoverPresentationController?.permittedArrowDirections = .any
             navigationController.popoverPresentationController?.sourceRect               = CGRectMake( 50, 20, 50, 50 )

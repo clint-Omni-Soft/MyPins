@@ -40,8 +40,6 @@ class NasLoginViewController: UIViewController {
         logTrace()
         super.viewDidLoad()
         
-        preferredContentSize = CGSize( width: 250, height: 300 )
-
         nasDriveNameLabel.text = ""
         passwordTextField.text = ""
         userNameTextField.text = ""
