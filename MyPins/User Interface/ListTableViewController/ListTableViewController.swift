@@ -141,8 +141,8 @@ class ListTableViewController: UIViewController {
     
     
     @objc func ready( notification: NSNotification ) {
+        // We get this one when (a) the pin array is reloaded and (b) when we fail to load an image
         logTrace()
-        // We get these when we fail to load an image... no action is required
     }
 
 
@@ -615,7 +615,6 @@ extension ListTableViewController: UITableViewDelegate {
         var     imageName = ""
         let     onDevice  = pinCentral.dataStoreLocation == .device
         let     pin       = pinCentral.pinAt( indexPath )
-        var     thumbnail = GlobalConstants.thumbNailPrefix
 
         let     alert     = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ActionForEntry", comment: "What would you like to do with this entry?" ), message: nil, preferredStyle: .alert)
         
@@ -653,21 +652,6 @@ extension ListTableViewController: UITableViewDelegate {
             
         }
         
-        let     saveImageAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.SaveImageToLibrary", comment: "Save Image to Photo Library" ), style: .default )
-        { ( alertAction ) in
-            logTrace( "Save Image Action" )
-            let     thisImage = cell.myImageView.image!
-            
-            UIImageWriteToSavedPhotosAlbum( thisImage, self, #selector( self.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
-        }
-
-        let uploadAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.UploadImage", comment: "Upload Image" ), style: .default )
-        { ( alertAction ) in
-            logTrace( "Upload Action" )
-            self.pinCentral.uploadImageNamed( imageName, self )
-            self.pinCentral.uploadImageNamed( thumbnail, self )
-        }
-        
         let cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel )
         { ( alertAction ) in
             logTrace( "Cancel Action" )
@@ -678,14 +662,10 @@ extension ListTableViewController: UITableViewDelegate {
 
         if cell.imageState == ImageState.loaded  {
             alert.addAction( inspectImageAction )
-            alert.addAction( saveImageAction    )
 
             if !onDevice {
                 if let name = pin.imageName {
                     imageName  = name
-                    thumbnail += name
-                    
-                    alert.addAction( uploadAction )
                 }
                     
             }

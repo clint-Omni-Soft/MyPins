@@ -474,7 +474,7 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
         logTrace()
         imageCell = locationImageTableViewCell
 
-        if imageCell.imageState == ImageState.noName {
+        if imageCell.imageState != ImageState.loaded {
             promptForImageSource()
         }
         else {
@@ -557,6 +557,7 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
         let     alert    = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ImageDisposition", comment: "What would you like to do with this image?" ), message: nil, preferredStyle: .alert)
         let     onDevice = pinCentral.dataStoreLocation == .device
 
+        // These are .default style
         let     inspectImageAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.InspectImage", comment: "Inspect Image" ), style: .default )
         { ( alertAction ) in
             logTrace( "Inspect Image Action" )
@@ -588,6 +589,23 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
             UIImageWriteToSavedPhotosAlbum( thisImage, self, #selector( LocationEditorViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
         }
 
+        let uploadAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.UploadImage", comment: "Upload Image" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Upload Action" )
+            self.pinCentral.uploadImageNamed( self.imageCell.imageName, self )
+        }
+        
+        // These are .destructive style
+        let     deleteAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Delete", comment: "Delete" ), style: .destructive )
+        { ( alertAction ) in
+            logTrace( "Delete Action" )
+            
+            let _ = self.pinCentral.deleteImageNamed( self.imageName )
+            self.imageName = ""
+            self.imageCell.initializeWith( self.imageName, self )
+            self.loadBarButtonItems()
+        }
+        
         let     replaceAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Replace", comment: "Replace" ), style: .destructive )
         { ( alertAction ) in
             logTrace( "Replace Action" )
@@ -597,16 +615,23 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
         
+        // These are .default style
         if imageCell.imageState == ImageState.loaded {
             alert.addAction( inspectImageAction )
-            alert.addAction( saveImageAction )
+            alert.addAction( saveImageAction    )
+            alert.addAction( uploadAction       )
         }
         
         if !onDevice && imageCell.imageState == ImageState.missing {
             alert.addAction( reloadImageAction )
         }
         
-        alert.addAction( replaceAction )
+        // These are .destructive style
+        if imageCell.imageState == ImageState.loaded {
+            alert.addAction( deleteAction  )
+            alert.addAction( replaceAction )
+        }
+        
         alert.addAction( cancelAction  )
         
         present( alert, animated: true, completion: nil )
@@ -783,6 +808,7 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
         }
         
         DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.01 ) ) {
+            
             if let mediaType = info[self.convertFromUIImagePickerControllerInfoKey( .mediaType )] as? String {
                 if "public.image" == mediaType {
                     var     imageToSave: UIImage? = nil
@@ -795,38 +821,17 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
                     }
                     
                     if let myImageToSave = imageToSave {
+                        let imageFilename = self.pinCentral.imageNameFor( self.name, self.details )
                         
-                        // Uncomment the following 3 lines if you want to save images to the photo album
-                        // but just be aware that we already use PinCentral to save them in our app
-                        
-//                        if .camera == picker.sourceType {
-//                            UIImageWriteToSavedPhotosAlbum( myImageToSave, self, #selector( LocationEditorViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
-//                        }
-                        
-                        let     imageName = self.pinCentral.saveImage( myImageToSave, compressed: true )
-                        
-                        if imageName.isEmpty {
+                        if !self.pinCentral.saveImage( myImageToSave, imageFilename: imageFilename, compressed: true ) {
                             logTrace( "ERROR:  Image save FAILED!" )
                             self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                                                message: NSLocalizedString( "AlertMessage.ImageSaveFailed", comment: "We were unable to save the image you selected." ) )
                         }
                         else {
-                            logVerbose( "Saved image as [ %@ ]", imageName )
-                            if !self.pinCentral.createThumbnailFrom( imageName ) {
-                                logTrace( "ERROR:  Thumbnail create FAILED!" )
-                                self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                                                   message: NSLocalizedString( "AlertMessage.ThumbnailCreateFailed", comment: "We were unable to create a thumbnail for the image you selected." ) )
-                            }
-                            else {
-                                if !self.flagIsPresentInUserDefaults( UserDefaultKeys.usingThumbnails ) {
-                                    self.saveFlagInUserDefaults( UserDefaultKeys.usingThumbnails )
-                                }
-                                
-                            }
-                            
-                            logVerbose( "Saved image as [ %@ ]", imageName )
-                            
-                            self.imageName = imageName
+                            logVerbose( "Saved image as [ %@ ]", imageFilename )
+                            self.imageName = imageFilename
+
                             self.imageCell.initializeWith( self.imageName, self )
                             self.loadBarButtonItems()
                         }

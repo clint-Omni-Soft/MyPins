@@ -43,7 +43,6 @@ class TabBarViewController: UITabBarController {
 
         if !flagIsPresentInUserDefaults( UserDefaultKeys.howToUseShown ) {
             lastTabSelected = "Settings"
-            saveFlagInUserDefaults( UserDefaultKeys.usingThumbnails )   // We want to do this by default... so, the first time in we set it
         }
 
     }
@@ -65,12 +64,6 @@ class TabBarViewController: UITabBarController {
 
         if pinCentral.dataStoreLocation == .nas || pinCentral.dataStoreLocation == .shareNas {
             checkDeviceName()
-        }
-        else {
-            if !self.flagIsPresentInUserDefaults( UserDefaultKeys.usingThumbnails ) {
-                promptToEnableThumbnails()
-            }
-
         }
             
     }
@@ -145,38 +138,10 @@ class TabBarViewController: UITabBarController {
             
         }
         else {
-            if !self.flagIsPresentInUserDefaults( UserDefaultKeys.usingThumbnails ) {
-                presentAlert( title:   NSLocalizedString( "AlertTitle.SetupRequired",   comment: "We need to change a few things ..." ),
-                              message: NSLocalizedString( "AlertMessage.SetupRequired", comment: "Please go to the Settings tab, tap on the 'User Assigned Device Name' entry in the table and enter a name for this device then tap on the 'Setup Thumbnails' entry." ) )
-            }
-            else {
-                presentAlert( title:   NSLocalizedString( "AlertTitle.DeviceNameRequired",   comment: "Device Name is Required for NAS or iCloud" ),
-                              message: NSLocalizedString( "AlertMessage.DeviceNameRequired", comment: "Please go to the Settings tab, tap on the 'User Assigned Device Name' entry in the table and enter a name for this device." ) )
-            }
-
+            presentAlert( title:   NSLocalizedString( "AlertTitle.DeviceNameRequired",   comment: "Device Name is Required for NAS or iCloud" ),
+                          message: NSLocalizedString( "AlertMessage.DeviceNameRequired", comment: "Please go to the Settings tab, tap on the 'User Assigned Device Name' entry in the table and enter a name for this device." ) )
         }
             
-    }
-    
-
-    private func promptToEnableThumbnails() {
-        logTrace()
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.selectedIndex = self.viewControllers!.count - 1
-
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    self.notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.enableThumbnails ), object: self )
-                }
-                
-            }
-            
-        }
-        else {
-            presentAlert( title:   NSLocalizedString( "AlertTitle.SetupThumbnails",   comment: "For performance reasons, we need to enable thumbnail images." ),
-                          message: NSLocalizedString( "AlertMessage.SetupThumbnails", comment: "Please go to the Settings tab, tap on the 'Setup Thumbnails' entry in the table." ) )
-        }
-
     }
     
 

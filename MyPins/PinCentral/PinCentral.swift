@@ -1090,8 +1090,13 @@ extension PinCentral {
             
             if !stayOffline {
                 DispatchQueue.global().async {
+
+                    // The OS calls this block if we don't finish in time
                     self.backgroundTaskID = UIApplication.shared.beginBackgroundTask( withName: "Finish copying DB to External Device" ) {
-                        // The OS calls this block if we don't finish in time
+                        if self.dataStoreLocation == .nas || self.dataStoreLocation == .shareNas {
+                            logVerbose( "queueContents[ %@ ]", self.nasCentral.queueContents() )
+                        }
+
                         logTrace( "We ran out of time!  Killing background task..." )
                         UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
                         
@@ -1129,9 +1134,14 @@ extension PinCentral {
             
             if !stayOffline {
                 DispatchQueue.global().async {
+
+                    // The OS calls this block if we don't finish in time
                     self.backgroundTaskID = UIApplication.shared.beginBackgroundTask( withName: "Remove lock file" ) {
-                        // The OS calls this block if we don't finish in time
-                        logTrace( "We ran out of time!  Killing background task #2..." )
+                        if self.dataStoreLocation == .nas || self.dataStoreLocation == .shareNas {
+                            logVerbose( "queueContents[ %@ ]", self.nasCentral.queueContents() )
+                        }
+
+                        logTrace( "We ran out of time!  Ending background task #2..." )
                         UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
                         
                         self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid

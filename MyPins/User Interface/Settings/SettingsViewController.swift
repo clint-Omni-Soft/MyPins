@@ -27,8 +27,7 @@ class SettingsViewController: UIViewController {
         static let dataStoreLocation = 3
         static let howToUse          = 4
         static let missingImageCheck = 5
-        static let setupThumbnails   = 6
-        static let deviceName        = 7
+        static let deviceName        = 6
     }
     
     private struct Constants {
@@ -52,7 +51,7 @@ class SettingsViewController: UIViewController {
     private let pinCentral          = PinCentral.sharedInstance
     private var replies             = 0
     private var showHowToUse        = true
-    private var usingThumbnails     = false
+    private var testing             = false      // TODO: Remember to set this to false when you are done testing
     private let userDefaults        = UserDefaults.standard
 
     private var optionArray         = [ NSLocalizedString( "Title.About",              comment: "About"               ),
@@ -78,11 +77,8 @@ class SettingsViewController: UIViewController {
             saveFlagInUserDefaults( UserDefaultKeys.howToUseShown   )
         }
         
-        usingThumbnails = flagIsPresentInUserDefaults( UserDefaultKeys.usingThumbnails )
-        
         if pinCentral.dataStoreLocation != .device {
             optionArray.append( NSLocalizedString( "Title.MissingImageCheck",      comment: "Missing Image Check"       ) )
-            optionArray.append( NSLocalizedString( "Title.SetupThumbnails",        comment: "Setup Thumbnails"          ) )
             optionArray.append( NSLocalizedString( "Title.UserAssignedDeviceName", comment: "User Assigned Device Name" ) )
         }
 
@@ -124,6 +120,10 @@ class SettingsViewController: UIViewController {
             }
             
         }
+        else if pinCentral.dataStoreLocation != .device && !flagIsPresentInUserDefaults( UserDefaultKeys.deviceName ) {
+            presentAlert( title:   NSLocalizedString( "AlertTitle.DeviceNameRequired",   comment: "Device Name is Required for NAS or iCloud" ),
+                          message: NSLocalizedString( "AlertMessage.DeviceNameRequired", comment: "Please go to the Settings tab, tap on the 'User Assigned Device Name' entry in the table and enter a name for this device." ) )
+        }
         
     }
     
@@ -139,7 +139,7 @@ class SettingsViewController: UIViewController {
 
     @objc func ready( notification: NSNotification ) {
         logTrace()
-        showResults()
+//        showResults()
     }
 
 
@@ -164,6 +164,11 @@ class SettingsViewController: UIViewController {
     private func loadBarButtonItems() {
         logTrace()
         navigationItem.rightBarButtonItem = UIBarButtonItem.init( image: UIImage(named: "info" ), style: .plain, target: self, action: #selector( infoBarButtonItemTouched(_:) ) )
+        
+        if testing {
+            navigationItem.leftBarButtonItem = UIBarButtonItem.init(title: "Testing", style: .plain, target: self, action: #selector( testingBarButtonItemTouched(_:) ) )
+        }
+        
     }
     
     
@@ -188,6 +193,14 @@ extension SettingsViewController: NASCentralDelegate {
         
         self.canSeeNasFolders = canSeeNasFolders
         
+        if canSeeNasFolders && flagIsPresentInUserDefaults( UserDefaultKeys.usingThumbnails ) && !flagIsPresentInUserDefaults( UserDefaultKeys.thumbnailsRemoved ) {
+            pinCentral.removeThumbnails()
+        }
+        
+        if pinCentral.thumbnailsArePresent() {
+            pinCentral.removeThumbnails()
+        }
+
         myActivityIndicator.stopAnimating()
         myActivityIndicator.isHidden = true
     }
@@ -234,7 +247,6 @@ extension SettingsViewController: UITableViewDelegate {
             case CellIndexes.deviceName:        promptForDeviceName()
             case CellIndexes.howToUse:          pushViewControllerWith( StoryboardIds.howToUse          )
             case CellIndexes.missingImageCheck: checkForMissingImages()
-            case CellIndexes.setupThumbnails:   checkThumbnailsAndPromptForActionToTake()
             default:    break
         }
             
@@ -281,96 +293,6 @@ extension SettingsViewController: UITableViewDelegate {
     }
     
 
-    private func checkThumbnailsAndPromptForActionToTake() {
-        logTrace()
-        let     missingThumbNails = getImagesMissingThumbnails()
-        
-        if missingThumbNails.count == 0 {
-            presentAlert(title: NSLocalizedString( "AlertTitle.NoMissingThumbnails", comment: "There are no missing thumbnail images." ), message: "" )
-            return
-        }
-        
-        let     titleMessage  = String( format: NSLocalizedString( "AlertTitle.MissingThumbnails", comment: "There are %d missing thumbnail images.  Would you like to create them now?" ), missingThumbNails.count )
-        let     alert         = UIAlertController.init(title: titleMessage, message: "", preferredStyle: .alert )
-        
-        let     okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ), style: .default ) {
-            ( alertAction ) in
-            logTrace( "OK Action" )
-            var thumbNailsCreated = 0
-            
-            self.myActivityIndicator.isHidden = false
-            self.myActivityIndicator.startAnimating()
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
-                for imageName in missingThumbNails {
-                    if self.pinCentral.createThumbnailFrom( imageName ) {
-                        thumbNailsCreated += 1
-                    }
-
-                }
-                
-                self.myActivityIndicator.isHidden = true
-                self.myActivityIndicator.stopAnimating()
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
-                    let titleText = String( format: NSLocalizedString( "AlertTitle.CreatedThumbnails", comment: "Created %d out of %d missing thumbnail images." ), thumbNailsCreated, missingThumbNails.count )
-                    
-                    self.presentAlert(title: titleText, message: "" )
-                }
-                
-                self.saveFlagInUserDefaults( UserDefaultKeys.usingThumbnails )
-                self.usingThumbnails = true
-            }
-
-        }
-
-        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel ) {
-            ( alertAction ) in
-            logTrace( "Cancel Action" )
-        }
-
-        alert.addAction( okAction )
-        alert.addAction( cancelAction )
-
-        present( alert, animated: true )
-    }
-    
-    
-    func getImagesMissingThumbnails() -> [String] {
-        let directoryPath = pinCentral.pictureDirectoryPath()
-        var missingImages: [String] = []
-
-        if directoryPath.isEmpty {
-            logTrace( "ERROR!!!  directoryPath.isEmpty!" )
-            return []
-        }
-        
-        let picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
-
-        for array in pinCentral.pinArrayOfArrays {
-            for pin in array {
-                if let imageName = pin.imageName {
-                    if !imageName.isEmpty {
-                        let thumbNailName = GlobalConstants.thumbNailPrefix + imageName
-                        let imageFileURL  = picturesDirectoryURL.appendingPathComponent( thumbNailName )
-                        
-                        if !fileManager.fileExists( atPath: imageFileURL.path ) {
-                            missingImages.append( imageName )
-                        }
-                        
-                    }
-                    
-                }
-                
-            }
-
-        }
-            
-        logVerbose( "discovered [ %d ] images missing thumbnails", missingImages.count )
-        return missingImages
-    }
-    
-    
     private func promptForAltitudeUnits() {
         let     units   = pinCentral.displayUnits() == DisplayUnits.meters ? NSLocalizedString( "ButtonTitle.Meters", comment: "Meters" ) : NSLocalizedString( "ButtonTitle.Feet", comment: "Feet" )
         let     message = String( format: NSLocalizedString( "AlertMessage.SelectUnitsForAltitude", comment: "Currently using %@ " ), units )
@@ -565,3 +487,70 @@ extension SettingsViewController: PinCentralDelegate {
 
 
 
+extension SettingsViewController {
+    
+    @IBAction func testingBarButtonItemTouched(_ sender : UIBarButtonItem ) {
+        logTrace()
+        let sectionArray = pinCentral.pinArrayOfArrays[1]
+        let pin          = sectionArray[0]
+        
+        if let imageName = pin.imageName {
+            if !imageName.isEmpty {
+                let picturesDirectoryPath = pinCentral.pictureDirectoryPath()
+                
+                if picturesDirectoryPath.isEmpty {
+                    logTrace( "ERROR!  pictureDirectoryPath isEmpty!" )
+                }
+                else {
+                    logVerbose( "Interogating [ %@ ][ %@ ]", pinCentral.shortDescriptionFor( pin ), imageName )
+                    let picturesDirectoryURL = URL.init( fileURLWithPath: picturesDirectoryPath )
+                    let imageFileURL         = picturesDirectoryURL.appendingPathComponent( imageName )
+                    
+                    if !fileManager.fileExists( atPath: imageFileURL.path ) {
+                        logTrace( "ERROR!  File does NOT exist at that location!" )
+                    }
+                    else {
+                        logVerbose( "\n    imageFileURL[ %@ ]", imageFileURL.path )
+                        let cgThumbnailImage = getImageThumbnail( url: imageFileURL )
+                        
+                        if let cgImage = cgThumbnailImage {
+                            logVerbose( "cgImage[ %d, %d ]", cgImage.width, cgImage.height )
+                            
+                            let uiImage = UIImage( cgImage: cgImage )
+                            logVerbose( "uiImage[ %f, %f ]", uiImage.size.width, uiImage.size.height )
+                        }
+                        else {
+                            logTrace( "We FAILED!  nil was returned for the thumbnailImage" )
+                        }
+
+                    }
+                    
+                }
+
+            }
+            
+        }
+        
+    }
+    
+    
+    func getImageThumbnail(url: URL) -> CGImage? {
+        guard let imageSource = CGImageSourceCreateWithURL( url as CFURL, nil ) else {
+            logTrace( "We FAILED to get the imageSource" )
+            return nil
+        }
+       
+        logVerbose( "imagesPresent[ %d ]", CGImageSourceGetCount( imageSource ) )
+        
+        let thumbnailOptions: [String: Any] = [
+            kCGImageSourceCreateThumbnailWithTransform     as String: true,
+            kCGImageSourceCreateThumbnailFromImageIfAbsent as String: true, // true will create if thumbnail not present
+//            kCGImageSourceCreateThumbnailFromImageAlways   as String: true,
+            kCGImageSourceThumbnailMaxPixelSize            as String: 512
+        ]
+     
+        return CGImageSourceCreateThumbnailAtIndex( imageSource, 0, thumbnailOptions as CFDictionary )
+    }
+
+
+}

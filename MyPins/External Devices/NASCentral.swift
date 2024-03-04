@@ -344,6 +344,12 @@ extension NASCentral {
     // MARK: Utility Methods (Public)
     
     func emptyQueue() {
+        logVerbose( "queue contents[ %@ ]", queueContents() )
+        requestQueue = []
+    }
+
+    
+    func queueContents() -> String {
         var queueContents = ""
         
         for request in requestQueue {
@@ -356,8 +362,7 @@ extension NASCentral {
             queueContents += stringForCommand( command )
         }
         
-        logVerbose( "queue contents[ %@ ]", queueContents )
-        requestQueue = []
+        return queueContents
     }
 
     
@@ -856,7 +861,7 @@ extension NASCentral {
     
     
     private func _unlockNas(_ delegate: NASCentralDelegate ) {
-//        logTrace()
+        logTrace()
         let     fullPath = nasAccessKey.path + "/" + Filenames.lockFile
         
         smbCentral.deleteFileAt( fullPath, self )
@@ -1138,7 +1143,7 @@ extension NASCentral: SMBCentralDelegate {
     // MARK: Session Callbacks
     
     func smbCentral(_ smbCentral: SMBCentral, didDeleteFile: Bool, _ filename: String ) {
-//        logVerbose( "[ %@ ][ %@ ]", stringFor( didDeleteFile ), filename )
+        logVerbose( "[ %@ ][ %@ ]", stringFor( didDeleteFile ), filename )
 
         if currentCommand == .CopyDatabaseFromDeviceToNas || currentCommand == .CopyAllImagesFromDeviceToNas {
             if deviceUrlsToDeleteArray.count != 0 {
@@ -1159,6 +1164,7 @@ extension NASCentral: SMBCentralDelegate {
             
         }
         else if currentCommand == .UnlockNas {
+            logTrace( "Lock file removed ... notifying delegate" )
             DispatchQueue.main.async {
                 self.delegate?.nasCentral( self, didUnlockNas: didDeleteFile )
                 self.processNextRequest()

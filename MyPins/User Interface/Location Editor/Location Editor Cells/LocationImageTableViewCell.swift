@@ -67,6 +67,7 @@ class LocationImageTableViewCell: UITableViewCell {
         cameraButton.setImage( ( imageName.isEmpty ? UIImage.init( named: Constants.cameraImage ) : nil ), for: .normal )
         cameraButton.backgroundColor = ( imageName.isEmpty ? .white : .clear )
         
+        imageState     = ImageState.noName
         self.delegate  = delegate
         self.imageName = imageName
 

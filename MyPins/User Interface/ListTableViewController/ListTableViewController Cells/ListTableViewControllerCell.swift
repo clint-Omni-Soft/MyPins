@@ -59,18 +59,12 @@ class ListTableViewControllerCell: UITableViewCell {
             dateLabel  .text = dateString
         }
         
+        imageState        = ImageState.noName
         myImageView.image = UIImage( named: GlobalConstants.noImage )
 
         if let imageName = pin.imageName {
             if !imageName.isEmpty {
-                var     usingThumbnails = false
-                
-                if let _ = UserDefaults.standard.string( forKey: UserDefaultKeys.usingThumbnails ) {
-                    usingThumbnails = true
-                }
-
-                let imageToFetch = usingThumbnails ? ( GlobalConstants.thumbNailPrefix + imageName ) : imageName
-                let result       = self.pinCentral.imageNamed( imageToFetch, descriptor: pinCentral.shortDescriptionFor( pin ), self )
+                let result       = pinCentral.extractThumbnailFrom( imageName, pinCentral.shortDescriptionFor( pin ) )
                 let imageLoaded  = result.0
                 
                 imageState        = imageLoaded ? ImageState.loaded : ImageState.missing
@@ -82,23 +76,4 @@ class ListTableViewControllerCell: UITableViewCell {
     }
     
 
-}
-
-
-
-// MARK: PinCentralDelegate Methods
-
-extension ListTableViewControllerCell: PinCentralDelegate {
-    
-    func pinCentral(_ pinCentral: PinCentral, didFetchImage: Bool, filename: String, image: UIImage) {
-        logVerbose( "didFetchImage[ %@ ] [ %@ ]", stringFor( didFetchImage ), filename )
-        imageState = didFetchImage ? ImageState.loaded : ImageState.missing
-
-        if didFetchImage {
-            myImageView.image = image
-        }
-        
-    }
-    
-    
 }

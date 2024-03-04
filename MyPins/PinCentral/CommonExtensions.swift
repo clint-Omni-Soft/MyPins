@@ -304,61 +304,6 @@ extension PinCentral {
 
 extension PinCentral {
     
-    func createThumbnailFrom(_ imageName: String ) -> Bool {
-        let directoryPath    = pictureDirectoryPath()
-        var thumbNailCreated = false
-        
-        if directoryPath.isEmpty {
-            logTrace( "ERROR!!!  directoryPath.isEmpty!" )
-            return thumbNailCreated
-        }
-        
-        let fetchResult = fetchFromDiskImageNamed( imageName )
-        let imageLoaded = fetchResult.0
-        
-        if !imageLoaded {
-           logTrace( "ERROR!!!  Unable to fetch image from disk!" )
-           return thumbNailCreated
-        }
-
-        let normalizedImage      = normalize( fetchResult.1 )
-        let picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
-        let thumbNailName        = GlobalConstants.thumbNailPrefix + imageName
-        let pictureFileURL       = picturesDirectoryURL.appendingPathComponent( thumbNailName )
-        
-        guard let imageData = normalizedImage.jpegData( compressionQuality: 0.05 ) else {
-            logTrace( "ERROR!  Could NOT convert UIImage to Data!" )
-            return thumbNailCreated
-        }
-        
-        do {
-            try imageData.write( to: pictureFileURL, options: .atomic )
-            
-            logVerbose( "saved compressed image to [ %@ ]", thumbNailName )
-            thumbNailCreated = true
-            
-            if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-                cloudCentral.saveImageData( imageData, filename: thumbNailName, self )
-            }
-            else if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
-                if stayOffline {
-                    createImageRequestFor( OfflineImageRequestCommands.save, filename: thumbNailName )
-                }
-                else {
-                    nasCentral.saveImageData( imageData, filename: thumbNailName, self )
-                }
-                
-            }
-            
-        }
-        catch let error as NSError {
-            logVerbose( "ERROR!  Failed to save image for [ %@ ] ... Error[ %@ ]", thumbNailName, error.localizedDescription )
-        }
-
-        return thumbNailCreated
-    }
-    
-    
     func deleteImageNamed(_ name: String ) -> Bool {
         //        logTrace()
         let         directoryPath = pictureDirectoryPath()
@@ -420,6 +365,44 @@ extension PinCentral {
             nasCentral.fetchImage( imageName, self )
         }
 
+    }
+    
+    
+    func extractThumbnailFrom(_ imageName: String, _ description: String ) -> (Bool, UIImage) {
+        let picturesDirectoryPath = pictureDirectoryPath()
+        var result                = ( false, UIImage.init() )
+
+        if picturesDirectoryPath.isEmpty {
+            logVerbose( "ERROR!  pictureDirectoryPath isEmpty!  [ %@ ][ %@ ]", imageName, description )
+            return result
+        }
+
+        let picturesDirectoryURL = URL.init( fileURLWithPath: picturesDirectoryPath )
+        let imageFileURL         = picturesDirectoryURL.appendingPathComponent( imageName )
+        
+        if !fileManager.fileExists( atPath: imageFileURL.path ) {
+            logVerbose( "ERROR!  Image [ %@ ] for [ %@ ] does NOT exist!", imageName, description )
+            return result
+        }
+
+        guard let imageSource = CGImageSourceCreateWithURL( imageFileURL as CFURL, nil ) else {
+            logVerbose( "ERROR!  Could NOT create imageSource for [ %@ ][ %@ ]", imageName, description )
+            return result
+        }
+        
+        let thumbnailOptions: [String: Any] = [ kCGImageSourceCreateThumbnailWithTransform     as String: true,
+                                                kCGImageSourceCreateThumbnailFromImageIfAbsent as String: true,
+                                                kCGImageSourceThumbnailMaxPixelSize            as String: 512 ]
+     
+        if let cgImage = CGImageSourceCreateThumbnailAtIndex( imageSource, 0, thumbnailOptions as CFDictionary ) {
+//          logVerbose( "Created thumbnail[ %d, %d ] for [ %@ ][ %@ ]", cgImage.width, cgImage.height, imageName, description )
+            result = ( true, UIImage( cgImage: cgImage ) )
+        }
+        else {
+            logVerbose( "ERROR!  Could NOT create thumbnail for[ %@ ][ %@ ]! ... [ %d ] imagesPresent", imageName, description, CGImageSourceGetCount( imageSource ) )
+        }
+
+        return result
     }
 
     
@@ -488,24 +471,6 @@ extension PinCentral {
             
         }
         
-        let thumbnailName = GlobalConstants.thumbNailPrefix + imageName
-
-        if !imageExistsWith( thumbnailName ) {
-            imagesRequested += 1
-            
-            if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-                logVerbose( "Thumbnail for [ %@ ] not on disk!  \n    Requesting [ %@ ] from the Cloud ...", descriptor, thumbnailName )
-                imageRequestQueue.append( (thumbnailName, delegate ) )
-                cloudCentral.fetchImage( thumbnailName, self )
-            }
-            else if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
-                logVerbose( "Thumbnail for [ %@ ] not on disk!  \n    Requesting [ %@ ] from NAS ...", descriptor, thumbnailName )
-                imageRequestQueue.append( (thumbnailName, delegate ) )
-                nasCentral.fetchImage( thumbnailName, self )
-            }
-            
-        }
-                        
         return imagesRequested
     }
         
@@ -552,24 +517,70 @@ extension PinCentral {
     }
     
     
-    func saveImage(_ image: UIImage, compressed: Bool ) -> String {
+    func imageNameFor(_ pinName: String, _ pinDetails: String ) -> String {
+        var dateString     = ""
+        let encodedDetails = pinDetails.replacingOccurrences(of: " ", with: "" )
+        let encodedName    = pinName.replacingOccurrences(of: " ", with: "" )
+        let formatter      = DateFormatter()
+        var imageName      = ""
+
+        formatter.dateFormat = "yyyyMMdd-HHmmss"
+        
+        dateString = formatter.string(from: Date() )
+        
+        imageName = dateString + "_" + encodedName + "_" + encodedDetails.replacingOccurrences(of: ",", with: "" ) + ".jpg"
+        
+        return imageName
+    }
+    
+
+    func removeThumbnails() {
+        let directoryPath = pictureDirectoryPath()
+        
+        if directoryPath.isEmpty {
+            logTrace( "ERROR!!!  directoryPath.isEmpty!" )
+            return
+        }
+        
+        logTrace()
+        var thumbnailsRemoved = 0
+        
+        for pinArray in pinArrayOfArrays {
+            for pin in pinArray {
+                if let imageName = pin.imageName {
+                    let thumbnailImageName = GlobalConstants.thumbNailPrefix + imageName
+                    
+                    thumbnailsRemoved += deleteImageNamed( thumbnailImageName ) ? 1 : 0
+                }
+                
+            }
+            
+        }
+        
+        removeFlagFromUserDefaults( UserDefaultKeys.usingThumbnails   )
+        setFlagInUserDefaults(      UserDefaultKeys.thumbnailsRemoved )
+        
+        logVerbose( "Removed [ %d ] thumbnail images", thumbnailsRemoved )
+    }
+    
+    
+    func saveImage(_ image: UIImage, imageFilename: String, compressed: Bool ) -> Bool {
 //        logTrace()
         let         directoryPath = pictureDirectoryPath()
         
         if directoryPath.isEmpty {
             logTrace( "ERROR!!!  directoryPath.isEmpty!" )
-            return ""
+            return false
         }
         
         let     normalizedImage      = normalize( image )
         let     compressionQuality   : CGFloat = ( compressed ? 0.25 : 1.0 )
-        let     imageFilename        = UUID().uuidString + ".jpg"
         let     picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
         let     pictureFileURL       = picturesDirectoryURL.appendingPathComponent( imageFilename )
         
         guard let imageData = normalizedImage.jpegData( compressionQuality: compressionQuality ) else {
             logTrace( "ERROR!  Could NOT convert UIImage to Data!" )
-            return ""
+            return false
         }
         
         do {
@@ -590,13 +601,36 @@ extension PinCentral {
                 
             }
             
-            return imageFilename
+            return true
         }
         catch let error as NSError {
             logVerbose( "ERROR!  Failed to save image for [ %@ ] ... Error[ %@ ]", imageFilename, error.localizedDescription )
         }
         
-        return ""
+        return false
+    }
+    
+    
+    func thumbnailsArePresent() -> Bool {
+        var foundOne = false
+        
+        for array in pinArrayOfArrays {
+            for pin in array {
+                if let imageName = pin.imageName {
+                    let thumbnailImageName = GlobalConstants.thumbNailPrefix + imageName
+                    
+                    if imageExistsWith( thumbnailImageName ) {
+                        foundOne = true
+                        break
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+        return foundOne
     }
  
 

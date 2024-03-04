@@ -74,6 +74,10 @@ class MapViewController: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
+        if pinCentral.resigningActive {
+            return
+        }
+        
         logTrace()
         super.viewWillAppear( animated )
         
@@ -481,8 +485,11 @@ class MapViewController: UIViewController {
 extension MapViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error ) {
-        logVerbose( "[ %@ ]", error.localizedDescription )
+        if !pinCentral.resigningActive {
+            logVerbose( "[ %@ ]", error.localizedDescription )
 //        presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: error.localizedDescription )
+        }
+
     }
     
     

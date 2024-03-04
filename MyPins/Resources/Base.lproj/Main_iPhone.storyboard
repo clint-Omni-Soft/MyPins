@@ -1020,7 +1020,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter Credentials for" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UQs-c7-aVp" userLabel="titleLabel">
-                                <rect key="frame" x="16" y="40" width="218" height="28"/>
+                                <rect key="frame" x="16" y="20" width="218" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="28" id="WCs-hv-Vp1"/>
                                 </constraints>
@@ -1029,7 +1029,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NAS Drive Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5pR-oh-UAE" userLabel="nasDriveNameLabel">
-                                <rect key="frame" x="16" y="76" width="218" height="21"/>
+                                <rect key="frame" x="16" y="56" width="218" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="xZY-VS-Tjk"/>
                                 </constraints>
@@ -1038,7 +1038,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C55-4M-sn8" userLabel="userNameLabel">
-                                <rect key="frame" x="16" y="116" width="218" height="21"/>
+                                <rect key="frame" x="16" y="96" width="218" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="eBk-ZT-Sag"/>
                                 </constraints>
@@ -1047,7 +1047,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="w2k-p0-Ild" userLabel="userNameTextField">
-                                <rect key="frame" x="16" y="145" width="218" height="30"/>
+                                <rect key="frame" x="16" y="125" width="218" height="30"/>
                                 <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="xqj-Un-xiw"/>
@@ -1056,7 +1056,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7S6-vv-4bP" userLabel="passwordLabel">
-                                <rect key="frame" x="16" y="183" width="218" height="21"/>
+                                <rect key="frame" x="16" y="163" width="218" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="Hcq-5Z-FYl"/>
                                 </constraints>
@@ -1065,7 +1065,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="51R-UA-Fup" userLabel="passwordTextField">
-                                <rect key="frame" x="16" y="212" width="218" height="30"/>
+                                <rect key="frame" x="16" y="192" width="218" height="30"/>
                                 <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="vgM-Or-mHZ"/>
@@ -1074,13 +1074,23 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="thD-0t-sZ6" userLabel="cancelButton">
-                                <rect key="frame" x="16" y="250" width="83" height="30"/>
+                                <rect key="frame" x="16" y="230" width="83" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="AsK-pI-FNo"/>
                                 </constraints>
                                 <state key="normal" title="Cancel"/>
                                 <connections>
                                     <action selector="cancelButtonTouched:" destination="Fbb-ZI-RLB" eventType="touchUpInside" id="BVe-44-R6X"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a7F-68-4o7" userLabel="okButton">
+                                <rect key="frame" x="151" y="230" width="83" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="5NL-Sc-sRi"/>
+                                </constraints>
+                                <state key="normal" title="OK"/>
+                                <connections>
+                                    <action selector="okButtonTouched:" destination="Fbb-ZI-RLB" eventType="touchUpInside" id="0m4-mA-I5n"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ign-0m-mWg">
@@ -1091,16 +1101,6 @@
                                     <constraint firstAttribute="width" constant="36" id="qDf-Wv-QEr"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a7F-68-4o7" userLabel="okButton">
-                                <rect key="frame" x="151" y="250" width="83" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="5NL-Sc-sRi"/>
-                                </constraints>
-                                <state key="normal" title="OK"/>
-                                <connections>
-                                    <action selector="okButtonTouched:" destination="Fbb-ZI-RLB" eventType="touchUpInside" id="0m4-mA-I5n"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="tCp-gf-Lji"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1112,6 +1112,7 @@
                             <constraint firstItem="tCp-gf-Lji" firstAttribute="trailing" secondItem="UQs-c7-aVp" secondAttribute="trailing" constant="16" id="B89-1y-GJv"/>
                             <constraint firstItem="w2k-p0-Ild" firstAttribute="leading" secondItem="tCp-gf-Lji" secondAttribute="leading" constant="16" id="BVr-MX-cIF"/>
                             <constraint firstItem="7S6-vv-4bP" firstAttribute="leading" secondItem="tCp-gf-Lji" secondAttribute="leading" constant="16" id="BbH-pl-6UP"/>
+                            <constraint firstItem="ign-0m-mWg" firstAttribute="top" secondItem="51R-UA-Fup" secondAttribute="bottom" constant="8" symbolic="YES" id="Bej-Zn-ALX"/>
                             <constraint firstItem="tCp-gf-Lji" firstAttribute="trailing" secondItem="a7F-68-4o7" secondAttribute="trailing" constant="16" id="DEc-E0-QAh"/>
                             <constraint firstItem="a7F-68-4o7" firstAttribute="leading" secondItem="ign-0m-mWg" secondAttribute="trailing" constant="8" id="HC5-hm-6uV"/>
                             <constraint firstItem="tCp-gf-Lji" firstAttribute="trailing" secondItem="5pR-oh-UAE" secondAttribute="trailing" constant="16" id="I8O-eg-Ds5"/>
@@ -1119,12 +1120,11 @@
                             <constraint firstItem="ign-0m-mWg" firstAttribute="centerX" secondItem="1Jg-WT-2Ys" secondAttribute="centerX" id="Lh1-aM-lW2"/>
                             <constraint firstItem="ign-0m-mWg" firstAttribute="leading" secondItem="thD-0t-sZ6" secondAttribute="trailing" constant="8" id="P0I-Cd-aRj"/>
                             <constraint firstItem="C55-4M-sn8" firstAttribute="leading" secondItem="tCp-gf-Lji" secondAttribute="leading" constant="16" id="QrL-lK-ZhN"/>
-                            <constraint firstItem="UQs-c7-aVp" firstAttribute="top" secondItem="tCp-gf-Lji" secondAttribute="top" constant="20" id="UNo-Dz-HDJ"/>
+                            <constraint firstItem="UQs-c7-aVp" firstAttribute="top" secondItem="1Jg-WT-2Ys" secondAttribute="top" constant="20" id="ac4-dE-r8I"/>
                             <constraint firstItem="tCp-gf-Lji" firstAttribute="trailing" secondItem="C55-4M-sn8" secondAttribute="trailing" constant="16" id="cNN-na-088"/>
                             <constraint firstItem="tCp-gf-Lji" firstAttribute="trailing" secondItem="7S6-vv-4bP" secondAttribute="trailing" constant="16" id="fEb-Vh-zok"/>
                             <constraint firstItem="tCp-gf-Lji" firstAttribute="trailing" secondItem="51R-UA-Fup" secondAttribute="trailing" constant="16" id="gdW-a3-kuK"/>
                             <constraint firstItem="w2k-p0-Ild" firstAttribute="top" secondItem="C55-4M-sn8" secondAttribute="bottom" constant="8" id="iOk-S0-lb8"/>
-                            <constraint firstItem="tCp-gf-Lji" firstAttribute="bottom" secondItem="ign-0m-mWg" secondAttribute="bottom" constant="20" id="iSK-fS-u0T"/>
                             <constraint firstItem="thD-0t-sZ6" firstAttribute="top" secondItem="51R-UA-Fup" secondAttribute="bottom" constant="8" id="iu2-TE-RYQ"/>
                             <constraint firstItem="tCp-gf-Lji" firstAttribute="trailing" secondItem="w2k-p0-Ild" secondAttribute="trailing" constant="16" id="j5a-67-o6G"/>
                             <constraint firstItem="thD-0t-sZ6" firstAttribute="leading" secondItem="tCp-gf-Lji" secondAttribute="leading" constant="16" id="mIM-6N-IT2"/>

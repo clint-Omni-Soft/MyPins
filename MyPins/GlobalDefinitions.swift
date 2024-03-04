@@ -96,7 +96,6 @@ struct Notifications {
     static let centerMap                    = "CenterMap"
     static let connectingToExternalDevice   = "ConnectingToExternalDevice"
     static let deviceNameNotSet             = "DeviceNameNotSet"
-    static let enableThumbnails             = "EnableThumbnails"
     static let enteringBackground           = "EnteringBackground"
     static let enteringForeground           = "EnteringForeground"
     static let externalDeviceLocked         = "ExternalDeviceLocked"
@@ -167,6 +166,7 @@ struct UserDefaultKeys {
     static let nasDescriptor         = "NasDescriptor"
     static let networkPath           = "NetworkPath"
     static let networkAccessGranted  = "NetworkAccessGranted"
+    static let thumbnailsRemoved     = "ThumbnailsRemoved"
     static let updatedOffline        = "UpdatedOffline"
     static let usingThumbnails       = "UsingThumbnails"
 }

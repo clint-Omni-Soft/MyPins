@@ -20,10 +20,10 @@
             </objects>
             <point key="canvasLocation" x="-322" y="152"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Tab Bar View Controller-->
         <scene sceneID="IY0-6O-3yf">
             <objects>
-                <tabBarController id="bP8-2a-1Ss" sceneMemberID="viewController">
+                <tabBarController id="bP8-2a-1Ss" customClass="TabBarViewController" customModule="MyPins" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="3Cd-q6-sQH">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>

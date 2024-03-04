@@ -30,9 +30,7 @@
 "AlertMessage.ReadyToRestart"               = "Listo para reiniciar";
 "AlertMessage.SelectHowToUseForInfo"        = "Seleccione '%@' para obtener información útil sobre: ​​%@,%@,%@ y muchos otros temas.";
 "AlertMessage.SelectUnitsForAltitude"       = "Actualmente usando %@";
-"AlertMessage.SetupRequired"                = "Vaya a la pestaña Configuración, toque la entrada 'Nombre de dispositivo asignado por el usuario' en la tabla e ingrese un nombre para este dispositivo, luego toque la entrada 'Configurar miniaturas'.";
-"AlertMessage.SetupThumbnails"              = "Vaya a la pestaña Configuración, toque la entrada 'Configurar miniaturas' en la tabla.";
-"AlertMessage.ThumbnailCreateFailed"        = "No pudimos crear una miniatura para la imagen que seleccionó.";
+"AlertMessage.SetupRequired"                = "Vaya a la pestaña Configuración, toque la entrada 'Nombre de dispositivo asignado por el usuario' en la tabla e ingrese un nombre para este dispositivo.";
 "AlertMessage.UnableToConnect"              = "No podemos conectarnos a su dispositivo externo. Acérquese a su red WiFi e intente nuevamente.";
 "AlertMessage.UnableToCopyFiles"            = "No se pueden copiar sus archivos a su unidad iCloud.";
 "AlertMessage.UnableToCreate"               = "¡No se puede crear nuestro directorio!";
@@ -45,7 +43,6 @@
 "AlertTitle.ActionForEntry"                 = "¿Qué te gustaría hacer con esta entrada?";
 "AlertTitle.AreYouSure"                     = "¿Estás seguro de que quieres descartar tus cambios?";
 "AlertTitle.CheckForMissingImages"          = "Comprobar si faltan imágenes";
-"AlertTitle.CreatedThumbnails"              = "Creó %d a partir de %d imágenes en miniatura faltantes.";
 "AlertTitle.CurrentCoordinates"             = "Coordenadas actuales";
 "AlertTitle.DeviceNameRequired"             = "Se requiere el nombre del dispositivo para NAS o iCloud";
 "AlertTitle.DiscardChanges"                 = "¿Quieres descartar tus cambios?";
@@ -57,16 +54,13 @@
 "AlertTitle.GotAQuestion"                   = "¿Tienes una pregunta?";
 "AlertTitle.ImageDisposition"               = "¿Qué te gustaría hacer con esta imagen?";
 "AlertTitle.MappingCannotBeBlank"           = "¡El descriptor de asignación no puede estar en blanco!";
-"AlertTitle.MissingThumbnails"              = "Faltan %d imágenes en miniatura. ¿Quieres crearlos ahora?";
 "AlertTitle.NoMissingImages"                = "NO te faltan imágenes.";
-"AlertTitle.NoMissingThumbnails"            = "No faltan imágenes en miniatura.";
 "AlertTitle.OverrideOfflineBlock"           = "¿Anular bloqueo sin conexión?";
 "AlertTitle.RequestedImagesLoaded"          = "Se cargó %d de %d imágenes solicitadas.";
 "AlertTitle.SelectMapType"                  = "Seleccionar tipo de mapa";
 "AlertTitle.SelectMediaSource"              = "Seleccionar fuente de medios para foto";
 "AlertTitle.SelectUnitsForAltitude"         = "Seleccionar unidades para altitud";
 "AlertTitle.SetupRequired"                  = "Necesitamos cambiar algunas cosas...";
-"AlertTitle.SetupThumbnails"                = "Por razones de rendimiento, necesitamos habilitar las imágenes en miniatura.";
 "AlertTitle.Success"                        = "¡Éxito!";
 "AlertTitle.TransferComplete"               = "¡Transferencia completa!";
 "AlertTitle.Warning"                        = "¡Advertencia!";
@@ -149,6 +143,7 @@
 "LabelText.Name"                            = "Nombre";
 "LabelText.NetworkPath"                     = "Ruta de red";
 "LabelText.Notes"                           = "Notas";
+"LabelText.NotSet"                          = "No establecido";
 "LabelText.Password"                        = "Contraseña:";
 "LabelText.PleaseWait"                      = "Esto puede tomar unos pocos minutos.\nPor favor espera...";
 "LabelText.PleaseWaitWhileWeConnect"        = "Espere mientras nos conectamos a su dispositivo externo ..";
@@ -205,7 +200,6 @@
 "Title.SelectSortOptions"                   = "Seleccionar opciones de clasificación";
 "Title.SelectSubFolder"                     = "Seleccione una subcarpeta";
 "Title.Settings"                            = "Configuraciones";
-"Title.SetupThumbnails"                     = "Configurar miniaturas";
 "Title.TransferringFiles"                   = "Transfert de fichiers";
 "Title.Unknown"                             = "Desconocido";
 "Title.UserAssignedDeviceName"              = "Nombre de dispositivo asignado por el usuario";

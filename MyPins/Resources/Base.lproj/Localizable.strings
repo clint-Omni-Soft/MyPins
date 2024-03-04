@@ -30,9 +30,7 @@
 "AlertMessage.ReadyToRestart"               = "Ready to Restart";
 "AlertMessage.SelectHowToUseForInfo"        = "Select '%@' for helpful information on: %@, %@, %@ and many other topics.";
 "AlertMessage.SelectUnitsForAltitude"       = "Currently using %@";
-"AlertMessage.SetupRequired"                = "Please go to the Settings tab, tap on the 'User Assigned Device Name' entry in the table and enter a name for this device then tap on the 'Setup Thumbnails' entry.";
-"AlertMessage.SetupThumbnails"              = "Please go to the Settings tab, tap on the 'Enable Thumbnails' entry in the table.";
-"AlertMessage.ThumbnailCreateFailed"        = "We were unable to create a thumbnail for the image you selected.";
+"AlertMessage.SetupRequired"                = "Please go to the Settings tab, tap on the 'User Assigned Device Name' entry in the table and enter a name for this device.";
 "AlertMessage.UnableToConnect"              = "We are unable to connect to your external device.  Move closer to your WiFi network and try again.";
 "AlertMessage.UnableToCopyFiles"            = "Unable to copy your files to your iCloud Drive.";
 "AlertMessage.UnableToCreate"               = "Unable to create our directory!";
@@ -45,7 +43,6 @@
 "AlertTitle.ActionForEntry"                 = "What would you like to do with this entry?";
 "AlertTitle.AreYouSure"                     = "Are you sure you want to discard your changes?";
 "AlertTitle.CheckForMissingImages"          = "Check for missing images";
-"AlertTitle.CreatedThumbnails"              = "Created %d out of %d missing thumbnail images.";
 "AlertTitle.CurrentCoordinates"             = "Current Coordinates";
 "AlertTitle.DeviceNameRequired"             = "Device Name is Required for NAS or iCloud";
 "AlertTitle.DiscardChanges"                 = "Do you want to discard your changes?";
@@ -57,16 +54,13 @@
 "AlertTitle.GotAQuestion"                   = "Got a question?";
 "AlertTitle.ImageDisposition"               = "What would you like to do with this image?";
 "AlertTitle.MappingCannotBeBlank"           = "Mapping Descriptor Cannot be Blank!";
-"AlertTitle.MissingThumbnails"              = "There are %d missing thumbnail images.  Would you like to create them now?";
 "AlertTitle.NoMissingImages"                = "You have NO missing images.";
-"AlertTitle.NoMissingThumbnails"            = "There are no missing thumbnail images.";
 "AlertTitle.OverrideOfflineBlock"           = "Override Offline Block?";
 "AlertTitle.RequestedImagesLoaded"          = "Loaded %d of %d images requested.";
 "AlertTitle.SelectMapType"                  = "Select Map Type";
 "AlertTitle.SelectMediaSource"              = "Select Media Source for Photo";
 "AlertTitle.SelectUnitsForAltitude"         = "Select Units for Altitude";
 "AlertTitle.SetupRequired"                  = "We need to change a few things ...";
-"AlertTitle.SetupThumbnails"                = "For performance reasons, we need to enable thumbnail images.";
 "AlertTitle.Success"                        = "Success!";
 "AlertTitle.TransferComplete"               = "Transfer Complete!";
 "AlertTitle.Warning"                        = "Warning!";
@@ -149,6 +143,7 @@
 "LabelText.Name"                            = "Name";
 "LabelText.NetworkPath"                     = "Network Path";
 "LabelText.Notes"                           = "Notes";
+"LabelText.NotSet"                          = "Not Set";
 "LabelText.Password"                        = "Password:";
 "LabelText.PleaseWait"                      = "This may take a few minutes.\nPlease wait...";
 "LabelText.PleaseWaitWhileWeConnect"        = "Please wait while we connect to your external device ...";
@@ -205,7 +200,6 @@
 "Title.SelectSortOptions"                   = "Select Sort Options";
 "Title.SelectSubFolder"                     = "Select a Sub-Folder";
 "Title.Settings"                            = "Settings";
-"Title.SetupThumbnails"                     = "Setup Thumbnails";
 "Title.TransferringFiles"                   = "Transferring files";
 "Title.Unknown"                             = "Unknown";
 "Title.UserAssignedDeviceName"              = "User Assigned Device Name";
