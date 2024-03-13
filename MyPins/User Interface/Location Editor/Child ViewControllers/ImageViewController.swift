@@ -39,10 +39,12 @@ class ImageViewController: UIViewController, UIScrollViewDelegate {
         logTrace()
         super.viewWillAppear( animated )
         
-        let result      = pinCentral.imageNamed( imageName, descriptor: "", self )
+        let result      = pinCentral.imageNamed( imageName, descriptor: "ImageViewController", self )
         let imageLoaded = result.0
         
         imageView.image = imageLoaded ? result.1 : UIImage( named: GlobalConstants.missingImage )
+        
+        loadBarButtonItems()
     }
     
     
@@ -50,8 +52,27 @@ class ImageViewController: UIViewController, UIScrollViewDelegate {
         logTrace()
         super.viewWillDisappear( animated )
     }
+    
+    
+    
+    // MARK: Target/Action Methods
+    
+    @IBAction func leftBarButtonTouched(sender : UIBarButtonItem ) {
+        logTrace()
+        removeViewControllerByIdiom()
+    }
+    
+    
+    
+    // MARK: Utilities
+    
+    private func loadBarButtonItems() {
+        let title = (UIDevice.current.userInterfaceIdiom == .phone) ? NSLocalizedString( "ButtonTitle.Back", comment: "Back" ) : NSLocalizedString( "ButtonTitle.Done", comment: "Done" )
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem.init( title: title, style: .plain, target: self, action: #selector( leftBarButtonTouched ) )
+    }
 
-
+    
     
     // MARK: UIScrollViewDelegate Methods
     

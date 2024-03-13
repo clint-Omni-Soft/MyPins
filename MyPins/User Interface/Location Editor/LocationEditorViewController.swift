@@ -307,7 +307,7 @@ class LocationEditorViewController: UIViewController  {
         navigationItem.rightBarButtonItem = nil
         
         if dataChanged() {
-            navigationItem.rightBarButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Save",   comment: "Save"   ), style: .plain, target: self, action: #selector( saveBarButtonTouched   ) )
+            navigationItem.rightBarButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .plain, target: self, action: #selector( saveBarButtonTouched   ) )
         }
     
     }
@@ -529,7 +529,18 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
         
         logVerbose( "imageName[ %@ ]", imageName )
         imageViewController.imageName = imageName
-        navigationController?.pushViewController( imageViewController, animated: true )
+        
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            navigationController?.pushViewController( imageViewController, animated: true )
+        }
+        else {
+            let navController = UINavigationController(rootViewController: imageViewController )
+            
+            navController.modalPresentationStyle = .overFullScreen
+            
+            present( navController, animated: true )
+        }
+            
     }
     
     

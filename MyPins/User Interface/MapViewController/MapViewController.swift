@@ -99,7 +99,10 @@ class MapViewController: UIViewController {
     
     
     override func viewWillDisappear(_ animated: Bool) {
-        logTrace()
+        if !pinCentral.resigningActive {
+            logTrace()
+        }
+        
         super.viewWillDisappear( animated )
         
         NotificationCenter.default.removeObserver( self )

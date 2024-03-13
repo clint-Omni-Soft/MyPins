@@ -22,6 +22,14 @@ struct HeaderViewTagOffsets {
 
 extension UIViewController {
     
+    func configureBackBarButtonItem() {
+        let backBarButtonItem = UIBarButtonItem()
+        
+        backBarButtonItem.title = NSLocalizedString( "ButtonTitle.Back", comment: "Back" )
+        navigationController?.navigationBar.topItem?.backBarButtonItem = backBarButtonItem
+    }
+
+    
     func headerViewFor(_ tableView : UITableView, _ section : Int, with title : String, arrowUp : Bool ) -> UIView {
         // NOTE: This method is no longer used
         let     button     = UIButton.init( type: .system )
@@ -64,6 +72,17 @@ extension UIViewController {
         alert.addAction( okAction )
         
         present( alert, animated: true, completion: nil )
+    }
+
+    
+    func removeViewControllerByIdiom() {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            navigationController?.popViewController( animated: true )
+        }
+        else {
+            dismiss(animated: true )
+        }
+
     }
 
     

@@ -603,9 +603,19 @@ extension ListTableViewController: UITableViewDelegate {
             return
         }
         
-        logVerbose( "imageName[ %@ ]", imageName )
+        logVerbose( "[ %@ ]", imageName )
         imageViewController.imageName = imageName
-        navigationController?.pushViewController( imageViewController, animated: true )
+        
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            navigationController?.pushViewController( imageViewController, animated: true )
+        }
+        else {
+            let navController = UINavigationController(rootViewController: imageViewController )
+            
+            navController.modalPresentationStyle = .overFullScreen
+            present( navController, animated: true )
+        }
+            
     }
     
     
@@ -626,14 +636,8 @@ extension ListTableViewController: UITableViewDelegate {
         
         let inspectImageAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.InspectImage", comment: "Inspect Image" ), style: .default )
         { ( alertAction ) in
-            guard let imageViewController: ImageViewController = self.iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.imageViewer ) as? ImageViewController else {
-                logTrace( "ERROR: Could NOT load ImageViewController!" )
-                return
-            }
-            
-            logVerbose( "Inspect Image Action ... [ %@ ]", imageName )
-            imageViewController.imageName = imageName
-            self.navigationController?.pushViewController( imageViewController, animated: true )
+            logTrace( "Inspect Image Action" )
+            self.launchImageViewControllerFor( imageName )
         }
         
         let showOnMapAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.ShowOnMap", comment: "Show on Map" ), style: .default )

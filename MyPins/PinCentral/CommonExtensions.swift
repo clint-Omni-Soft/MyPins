@@ -519,8 +519,8 @@ extension PinCentral {
     
     func imageNameFor(_ pinName: String, _ pinDetails: String ) -> String {
         var dateString     = ""
-        let encodedDetails = pinDetails.replacingOccurrences(of: " ", with: "" )
-        let encodedName    = pinName.replacingOccurrences(of: " ", with: "" )
+        let encodedDetails = pinDetails.replacingOccurrences(of: " ", with: "" ).replacingOccurrences(of: ",", with: "" )
+        let encodedName    = pinName.replacingOccurrences(   of: " ", with: "" ).replacingOccurrences(of: "'", with: "" )
         let formatter      = DateFormatter()
         var imageName      = ""
 
@@ -528,7 +528,7 @@ extension PinCentral {
         
         dateString = formatter.string(from: Date() )
         
-        imageName = dateString + "_" + encodedName + "_" + encodedDetails.replacingOccurrences(of: ",", with: "" ) + ".jpg"
+        imageName = dateString + "_" + encodedName + "_" + encodedDetails + ".jpg"
         
         return imageName
     }
