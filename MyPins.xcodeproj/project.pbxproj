@@ -190,7 +190,6 @@
 				F400B4D220572E0000556F51 /* Info.plist */,
 				F40319FC20A3C3B900D33372 /* MyPins-Bridging-Header.h */,
 				F40319BF20A38A2D00D33372 /* MyPins-Prefix.pch */,
-				F400B4D820572E2700556F51 /* Application */,
 				F47571EA2A12E403002E7E18 /* External Devices */,
 				F4B47FF3205744F40027755B /* PinCentral */,
 				F400B4D920572E2F00556F51 /* Resources */,
@@ -227,6 +226,7 @@
 			children = (
 				F438F6DB2061D0B10032F465 /* SplitViewController.swift */,
 				F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */,
+				F400B4D820572E2700556F51 /* Application */,
 				F461B8862670205000A2C53A /* ListTableViewController */,
 				F483C5342671351700224D53 /* Location Editor */,
 				F483C5362671364C00224D53 /* MapViewController */,
@@ -468,7 +468,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 1510;
+				LastUpgradeCheck = 1520;
 				ORGANIZATIONNAME = "Omni-Soft, Inc.";
 				TargetAttributes = {
 					F400B4BF20572E0000556F51 = {
@@ -618,6 +618,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -680,6 +681,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

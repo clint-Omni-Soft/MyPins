@@ -27,7 +27,11 @@ class TabBarViewController: UITabBarController {
     // MARK: UIViewController Lifecycle Methods
     
     override func viewDidLoad() {
-        logTrace()
+        if pinCentral.pleaseWaiting {
+            logTrace( "PleaseWaiting..." )
+            return
+        }
+        
         super.viewDidLoad()
 
         logVerbose( "didOpenDatabase[ %@ ]", stringFor( pinCentral.didOpenDatabase ) )
@@ -85,15 +89,6 @@ class TabBarViewController: UITabBarController {
     
 
     // MARK: NSNotification Methods
-    
-    @objc func cannotReadAllDbFiles( notification: NSNotification ) {
-        logTrace()
-        let formatString  = NSLocalizedString( "AlertMessage.CannotReadAllDbFiles", comment: "The last update to the database on the remote device did not complete properly.  Please contact the user of '%@' and ask them to re-submit their last post.  The database will remain locked until this is resolved." )
-        let messageString = String(format: formatString, pinCentral.externalDeviceLastUpdatedBy )
-        
-        presentAlert( title: NSLocalizedString( "AlertTitle.CannotReadAllDbFiles", comment: "Cannot Read ALL Database Files on Remote!" ), message: messageString )
-    }
-    
     
     @objc func enteringBackground( notification: NSNotification ) {
         logTrace()
@@ -160,7 +155,6 @@ class TabBarViewController: UITabBarController {
     
     private func setupNotifications() {
         logTrace()
-        notificationCenter.addObserver( self, selector: #selector( cannotReadAllDbFiles( notification: ) ), name: NSNotification.Name( rawValue: Notifications.cannotReadAllDbFiles ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( enteringBackground(   notification: ) ), name: NSNotification.Name( rawValue: Notifications.enteringBackground   ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( transferringDatabase( notification: ) ), name: NSNotification.Name( rawValue: Notifications.transferringDatabase ), object: nil )
     }

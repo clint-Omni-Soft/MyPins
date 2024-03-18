@@ -10,6 +10,7 @@
 "AlertMessage.CannotOpenDatabase"           = "Error fatal!  No se puede abrir la base de datos.";
 "AlertMessage.CannotGoDirectFromCloudToNas" = "No puede pasar de iCloud directamente al NAS, debe volver al Dispositivo y luego al NAS";
 "AlertMessage.CannotGoDirectFromNasToCloud" = "No puede pasar del NAS directamente a iCloud, debe volver al Dispositivo y luego a iCloud";
+"AlertMessage.CannotReadAllDbFiles"         = "La última actualización de la base de datos en el dispositivo remoto no se completó correctamente. Póngase en contacto con el usuario de '%@' y pídale que vuelva a enviar su última publicación. La base de datos permanecerá bloqueada hasta que esto se resuelva.";
 "AlertMessage.CannotSeeContainer"           = "¡No puedo ver tu contenedor de iCloud! Vaya a Configuración y verifique que haya iniciado sesión en iCloud con su ID de Apple, luego vaya a la pantalla de configuración de iCloud y asegúrese de que iCloud Drive esté encendido. Finalmente, verifique que iCloud esté habilitado para esta aplicación.";
 "AlertMessage.CannotSeeExternalDevice"      = "No podemos ver su dispositivo externo. Acérquese a su red WiFi e intente nuevamente.";
 "AlertMessage.CheckForMissingImages"        = "Esto puede tomar algo de tiempo. Si desea hacer esto, deberá mantener la aplicación en primer plano hasta que finalice.";
@@ -53,6 +54,7 @@
 "AlertTitle.EditNameAndDetails"             = "Editar nombre y detalles";
 "AlertTitle.GotAQuestion"                   = "¿Tienes una pregunta?";
 "AlertTitle.ImageDisposition"               = "¿Qué te gustaría hacer con esta imagen?";
+"AlertTitle.LastUpdateDidNotComplete"       = "¡La última actualización NO se completó!";
 "AlertTitle.MappingCannotBeBlank"           = "¡El descriptor de asignación no puede estar en blanco!";
 "AlertTitle.NoMissingImages"                = "NO te faltan imágenes.";
 "AlertTitle.OverrideOfflineBlock"           = "¿Anular bloqueo sin conexión?";
@@ -90,6 +92,7 @@
 "ButtonTitle.PinColor"                      = "Color del alfiler";
 "ButtonTitle.ReloadImage"                   = "Recargar imagen";
 "ButtonTitle.Replace"                       = "Reemplazar";
+"ButtonTitle.Resubmit"                      = "Reenviar";
 "ButtonTitle.Satellite"                     = "Satélite";
 "ButtonTitle.SatelliteFlyover"              = "Paso elevado por satélite";
 "ButtonTitle.Save"                          = "Salvar";

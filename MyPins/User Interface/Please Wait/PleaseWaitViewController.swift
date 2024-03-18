@@ -24,6 +24,7 @@ class PleaseWaitViewController: UIViewController {
     private let deviceAccessControl = DeviceAccessControl.sharedInstance
     private var displayingAlert     = false
     private let pinCentral          = PinCentral.sharedInstance
+    private let nasCentral          = NASCentral.sharedInstance
     private let notificationCenter  = NotificationCenter.default
     
     
@@ -67,6 +68,12 @@ class PleaseWaitViewController: UIViewController {
     
     
     // MARK: NSNotification Methods
+    
+    @objc func cannotReadAllDbFiles( notification: NSNotification ) {
+        logTrace()
+        promptForRecoveryAction()
+    }
+
     
     @objc func cannotSeeExternalDevice( notification: NSNotification ) {
         logTrace()
@@ -152,8 +159,44 @@ class PleaseWaitViewController: UIViewController {
     }
     
 
+    private func promptForRecoveryAction() {
+        logTrace()
+        stayOfflineButton.isHidden = true
+        disableControls()
+        
+        let formatString  = NSLocalizedString( "AlertMessage.CannotReadAllDbFiles", comment: "The last update to the database on the remote device did not complete properly.  Please contact the user of '%@' and ask them to re-submit their last post.  The database will remain locked until this is resolved." )
+        let messageString = String(format: formatString, pinCentral.externalDeviceLastUpdatedBy )
+
+        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.LastUpdateDidNotComplete", comment: "The Last Update Did NOT Complete" ), message: messageString, preferredStyle: .alert)
+
+        let     okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "OK Action" )
+        }
+        
+        
+        let     resubmitAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Resubmit", comment: "Resubmit" ), style: .destructive )
+        { ( alertAction ) in
+            logTrace( "Resubmit Action" )
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 ) {
+                self.pinCentral.didOpenDatabase = false
+     
+                self.nasCentral.copyDatabaseFromDeviceToNas( self.pinCentral )
+            }
+            
+        }
+        
+        alert.addAction( okAction       )
+        alert.addAction( resubmitAction )
+
+        present( alert, animated: true, completion: nil )
+    }
+
+
     private func registerForNotifications() {
         logTrace()
+        notificationCenter.addObserver( self, selector: #selector( cannotReadAllDbFiles(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.cannotReadAllDbFiles    ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( cannotSeeExternalDevice(         notification: ) ), name: NSNotification.Name( rawValue: Notifications.cannotSeeExternalDevice ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( externalDeviceLocked(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.externalDeviceLocked    ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( ready(                           notification: ) ), name: NSNotification.Name( rawValue: Notifications.ready                   ), object: nil )

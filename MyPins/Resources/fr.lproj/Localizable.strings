@@ -10,6 +10,7 @@
 "AlertMessage.CannotOpenDatabase"           = "Erreur fatale!  Impossible d'ouvrir la base de données.";
 "AlertMessage.CannotGoDirectFromCloudToNas" = "Vous ne pouvez pas passer d'iCloud directement au NAS, vous devez revenir à l'appareil puis au NAS";
 "AlertMessage.CannotGoDirectFromNasToCloud" = "Vous ne pouvez pas passer directement du NAS à iCloud, vous devez revenir à l'appareil puis à iCloud";
+"AlertMessage.CannotReadAllDbFiles"         = "La dernière mise à jour de la base de données sur le périphérique distant ne s'est pas terminée correctement. Veuillez contacter l'utilisateur de '%@' et lui demander de soumettre à nouveau son dernier message. La base de données restera verrouillée jusqu'à ce que ce problème soit résolu.";
 "AlertMessage.CannotSeeContainer"           = "Impossible de voir votre conteneur iCloud! Accédez à Paramètres et vérifiez que vous vous êtes connecté à iCloud avec votre identifiant Apple, puis accédez à l'écran de configuration iCloud et assurez-vous que iCloud Drive est activé. Enfin, vérifiez que iCloud est activé pour cette application.";
 "AlertMessage.CannotSeeExternalDevice"      = "Nous ne pouvons pas voir votre appareil externe. Rapprochez-vous de votre réseau WiFi et réessayez.";
 "AlertMessage.CheckForMissingImages"        = "Cela peut prendre un certain temps. Si vous souhaitez faire cela, vous devrez conserver l'application au premier plan jusqu'à la fin.";
@@ -53,6 +54,7 @@
 "AlertTitle.EditNameAndDetails"             = "Modifier le nom et les détails";
 "AlertTitle.GotAQuestion"                   = "Tu as une question?";
 "AlertTitle.ImageDisposition"               = "Que voudriez-vous faire avec cette image?";
+"AlertTitle.LastUpdateDidNotComplete"       = "La dernière mise à jour n'a PAS été terminée!";
 "AlertTitle.MappingCannotBeBlank"           = "Le descripteur de mappage ne peut pas être vide!";
 "AlertTitle.NoMissingImages"                = "Vous n’avez AUCUNE image manquante.";
 "AlertTitle.OverrideOfflineBlock"           = "Ignorer le blocage hors connexion ?";
@@ -90,6 +92,7 @@
 "ButtonTitle.PinColor"                      = "Couleur de broche";
 "ButtonTitle.ReloadImage"                   = "Recharger l'image";
 "ButtonTitle.Replace"                       = "Remplacer";
+"ButtonTitle.Resubmit"                      = "Soumettre à nouveau";
 "ButtonTitle.Satellite"                     = "Satellite";
 "ButtonTitle.SatelliteFlyover"              = "Survol satellite";
 "ButtonTitle.Save"                          = "Sauvegarder";

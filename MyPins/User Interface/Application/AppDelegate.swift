@@ -16,10 +16,9 @@ import CoreLocation
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
     var locationManager: CLLocationManager?
-    
-    private let pinCentral = PinCentral.sharedInstance
+    let pinCentral = PinCentral.sharedInstance
+    var window: UIWindow?
 
 
     
@@ -81,7 +80,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let     storyboardName = UIDevice.current.userInterfaceIdiom == .pad ? "Main_iPad" : "Main_iPhone"
         let     storyboard     = UIStoryboard(name: storyboardName, bundle: .main )
 
+        pinCentral.didOpenDatabase = false
+        
         if let initialViewController = storyboard.instantiateInitialViewController() {
+            pinCentral.pleaseWaiting = false
+
             window?.rootViewController = initialViewController
             window?.makeKeyAndVisible()
         }
@@ -97,6 +100,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let storyboard = UIStoryboard(name: "PleaseWait", bundle: .main )
 
         if let initialViewController = storyboard.instantiateInitialViewController() {
+            pinCentral.pleaseWaiting = true
+
             window?.rootViewController = initialViewController
             window?.makeKeyAndVisible()
         }

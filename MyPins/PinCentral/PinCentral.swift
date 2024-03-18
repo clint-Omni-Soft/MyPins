@@ -54,6 +54,7 @@ class PinCentral: NSObject {
     var newPinIndexPath             = GlobalIndexPaths.newPin
     var openInProgress              = false
     var pinArrayOfArrays            = [[Pin]]()
+    var pleaseWaiting               = false
     var resigningActive             = false
     var stayOffline                 = false
     
