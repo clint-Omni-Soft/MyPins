@@ -51,10 +51,10 @@ extension PinCentral: CloudCentralDelegate {
        else if didCompareLastUpdatedFiles == LastUpdatedFileCompareResult.cloudIsNewer {
            logTrace( "Verify that we can access all the database files before we start the tranfer" )
            missingDbFiles = []
+           
            cloudCentral.fetchDbFiles( self )
        }
        else {  // This tells the ReceivingVC to reload the barButtonItems and table data
-           transferInProgress = false
            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
        }
 
@@ -221,8 +221,9 @@ extension PinCentral: CloudCentralDelegate {
         self.missingDbFiles = missingDbFiles
         
         if missingDbFiles.count == 0 {
-            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.transferringDatabase ), object: self )
             didOpenDatabase = false
+            deviceAccessControl.updating = true
+            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.transferringDatabase ), object: self )
             
             cloudCentral.copyDatabaseFromCloudToDevice( self )
         }
@@ -533,6 +534,50 @@ extension PinCentral {
         return imageName
     }
     
+    
+/*
+ 
+    TODO: Reserve this space for WineStock methods that we don't need but we want the rest of the code to show up on matching line numbers
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ */
+    
 
     func removeThumbnails() {
         let directoryPath = pictureDirectoryPath()
@@ -543,6 +588,7 @@ extension PinCentral {
         }
         
         logTrace()
+        
         var thumbnailsRemoved = 0
         
         for pinArray in pinArrayOfArrays {
@@ -611,29 +657,6 @@ extension PinCentral {
     }
     
     
-    func thumbnailsArePresent() -> Bool {
-        var foundOne = false
-        
-        for array in pinArrayOfArrays {
-            for pin in array {
-                if let imageName = pin.imageName {
-                    let thumbnailImageName = GlobalConstants.thumbNailPrefix + imageName
-                    
-                    if imageExistsWith( thumbnailImageName ) {
-                        foundOne = true
-                        break
-                    }
-                    
-                }
-                
-            }
-            
-        }
-        
-        return foundOne
-    }
- 
-
     func uploadImageNamed(_ imageName: String, _ delegate: PinCentralDelegate ) {  // Tailored to each implementation
         logTrace()
         let     directoryPath        = pictureDirectoryPath()
@@ -828,9 +851,8 @@ extension PinCentral: NASCentralDelegate {
         
         if didCompareLastUpdatedFiles == LastUpdatedFileCompareResult.deviceIsNewer {
             if deviceAccessControl.locked && deviceAccessControl.byMe {
-                notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.transferringDatabase ), object: self )
-                
                 deviceAccessControl.updating = true
+                notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.transferringDatabase ), object: self )
 
                 nasCentral.copyDatabaseFromDeviceToNas( self )
             }
@@ -839,11 +861,11 @@ extension PinCentral: NASCentralDelegate {
         else if didCompareLastUpdatedFiles == LastUpdatedFileCompareResult.nasIsNewer {
             logTrace( "Verify that we can access all the database files before we start the transfer" )
             missingDbFiles = []
+            
             nasCentral.fetchDbFiles( self )
         }
         else {  // Must be same!
             // Tell the PleaseWaitVC that we are done
-            transferInProgress = false
             notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
         }
 
@@ -979,6 +1001,11 @@ extension PinCentral: NASCentralDelegate {
         else {
             DispatchQueue.main.async {
                 delegate.pinCentral( self, didFetchImage: didFetchImage, filename: filename, image: image )       // Tailored to each implementation
+
+                if self.imageRequestQueue.count == 0 {
+                    self.notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
+                }
+                
             }
 
         }
@@ -1043,8 +1070,9 @@ extension PinCentral: NASCentralDelegate {
         self.missingDbFiles = missingDbFiles
         
         if missingDbFiles.count == 0 {
-            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.transferringDatabase ), object: self )
             didOpenDatabase = false
+            deviceAccessControl.updating = true
+            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.transferringDatabase ), object: self )
 
             nasCentral.copyDatabaseFromNasToDevice( self )
         }

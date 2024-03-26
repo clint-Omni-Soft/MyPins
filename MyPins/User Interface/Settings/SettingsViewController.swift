@@ -197,10 +197,6 @@ extension SettingsViewController: NASCentralDelegate {
             pinCentral.removeThumbnails()
         }
         
-        if pinCentral.thumbnailsArePresent() {
-            pinCentral.removeThumbnails()
-        }
-
         myActivityIndicator.stopAnimating()
         myActivityIndicator.isHidden = true
     }

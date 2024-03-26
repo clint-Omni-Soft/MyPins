@@ -254,7 +254,6 @@ class PinCentral: NSObject {
     var notificationCenter      = NotificationCenter.default
     var offlineImageRequestQueue: [ImageRequest] = []                       // This queue is used to flush offline NAS image transactions to disk after we reconnect
     var persistentContainer     : NSPersistentContainer!
-    var transferInProgress      = false
     let userDefaults            = UserDefaults.standard
 
     

@@ -26,7 +26,8 @@ class PleaseWaitViewController: UIViewController {
     private let pinCentral          = PinCentral.sharedInstance
     private let nasCentral          = NASCentral.sharedInstance
     private let notificationCenter  = NotificationCenter.default
-    
+    private var ready               = false
+
     
         // MARK: UIViewController Lifecycle Methods
 
@@ -58,14 +59,7 @@ class PleaseWaitViewController: UIViewController {
         notificationCenter.removeObserver( self )
     }
     
-    
-    // MARK: Target/Action Methods
-    
-    @IBAction func stayOfflineButtonTouched(_ sender: UIButton) {
-        logTrace()
-        makeSureUserHasBeenWarned()
-     }
-    
+
     
     // MARK: NSNotification Methods
     
@@ -91,7 +85,9 @@ class PleaseWaitViewController: UIViewController {
 
     
     @objc func ready( notification: NSNotification ) {
-        logTrace()
+        logVerbose( "%@", displayingAlert ? "Do nothing!  displayingAlert" : "" )
+        ready = true
+
         if !displayingAlert {
             switchToMainApp()
         }
@@ -99,6 +95,15 @@ class PleaseWaitViewController: UIViewController {
     }
     
     
+    @objc func transferringDatabase( notification: NSNotification ) {
+        logTrace()
+        stayOfflineButton.isHidden = true
+        pleaseWaitLabel  .isHidden = true
+        
+        displayAlert(title: NSLocalizedString( "AlertMessage.UpdatingExternalDevice", comment: "This device is updating the database on your external device.  Please wait a few minutes then try again." ), message: "" )
+    }
+
+
     @objc func unableToConnectToExternalDevice( notification: NSNotification ) {
         logTrace()
         displayAlert(title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: NSLocalizedString( "AlertMessage.UnableToConnect", comment: "We are unable to connect to your external device.  Move closer to your WiFi network and try again." ) )
@@ -112,6 +117,15 @@ class PleaseWaitViewController: UIViewController {
     
 
 
+    // MARK: Target/Action Methods
+    
+    @IBAction func stayOfflineButtonTouched(_ sender: UIButton) {
+        logTrace()
+        makeSureUserHasBeenWarned()
+     }
+    
+
+    
     // MARK: Utility Methods
     
     private func disableControls() {
@@ -131,14 +145,22 @@ class PleaseWaitViewController: UIViewController {
         
         let     okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ), style: .default )
         { ( alertAction ) in
-            logTrace( "OK Action" )
-            self.displayingAlert = false
+            logVerbose( "OK Action for\n    [ %@ ][ %@ ]", title, message )
         }
         
-        displayingAlert = true
         alert.addAction( okAction )
-        
-        present( alert, animated: true, completion: nil )
+
+        displayingAlert = true
+
+        present( alert, animated: true ) {
+            self.displayingAlert = false
+            
+            if self.ready {
+                self.switchToMainApp()
+            }
+            
+        }
+
     }
     
     
@@ -174,12 +196,11 @@ class PleaseWaitViewController: UIViewController {
             logTrace( "OK Action" )
         }
         
-        
         let     resubmitAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Resubmit", comment: "Resubmit" ), style: .destructive )
         { ( alertAction ) in
             logTrace( "Resubmit Action" )
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 ) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2 ) {
                 self.pinCentral.didOpenDatabase = false
      
                 self.nasCentral.copyDatabaseFromDeviceToNas( self.pinCentral )
@@ -190,7 +211,12 @@ class PleaseWaitViewController: UIViewController {
         alert.addAction( okAction       )
         alert.addAction( resubmitAction )
 
-        present( alert, animated: true, completion: nil )
+        displayingAlert = true
+        
+        present( alert, animated: true ) {
+            self.displayingAlert = false
+        }
+        
     }
 
 
@@ -200,6 +226,7 @@ class PleaseWaitViewController: UIViewController {
         notificationCenter.addObserver( self, selector: #selector( cannotSeeExternalDevice(         notification: ) ), name: NSNotification.Name( rawValue: Notifications.cannotSeeExternalDevice ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( externalDeviceLocked(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.externalDeviceLocked    ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( ready(                           notification: ) ), name: NSNotification.Name( rawValue: Notifications.ready                   ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( transferringDatabase(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.transferringDatabase    ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( unableToConnectToExternalDevice( notification: ) ), name: NSNotification.Name( rawValue: Notifications.unableToConnect         ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( updatingExternalDevice(          notification: ) ), name: NSNotification.Name( rawValue: Notifications.updatingExternalDevice  ), object: nil )
     }
@@ -224,21 +251,12 @@ class PleaseWaitViewController: UIViewController {
         let     gotItAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.GotIt", comment: "Got it!" ), style: .default )
         { ( alertAction ) in
             logTrace( "Got It Action" )
-            self.deviceAccessControl.byMe = true
-            self.pinCentral.stayOffline   = true
-            
-            self.switchToMainApp()
         }
         
         let     dontRemindMeAgainAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.DontRemindMeAgain", comment: "Don't remind me again." ), style: .destructive )
         { ( alertAction ) in
             logTrace( "Don't Remind Me Again Action" )
             self.saveFlagInUserDefaults( UserDefaultKeys.dontRemindMeAgain )
-            
-            self.deviceAccessControl.byMe = true
-            self.pinCentral.stayOffline   = true
-            
-            self.switchToMainApp()
         }
         
         alert.addAction( gotItAction )
@@ -247,7 +265,16 @@ class PleaseWaitViewController: UIViewController {
             alert.addAction( dontRemindMeAgainAction )
         }
 
-        present( alert, animated: true, completion: nil )
+        displayingAlert = true
+        
+        present( alert, animated: true ) {
+            self.deviceAccessControl.byMe = true
+            self.displayingAlert          = false
+            self.pinCentral.stayOffline   = true
+
+            self.switchToMainApp()
+        }
+        
     }
     
     
