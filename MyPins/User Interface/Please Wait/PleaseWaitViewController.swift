@@ -141,6 +141,8 @@ class PleaseWaitViewController: UIViewController {
             return
         }
         
+        logVerbose( "\n    [ %@ ][ %@ ]", title, message )
+
         let     alert = UIAlertController.init( title: title, message: message, preferredStyle: .alert )
         
         let     okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ), style: .default )

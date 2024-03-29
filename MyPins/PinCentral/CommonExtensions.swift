@@ -912,7 +912,7 @@ extension PinCentral: NASCentralDelegate {
 
         notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
 
-        if didCopyDatabaseFromNasToDevice && !openInProgress {
+        if didCopyDatabaseFromNasToDevice && !openInProgress && !pleaseWaiting {
             let     appDelegate = UIApplication.shared.delegate as! AppDelegate
             
             logTrace( "opening database" )
