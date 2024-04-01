@@ -100,7 +100,7 @@ class PleaseWaitViewController: UIViewController {
         stayOfflineButton.isHidden = true
         pleaseWaitLabel  .isHidden = true
         
-        displayAlert(title: NSLocalizedString( "AlertMessage.UpdatingExternalDevice", comment: "This device is updating the database on your external device.  Please wait a few minutes then try again." ), message: "" )
+        displayAlert(title: NSLocalizedString( "AlertMessage.UpdatingExternalDevice", comment: "Please wait while we update the database with the most recent changes." ), message: "" )
     }
 
 
@@ -112,7 +112,10 @@ class PleaseWaitViewController: UIViewController {
     
     @objc func updatingExternalDevice( notification: NSNotification ) {
         logTrace()
-        displayAlert(title: NSLocalizedString( "AlertMessage.UpdatingExternalDevice", comment: "This device is updating the database on your external device.  Please wait a few minutes then try again." ), message: "" )
+        stayOfflineButton.isHidden = true
+        pleaseWaitLabel  .isHidden = true
+        
+        displayAlert(title: NSLocalizedString( "AlertMessage.UpdatingExternalDevice", comment: "Please wait while we update the database with the most recent changes." ), message: "" )
     }
     
 
@@ -147,14 +150,7 @@ class PleaseWaitViewController: UIViewController {
         
         let     okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ), style: .default )
         { ( alertAction ) in
-            logVerbose( "OK Action for\n    [ %@ ][ %@ ]", title, message )
-        }
-        
-        alert.addAction( okAction )
-
-        displayingAlert = true
-
-        present( alert, animated: true ) {
+            logTrace( "OK Action" )
             self.displayingAlert = false
             
             if self.ready {
@@ -162,7 +158,12 @@ class PleaseWaitViewController: UIViewController {
             }
             
         }
+        
+        alert.addAction( okAction )
 
+        displayingAlert = true
+
+        present( alert, animated: true, completion: nil )
     }
     
     
@@ -177,7 +178,10 @@ class PleaseWaitViewController: UIViewController {
             deviceAccessControl.byMe = true
             pinCentral.stayOffline   = true
             
-            switchToMainApp()
+            if !displayingAlert {
+                switchToMainApp()
+            }
+            
         }
         
     }
@@ -196,12 +200,14 @@ class PleaseWaitViewController: UIViewController {
         let     okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ), style: .default )
         { ( alertAction ) in
             logTrace( "OK Action" )
+            self.displayingAlert = false
         }
         
         let     resubmitAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Resubmit", comment: "Resubmit" ), style: .destructive )
         { ( alertAction ) in
             logTrace( "Resubmit Action" )
-            
+            self.displayingAlert = false
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2 ) {
                 self.pinCentral.didOpenDatabase = false
      
@@ -215,10 +221,7 @@ class PleaseWaitViewController: UIViewController {
 
         displayingAlert = true
         
-        present( alert, animated: true ) {
-            self.displayingAlert = false
-        }
-        
+        present( alert, animated: true, completion: nil )
     }
 
 
@@ -245,7 +248,9 @@ class PleaseWaitViewController: UIViewController {
     private func warnUser() {
         logTrace()
         disableControls()
-        
+        self.deviceAccessControl.byMe = true
+        self.pinCentral.stayOffline   = true
+
         let     alert = UIAlertController.init( title:   NSLocalizedString( "AlertTitle.Warning",          comment: "Warning!" ),
                                                 message: NSLocalizedString( "AlertMessage.OfflineWarning", comment: "We cannot connect to your remote storage.  Because this app is designed to work offline, you can make changes that we will upload the next time you connect to your remote storage.  Just be aware that if more than one person makes changes offline, your changes may be overwritten." ),
                                                 preferredStyle: .alert)
@@ -253,12 +258,18 @@ class PleaseWaitViewController: UIViewController {
         let     gotItAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.GotIt", comment: "Got it!" ), style: .default )
         { ( alertAction ) in
             logTrace( "Got It Action" )
+            self.displayingAlert = false
+
+            self.switchToMainApp()
         }
         
         let     dontRemindMeAgainAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.DontRemindMeAgain", comment: "Don't remind me again." ), style: .destructive )
         { ( alertAction ) in
             logTrace( "Don't Remind Me Again Action" )
             self.saveFlagInUserDefaults( UserDefaultKeys.dontRemindMeAgain )
+            self.displayingAlert = false
+
+            self.switchToMainApp()
         }
         
         alert.addAction( gotItAction )
@@ -269,14 +280,7 @@ class PleaseWaitViewController: UIViewController {
 
         displayingAlert = true
         
-        present( alert, animated: true ) {
-            self.deviceAccessControl.byMe = true
-            self.displayingAlert          = false
-            self.pinCentral.stayOffline   = true
-
-            self.switchToMainApp()
-        }
-        
+        present( alert, animated: true, completion: nil )
     }
     
     

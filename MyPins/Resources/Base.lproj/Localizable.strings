@@ -39,7 +39,7 @@
 "AlertMessage.UnableToDeleteImage"          = "We were unable to delete the image you created.";
 "AlertMessage.UnableToFetchDevices"         = "Unable to fetch devices!";
 "AlertMessage.UnableToOpenShare"            = "Unable to open the selected share!";
-"AlertMessage.UpdatingExternalDevice"       = "This device is updating the database on your external device.  Please wait a few minutes then try again.";
+"AlertMessage.UpdatingExternalDevice"       = "Please wait while we update the database with the most recent changes.";
 
 "AlertTitle.ActionForEntry"                 = "What would you like to do with this entry?";
 "AlertTitle.AreYouSure"                     = "Are you sure you want to discard your changes?";

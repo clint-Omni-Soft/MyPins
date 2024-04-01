@@ -343,9 +343,14 @@ extension NASCentral {
     
     // MARK: Utility Methods (Public)
     
+    func currentCommandIsStartSession() -> Bool {
+        return currentCommand == .StartSession
+    }
+    
+
     func emptyQueue() {
         logVerbose( "queue contents[ %@ ]", queueContents() )
-        requestQueue = []
+        requestQueue.removeAll()
     }
 
     
@@ -405,7 +410,7 @@ extension NASCentral {
         }
 
         if requestQueue.isEmpty {
-//            logTrace( "going IDLE" )
+            logTrace( "going IDLE" )
             return
         }
         

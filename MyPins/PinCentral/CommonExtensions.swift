@@ -832,7 +832,13 @@ extension PinCentral: NASCentralDelegate {
         logVerbose( "[ %@ ]", stringFor( canSeeNasFolders ) )
 
         if canSeeNasFolders {
-            nasCentral.startSession( self )
+            if nasCentral.currentCommandIsStartSession() {
+                logTrace( "Supressing duplicate StartSession command" )
+            }
+            else {
+                nasCentral.startSession( self )
+            }
+            
         }
         else {
             deviceAccessControl.initWith(ownerName: "Unknown", locked: true, byMe: false, updating: false )

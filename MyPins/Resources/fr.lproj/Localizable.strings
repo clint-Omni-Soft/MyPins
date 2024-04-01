@@ -39,7 +39,7 @@
 "AlertMessage.UnableToDeleteImage"          = "Nous n'avons pas pu supprimer l'image que vous avez créée.";
 "AlertMessage.UnableToFetchDevices"         = "Impossible de récupérer les appareils!";
 "AlertMessage.UnableToOpenShare"            = "Impossible d'ouvrir le partage sélectionné!";
-"AlertMessage.UpdatingExternalDevice"       = "Cet appareil met à jour la base de données sur votre appareil externe. Veuillez patienter quelques minutes, puis réessayer.";
+"AlertMessage.UpdatingExternalDevice"       = "Veuillez patienter pendant que nous mettons à jour la base de données avec les modifications les plus récentes.";
 
 "AlertTitle.ActionForEntry"                 = "Que souhaiteriez-vous faire avec cette entrée?";
 "AlertTitle.AreYouSure"                     = "Êtes-vous sûr de vouloir annuler vos modifications?";
