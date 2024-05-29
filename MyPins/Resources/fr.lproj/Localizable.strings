@@ -14,6 +14,7 @@
 "AlertMessage.CannotSeeContainer"           = "Impossible de voir votre conteneur iCloud! Accédez à Paramètres et vérifiez que vous vous êtes connecté à iCloud avec votre identifiant Apple, puis accédez à l'écran de configuration iCloud et assurez-vous que iCloud Drive est activé. Enfin, vérifiez que iCloud est activé pour cette application.";
 "AlertMessage.CannotSeeExternalDevice"      = "Nous ne pouvons pas voir votre appareil externe. Rapprochez-vous de votre réseau WiFi et réessayez.";
 "AlertMessage.CheckForMissingImages"        = "Cela peut prendre un certain temps. Si vous souhaitez faire cela, vous devrez conserver l'application au premier plan jusqu'à la fin.";
+"AlertMessage.ConnectingToExternalDevice"   = "Connexion à votre appareil externe.";
 "AlertMessage.DataWillBeMovedTo"            = "Lorsque vous appuyez sur le bouton OK, nous transférerons vos données, puis tuerons l'application. Lorsque vous redémarrez l'application, vos données seront stockées sur votre ";
 "AlertMessage.DataWillBeShared"             = "Lorsque vous appuyez sur le bouton OK, nous transférerons vos données, puis tuerons l'application. Lorsque vous redémarrerez, l'application PARTAGERA les données de votre ";
 "AlertMessage.DeviceNameRequired"           = "Veuillez accéder à l'onglet Paramètres, appuyez sur l'entrée 'Nom de l'appareil attribué à l'utilisateur' dans le tableau et entrez un nom pour cet appareil.";

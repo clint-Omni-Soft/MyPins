@@ -328,7 +328,7 @@ class ListTableViewController: UIViewController {
             else if showAllSections {
                 myTableView.scrollToRow(at: indexPath, at: .top, animated: true )
             }
-            else if indexPath.section == selectedSection + 1 {
+            else if indexPath.section == selectedSection {
                 myTableView.scrollToRow(at: indexPath, at: .top, animated: true )
             }
             
@@ -435,7 +435,6 @@ extension ListTableViewController: SortOptionsViewControllerDelegate {
         
         configureSortButtonTitle()
         pinCentral.fetchPinsWith( self )
-        
     }
     
     
@@ -461,7 +460,7 @@ extension ListTableViewController: UIPopoverPresentationControllerDelegate {
 extension ListTableViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return pinCentral.numberOfPinsLoaded == 0 ? 0 : pinCentral.pinArrayOfArrays.count
+        return ( pinCentral.numberOfPinsLoaded == 0 ) ? 0 : pinCentral.pinArrayOfArrays.count
     }
     
     
@@ -491,12 +490,11 @@ extension ListTableViewController: UITableViewDataSource {
             return 0
         }
         
-        let adjustedSection = section - 1
-        var numberOfRows    = 0
-        let sortType        = pinCentral.sortDescriptor.0
+        var numberOfRows = 0
+        let sortType     = pinCentral.sortDescriptor.0
 
         if sortType == SortOptions.byType {
-            if showAllSections || ( selectedSection == adjustedSection ) {
+            if showAllSections || ( selectedSection == section ) {
                 numberOfRows = pinCentral.pinArrayOfArrays[section].count
             }
 
@@ -541,13 +539,9 @@ extension ListTableViewController: UITableViewDelegate {
     
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return CGFloat.leastNormalMagnitude
-        }
-        
         let sortType = pinCentral.sortDescriptor.0
         
-        return sortType == SortOptions.byType ? Constants.sectionHeaderHeight : tableView.sectionHeaderHeight
+        return sortType == SortOptions.byType ? Constants.sectionHeaderHeight : CGFloat.leastNormalMagnitude
     }
     
     
@@ -568,28 +562,21 @@ extension ListTableViewController: UITableViewDelegate {
     
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return titleForHeaderIn( section )
+        return pinCentral.sectionTitleArray[ section ]
     }
     
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == 0 {
-            logTrace( "Ignorning table header" )
-            
-            return UIView()
-        }
-        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.sectionHeaderID ) else {
             logTrace( "We FAILED to dequeueReusableCell!" )
             return UITableViewCell.init()
         }
         
-        let adjustedSection = section - 1
-        let isOpen          = selectedSection == section
-        let headerCell      = cell as! ListTableViewSectionCell
+        let isOpen     = selectedSection == section
+        let headerCell = cell as! ListTableViewSectionCell
         
-        headerCell.initializeFor( adjustedSection, with: titleForHeaderIn( section ), isOpen: isOpen, self )
-        
+        headerCell.initializeFor( section, with: pinCentral.sectionTitleArray[ section ], isOpen: isOpen, self )
+
         return headerCell
     }
     
@@ -682,20 +669,6 @@ extension ListTableViewController: UITableViewDelegate {
     }
     
 
-    private func titleForHeaderIn(_ section: Int ) -> String {
-        if section == 0 {
-            return ""       // Table Header
-        }
-        
-        let adjustedSection = section - 1
-        let sortDescriptor  = pinCentral.sortDescriptor
-        let sortAscending   = sortDescriptor.1
-        let targetSection   = sortAscending ? adjustedSection : ( ( pinCentral.colorArray.count - 1 ) - adjustedSection )
-        
-        return pinCentral.colorArray[targetSection].descriptor!
-    }
-    
-    
     
     // MARK: UIImageWrite Completion Methods
     

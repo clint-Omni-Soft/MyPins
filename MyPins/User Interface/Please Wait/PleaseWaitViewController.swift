@@ -21,6 +21,7 @@ class PleaseWaitViewController: UIViewController {
     
     // MARK: Private Variables
     
+    private var alertQueue          : [ (String, String) ] = []
     private let deviceAccessControl = DeviceAccessControl.sharedInstance
     private var displayingAlert     = false
     private let pinCentral          = PinCentral.sharedInstance
@@ -75,6 +76,15 @@ class PleaseWaitViewController: UIViewController {
     }
 
     
+    @objc func connectingToExternalDevice( notification: NSNotification ) {
+        logTrace()
+        stayOfflineButton.isHidden = true
+        pleaseWaitLabel  .isHidden = true
+                
+        displayAlert(title: NSLocalizedString( "AlertMessage.ConnectingToExternalDevice", comment: "Connecting to your external device." ), message: "" )
+    }
+
+    
     @objc func externalDeviceLocked( notification: NSNotification ) {
         logTrace()
         let     format  = NSLocalizedString( "AlertMessage.ExternalDriveLocked", comment: "The database on your external drive is locked by another user [ %@ ].  You can wait until the other user closes the app (which unlocks it) or make you changes offline and upload them when the drive is no longer locked." )
@@ -88,7 +98,7 @@ class PleaseWaitViewController: UIViewController {
         logVerbose( "%@", displayingAlert ? "Do nothing!  displayingAlert" : "" )
         ready = true
 
-        if !displayingAlert {
+        if !displayingAlert && !deviceAccessControl.updating {
             switchToMainApp()
         }
 
@@ -99,6 +109,8 @@ class PleaseWaitViewController: UIViewController {
         logTrace()
         stayOfflineButton.isHidden = true
         pleaseWaitLabel  .isHidden = true
+        
+        pinCentral.stayOffline = false
         
         displayAlert(title: NSLocalizedString( "AlertMessage.UpdatingExternalDevice", comment: "Please wait while we update the database with the most recent changes." ), message: "" )
     }
@@ -124,6 +136,10 @@ class PleaseWaitViewController: UIViewController {
     
     @IBAction func stayOfflineButtonTouched(_ sender: UIButton) {
         logTrace()
+        if  pinCentral.dataStoreLocation == .nas || pinCentral.dataStoreLocation == .shareNas {
+            nasCentral.emptyQueue()
+        }
+        
         makeSureUserHasBeenWarned()
      }
     
@@ -140,7 +156,8 @@ class PleaseWaitViewController: UIViewController {
     
     private func displayAlert( title: String, message: String ) {
         if displayingAlert {
-            logVerbose( "displayingAlert!  Suppressing this one.\n    [ %@ ][ %@ ]", title, message )
+            logVerbose( "displayingAlert!  Queuing this one.\n    [ %@ ][ %@ ]", title, message )
+            alertQueue.append( (title, message) )
             return
         }
         
@@ -152,13 +169,22 @@ class PleaseWaitViewController: UIViewController {
         { ( alertAction ) in
             logTrace( "OK Action" )
             self.displayingAlert = false
-            
-            if self.ready {
-                self.switchToMainApp()
+
+            if self.alertQueue.isEmpty {
+                if self.ready {
+                    self.switchToMainApp()
+                }
+
+            }
+            else {
+                let queuedAlert = self.alertQueue.first!
+                
+                self.alertQueue.removeFirst()
+                self.displayAlert(title: queuedAlert.0, message: queuedAlert.1 )
             }
             
         }
-        
+
         alert.addAction( okAction )
 
         displayingAlert = true
@@ -178,7 +204,7 @@ class PleaseWaitViewController: UIViewController {
             deviceAccessControl.byMe = true
             pinCentral.stayOffline   = true
             
-            if !displayingAlert {
+            if !displayingAlert && !deviceAccessControl.updating {
                 switchToMainApp()
             }
             
@@ -227,13 +253,14 @@ class PleaseWaitViewController: UIViewController {
 
     private func registerForNotifications() {
         logTrace()
-        notificationCenter.addObserver( self, selector: #selector( cannotReadAllDbFiles(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.cannotReadAllDbFiles    ), object: nil )
-        notificationCenter.addObserver( self, selector: #selector( cannotSeeExternalDevice(         notification: ) ), name: NSNotification.Name( rawValue: Notifications.cannotSeeExternalDevice ), object: nil )
-        notificationCenter.addObserver( self, selector: #selector( externalDeviceLocked(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.externalDeviceLocked    ), object: nil )
-        notificationCenter.addObserver( self, selector: #selector( ready(                           notification: ) ), name: NSNotification.Name( rawValue: Notifications.ready                   ), object: nil )
-        notificationCenter.addObserver( self, selector: #selector( transferringDatabase(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.transferringDatabase    ), object: nil )
-        notificationCenter.addObserver( self, selector: #selector( unableToConnectToExternalDevice( notification: ) ), name: NSNotification.Name( rawValue: Notifications.unableToConnect         ), object: nil )
-        notificationCenter.addObserver( self, selector: #selector( updatingExternalDevice(          notification: ) ), name: NSNotification.Name( rawValue: Notifications.updatingExternalDevice  ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( cannotReadAllDbFiles(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.cannotReadAllDbFiles       ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( cannotSeeExternalDevice(         notification: ) ), name: NSNotification.Name( rawValue: Notifications.cannotSeeExternalDevice    ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( connectingToExternalDevice(      notification: ) ), name: NSNotification.Name( rawValue: Notifications.connectingToExternalDevice ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( externalDeviceLocked(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.externalDeviceLocked       ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( ready(                           notification: ) ), name: NSNotification.Name( rawValue: Notifications.ready                      ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( transferringDatabase(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.transferringDatabase       ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( unableToConnectToExternalDevice( notification: ) ), name: NSNotification.Name( rawValue: Notifications.unableToConnect            ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( updatingExternalDevice(          notification: ) ), name: NSNotification.Name( rawValue: Notifications.updatingExternalDevice     ), object: nil )
     }
     
     
@@ -260,7 +287,10 @@ class PleaseWaitViewController: UIViewController {
             logTrace( "Got It Action" )
             self.displayingAlert = false
 
-            self.switchToMainApp()
+            if !self.deviceAccessControl.updating {
+                self.switchToMainApp()
+            }
+            
         }
         
         let     dontRemindMeAgainAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.DontRemindMeAgain", comment: "Don't remind me again." ), style: .destructive )
@@ -269,7 +299,10 @@ class PleaseWaitViewController: UIViewController {
             self.saveFlagInUserDefaults( UserDefaultKeys.dontRemindMeAgain )
             self.displayingAlert = false
 
-            self.switchToMainApp()
+            if !self.deviceAccessControl.updating {
+                self.switchToMainApp()
+            }
+            
         }
         
         alert.addAction( gotItAction )

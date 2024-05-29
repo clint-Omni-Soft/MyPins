@@ -23,6 +23,8 @@ extension PinCentral: CloudCentralDelegate {
         }
         else if canSeeCloud {
             cloudCentral.startSession( self )
+            
+            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.connectingToExternalDevice ), object: self )
         }
         else {
             deviceAccessControl.initWith(ownerName: "Unknown", locked: true, byMe: false, updating: false)
@@ -829,6 +831,11 @@ extension PinCentral: NASCentralDelegate {
             return
         }
         
+        if nasCentral.queueIsEmpty() {
+            logVerbose( "[ %@ ]  Queue is empty!  Ignoring response", stringFor( canSeeNasFolders ) )
+            return
+        }
+        
         logVerbose( "[ %@ ]", stringFor( canSeeNasFolders ) )
 
         if canSeeNasFolders {
@@ -837,6 +844,8 @@ extension PinCentral: NASCentralDelegate {
             }
             else {
                 nasCentral.startSession( self )
+                
+                notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.connectingToExternalDevice ), object: self )
             }
             
         }
@@ -872,7 +881,10 @@ extension PinCentral: NASCentralDelegate {
         }
         else {  // Must be same!
             // Tell the PleaseWaitVC that we are done
-            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
+                self.notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
+            }
+            
         }
 
     }

@@ -369,6 +369,11 @@ extension NASCentral {
         
         return queueContents
     }
+    
+    
+    func queueIsEmpty() -> Bool {
+        return requestQueue.isEmpty
+    }
 
     
     

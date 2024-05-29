@@ -56,6 +56,7 @@ class PinCentral: NSObject {
     var pinArrayOfArrays            = [[Pin]]()
     var pleaseWaiting               = false
     var resigningActive             = false
+    var sectionTitleArray: [String] = []
     var stayOffline                 = false
     
     
@@ -667,7 +668,6 @@ class PinCentral: NSObject {
             nasCentral.canSeeNasFolders( self )
         }
 
-        notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.connectingToExternalDevice ), object: self )
     }
     
     
@@ -925,58 +925,68 @@ class PinCentral: NSObject {
     
     
     private func sortByType(_ fetchedPins: [Pin], _ sortAscending: Bool ){
-        logVerbose( "sortAscending[ %@ ]", stringFor( sortAscending ) )
-        let sortedArray = fetchedPins.sorted( by:
-                    { (pin1, pin2) -> Bool in
-                        if sortAscending {
-                            pin1.pinColor < pin2.pinColor
-                        }
-                        else {
-                            pin1.pinColor > pin2.pinColor
-                        }
-            
-                    } )
+        logVerbose( "fetchedPins[ %d ]  sortAscending[ %@ ]", fetchedPins.count, stringFor( sortAscending ) )
         
-        let delta        = sortAscending ? 1 : -1
-        var index        = 0
-        var section      = sortAscending ? 0 : ( colorArray.count - 1 )
-        var sectionArray = [Pin]()
+        // First we build an empty target
+        var targetArrayOfArrays: [[Pin]] = []
         
-//        logVerbose( "Starting with [ %@ ]", colorArray[section].descriptor! )
-        while index < sortedArray.count {
-            let pin = sortedArray[index]
-            
-            if pin.pinColor == section {
-                sectionArray.append( pin )
-//                logVerbose( "Section [ %d ][ %@ ] Added [ %@ ][ %@ ]", section, pinColorNameArray[ section ], pinColorNameArray[ Int( pin.pinColor ) ], pin.name! )
-                index += 1
-            }
-            else {
-                sectionArray = sectionArray.sorted( by:
-                            { (pin1, pin2) -> Bool in
-                                if sortAscending {
-                                    pin1.name! < pin2.name!
-                                }
-                                else {
-                                    pin1.name! > pin2.name!
-                                }
-                    
-                            } )
-                
-//                logVerbose( "Added an array of %d pins to section %d [ %@ / %@ ]", sectionArray.count, section, pinColorNameArray[section], colorArray[section].descriptor! )
-                pinArrayOfArrays.append( sectionArray )
-                sectionArray = []
-                section = section + delta
-            }
-            
+        for _ in 0..<colorArray.count {
+            targetArrayOfArrays.append( [Pin]() )
         }
         
-            // Pick up the last section
-//        logVerbose( "Added an array of %d pins to section %d [ %@ / %@ ]", sectionArray.count, section, pinColorNameArray[section], colorArray[section].descriptor! )
-        pinArrayOfArrays.append( sectionArray )
+        // Next we put the pins in their corresponding array in targetArrayOfArrays
+        for index in 0..<fetchedPins.count {
+            let pin = fetchedPins[index]
+            
+            targetArrayOfArrays[ Int(pin.pinColor) ].append( pin )
+        }
+        
+        // Now we go through and sort each array in the targetArrayOfArrays by pin name
+        for index in 0..<targetArrayOfArrays.count {
+            targetArrayOfArrays[index] = targetArrayOfArrays[index].sorted( by:
+                                            { (pin1, pin2) -> Bool in
+                                                if sortAscending {
+                                                    pin1.name! < pin2.name!
+                                                }
+                                                else {
+                                                    pin1.name! > pin2.name!
+                                                }
+                                    
+                                            } )
+            
+        }
 
+        // Now we construct the mapping for the arrays using the color descriptor assigned by the user
+        var mappingArray: [(String, Int)] = []
+        
+        for index in 0..<colorArray.count {
+            mappingArray.append( (colorArray[index].descriptor!, index) )
+        }
+        
+        // Then sort it by color descriptor (tuple 0)
+        mappingArray = mappingArray.sorted(by:
+                        { (mapping1, mapping2) -> Bool in
+                            if sortAscending {
+                                mapping1.0 < mapping2.0
+                            }
+                            else {
+                                mapping1.0 > mapping2.0
+                            }
+                        
+                        } )
+        
+        // Finally, we use the mappingArray to put the color arrays in color descriptor order in pinArrayOfArrays
+        pinArrayOfArrays  = []
+        sectionTitleArray = []
+        
+        for mapping in mappingArray {
+//            logVerbose( "[ %d ][ %@ ]", mapping.1, mapping.0 )
+            pinArrayOfArrays .append( targetArrayOfArrays[mapping.1] )
+            sectionTitleArray.append( mapping.0 )
+        }
+        
     }
-    
+
     
 }
 

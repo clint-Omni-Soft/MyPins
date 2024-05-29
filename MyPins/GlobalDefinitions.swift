@@ -145,7 +145,6 @@ struct SortOptions {
     static let byType             = "byType"
 }
 
-
 struct SortOptionNames {
     static let byDateLastModified = NSLocalizedString( "SortOption.DateLastModified", comment: "Date Last Modified" )
     static let byName             = NSLocalizedString( "SortOption.Name",             comment: "Name" )

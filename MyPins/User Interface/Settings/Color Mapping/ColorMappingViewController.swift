@@ -95,19 +95,14 @@ extension ColorMappingViewController : UITableViewDataSource {
             return UITableViewCell.init()
         }
         
-        var backgroundColor = UIColor.white
-        let pinColor        = pinCentral.colorArray[indexPath.row]
+        let color = pinCentral.colorArray[indexPath.row]
 
-        if ( ( pinColor.colorId == PinColors.pinWhite ) || ( pinColor.colorId == PinColors.pinYellow ) ) {
-            backgroundColor = .lightGray
-        }
-
-        cell.backgroundColor = backgroundColor
-
-        cell.detailTextLabel?.text = pinColor.name!
+        cell.backgroundColor       = ( ( color.colorId == PinColors.pinWhite ) || ( color.colorId == PinColors.pinYellow ) ) ? .lightGray : .white
+        cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17.0 )
+        cell.detailTextLabel?.text = color.descriptor ?? "???"
         cell.textLabel?.font       = UIFont.systemFont(ofSize: 17.0 )
-        cell.textLabel?.text       = pinColor.descriptor!
-        cell.textLabel?.textColor  = pinColorArray[Int( pinColor.colorId )]
+        cell.textLabel?.text       = color.name ?? "???"
+        cell.textLabel?.textColor  = pinColorArray[Int( color.colorId )]
 
         return cell
     }

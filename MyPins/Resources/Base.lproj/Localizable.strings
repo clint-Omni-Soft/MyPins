@@ -14,6 +14,7 @@
 "AlertMessage.CannotSeeContainer"           = "Cannot see your iCloud container!  Please go to Settings and verify that you have signed into iCloud with your Apple ID then navigate to the iCloud setting screen and make sure iCloud Drive is on.  Finally, verify that iCloud is enabled for this app.";
 "AlertMessage.CannotSeeExternalDevice"      = "We cannot see your external device.  Move closer to your WiFi network and try again.";
 "AlertMessage.CheckForMissingImages"        = "This may take some time.  If you want to do this you will need to keep the app in the foreground until it finishes.";
+"AlertMessage.ConnectingToExternalDevice"   = "Connecting to your external device.";
 "AlertMessage.DataWillBeMovedTo"            = "When you hit the OK button we will transfer your data then kill the app.  When you re-start the app your data will stored be on your ";
 "AlertMessage.DataWillBeShared"             = "When you hit the OK button we will transfer your data then kill the app.  When you re-start the app will SHARE the data in your ";
 "AlertMessage.DeviceNameRequired"           = "Please go to the Settings tab, tap on the 'User Assigned Device Name' entry in the table and enter a name for this device.";
