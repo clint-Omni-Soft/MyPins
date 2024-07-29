@@ -24,6 +24,7 @@ class PleaseWaitViewController: UIViewController {
     private var alertQueue          : [ (String, String) ] = []
     private let deviceAccessControl = DeviceAccessControl.sharedInstance
     private var displayingAlert     = false
+    private var displayRecovery     = false
     private let pinCentral          = PinCentral.sharedInstance
     private let nasCentral          = NASCentral.sharedInstance
     private let notificationCenter  = NotificationCenter.default
@@ -174,6 +175,9 @@ class PleaseWaitViewController: UIViewController {
                 if self.ready {
                     self.switchToMainApp()
                 }
+                else if self.displayRecovery {
+                    self.promptForRecoveryAction()
+                }
 
             }
             else {
@@ -215,6 +219,12 @@ class PleaseWaitViewController: UIViewController {
 
     private func promptForRecoveryAction() {
         logTrace()
+        if displayingAlert {
+            displayRecovery = true
+            return
+        }
+        
+        displayingAlert = true
         stayOfflineButton.isHidden = true
         disableControls()
         

@@ -905,8 +905,11 @@ extension PinCentral: NASCentralDelegate {
         
         if updatedOffline {
             DispatchQueue.main.asyncAfter(deadline: .now() + 4.0 ) {
-                self.persistentContainer.viewContext.perform {
-                    self.processNextOfflineImageRequest()
+                if let container = self.persistentContainer {
+                    container.viewContext.perform {
+                        self.processNextOfflineImageRequest()
+                    }
+
                 }
 
             }

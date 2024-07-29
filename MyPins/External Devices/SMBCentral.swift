@@ -480,7 +480,7 @@ extension SMBCentral {
             
             if let thisError = error {
                 logVerbose( "ERROR!  Unable to list files[ %@ ]", thisError.localizedDescription )
-                delegate.smbCentral( self, didFetchDirectories : false, [] )
+                delegate.smbCentral( self, didFetchFiles: false, [] )
             }
             else {
                 if let _ = files {
@@ -510,6 +510,7 @@ extension SMBCentral {
             return
         }
         
+        logVerbose( "[ %@ ]", path )
         if let smbFile  = SMBFile.init( path: path, share: connectedShare! ) {
 
             smbFile.updateStatus( {
@@ -525,6 +526,7 @@ extension SMBCentral {
                         delegate.smbCentral( self, didReadFile: false, fileData )
                     }
                     else {
+                        logTrace( "    opening" )
                         smbFile.open( .read, completion: {
                             (error) in
                             
@@ -548,7 +550,7 @@ extension SMBCentral {
                                     }
                                     
                                     if complete {
-//                                    logVerbose( "Read [ %ld ] bytes from [ %@ ]", bytesReadTotal, path )
+                                    logVerbose( "    read a total of [ %ld ] bytes", bytesReadTotal )
                                         
                                         smbFile.close( {
                                             (error) in

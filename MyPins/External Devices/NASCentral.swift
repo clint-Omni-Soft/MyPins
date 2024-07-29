@@ -874,6 +874,7 @@ extension NASCentral {
         logTrace()
         let     fullPath = nasAccessKey.path + "/" + Filenames.lockFile
         
+        self.delegate = delegate
         smbCentral.deleteFileAt( fullPath, self )
     }
 
