@@ -46,7 +46,7 @@
 "AlertTitle.AreYouSure"                     = "¿Estás seguro de que quieres descartar tus cambios?";
 "AlertTitle.CheckForMissingImages"          = "Comprobar si faltan imágenes";
 "AlertTitle.CurrentCoordinates"             = "Coordenadas actuales";
-"AlertTitle.DeviceNameRequired"             = "Se requiere el nombre del dispositivo para NAS o iCloud";
+"AlertTitle.DeviceNameRequired"             = "Se requiere el nombre del dispositivo para NAS";
 "AlertTitle.DiscardChanges"                 = "¿Quieres descartar tus cambios?";
 "AlertTitle.EnterDeviceName"                = "Ingrese el nombre del dispositivo";
 "AlertTitle.Error"                          = "Error";
@@ -60,6 +60,7 @@
 "AlertTitle.NoMissingImages"                = "NO te faltan imágenes.";
 "AlertTitle.OverrideOfflineBlock"           = "¿Anular bloqueo sin conexión?";
 "AlertTitle.RequestedImagesLoaded"          = "Se cargó %d de %d imágenes solicitadas.";
+"AlertTitle.SaveToPhotoLibrary"             = "¿Le gustaría guardar esta imagen en su biblioteca de fotos?";
 "AlertTitle.SelectMapType"                  = "Seleccionar tipo de mapa";
 "AlertTitle.SelectMediaSource"              = "Seleccionar fuente de medios para foto";
 "AlertTitle.SelectUnitsForAltitude"         = "Seleccionar unidades para altitud";
@@ -89,6 +90,8 @@
 "ButtonTitle.MutedStandard"                 = "Estándar silenciado";
 "ButtonTitle.No"                            = "¡No!";
 "ButtonTitle.OK"                            = "DE ACUERDO";
+"ButtonTitle.OnRemote"                      = "En control remoto";
+"ButtonTitle.OnThisDevice"                  = "En este dispositivo";
 "ButtonTitle.PhotoAlbum"                    = "Album de fotos";
 "ButtonTitle.PinColor"                      = "Color del alfiler";
 "ButtonTitle.ReloadImage"                   = "Recargar imagen";
@@ -103,6 +106,7 @@
 "ButtonTitle.Standard"                      = "Estándar";
 "ButtonTitle.StayOffline"                   = "Mantenerse fuera de línea";
 "ButtonTitle.ToggleUnits"                   = "Conmutar unidades";
+"ButtonTitle.TryAgain"                      = "Intentar otra vez";
 "ButtonTitle.Units"                         = "Unidades";
 "ButtonTitle.UploadImage"                   = "Cargar imagen";
 "ButtonTitle.UseCurrent"                    = "Usar la ubicación actual";
@@ -123,8 +127,8 @@
 "DefaultColorNickname.White"                = "Compras";
 "DefaultColorNickname.Yellow"               = "Lagar";
 
-"InfoText.DataStoreLocation1"               = "UBICACIÓN DEL ALMACENAMIENTO DE DATOS\n\nOfrecemos soporte para tres opciones de ubicación de almacenamiento diferentes...\n\n   (a) en su dispositivo (predeterminado),\n   (b) en la nube y \n   (c) en una red accesible Unidad de almacenamiento (NAS).\n\n";
-"InfoText.DataStoreLocation2"               = "El punto clave aquí es que no se comparte en el dispositivo. Si elige la nube, sus datos se pueden compartir en todos sus dispositivos. Si elige NAS, cualquiera que tenga acceso a su Wi-Fi puede acceder a él.\n\n";
+"InfoText.DataStoreLocation1"               = "UBICACIÓN DEL ALMACENAMIENTO DE DATOS\n\nBrindamos soporte para dos opciones de ubicación de almacenamiento diferentes...\n\n (a) en su dispositivo (predeterminado) o \n (b) en una unidad de almacenamiento accesible en red (NAS).\n\n";
+"InfoText.DataStoreLocation2"               = "El punto clave aquí es que no se puede compartir en el dispositivo.  Si elige NAS, cualquiera que tenga acceso a su Wi-Fi podrá acceder a él.\n\n";
 "InfoText.Map1"                             = "MAP\n\nAl tocar el botón de la barra del signo más (+), accederá al Editor de pines, donde puede asociar proporcionar información sobre ese pin.\n\n";
 "InfoText.Map2"                             = "Al tocar el botón de la barra 'Mapa' se producirá una ventana emergente que le permitirá elegir entre los modos de visualización de mapas admitidos.\n\n";
 "InfoText.Map3"                             = "Tocar el botón de la barra 'Dardo' producirá una ventana emergente que le dará la latitud, longitud y altitud actuales del dispositivo.\n\n";

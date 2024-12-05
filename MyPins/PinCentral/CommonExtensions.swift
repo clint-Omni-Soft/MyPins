@@ -101,6 +101,11 @@ extension PinCentral: CloudCentralDelegate {
         deviceAccessControl.updating = false
 
         notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
+
+        if self.userNotificationsAllowed && UIApplication.shared.applicationIconBadgeNumber != GlobalConstants.noSelection {
+            UIApplication.shared.applicationIconBadgeNumber = GlobalConstants.noSelection
+        }
+
     }
     
     
@@ -114,7 +119,6 @@ extension PinCentral: CloudCentralDelegate {
 
         if backgroundTaskID != UIBackgroundTaskIdentifier.invalid {
             UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
-            
             self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
         }
         
@@ -215,6 +219,11 @@ extension PinCentral: CloudCentralDelegate {
         logVerbose( "[ %@ ]", stringFor( didUnlockCloud ) )
 
         cloudCentral.endSession( self )
+
+        if self.userNotificationsAllowed && UIApplication.shared.applicationIconBadgeNumber != GlobalConstants.noSelection {
+            UIApplication.shared.applicationIconBadgeNumber = GlobalConstants.noSelection
+        }
+
     }
     
     
@@ -455,7 +464,7 @@ extension PinCentral {
     }
     
     
-    func fetchMissingImages(_ imageName: String, _ descriptor: String,  _ delegate: PinCentralDelegate ) -> Int {   // Tailored to each implementation
+    func fetchMissingDeviceImages(_ imageName: String, _ descriptor: String,  _ delegate: PinCentralDelegate ) -> Int {   // Tailored to each implementation
         var     imagesRequested = 0
         
         if !imageExistsWith( imageName ) {
@@ -532,6 +541,9 @@ extension PinCentral {
         dateString = formatter.string(from: Date() )
         
         imageName = dateString + "_" + encodedName + "_" + encodedDetails + ".jpg"
+        
+        imageName = imageName.replacingOccurrences( of: "/", with: "-" )
+        imageName = imageName.replacingOccurrences( of: ":", with: "-" )
         
         return imageName
     }
@@ -660,7 +672,6 @@ extension PinCentral {
     
     
     func uploadImageNamed(_ imageName: String, _ delegate: PinCentralDelegate ) {  // Tailored to each implementation
-        logTrace()
         let     directoryPath        = pictureDirectoryPath()
         let     picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
         let     imageFileURL         = picturesDirectoryURL.appendingPathComponent( imageName )
@@ -669,6 +680,7 @@ extension PinCentral {
             let     imageFileData = fileManager.contents( atPath: imageFileURL.path )
             
             if let imageData = imageFileData {
+                logVerbose( "[ %@ ]", imageName )
                 self.delegate = delegate
 
                 if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
@@ -923,6 +935,11 @@ extension PinCentral: NASCentralDelegate {
         deviceAccessControl.updating = false
         
         notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
+
+        if self.userNotificationsAllowed && UIApplication.shared.applicationIconBadgeNumber != GlobalConstants.noSelection {
+            UIApplication.shared.applicationIconBadgeNumber = GlobalConstants.noSelection
+        }
+
     }
         
         
@@ -1083,6 +1100,11 @@ extension PinCentral: NASCentralDelegate {
         logVerbose( "[ %@ ]", stringFor( didUnlockNas ) )
         
         nasCentral.endSession( self )
+
+        if self.userNotificationsAllowed && UIApplication.shared.applicationIconBadgeNumber != GlobalConstants.noSelection {
+            UIApplication.shared.applicationIconBadgeNumber = GlobalConstants.noSelection
+        }
+
     }
         
 

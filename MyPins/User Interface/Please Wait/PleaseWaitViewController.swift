@@ -25,9 +25,10 @@ class PleaseWaitViewController: UIViewController {
     private let deviceAccessControl = DeviceAccessControl.sharedInstance
     private var displayingAlert     = false
     private var displayRecovery     = false
-    private let pinCentral          = PinCentral.sharedInstance
     private let nasCentral          = NASCentral.sharedInstance
+    private var networkErrorMessage = ""
     private let notificationCenter  = NotificationCenter.default
+    private let pinCentral          = PinCentral.sharedInstance
     private var ready               = false
 
     
@@ -73,15 +74,12 @@ class PleaseWaitViewController: UIViewController {
     
     @objc func cannotSeeExternalDevice( notification: NSNotification ) {
         logTrace()
-        displayAlert(title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: NSLocalizedString( "AlertMessage.CannotSeeExternalDevice", comment: "We cannot see your external device.  Move closer to your WiFi network and try again." ) )
+        displayNetworkError( NSLocalizedString( "AlertMessage.CannotSeeExternalDevice", comment: "We cannot see your external device.  Move closer to your WiFi network and try again." ) )
     }
 
     
     @objc func connectingToExternalDevice( notification: NSNotification ) {
         logTrace()
-        stayOfflineButton.isHidden = true
-        pleaseWaitLabel  .isHidden = true
-                
         displayAlert(title: NSLocalizedString( "AlertMessage.ConnectingToExternalDevice", comment: "Connecting to your external device." ), message: "" )
     }
 
@@ -119,7 +117,7 @@ class PleaseWaitViewController: UIViewController {
 
     @objc func unableToConnectToExternalDevice( notification: NSNotification ) {
         logTrace()
-        displayAlert(title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: NSLocalizedString( "AlertMessage.UnableToConnect", comment: "We are unable to connect to your external device.  Move closer to your WiFi network and try again." ) )
+        displayNetworkError( NSLocalizedString( "AlertMessage.UnableToConnect", comment: "We are unable to connect to your external device.  Move closer to your WiFi network and try again." ) )
     }
 
     
@@ -170,26 +168,48 @@ class PleaseWaitViewController: UIViewController {
         { ( alertAction ) in
             logTrace( "OK Action" )
             self.displayingAlert = false
-
-            if self.alertQueue.isEmpty {
-                if self.ready {
-                    self.switchToMainApp()
-                }
-                else if self.displayRecovery {
-                    self.promptForRecoveryAction()
-                }
-
-            }
-            else {
-                let queuedAlert = self.alertQueue.first!
-                
-                self.alertQueue.removeFirst()
-                self.displayAlert(title: queuedAlert.0, message: queuedAlert.1 )
-            }
             
+            self.pumpAlertQueue()
         }
 
         alert.addAction( okAction )
+
+        displayingAlert = true
+
+        present( alert, animated: true, completion: nil )
+    }
+    
+
+    private func displayNetworkError(_ message: String ) {
+        if displayingAlert {
+            logTrace( "displayingAlert ... queuing" )
+            networkErrorMessage = message
+            return
+        }
+        
+        logTrace()
+        let     alert = UIAlertController.init( title  : NSLocalizedString( "AlertTitle.Error", comment: "Error!" ), message: message, preferredStyle: .alert )
+        
+        let     tryAgainAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.TryAgain", comment: "Try Again" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Try Again Action" )
+            self.displayingAlert     = false
+            self.networkErrorMessage = ""
+            
+            self.pinCentral.canSeeExternalStorage()
+        }
+
+        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel )
+        { ( alertAction ) in
+            logTrace( "Cancel Action" )
+            self.displayingAlert     = false
+            self.networkErrorMessage = ""
+
+            self.pumpAlertQueue()
+        }
+
+        alert.addAction( tryAgainAction )
+        alert.addAction( cancelAction   )
 
         displayingAlert = true
 
@@ -218,13 +238,13 @@ class PleaseWaitViewController: UIViewController {
     
 
     private func promptForRecoveryAction() {
-        logTrace()
         if displayingAlert {
+            logTrace( "displayingAlert ... queuing" )
             displayRecovery = true
             return
         }
         
-        displayingAlert = true
+        logTrace()
         stayOfflineButton.isHidden = true
         disableControls()
         
@@ -237,12 +257,14 @@ class PleaseWaitViewController: UIViewController {
         { ( alertAction ) in
             logTrace( "OK Action" )
             self.displayingAlert = false
+            self.displayRecovery = false
         }
         
         let     resubmitAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Resubmit", comment: "Resubmit" ), style: .destructive )
         { ( alertAction ) in
             logTrace( "Resubmit Action" )
             self.displayingAlert = false
+            self.displayRecovery = false
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2 ) {
                 self.pinCentral.didOpenDatabase = false
@@ -261,6 +283,30 @@ class PleaseWaitViewController: UIViewController {
     }
 
 
+    private func pumpAlertQueue() {
+        logTrace()
+        if alertQueue.isEmpty {
+            if ready {
+                switchToMainApp()
+            }
+            else if displayRecovery {
+                promptForRecoveryAction()
+            }
+            else if !networkErrorMessage.isEmpty {
+                displayNetworkError( networkErrorMessage )
+            }
+
+        }
+        else {
+            let queuedAlert = alertQueue.first!
+            
+            alertQueue.removeFirst()
+            displayAlert(title: queuedAlert.0, message: queuedAlert.1 )
+        }
+        
+    }
+
+    
     private func registerForNotifications() {
         logTrace()
         notificationCenter.addObserver( self, selector: #selector( cannotReadAllDbFiles(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.cannotReadAllDbFiles       ), object: nil )

@@ -51,7 +51,7 @@
                                     <action selector="stayOfflineButtonTouched:" destination="QZo-Aa-aQX" eventType="touchUpInside" id="9h8-wr-0rv"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="© Omni-Soft, Inc. 2018-2024" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="zTS-ZZ-b6K">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="© Omni-Soft, Inc. 2018-2025" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="zTS-ZZ-b6K">
                                 <rect key="frame" x="20" y="1013" width="794" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="29" id="lOM-VN-YSh"/>

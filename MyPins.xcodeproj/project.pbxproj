@@ -312,11 +312,8 @@
 		F483C5332671349300224D53 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				F4766CE6243D238A0054CD97 /* Logger.swift */,
-				F4A6552829AEB23400DDC813 /* LogViewController.swift */,
-				F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */,
-				F4B76F5F29CD06BA002D2060 /* UIImage+Cropping.swift */,
-				F4CACD9C29D39F8E00BCFF79 /* UIKitExtensions.swift */,
+				F4B6DA372D00A14E00D3C3A1 /* Extensions */,
+				F4B6DA362D009DED00D3C3A1 /* Logger */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -413,6 +410,25 @@
 				F4EB06A42A00575000B159E1 /* PinColor+CoreDataProperties.swift */,
 			);
 			path = "CoreData Entities";
+			sourceTree = "<group>";
+		};
+		F4B6DA362D009DED00D3C3A1 /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				F4766CE6243D238A0054CD97 /* Logger.swift */,
+				F4A6552829AEB23400DDC813 /* LogViewController.swift */,
+			);
+			path = Logger;
+			sourceTree = "<group>";
+		};
+		F4B6DA372D00A14E00D3C3A1 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */,
+				F4B76F5F29CD06BA002D2060 /* UIImage+Cropping.swift */,
+				F4CACD9C29D39F8E00BCFF79 /* UIKitExtensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		F4B76F4829CCEB8A002D2060 /* How to Use */ = {
@@ -750,7 +766,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MyPins/MyPins-Prefix.pch";
 				INFOPLIST_FILE = MyPins/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -782,7 +798,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MyPins/MyPins-Prefix.pch";
 				INFOPLIST_FILE = MyPins/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -473,14 +473,14 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
     func locationImageTableViewCell(_ locationImageTableViewCell: LocationImageTableViewCell, cameraButtonTouched: Bool ) {
         logTrace()
         imageCell = locationImageTableViewCell
-
+        
         if imageCell.imageState != ImageState.loaded {
             promptForImageSource()
         }
         else {
             promptForImageDispostion()
         }
-
+        
     }
     
     
@@ -540,7 +540,7 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
             
             present( navController, animated: true )
         }
-            
+        
     }
     
     
@@ -567,7 +567,7 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
         logTrace()
         let     alert    = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ImageDisposition", comment: "What would you like to do with this image?" ), message: nil, preferredStyle: .alert)
         let     onDevice = pinCentral.dataStoreLocation == .device
-
+        
         // These are .default style
         let     inspectImageAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.InspectImage", comment: "Inspect Image" ), style: .default )
         { ( alertAction ) in
@@ -579,7 +579,7 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
             else {
                 self.launchImageViewController()
             }
-
+            
         }
         
         let     reloadImageAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.ReloadImage", comment: "Reload Image" ), style: .default )
@@ -599,7 +599,7 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
             
             UIImageWriteToSavedPhotosAlbum( thisImage, self, #selector( LocationEditorViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
         }
-
+        
         let uploadAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.UploadImage", comment: "Upload Image" ), style: .default )
         { ( alertAction ) in
             logTrace( "Upload Action" )
@@ -671,7 +671,7 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
         { ( alertAction ) in
             logTrace( "Cancel Action" )
         }
-
+        
         if UIImagePickerController.isSourceTypeAvailable( .camera ) {
             alert.addAction( cameraAction )
         }
@@ -681,8 +681,26 @@ extension LocationEditorViewController: LocationImageTableViewCellDelegate {
         
         present( alert, animated: true, completion: nil )
     }
-
-
+    
+    
+    private func promptToSaveToPhotoAlbum(_ thisImage: UIImage ) {
+        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.SaveToPhotoLibrary", comment: "Would you like to save this image to your Photo Library?" ), message: nil, preferredStyle: .alert )
+        
+        let     yesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Yes", comment: "Yes" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Yes Action" )
+            UIImageWriteToSavedPhotosAlbum( thisImage, self, #selector( LocationEditorViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
+        }
+        
+        let     noAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.No", comment: "No!" ), style: .cancel, handler: nil )
+        
+        alert.addAction( yesAction )
+        alert.addAction( noAction  )
+        
+        present( alert, animated: true, completion: nil )
+    }
+    
+    
 }
     
     
@@ -845,6 +863,11 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
 
                             self.imageCell.initializeWith( self.imageName, self )
                             self.loadBarButtonItems()
+                            
+                            if picker.sourceType == .camera {
+                                self.promptToSaveToPhotoAlbum( myImageToSave )
+                            }
+                            
                         }
                         
                     }
@@ -868,7 +891,7 @@ extension LocationEditorViewController: UIImagePickerControllerDelegate, UINavig
         
     }
     
-    
+ 
     
     // MARK: UIImageWrite Completion Methods
     

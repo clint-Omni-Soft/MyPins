@@ -46,7 +46,7 @@
 "AlertTitle.AreYouSure"                     = "Are you sure you want to discard your changes?";
 "AlertTitle.CheckForMissingImages"          = "Check for missing images";
 "AlertTitle.CurrentCoordinates"             = "Current Coordinates";
-"AlertTitle.DeviceNameRequired"             = "Device Name is Required for NAS or iCloud";
+"AlertTitle.DeviceNameRequired"             = "Device Name is Required for NAS";
 "AlertTitle.DiscardChanges"                 = "Do you want to discard your changes?";
 "AlertTitle.EnterDeviceName"                = "Enter Device Name";
 "AlertTitle.Error"                          = "Error";
@@ -60,6 +60,7 @@
 "AlertTitle.NoMissingImages"                = "You have NO missing images.";
 "AlertTitle.OverrideOfflineBlock"           = "Override Offline Block?";
 "AlertTitle.RequestedImagesLoaded"          = "Loaded %d of %d images requested.";
+"AlertTitle.SaveToPhotoLibrary"             = "Would you like to save this image to your Photo Library?";
 "AlertTitle.SelectMapType"                  = "Select Map Type";
 "AlertTitle.SelectMediaSource"              = "Select Media Source for Photo";
 "AlertTitle.SelectUnitsForAltitude"         = "Select Units for Altitude";
@@ -89,6 +90,8 @@
 "ButtonTitle.MutedStandard"                 = "Muted Standard";
 "ButtonTitle.No"                            = "No!";
 "ButtonTitle.OK"                            = "OK";
+"ButtonTitle.OnRemote"                      = "On remote";
+"ButtonTitle.OnThisDevice"                  = "On this device";
 "ButtonTitle.PhotoAlbum"                    = "Photo Album";
 "ButtonTitle.PinColor"                      = "Pin Color";
 "ButtonTitle.ReloadImage"                   = "Reload Image";
@@ -103,6 +106,7 @@
 "ButtonTitle.Standard"                      = "Standard";
 "ButtonTitle.StayOffline"                   = "Stay Offline";
 "ButtonTitle.ToggleUnits"                   = "Toggle Units";
+"ButtonTitle.TryAgain"                      = "Try Again";
 "ButtonTitle.Units"                         = "Units";
 "ButtonTitle.UploadImage"                   = "Upload Image";
 "ButtonTitle.UseCurrent"                    = "Use Current Location";
@@ -123,8 +127,8 @@
 "DefaultColorNickname.White"                = "Shopping";
 "DefaultColorNickname.Yellow"               = "Winery";
 
-"InfoText.DataStoreLocation1"               = "DATA STORE LOCATION\n\nWe provide support for three different storage location options...\n\n   (a) on your device (default;\n   (b) in the cloud and \n   (c) on a Network Accessible Storage (NAS) unit.\n\n";
-"InfoText.DataStoreLocation2"               = "The key point here is that there is no sharing on the device.  If you chose the cloud then your data can be shared across all of your devices.  If you chose NAS then anyone who has access to your Wi-Fi can access it.\n\n";
+"InfoText.DataStoreLocation1"               = "DATA STORE LOCATION\n\nWe provide support for two different storage location options...\n\n   (a) on your device (default) or \n   (b) on a Network Accessible Storage (NAS) unit.\n\n";
+"InfoText.DataStoreLocation2"               = "The key point here is that there is no sharing on the device.  If you chose NAS then anyone who has access to your Wi-Fi can access it.\n\n";
 "InfoText.Map1"                             = "MAP\n\nTouching the plus sign (+) bar button will take you to the Pin Editor where you can associate provide information about that pin.\n\n";
 "InfoText.Map2"                             = "Touching the 'Map' bar button will produce a popover that will allow you to choose from the supported map display modes.\n\n";
 "InfoText.Map3"                             = "Touching the 'Dart' bar button will produce a popover that will give the device's current latitude, longitude and altitude.\n\n";

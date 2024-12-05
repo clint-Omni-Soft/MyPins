@@ -22,6 +22,17 @@ class MapViewController: UIViewController {
     @IBOutlet var mapTypeBarButtonItem: UIBarButtonItem!
 
 
+    // MARK: Public Interfaces
+    
+    func primaryWindow(_ isHidden: Bool ) {
+        logVerbose( "isHidden[ %@ ]", stringFor( isHidden ) )
+        primaryWindowIsHidden = isHidden
+        
+        loadBarButtonItems()
+    }
+    
+    
+    
     // MARK: Private Variables
     
     private struct Constants {
@@ -34,13 +45,16 @@ class MapViewController: UIViewController {
         static let locationEditor = "LocationEditorViewController"
     }
 
+    private let appDelegate              = UIApplication.shared.delegate as! AppDelegate
+    private var centerMapOnUserLocation  = true
     private var coordinateToCenterMapOn  = CLLocationCoordinate2DMake( 0.0, 0.0 )
     private let deviceAccessControl      = DeviceAccessControl.sharedInstance
     private var ignoreRefresh            = false
     private var locationEstablished      = false
     private var locationManager          : CLLocationManager?
-    private var centerMapOnUserLocation  = true
+    private let notificationCenter       = NotificationCenter.default
     private let pinCentral               = PinCentral.sharedInstance
+    private var primaryWindowIsHidden    = false
     private var routeColor               = UIColor.green
     private var selectedPointAnnotation  : PointAnnotation?
     
@@ -75,12 +89,14 @@ class MapViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         if pinCentral.resigningActive {
+            logTrace( "resigningActive" )
             return
         }
         
         logTrace()
         super.viewWillAppear( animated )
         
+        appDelegate.mapView = self
         loadBarButtonItems()
 
         if !pinCentral.didOpenDatabase {
@@ -93,19 +109,19 @@ class MapViewController: UIViewController {
             
         }
         
-        NotificationCenter.default.addObserver( self, selector: #selector( MapViewController.centerMap(   notification: ) ), name: NSNotification.Name( rawValue: Notifications.centerMap         ), object: nil )
-        NotificationCenter.default.addObserver( self, selector: #selector( MapViewController.pinsUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( MapViewController.centerMap(   notification: ) ), name: NSNotification.Name( rawValue: Notifications.centerMap         ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( MapViewController.pinsUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: nil )
     }
     
     
     override func viewWillDisappear(_ animated: Bool) {
         if !pinCentral.resigningActive {
-            logTrace()
+            logTrace( "resigningActive" )
         }
         
         super.viewWillDisappear( animated )
         
-        NotificationCenter.default.removeObserver( self )
+        notificationCenter.removeObserver( self )
     }
     
     
@@ -232,7 +248,13 @@ class MapViewController: UIViewController {
     }
     
     
+    @IBAction func showPrimaryBarButtonItemTouched(_ sender: UIBarButtonItem ) {
+        logTrace()
+        appDelegate.hidePrimaryView( false )
+    }
     
+    
+
     // MARK: Utility Methods
     
     private func examine(_ pointAnnotation: PointAnnotation ) {
@@ -301,8 +323,15 @@ class MapViewController: UIViewController {
     private func loadBarButtonItems() {
         logTrace()
         let dartBarButtonItem  = UIBarButtonItem.init( image: UIImage(named: "dart" ), style: .plain, target: self, action: #selector( dartBarButtonItemTouched(_:) ) )
-        let infoBarButtonItem  = UIBarButtonItem.init( image: UIImage(named: "info" ), style: .plain, target: self, action: #selector( infoBarButtonTouched(_:) ) )
-        var leftBarButtonItems = [infoBarButtonItem, dartBarButtonItem]
+        let infoBarButtonItem  = UIBarButtonItem.init( image: UIImage(named: "info" ), style: .plain, target: self, action: #selector( infoBarButtonTouched(_    :) ) )
+        var leftBarButtonItems = [UIBarButtonItem]()
+        
+        if UIDevice.current.userInterfaceIdiom == .pad && primaryWindowIsHidden {
+            leftBarButtonItems.append( UIBarButtonItem.init(image: UIImage(named: "hamburger" ), style: .plain, target: self, action: #selector( showPrimaryBarButtonItemTouched(_:) ) ) )
+        }
+        
+        leftBarButtonItems.append( infoBarButtonItem )
+        leftBarButtonItems.append( dartBarButtonItem )
         
         if let _ = selectedPointAnnotation {
             let compassBarButtonItem = UIBarButtonItem.init( image: UIImage(named: "compass" ), style: .plain, target: self, action: #selector( compassBarButtonItemTouched(_:) ) )

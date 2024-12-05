@@ -526,7 +526,6 @@ extension SMBCentral {
                         delegate.smbCentral( self, didReadFile: false, fileData )
                     }
                     else {
-                        logTrace( "    opening" )
                         smbFile.open( .read, completion: {
                             (error) in
                             
@@ -550,7 +549,7 @@ extension SMBCentral {
                                     }
                                     
                                     if complete {
-                                    logVerbose( "    read a total of [ %ld ] bytes", bytesReadTotal )
+//                                    logVerbose( "    read a total of [ %ld ] bytes", bytesReadTotal )
                                         
                                         smbFile.close( {
                                             (error) in
@@ -588,7 +587,7 @@ extension SMBCentral {
         connectedToDevice = false
         shareOpen         = true
         
-        logTrace()
+//        logTrace()
         if let myFileServer = SMBFileServer.init( host: nasDescriptor.host, netbiosName: nasDescriptor.netbiosName, group: nasDescriptor.group ) {
             if let timer = startSessionTimer {
                 timer.invalidate()
@@ -618,7 +617,6 @@ extension SMBCentral {
                     myFileServer.findShare( nasDescriptor.share, completion: {
                         (share, error) in
                         
-                        logTrace( "found share" )
                         if error != nil {
                             logVerbose( "ERROR!  Unable to find share[ %@ ] ... [ %@ ]", nasDescriptor.share, error?.localizedDescription ?? "Unknown Error" )
                             myFileServer.disconnect( nil )
@@ -636,6 +634,7 @@ extension SMBCentral {
                                     delegate.smbCentral( self, didStartSession: false )
                                 }
                                 else {
+                                    logTrace( "found share" )
                                     self.connectedFileServer = myFileServer
                                     self.connectedShare      = share
                                     self.connectedToDevice   = true

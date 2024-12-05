@@ -41,7 +41,6 @@ class SettingsViewController: UIViewController {
         static let howToUse          = "HowToUseViewController"
     }
     
-    private var canSeeNasFolders    = false
     private var displayingAlert     = false
     private let fileManager         = FileManager.default
     private var imagesLoaded        = 0
@@ -98,16 +97,11 @@ class SettingsViewController: UIViewController {
         myActivityIndicator.isHidden = true
         myActivityIndicator.stopAnimating()
 
-        if !pinCentral.stayOffline && ( pinCentral.dataStoreLocation == .nas || pinCentral.dataStoreLocation == .shareNas ) {
-            canSeeNasFolders = false
-            NASCentral.sharedInstance.canSeeNasFolders( self )
-            
-            myActivityIndicator.isHidden = false
-            myActivityIndicator.startAnimating()
-        }
-        else {
-            myActivityIndicator.isHidden = true
-            myActivityIndicator.stopAnimating()
+        if !pinCentral.stayOffline && flagIsPresentInUserDefaults( UserDefaultKeys.usingThumbnails ) && !flagIsPresentInUserDefaults( UserDefaultKeys.thumbnailsRemoved ) {
+            if pinCentral.dataStoreLocation == .nas || pinCentral.dataStoreLocation == .shareNas {
+                NASCentral.sharedInstance.canSeeNasFolders( self )
+            }
+
         }
 
         loadBarButtonItems()
@@ -163,11 +157,15 @@ class SettingsViewController: UIViewController {
 
     private func loadBarButtonItems() {
         logTrace()
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            configureBackBarButtonItem()
+        }
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem.init( image: UIImage(named: "info" ), style: .plain, target: self, action: #selector( infoBarButtonItemTouched(_:) ) )
         
-        if testing {
-            navigationItem.leftBarButtonItem = UIBarButtonItem.init(title: "Testing", style: .plain, target: self, action: #selector( testingBarButtonItemTouched(_:) ) )
-        }
+//        if testing {
+//            navigationItem.leftBarButtonItem = UIBarButtonItem.init(title: "Testing", style: .plain, target: self, action: #selector( testingBarButtonItemTouched(_:) ) )
+//        }
         
     }
     
@@ -191,14 +189,116 @@ extension SettingsViewController: NASCentralDelegate {
     func nasCentral(_ nasCentral: NASCentral, canSeeNasFolders: Bool) {
         logVerbose( "[ %@ ]", stringFor( canSeeNasFolders ) )
         
-        self.canSeeNasFolders = canSeeNasFolders
-        
-        if canSeeNasFolders && flagIsPresentInUserDefaults( UserDefaultKeys.usingThumbnails ) && !flagIsPresentInUserDefaults( UserDefaultKeys.thumbnailsRemoved ) {
+        if canSeeNasFolders {
             pinCentral.removeThumbnails()
         }
         
-        myActivityIndicator.stopAnimating()
-        myActivityIndicator.isHidden = true
+    }
+
+    
+}
+
+
+
+// MARK: PinCentralDelegate Methods
+
+extension SettingsViewController: PinCentralDelegate {
+    
+    func pinCentral(_ pinCentral: PinCentral, didFetchImage: Bool, filename: String, image: UIImage) {
+        imagesLoaded += didFetchImage ? 1 : 0
+        replies      += 1
+        
+        logVerbose( "requested[ %d ] loaded[ %d ] replies[ %d ]", imagesRequested.count, imagesLoaded, replies )
+
+        if replies == imagesRequested.count {
+            showResults()
+        }
+        
+    }
+    
+    
+    func pinCentral(_ pinCentral: PinCentral, didFetch imageNames: [String]) {
+        logVerbose( "imageNames.count[ %d ]", imageNames.count )
+        scanForAndRequestMissingRemoteImages( imageNames )
+    }
+    
+    
+    func pinCentral(_ pinCentral: PinCentral, didSaveImageData: Bool ) {
+        imagesLoaded += didSaveImageData ? 1 : 0
+        replies      += 1
+        
+        logVerbose( "requested[ %d ] loaded[ %d ] replies[ %d ]", imagesRequested.count, imagesLoaded, replies )
+        
+        if replies == imagesRequested.count {
+            showResults()
+        }
+        
+    }
+    
+    
+    
+    // MARK: PinCentralDelegate Utility Methods
+    
+    private func scanForAndRequestMissingRemoteImages(_ remoteImageNameArray: [String] ) {
+        imagesRequested = []
+        
+        for array in pinCentral.pinArrayOfArrays {
+            for pin in array {
+                if let imageName = pin.imageName {
+                    if !imageName.isEmpty {
+                        if !remoteImageNameArray.contains( imageName ) {
+                            logVerbose( "uploading [ %@ ][ %@ ]", pinCentral.shortDescriptionFor( pin ), imageName )
+                            
+                            imagesRequested.append( imageName )
+                            pinCentral.uploadImageNamed( pin.imageName!, self )
+                        }
+                        
+                    }
+                    
+                }
+               
+            }
+
+        }
+            
+        logVerbose( "Requested [ %d ] uploads", imagesRequested.count )
+        
+        if imagesRequested.count == 0 {
+            self.presentAlert(title: NSLocalizedString( "AlertTitle.NoMissingImages", comment: "You have NO missing images." ), message: "" )
+            
+            self.myActivityIndicator.isHidden = true
+            self.myActivityIndicator.stopAnimating()
+        }
+        
+    }
+
+        
+    private func showResults() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
+            let titleText = String( format: NSLocalizedString( "AlertTitle.RequestedImagesLoaded", comment: "Loaded %d of %d images requested." ), self.imagesLoaded, self.imagesRequested.count )
+            
+            self.myActivityIndicator.isHidden = true
+            self.myActivityIndicator.stopAnimating()
+            
+            if self.displayingAlert {
+                logTrace( "We are displaying an alert ... don't try it again." )
+            }
+            else {
+                let     alert    = UIAlertController.init( title: titleText, message: nil, preferredStyle: .alert )
+                let     okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ), style: .cancel )
+                { ( alertAction ) in
+                    logTrace( "OK Action" )
+                    self.displayingAlert = false
+                }
+
+                alert.addAction( okAction )
+                
+                self.displayingAlert = true
+                self.present( alert, animated: true, completion: nil )
+            }
+
+        }
+
     }
 
     
@@ -256,18 +356,24 @@ extension SettingsViewController: UITableViewDelegate {
         let     alert = UIAlertController.init(title  : NSLocalizedString( "AlertTitle.CheckForMissingImages",   comment: "Check for missing images" ),
                                                message: NSLocalizedString( "AlertMessage.CheckForMissingImages", comment: "This may take some time.  If you want to do this you will need to keep the app in the foreground until it finishes." ), preferredStyle: .alert )
         
-        let     okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ), style: .default ) {
+        let onRemoteAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OnRemote", comment: "On remote" ), style: .default ) {
             ( alertAction ) in
-            logTrace( "OK Action" )
+            logTrace( "On remote Action" )
             self.myActivityIndicator.isHidden = false
             self.myActivityIndicator.startAnimating()
 
-            self.imagesLoaded = 0
-            self.replies      = 0
-            
+            self.pinCentral.fetchImageNamesFromRemote( self )
+        }
+        
+        let onThisDeviceAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OnThisDevice", comment: "On this device" ), style: .default ) {
+            ( alertAction ) in
+            logTrace( "On this device Action" )
+            self.myActivityIndicator.isHidden = false
+            self.myActivityIndicator.startAnimating()
+
             let requestCount = self.scanForAndRequestMissingImages()
-            // if we request any images we track the download progress in the pinCentral(didFetchImage::) method and will hide the activityIndicator when we finish
-            
+            // the download progress is tracked via the pinCentral(didFetchImage::) method which will hide the activityIndicator when we finish
+
             if requestCount == 0 {
                 self.presentAlert(title: NSLocalizedString( "AlertTitle.NoMissingImages", comment: "You have NO missing images." ), message: "" )
                 
@@ -282,8 +388,13 @@ extension SettingsViewController: UITableViewDelegate {
             logTrace( "Cancel Action" )
         }
 
-        alert.addAction( okAction )
-        alert.addAction( cancelAction )
+        imagesLoaded    = 0
+        imagesRequested = []
+        replies         = 0
+
+        alert.addAction( onRemoteAction     )
+        alert.addAction( onThisDeviceAction )
+        alert.addAction( cancelAction       )
 
         present( alert, animated: true )
     }
@@ -391,94 +502,35 @@ extension SettingsViewController: UITableViewDelegate {
    
     
     private func scanForAndRequestMissingImages() -> Int {
+        logTrace()
         var requestCount = 0
-        
-        if !pinCentral.stayOffline && pinCentral.dataStoreLocation != .device {
-            logTrace()
-            for array in pinCentral.pinArrayOfArrays {
-                for pin in array {
-                    if let imageName = pin.imageName {
-                        if !imageName.isEmpty {
-                            let descriptor = pinCentral.shortDescriptionFor( pin )
-                            var imageCount = pinCentral.fetchMissingImages( imageName, descriptor, self )
-                            
-                            requestCount += imageCount
-                            
-                            while imageCount > 0 {
-                                imagesRequested.append( imageName )
-                                imageCount -= 1
-                            }
-                            
+
+        for array in pinCentral.pinArrayOfArrays {
+            for pin in array {
+                if let imageName = pin.imageName {
+                    if !imageName.isEmpty {
+                        let descriptor = pinCentral.shortDescriptionFor( pin )
+                        var imageCount = pinCentral.fetchMissingDeviceImages( imageName, descriptor, self )
+                        
+                        requestCount += imageCount
+                        
+                        while imageCount > 0 {
+                            imagesRequested.append( imageName )
+                            imageCount -= 1
                         }
                         
                     }
-                   
+                    
                 }
-
+               
             }
-            
-        }
-        else {
-            logTrace( "Do nothing!" )
-        }
 
+        }
+            
         return requestCount
     }
 
 
-}
-
-
-
-// MARK: PinCentralDelegate Methods
-
-extension SettingsViewController: PinCentralDelegate {
-    
-    func pinCentral(_ pinCentral: PinCentral, didFetchImage: Bool, filename: String, image: UIImage) {
-        imagesLoaded += didFetchImage ? 1 : 0
-        replies      += 1
-        
-//        logVerbose( "%d / %d / %d", imagesRequested.count, imagesLoaded, replies )
-        
-        if replies == imagesRequested.count {
-            if replies == imagesRequested.count {
-                showResults()
-            }
-            
-        }
-        
-    }
-        
-        
-    private func showResults() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
-            let titleText = String( format: NSLocalizedString( "AlertTitle.RequestedImagesLoaded", comment: "Loaded %d of %d images requested." ), self.imagesLoaded, self.imagesRequested.count )
-            
-            self.myActivityIndicator.isHidden = true
-            self.myActivityIndicator.stopAnimating()
-            
-            if self.displayingAlert {
-                logTrace( "We are displaying an alert ... don't try it again." )
-            }
-            else {
-                let     alert    = UIAlertController.init( title: titleText, message: nil, preferredStyle: .alert )
-                let     okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ), style: .cancel )
-                { ( alertAction ) in
-                    logTrace( "OK Action" )
-                    self.displayingAlert = false
-                }
-
-                alert.addAction( okAction )
-                
-                self.displayingAlert = true
-                self.present( alert, animated: true, completion: nil )
-            }
-
-        }
-
-    }
-
-    
 }
 
 

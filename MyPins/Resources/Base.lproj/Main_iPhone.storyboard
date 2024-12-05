@@ -769,6 +769,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appIcon MASTER.png" translatesAutoresizingMaskIntoConstraints="NO" id="ylG-LL-Jii">
+                                <rect key="frame" x="27.5" y="163" width="320" height="320"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="ylG-LL-Jii" secondAttribute="height" multiplier="1:1" id="5yI-sm-xw0"/>
+                                </constraints>
+                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Pins" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P4F-36-WB4">
                                 <rect key="frame" x="15" y="74" width="345" height="44"/>
                                 <constraints>
@@ -807,7 +813,7 @@
                                 <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="© Omni-Soft, Inc. 2018 - 2024" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hv1-xj-5n4">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="© Omni-Soft, Inc. 2018 - 2025" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hv1-xj-5n4">
                                 <rect key="frame" x="17" y="499" width="343" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="ZMn-wE-E9M"/>
@@ -816,12 +822,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appIcon MASTER.png" translatesAutoresizingMaskIntoConstraints="NO" id="ylG-LL-Jii">
-                                <rect key="frame" x="27.5" y="163" width="320" height="320"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="ylG-LL-Jii" secondAttribute="height" multiplier="1:1" id="5yI-sm-xw0"/>
-                                </constraints>
-                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eof-bB-EZt" userLabel="invisibleButton">
                                 <rect key="frame" x="17" y="492" width="341" height="35"/>
                                 <constraints>
@@ -1497,7 +1497,7 @@
                                     <outlet property="delegate" destination="0t4-bh-AhY" id="RHb-Zc-0eN"/>
                                 </connections>
                             </tableView>
-                            <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="eTg-vn-MYW" userLabel="activityIndicator">
+                            <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="eTg-vn-MYW" userLabel="myActivityIndicator">
                                 <rect key="frame" x="169" y="315" width="37" height="37"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="37" id="ZK8-jY-sVl"/>
@@ -1510,17 +1510,17 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="ens-so-iN0" firstAttribute="top" secondItem="p9v-7D-wAl" secondAttribute="top" id="1fs-l7-kHR"/>
-                            <constraint firstItem="eTg-vn-MYW" firstAttribute="centerY" secondItem="tVN-dY-QeH" secondAttribute="centerY" id="4o1-2k-RDU"/>
                             <constraint firstItem="ens-so-iN0" firstAttribute="leading" secondItem="p9v-7D-wAl" secondAttribute="leading" constant="16" id="H0T-wj-8e8"/>
+                            <constraint firstItem="eTg-vn-MYW" firstAttribute="centerX" secondItem="tVN-dY-QeH" secondAttribute="centerX" id="IhW-ZY-f4n"/>
+                            <constraint firstItem="eTg-vn-MYW" firstAttribute="centerY" secondItem="tVN-dY-QeH" secondAttribute="centerY" id="Kbk-ZD-taD"/>
                             <constraint firstItem="p9v-7D-wAl" firstAttribute="trailing" secondItem="ens-so-iN0" secondAttribute="trailing" constant="16" id="PuQ-mr-1cf"/>
-                            <constraint firstItem="eTg-vn-MYW" firstAttribute="centerX" secondItem="tVN-dY-QeH" secondAttribute="centerX" id="nMM-NC-VNe"/>
                             <constraint firstItem="ens-so-iN0" firstAttribute="bottom" secondItem="p9v-7D-wAl" secondAttribute="bottom" id="sFy-9P-Mdb"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="6cq-jb-xMQ"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="myActivityIndicator" destination="eTg-vn-MYW" id="CBW-Zq-EWY"/>
+                        <outlet property="myActivityIndicator" destination="eTg-vn-MYW" id="ZhB-FN-YKh"/>
                         <outlet property="myTableView" destination="ens-so-iN0" id="jJ8-4s-fcQ"/>
                         <segue destination="JEp-Kd-MnZ" kind="show" identifier="AboutViewController" id="WVE-1k-TfN"/>
                         <segue destination="huf-SO-s6y" kind="show" identifier="DataStoreLocationViewController" id="49N-06-Jct"/>

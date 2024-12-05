@@ -16,9 +16,18 @@ import CoreLocation
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var locationManager: CLLocationManager?
-    let pinCentral = PinCentral.sharedInstance
-    var window: UIWindow?
+    
+    // MARK: Public Definitions
+    var hidePrimary = false
+    var mapView     : MapViewController!
+    var window      : UIWindow?
+    
+    
+    // MARK: Private Definitions
+    private var locationManager    : CLLocationManager?
+    private let notificationCenter = NotificationCenter.default
+    private let pinCentral         = PinCentral.sharedInstance
+    private var splitViewController: UISplitViewController!
 
 
     
@@ -26,11 +35,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? ) -> Bool {
         LogCentral.sharedInstance.setupLogging()
+        pinCentral.enteringForeground()
 
+        UNUserNotificationCenter.current().requestAuthorization( options: .badge ) { ( granted, error ) in
+            logVerbose( "request to badge icon authorized[ %@ ]", stringFor( granted ) )
+            self.pinCentral.userNotificationsAllowed = granted
+        }
+        
         locationManager = CLLocationManager()
         locationManager?.requestWhenInUseAuthorization()
-        
-        pinCentral.enteringForeground()
         
         if pinCentral.dataStoreLocation != .device {
             showPleaseWaitScreen()
@@ -75,6 +88,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: Public Interfaces
 
+    func hidePrimaryView(_ isHidden: Bool ) {
+        if splitViewController != nil {
+            hidePrimary = isHidden
+
+            UIView.animate(withDuration: 0.5 ) { () -> Void in
+                self.splitViewController?.preferredDisplayMode = self.hidePrimary ? UISplitViewController.DisplayMode.secondaryOnly : UISplitViewController.DisplayMode.oneBesideSecondary
+            }
+            
+        }
+       
+        if self.mapView != nil {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
+                self.mapView.primaryWindow( isHidden )
+            }
+            
+        }
+        
+//        logVerbose( "hidePrimary[ %@ ]", stringFor( hidePrimary ) )
+    }
+    
+    
+    func primaryIsHidden() -> Bool {
+        var isHidden = true
+        
+        if let splitVC = self.splitViewController {
+            isHidden = splitVC.isCollapsed
+            logVerbose( "instantiated - [ %@ ]", stringFor( isHidden ) )
+        }
+        else {
+            logTrace( "NOT instantiated" )
+        }
+        
+        return isHidden
+    }
+    
+    
     func switchToMainApp() {
         logTrace()
         let     storyboardName = UIDevice.current.userInterfaceIdiom == .pad ? "Main_iPad" : "Main_iPhone"
@@ -87,6 +136,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             window?.rootViewController = initialViewController
             window?.makeKeyAndVisible()
+            
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                getLinkToSplitViewController()
+            }
+            
         }
         
     }
@@ -94,6 +148,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     // MARK: Utility Methods (Private)
+    
+    private func getLinkToSplitViewController() {
+        DispatchQueue.main.asyncAfter(deadline: .now() ) {
+            if let splitVC = self.window!.rootViewController as? UISplitViewController {
+                self.splitViewController = splitVC
+                self.splitViewController.presentsWithGesture = false
+                
+                let minimumWidth = min( CGRectGetWidth(self.splitViewController.view.bounds), CGRectGetHeight(self.splitViewController.view.bounds) )
+                
+                self.splitViewController.minimumPrimaryColumnWidth = minimumWidth / 2;
+                self.splitViewController.maximumPrimaryColumnWidth = minimumWidth;
+                logTrace( "Captured pointer to SplitViewController" )
+            }
+            else {
+                logTrace( "ERROR!  Could NOT capture pointer to SplitViewController!" )
+            }
+
+        }
+
+    }
+    
     
     private func showPleaseWaitScreen() {
         logTrace()

@@ -35,9 +35,11 @@ class ListTableViewController: UIViewController {
         static let imageViewer      = "ImageViewController"
         static let locationEditor   = "LocationEditorViewController"
         static let map              = "MapViewController"
+        static let settings         = "SettingsViewController"
         static let sortOptions      = "SortOptionsViewController"
     }
     
+    private let appDelegate         = UIApplication.shared.delegate as! AppDelegate
     private let deviceAccessControl = DeviceAccessControl.sharedInstance
     private let pinCentral          = PinCentral.sharedInstance
     private var sectionIndexTitles  : [String] = []
@@ -155,6 +157,17 @@ class ListTableViewController: UIViewController {
     }
     
     
+    @IBAction func hidePrimaryBarButtonTouched(_ sender: UIBarButtonItem ) {
+        logTrace()
+        appDelegate.hidePrimaryView( true )
+    }
+
+    
+    @IBAction func settingsBarButtonTouched(_ sender : UIBarButtonItem ) {
+        launchSettingsViewController()
+    }
+    
+        
     @IBAction func showAllBarButtonTouched(_ sender : UIBarButtonItem ) {
         logVerbose( "[ %@ ]", stringFor( showAllSections ) )
         selectedSection = GlobalConstants.noSelection
@@ -243,6 +256,17 @@ class ListTableViewController: UIViewController {
     }
     
     
+    private func launchSettingsViewController() {
+        guard let settingsVC: SettingsViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.settings ) as? SettingsViewController else {
+            logTrace( "Error!  Unable to load SettingsViewController!" )
+            return
+        }
+
+        logTrace()
+        navigationController?.pushViewController( settingsVC, animated: true )
+    }
+
+    
     private func lastAccessedPin() -> IndexPath {
         guard let lastPinsGuid = userDefaults.object(forKey: UserDefaultKeys.lastAccessedPinsGuid ) as? String else {
             return GlobalIndexPaths.noSelection
@@ -271,17 +295,28 @@ class ListTableViewController: UIViewController {
     
     private func loadBarButtonItems() {
 //        logTrace()
-        let sortDescriptor = pinCentral.sortDescriptor
-        let sortType       = sortDescriptor.0
+        var leftBarButtonItems : [UIBarButtonItem] = []
+        var rightBarButtonItems: [UIBarButtonItem] = []
+        let sortDescriptor     = pinCentral.sortDescriptor
+        let sortType           = sortDescriptor.0
         
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            leftBarButtonItems.append( UIBarButtonItem.init( barButtonSystemItem: .close, target: self, action: #selector( hidePrimaryBarButtonTouched(_: ) ) ) )
+        }
+
         if sortType == SortOptions.byType {
-            navigationItem.leftBarButtonItem = UIBarButtonItem.init( image: UIImage(named: showAllSections ? "arrowUp" : "arrowDown" ), style: .plain, target: self, action: #selector( showAllBarButtonTouched(_:) ) )
+            leftBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: showAllSections ? "arrowUp" : "arrowDown" ), style: .plain, target: self, action: #selector( showAllBarButtonTouched(_:) ) ) )
         }
-        else {
-            navigationItem.leftBarButtonItem = nil
+
+        navigationItem.leftBarButtonItems = leftBarButtonItems
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            rightBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: "settings" ), style: .plain, target: self, action: #selector( settingsBarButtonTouched(_:) ) ) )
         }
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem.init( barButtonSystemItem: .add, target: self, action: #selector( addBarButtonItemTouched ) )
+        rightBarButtonItems.append( UIBarButtonItem.init( barButtonSystemItem: .add, target: self, action: #selector( addBarButtonItemTouched ) ) )
+
+        navigationItem.rightBarButtonItems = rightBarButtonItems
     }
     
     

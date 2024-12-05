@@ -406,8 +406,8 @@ class LogCentral : NSObject {
     private func newLogFileName() -> String {
         let     formatter = DateFormatter()
         
-        formatter.dateFormat = "MM-dd-yyyy@HH_mm_ss"
-        
+        formatter.dateFormat = "yyyy-MM-dd@HH_mm_ss"
+
         var     filename = formatter.string( from: Date() )
         
         filename += ".txt"

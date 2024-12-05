@@ -55,6 +55,7 @@ class NotesViewController: UIViewController {
         originalViewHeight = view.frame.size.height
         
         notificationCenter.addObserver( self, selector: #selector( keyboardWillShow(notification: )), name: UIResponder.keyboardDidShowNotification, object: nil )
+        notesTextView.becomeFirstResponder()
     }
     
     

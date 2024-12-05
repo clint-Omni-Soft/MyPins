@@ -46,7 +46,7 @@
 "AlertTitle.AreYouSure"                     = "Êtes-vous sûr de vouloir annuler vos modifications?";
 "AlertTitle.CheckForMissingImages"          = "Rechercher les images manquantes";
 "AlertTitle.CurrentCoordinates"             = "Coordonnées actuelles";
-"AlertTitle.DeviceNameRequired"             = "Le nom de l'appareil est requis pour NAS ou iCloud";
+"AlertTitle.DeviceNameRequired"             = "Le nom de l'appareil est requis pour NAS";
 "AlertTitle.DiscardChanges"                 = "Voulez-vous annuler vos modifications?";
 "AlertTitle.EnterDeviceName"                = "Entrez le nom de l'appareil";
 "AlertTitle.Error"                          = "Erreur!";
@@ -60,6 +60,7 @@
 "AlertTitle.NoMissingImages"                = "Vous n’avez AUCUNE image manquante.";
 "AlertTitle.OverrideOfflineBlock"           = "Ignorer le blocage hors connexion ?";
 "AlertTitle.RequestedImagesLoaded"          = "%d chargé sur %d images demandées.";
+"AlertTitle.SaveToPhotoLibrary"             = "Souhaitez-vous enregistrer cette image dans votre photothèque ?";
 "AlertTitle.SelectMapType"                  = "Sélectionner le type de carte";
 "AlertTitle.SelectMediaSource"              = "Sélectionnez la source multimédia pour la photo";
 "AlertTitle.SelectUnitsForAltitude"         = "Sélectionnez les unités pour l'altitude";
@@ -89,6 +90,8 @@
 "ButtonTitle.MutedStandard"                 = "Standard en sourdine";
 "ButtonTitle.No"                            = "Non!";
 "ButtonTitle.OK"                            = "OK";
+"ButtonTitle.OnRemote"                      = "À distance";
+"ButtonTitle.OnThisDevice"                  = "Sur cet appareil";
 "ButtonTitle.PhotoAlbum"                    = "Album photo";
 "ButtonTitle.PinColor"                      = "Couleur de broche";
 "ButtonTitle.ReloadImage"                   = "Recharger l'image";
@@ -103,6 +106,7 @@
 "ButtonTitle.Standard"                      = "la norme";
 "ButtonTitle.StayOffline"                   = "Restez hors ligne";
 "ButtonTitle.ToggleUnits"                   = "Toggle Unités";
+"ButtonTitle.TryAgain"                      = "Essayer à nouveau";
 "ButtonTitle.Units"                         = "Unités";
 "ButtonTitle.UploadImage"                   = "Télécharger une image";
 "ButtonTitle.UseCurrent"                    = "Utiliser la position actuelle";
@@ -123,8 +127,8 @@
 "DefaultColorNickname.White"                = "Achats";
 "DefaultColorNickname.Yellow"               = "Vignoble";
 
-"InfoText.DataStoreLocation1"               = "EMPLACEMENT DU MAGASIN DE DONNÉES\n\nNous prenons en charge trois options d'emplacement de stockage différentes...\n\n   (a) sur votre appareil (par défaut),\n   (b) dans le cloud et \n   (c) sur un réseau accessible Unité de stockage (NAS).\n\n";
-"InfoText.DataStoreLocation2"               = "The key point here is that there is no sharing on the device.  If you chose the cloud then your data can be shared across all of your devices.  If you chose NAS then anyone who has access to your Wi-Fi can access it.\n\n";
+"InfoText.DataStoreLocation1"               = "EMPLACEMENT DU MAGASIN DE DONNÉES\n\nNous prenons en charge deux options d'emplacement de stockage différentes...\n\n (a) sur votre appareil (par défaut) ou \n (b) sur une unité de stockage accessible en réseau (NAS).\n\n";
+"InfoText.DataStoreLocation2"               = "Le point clé ici est qu’il n’y a pas de partage sur l’appareil.  Si vous avez choisi NAS, toute personne ayant accès à votre Wi-Fi peut y accéder.\n\n";
 "InfoText.Map1"                             = "CARTE\n\nAppuyer sur le bouton de la barre du signe plus (+) vous amènera à l'éditeur de broches où vous pouvez associer des informations sur cette broche.\n\n";
 "InfoText.Map2"                             = "Toucher le bouton de la barre 'Carte' produira une fenêtre contextuelle qui vous permettra de choisir parmi les modes d'affichage de carte pris en charge.\n\n";
 "InfoText.Map3"                             = "Toucher le bouton de la barre 'Dart' produira un popover qui donnera la latitude, la longitude et l'altitude actuelles de l'appareil.\n\n";

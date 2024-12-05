@@ -58,7 +58,8 @@ class PinCentral: NSObject {
     var resigningActive             = false
     var sectionTitleArray: [String] = []
     var stayOffline                 = false
-    
+    var userNotificationsAllowed    = false
+
     
     var dataStoreLocation : DataStoreLocation {
         get {
@@ -305,7 +306,34 @@ class PinCentral: NSObject {
     }
     
     
+    func canSeeExternalStorage() {
+        if dataStoreLocation == .device {
+            deviceAccessControl.initForDevice()
+            logVerbose( "on device\n    %@", deviceAccessControl.descriptor() )
+            return
+        }
+            
+        logVerbose( "[ %@ ]", nameForDataStoreLocation( dataStoreLocation ) )
+
+//        if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
+//            cloudCentral.canSeeCloud( self )
+//        }
+//        else {  // NAS
+            if didOpenDatabase && updatedOffline {
+                self.persistentContainer.viewContext.perform {
+                    self.fetchAllImageRequestObjects()
+                }
+                
+//            }
+
+            nasCentral.emptyQueue()
+            nasCentral.canSeeNasFolders( self )
+        }
+
+    }
     
+    
+
     // MARK: Database Access Methods (Public)
     
     func openDatabaseWith(_ delegate: PinCentralDelegate ) {
@@ -643,33 +671,6 @@ class PinCentral: NSObject {
     
 
     // MARK: Utility Methods (Private)
-    
-    private func canSeeExternalStorage() {
-        if dataStoreLocation == .device {
-            deviceAccessControl.initForDevice()
-            logVerbose( "on device\n    %@", deviceAccessControl.descriptor() )
-            return
-        }
-            
-        logVerbose( "[ %@ ]", nameForDataStoreLocation( dataStoreLocation ) )
-
-        if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-            cloudCentral.canSeeCloud( self )
-        }
-        else {  // NAS
-            if didOpenDatabase && updatedOffline {
-                self.persistentContainer.viewContext.perform {
-                    self.fetchAllImageRequestObjects()
-                }
-                
-            }
-
-            nasCentral.emptyQueue()
-            nasCentral.canSeeNasFolders( self )
-        }
-
-    }
-    
     
     private func deleteDatabase() {
         guard let docURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).last else {
@@ -1111,6 +1112,14 @@ extension PinCentral {
                         UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
                         
                         self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
+                        
+                        if self.userNotificationsAllowed {
+                            DispatchQueue.main.async() {
+                                UIApplication.shared.applicationIconBadgeNumber = 1
+                            }
+                            
+                        }
+                        
                     }
                     
                     if self.deviceAccessControl.updating {
@@ -1155,6 +1164,14 @@ extension PinCentral {
                         UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
                         
                         self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
+                        
+                        if self.userNotificationsAllowed {
+                            DispatchQueue.main.async() {
+                                UIApplication.shared.applicationIconBadgeNumber = 2
+                            }
+                            
+                        }
+                        
                     }
                     
                     if self.deviceAccessControl.updating {

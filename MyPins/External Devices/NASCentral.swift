@@ -162,7 +162,8 @@ class NASCentral: NSObject {
     
     private var currentCommand          : Command!
     private var currentFilename         = ""
-    private var dbFilenameArray         = [""]
+    private var dbDataArray             : [(String, Data)] = []
+    private var dbFilenameArray         : [String] = []
     private var delegate                : NASCentralDelegate?
     private let deviceAccessControl     = DeviceAccessControl.sharedInstance
     private var deviceUrlArray          = [URL].init()
@@ -772,7 +773,37 @@ extension NASCentral {
         
         loadDatabaseFilesIntoDeviceUrlArray()
         deleteFilesFromDevice()
-        readNextRootFileFromNas()
+        
+        if dbDataArray.count == 4 {
+            var allFilesTransferred = true
+            
+            for tuple in dbDataArray {
+                let fileUrl  = documentDirectoryURL.appendingPathComponent( tuple.0 )
+                let result   = fileManager.createFile( atPath: fileUrl.path, contents: tuple.1, attributes: nil )
+                
+                logVerbose( "%@ [ %@ ]", ( result ? "Created" : "FAILED to create" ), fileUrl.path )
+                
+                if !result {
+                    allFilesTransferred = false
+                    break
+                }
+                
+            }
+            
+            if allFilesTransferred {
+                self.delegate?.nasCentral( self, didCopyDatabaseFromNasToDevice:  true )
+            }
+            else {
+                deleteFilesFromDevice()
+                readNextRootFileFromNas()
+            }
+            
+        }
+        else {
+            readNextRootFileFromNas()
+        }
+        
+        dbDataArray = []
     }
     
     
@@ -803,6 +834,7 @@ extension NASCentral {
         dbFilenameArray = [Filenames.database, Filenames.databaseShm, Filenames.databaseWal, Filenames.lastUpdated]
         self.delegate   = delegate
         missingDbFiles  = []
+        dbDataArray     = []
 
         let     fullPath = nasAccessKey.path + "/" + Filenames.database
 
@@ -1259,7 +1291,10 @@ extension NASCentral: SMBCentralDelegate {
             
         case .FetchDbFiles:                 let dbFilename = dbFilenameArray.first!
             
-                                            if !didReadFile {
+                                            if didReadFile {
+                                                dbDataArray.append( ( dbFilename, fileData ) )
+                                            }
+                                            else{
                                                 logVerbose( "FetchDbFiles - Could NOT Read [ %@ ] ", dbFilename )
                                                 missingDbFiles.append( dbFilename )
                                             }
