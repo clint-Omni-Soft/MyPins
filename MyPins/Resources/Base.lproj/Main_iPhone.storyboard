@@ -769,7 +769,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appIcon MASTER.png" translatesAutoresizingMaskIntoConstraints="NO" id="ylG-LL-Jii">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchScreenImage.png" translatesAutoresizingMaskIntoConstraints="NO" id="ylG-LL-Jii">
                                 <rect key="frame" x="27.5" y="163" width="320" height="320"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="ylG-LL-Jii" secondAttribute="height" multiplier="1:1" id="5yI-sm-xw0"/>
@@ -1536,11 +1536,11 @@
         <segue reference="5Yy-Lw-yLP"/>
     </inferredMetricsTieBreakers>
     <resources>
-        <image name="appIcon MASTER.png" width="732" height="732"/>
         <image name="camera" width="28" height="21"/>
         <image name="gears" width="28" height="28"/>
         <image name="globe" width="28" height="28"/>
         <image name="homeZoom" width="39" height="39"/>
+        <image name="launchScreenImage.png" width="1024" height="1024"/>
         <image name="mapPin" width="32" height="32"/>
         <image name="upOneLevel" width="24" height="20"/>
         <systemColor name="groupTableViewBackgroundColor">

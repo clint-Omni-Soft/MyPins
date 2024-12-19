@@ -205,7 +205,11 @@ class PleaseWaitViewController: UIViewController {
             self.displayingAlert     = false
             self.networkErrorMessage = ""
 
-            self.pumpAlertQueue()
+            if  self.pinCentral.dataStoreLocation == .nas || self.pinCentral.dataStoreLocation == .shareNas {
+                self.nasCentral.emptyQueue()
+            }
+            
+            self.makeSureUserHasBeenWarned()
         }
 
         alert.addAction( tryAgainAction )

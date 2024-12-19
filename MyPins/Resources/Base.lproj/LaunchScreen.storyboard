@@ -55,7 +55,7 @@
                                 <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appIcon 76x2x" translatesAutoresizingMaskIntoConstraints="NO" id="VO0-Yj-a1o">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchScreenImage.png" translatesAutoresizingMaskIntoConstraints="NO" id="VO0-Yj-a1o">
                                 <rect key="frame" x="257.5" y="72" width="851" height="851"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="VO0-Yj-a1o" secondAttribute="height" multiplier="1:1" id="IGJ-pl-buF"/>
@@ -89,7 +89,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="appIcon 76x2x" width="16" height="16"/>
+        <image name="launchScreenImage.png" width="1024" height="1024"/>
         <systemColor name="systemGroupedBackgroundColor">
             <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

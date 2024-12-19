@@ -61,7 +61,7 @@ class PinCentral: NSObject {
     var userNotificationsAllowed    = false
 
     
-    var dataStoreLocation : DataStoreLocation {
+    var dataStoreLocation: DataStoreLocation {
         get {
             if dataStoreLocationBacking != .notAssigned {
                 return dataStoreLocationBacking
@@ -315,17 +315,15 @@ class PinCentral: NSObject {
             
         logVerbose( "[ %@ ]", nameForDataStoreLocation( dataStoreLocation ) )
 
-//        if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-//            cloudCentral.canSeeCloud( self )
-//        }
-//        else {  // NAS
+        // We must be on the NAS
+        if !stayOffline {
             if didOpenDatabase && updatedOffline {
                 self.persistentContainer.viewContext.perform {
                     self.fetchAllImageRequestObjects()
                 }
                 
-//            }
-
+            }
+            
             nasCentral.emptyQueue()
             nasCentral.canSeeNasFolders( self )
         }
@@ -1109,10 +1107,6 @@ extension PinCentral {
                         }
 
                         logTrace( "We ran out of time!  Killing background task..." )
-                        UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
-                        
-                        self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
-                        
                         if self.userNotificationsAllowed {
                             DispatchQueue.main.async() {
                                 UIApplication.shared.applicationIconBadgeNumber = 1
@@ -1120,6 +1114,9 @@ extension PinCentral {
                             
                         }
                         
+                        UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
+                        
+                        self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
                     }
                     
                     if self.deviceAccessControl.updating {
@@ -1129,14 +1126,14 @@ extension PinCentral {
                         self.databaseUpdated = false
                         self.deviceAccessControl.updating = true
                         
-                        if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
-                            logTrace( "copying database to iCloud" )
-                            self.cloudCentral.copyDatabaseFromDeviceToCloud( self )
-                        }
-                        else {  // .nas
+//                        if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
+//                            logTrace( "copying database to iCloud" )
+//                            self.cloudCentral.copyDatabaseFromDeviceToCloud( self )
+//                        }
+//                        else {  // .nas
                             logTrace( "copying database to NAS" )
                             self.nasCentral.copyDatabaseFromDeviceToNas( self )
-                        }
+//                        }
                         
                     }
                     
@@ -1161,10 +1158,6 @@ extension PinCentral {
                         }
 
                         logTrace( "We ran out of time!  Ending background task #2..." )
-                        UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
-                        
-                        self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
-                        
                         if self.userNotificationsAllowed {
                             DispatchQueue.main.async() {
                                 UIApplication.shared.applicationIconBadgeNumber = 2
@@ -1172,6 +1165,9 @@ extension PinCentral {
                             
                         }
                         
+                        UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
+                        
+                        self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
                     }
                     
                     if self.deviceAccessControl.updating {
@@ -1179,12 +1175,12 @@ extension PinCentral {
                     }
                     else {
                         logTrace( "removing lock file" )
-                        if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
-                            self.cloudCentral.unlockCloud( self )
-                        }
-                        else {  // .nas
+//                        if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
+//                            self.cloudCentral.unlockCloud( self )
+//                        }
+//                        else {  // .nas
                             self.nasCentral.unlockNas( self )
-                        }
+//                        }
                         
                     }
                     

@@ -102,6 +102,7 @@
 "ButtonTitle.Save"                          = "Save";
 "ButtonTitle.SaveImageToLibrary"            = "Save Image to Photo Library";
 "ButtonTitle.ShowOnMap"                     = "Show on Map";
+"ButtonTitle.ShowSettings"                  = "Show Settings?";
 "ButtonTitle.SortAscending"                 = "Sort Ascending";
 "ButtonTitle.Standard"                      = "Standard";
 "ButtonTitle.StayOffline"                   = "Stay Offline";

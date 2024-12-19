@@ -30,6 +30,35 @@ extension UIViewController {
     }
 
     
+    func configureNavBarTitleButtonWith(_ title: String, _ ibAction: Selector ) {
+        let containerView  = UIView.init( frame: CGRect( x: 0, y: 0, width: 160, height: 40 ) )
+        let navTitleButton = UIButton( type: .custom )
+
+        navTitleButton.tag = 111
+        navTitleButton.frame = containerView.frame
+        navTitleButton.setTitle( title, for: .normal )
+        navTitleButton.setTitleColor( .blue, for: .normal )
+        navTitleButton.titleLabel?.font = UIFont.boldSystemFont( ofSize: 18 )
+        navTitleButton.addTarget( self, action:  ibAction, for: .touchUpInside )
+        
+        containerView.addSubview( navTitleButton )
+        
+        navigationController?.navigationBar.tintColor = .blue
+        navigationItem.titleView = containerView
+    }
+    
+    
+    func getNavBarTitleButton() -> UIButton {
+        var button = UIButton(frame: CGRect( x: 0, y: 0, width: 160, height: 40 ) )
+        
+        if let titleView = navigationItem.titleView {
+            button = titleView.viewWithTag( 111 ) as! UIButton
+        }
+        
+        return button
+    }
+    
+    
     func headerViewFor(_ tableView : UITableView, _ section : Int, with title : String, arrowUp : Bool ) -> UIView {
         // NOTE: This method is no longer used
         let     button     = UIButton.init( type: .system )

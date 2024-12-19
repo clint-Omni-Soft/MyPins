@@ -77,7 +77,13 @@ class ListTableViewController: UIViewController {
         logTrace()
         super.viewDidLoad()
         
-        navigationItem.title = NSLocalizedString( "Title.PinList", comment: "Pin List" )
+//        if UIDevice.current.userInterfaceIdiom == .pad {
+//            configureNavBarTitleButtonWith( NSLocalizedString( "Title.PinList", comment: "Pin List" ), #selector( navBarTitleButtonTouched(_:) ) )
+//        }
+//        else {
+            navigationItem.title = NSLocalizedString( "Title.PinList", comment: "Pin List" )
+//        }
+                                                      
     }
     
     
@@ -163,6 +169,12 @@ class ListTableViewController: UIViewController {
     }
 
     
+    @IBAction @objc func navBarTitleButtonTouched(_ sender: UIButton ) {
+        logTrace()
+        promptForNavigationAction()
+    }
+    
+    
     @IBAction func settingsBarButtonTouched(_ sender : UIBarButtonItem ) {
         launchSettingsViewController()
     }
@@ -192,7 +204,7 @@ class ListTableViewController: UIViewController {
     }
     
     
-    
+
     // MARK: Utility Methods
     
     private func buildSectionTitleIndex() {
@@ -340,6 +352,28 @@ class ListTableViewController: UIViewController {
     }
     
     
+    private func promptForNavigationAction() {
+        logTrace()
+        let alert = UIAlertController.init( title: NSLocalizedString( "ButtonTitle.ShowSettings", comment: "Show Settings?" ), message: nil, preferredStyle: .alert )
+        
+        let settingsAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Settings Action" )
+            self.launchSettingsViewController()
+        }
+
+        let cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel )
+        { ( alertAction ) in
+            logTrace( "Cancel Action" )
+        }
+
+        alert.addAction( settingsAction )
+        alert.addAction( cancelAction   )
+
+        present( alert, animated: true, completion: nil )
+    }
+
+
     private func registerForNotifications() {
         logTrace()
         NotificationCenter.default.addObserver( self, selector: #selector( self.pinsUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: nil )
@@ -648,7 +682,7 @@ extension ListTableViewController: UITableViewDelegate {
         let     onDevice  = pinCentral.dataStoreLocation == .device
         let     pin       = pinCentral.pinAt( indexPath )
 
-        let     alert     = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ActionForEntry", comment: "What would you like to do with this entry?" ), message: nil, preferredStyle: .alert)
+        let     alert     = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ActionForEntry", comment: "What would you like to do with this entry?" ), message: nil, preferredStyle: .alert )
         
         let editAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Edit", comment: "Edit" ), style: .default )
         { ( alertAction ) in
