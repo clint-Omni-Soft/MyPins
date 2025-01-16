@@ -1106,7 +1106,7 @@ extension PinCentral {
                             logVerbose( "queueContents[ %@ ]", self.nasCentral.queueContents() )
                         }
 
-                        logTrace( "We ran out of time!  Killing background task..." )
+                        logTrace( "We ran out of time!  Killing background task #1..." )
                         if self.userNotificationsAllowed {
                             DispatchQueue.main.async() {
                                 UIApplication.shared.applicationIconBadgeNumber = 1
@@ -1126,15 +1126,9 @@ extension PinCentral {
                         self.databaseUpdated = false
                         self.deviceAccessControl.updating = true
                         
-//                        if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
-//                            logTrace( "copying database to iCloud" )
-//                            self.cloudCentral.copyDatabaseFromDeviceToCloud( self )
-//                        }
-//                        else {  // .nas
-                            logTrace( "copying database to NAS" )
-                            self.nasCentral.copyDatabaseFromDeviceToNas( self )
-//                        }
-                        
+                        logTrace( "copying database to NAS" )
+                        self.nasCentral.emptyQueue()
+                        self.nasCentral.copyDatabaseFromDeviceToNas( self )
                     }
                     
                 }
@@ -1175,13 +1169,8 @@ extension PinCentral {
                     }
                     else {
                         logTrace( "removing lock file" )
-//                        if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
-//                            self.cloudCentral.unlockCloud( self )
-//                        }
-//                        else {  // .nas
-                            self.nasCentral.unlockNas( self )
-//                        }
-                        
+                        self.nasCentral.emptyQueue()
+                        self.nasCentral.unlockNas( self )
                     }
                     
                 }
