@@ -161,16 +161,10 @@ class TabBarViewController: UITabBarController {
 
     
    private func setupTabBar() {
-        logTrace()
-        tabBar.items![0].title = NSLocalizedString( "Title.PinList", comment: "Pin List"  )
-
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            tabBar.items![1].title = NSLocalizedString( "Title.Settings", comment: "Settings"  )
-        }
-        else {
-            tabBar.items![1].title = NSLocalizedString( "Title.Map",      comment: "Map"       )
-            tabBar.items![2].title = NSLocalizedString( "Title.Settings", comment: "Settings"  )
-        }
+       logTrace()
+       tabBar.items![0].title = NSLocalizedString( "Title.PinList",  comment: "Pin List"  )
+       tabBar.items![1].title = NSLocalizedString( "Title.Map",      comment: "Map"       )
+       tabBar.items![2].title = NSLocalizedString( "Title.Settings", comment: "Settings"  )
         
         // Switch to the last active tab
         for index in 0 ..< tabBar.items!.count {
