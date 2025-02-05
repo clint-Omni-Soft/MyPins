@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "912-gears.png",
+      "filename" : "740-gear.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "912-gears@2x.png",
+      "filename" : "740-gear@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "912-gears@3x.png",
+      "filename" : "740-gear@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
@@ -19,8 +19,5 @@
   "info" : {
     "author" : "xcode",
     "version" : 1
-  },
-  "properties" : {
-    "template-rendering-intent" : "original"
   }
 }

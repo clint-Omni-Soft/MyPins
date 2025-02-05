@@ -323,7 +323,7 @@ class ListTableViewController: UIViewController {
         navigationItem.leftBarButtonItems = leftBarButtonItems
 
         if UIDevice.current.userInterfaceIdiom == .pad {
-            rightBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: "settings" ), style: .plain, target: self, action: #selector( settingsBarButtonTouched(_:) ) ) )
+            rightBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: "gear" ), style: .plain, target: self, action: #selector( settingsBarButtonTouched(_:) ) ) )
         }
         
         rightBarButtonItems.append( UIBarButtonItem.init( barButtonSystemItem: .add, target: self, action: #selector( addBarButtonItemTouched ) ) )

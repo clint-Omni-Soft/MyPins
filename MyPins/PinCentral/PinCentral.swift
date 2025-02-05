@@ -808,6 +808,8 @@ class PinCentral: NSObject {
                 self.setFlagInUserDefaults( Constants.primedFlag )
             }
             
+            let _ = self.pictureDirectoryPath()   // Creates the directory if it does not exist
+
             self.fetchAllColorObjects()
             self.fetchAllImageRequestObjects()
             
@@ -893,11 +895,17 @@ class PinCentral: NSObject {
         logVerbose( "sortAscending[ %@ ]", stringFor( sortAscending ) )
         let sortedArray = fetchedPins.sorted( by:
                     { (pin1, pin2) -> Bool in
-                        if sortAscending {
-                            pin1.lastModified! < pin2.lastModified!
+                        if let pin1Date = pin1.lastModified, let pin2Date = pin2.lastModified {
+                            if sortAscending {
+                                return pin1Date < pin2Date
+                            }
+                            else {
+                                return pin1Date > pin2Date
+                            }
+                            
                         }
                         else {
-                            pin1.lastModified! > pin2.lastModified!
+                            return true
                         }
             
                     } )

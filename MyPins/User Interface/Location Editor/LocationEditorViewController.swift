@@ -343,14 +343,15 @@ class LocationEditorViewController: UIViewController  {
         else {
             let     pin = pinCentral.pinAt( indexPathOfItemBeingEdited )
             
-            pin.altitude  = altitude
-            pin.details   = details
-            pin.imageName = imageName
-            pin.latitude  = latitude
-            pin.longitude = longitude
-            pin.name      = name
-            pin.notes     = notes
-            pin.pinColor  = Int16( pinColorIndex )
+            pin.altitude     = altitude
+            pin.details      = details
+            pin.imageName    = imageName
+            pin.lastModified = Date()
+            pin.latitude     = latitude
+            pin.longitude    = longitude
+            pin.name         = name
+            pin.notes        = notes
+            pin.pinColor     = Int16( pinColorIndex )
             
             pinCentral.saveUpdated( pin, self )
         }
