@@ -326,7 +326,7 @@ class MapViewController: UIViewController {
         let infoBarButtonItem  = UIBarButtonItem.init( image: UIImage(named: "info" ), style: .plain, target: self, action: #selector( infoBarButtonTouched(_    :) ) )
         var leftBarButtonItems = [UIBarButtonItem]()
         
-        if UIDevice.current.userInterfaceIdiom == .pad && primaryWindowIsHidden {
+        if UIDevice.current.userInterfaceIdiom == .pad {
             leftBarButtonItems.append( UIBarButtonItem.init(image: UIImage(named: "hamburger" ), style: .plain, target: self, action: #selector( showPrimaryBarButtonItemTouched(_:) ) ) )
         }
         
@@ -344,8 +344,6 @@ class MapViewController: UIViewController {
 
         navigationItem.leftBarButtonItems  = leftBarButtonItems
         navigationItem.rightBarButtonItems = deviceAccessControl.byMe ? [addBarButtonItem, mapTypeBarButtonItem] : [mapTypeBarButtonItem]
-
-//        directionsBarButtonItem.isEnabled = false
     }
 
 

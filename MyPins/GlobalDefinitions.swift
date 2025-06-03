@@ -65,6 +65,7 @@ struct GlobalConstants {
     static let separatorForSorts                = ";"
     static let sortAscending                    = "↑"    // "▴"
     static let sortAscendingFlag                = "A"
+    static let sortByCreationDate               = "creationDate"
     static let sortDescending                   = "↓"    // "▾"
     static let sortDescendingFlag               = "D"
     static let thumbNailPrefix                  = "tn"

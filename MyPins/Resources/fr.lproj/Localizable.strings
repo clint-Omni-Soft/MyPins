@@ -25,8 +25,10 @@
 "AlertMessage.LocationNotYetSet"            = "Votre position n'a pas encore été établie.  Veuillez réessayer plus tard.";
 "AlertMessage.NameCannotBeBlank"            = "Le champ Nom ne peut pas être laissé vide";
 "AlertMessage.NoAccess"                     = "Échec de la connexion! Veuillez réessayer.";
+"AlertMessage.NoPhotosFound"                = "Aucune photo de votre bibliothèque n'a été créée pendant cette période. Veuillez essayer une autre date de début/durée.";
 "AlertMessage.NoRoutesAvailable"            = "Impossible de trouver un itinéraire vers cet emplacement.";
 "AlertMessage.OfflineWarning"               = "Nous ne pouvons pas nous connecter à votre stockage distant. Étant donné que cette application est conçue pour fonctionner hors ligne, vous pouvez apporter des modifications que nous téléchargerons la prochaine fois que vous vous connecterez à votre stockage distant. Sachez simplement que si plusieurs personnes effectuent des modifications hors ligne, vos modifications peuvent être écrasées.";
+"AlertMessage.PhotoLibraryNotAuthorized"    = "Cette application nécessite votre autorisation pour accéder à la photothèque sur cet appareil.  Veuillez mettre à jour les paramètres pour nous permettre de visualiser vos photos.";
 "AlertMessage.PhotoSaved"                   = "Image enregistrée dans l'album photo";
 "AlertMessage.PhotoSaveFailed"              = "Échec de l'enregistrement dans l'album photo!";
 "AlertMessage.ReadyToRestart"               = "Prêt à redémarrer";
@@ -44,6 +46,7 @@
 
 "AlertTitle.ActionForEntry"                 = "Que souhaiteriez-vous faire avec cette entrée?";
 "AlertTitle.AreYouSure"                     = "Êtes-vous sûr de vouloir annuler vos modifications?";
+"AlertTitle.AuthorizationRequired"          = "Autorisation requise!";
 "AlertTitle.CheckForMissingImages"          = "Rechercher les images manquantes";
 "AlertTitle.CurrentCoordinates"             = "Coordonnées actuelles";
 "AlertTitle.DeviceNameRequired"             = "Le nom de l'appareil est requis pour NAS";
@@ -57,9 +60,10 @@
 "AlertTitle.ImageDisposition"               = "Que voudriez-vous faire avec cette image?";
 "AlertTitle.LastUpdateDidNotComplete"       = "La dernière mise à jour n'a PAS été terminée!";
 "AlertTitle.MappingCannotBeBlank"           = "Le descripteur de mappage ne peut pas être vide!";
-"AlertTitle.NoMissingImages"                = "Vous n’avez AUCUNE image manquante.";
+"AlertTitle.NoMissingImages"                = "Il n'y a AUCUNE image manquante sur le %@";
+"AlertTitle.NoPhotosFound"                  = "Aucune photo trouvée !";
 "AlertTitle.OverrideOfflineBlock"           = "Ignorer le blocage hors connexion ?";
-"AlertTitle.RequestedImagesLoaded"          = "%d chargé sur %d images demandées.";
+"AlertTitle.RequestedImagesLoaded"          = "%d %d images demandées transférées à %@.";
 "AlertTitle.SaveToPhotoLibrary"             = "Souhaitez-vous enregistrer cette image dans votre photothèque ?";
 "AlertTitle.SelectMapType"                  = "Sélectionner le type de carte";
 "AlertTitle.SelectMediaSource"              = "Sélectionnez la source multimédia pour la photo";
@@ -101,6 +105,8 @@
 "ButtonTitle.SatelliteFlyover"              = "Survol satellite";
 "ButtonTitle.Save"                          = "Sauvegarder";
 "ButtonTitle.SaveImageToLibrary"            = "Enregistrer l'image dans la photothèque";
+"ButtonTitle.ShowMyPhotos"                  = "Afficher mes photos";
+"ButtonTitle.ShowNotes"                     = "Notes de l'émission";
 "ButtonTitle.ShowOnMap"                     = "Afficher sur la carte";
 "ButtonTitle.ShowSettings"                  = "Afficher les paramètres ?";
 "ButtonTitle.SortAscending"                 = "Trier par ordre croissant";
@@ -147,6 +153,7 @@
 "LabelText.ContactUs"                       = "Tous les droits sont réservés. Contactez-nous à";
 "LabelText.Destination"                     = "Destination";
 "LabelText.Details"                         = "Adresse / Description";
+"LabelText.Device"                          = "Appareil";
 "LabelText.Latitude"                        = "Latitude";
 "LabelText.Location"                        = "Emplacement";
 "LabelText.Longitude"                       = "Longitude";
@@ -154,10 +161,13 @@
 "LabelText.NetworkPath"                     = "Chemin d'accès au réseau";
 "LabelText.Notes"                           = "Remarques";
 "LabelText.NotSet"                          = "Pas encore défini";
+"LabelText.NumberOfDays"                    = "Nombre de jours";
 "LabelText.Password"                        = "Mot de passe:";
 "LabelText.PleaseWait"                      = "Cela peut prendre quelques minutes.\nS'il vous plaît, attendez...";
 "LabelText.PleaseWaitWhileWeConnect"        = "Veuillez patienter pendant que nous nous connectons à votre appareil externe ...";
+"LabelText.Remote"                          = "Télécommande";
 "LabelText.SortedOn"                        = "Trié sur: ";
+"LabelText.StartingDate"                    = "Date de début";
 "LabelText.StartingPath"                    = "Chemin de départ";
 "LabelText.UserName"                        = "Nom d'utilisateur:";
 
@@ -195,6 +205,8 @@
 "Title.Map"                                 = "Carte";
 "Title.MissingImageCheck"                   = "Vérification des images manquantes";
 "Title.MissingImages"                       = "Images manquantes";
+"Title.MyPhotos"                            = "Mes photos";
+"Title.Notes"                               = "Remarques";
 "Title.NotesEditor"                         = "Éditeur de notes";
 "Title.OnDeviceOnly"                        = "Sur l'appareil uniquement";
 "Title.OnRemoteOnly"                        = "Sur la télécommande uniquement";
@@ -209,6 +221,7 @@
 "Title.SelectShare"                         = "Sélectionnez un partage";
 "Title.SelectSortOptions"                   = "Sélectionnez les options de tri";
 "Title.SelectSubFolder"                     = "Sélectionnez un sous-dossier";
+"Title.SetTimePeriod"                       = "Définir la période de temps";
 "Title.Settings"                            = "Paramètres";
 "Title.TransferringFiles"                   = "Transferencia de archivos";
 "Title.Unknown"                             = "Inconnu";

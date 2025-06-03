@@ -74,6 +74,7 @@ class LocationEditorViewController: UIViewController  {
     private let     pinCentral                = PinCentral.sharedInstance
     private var     pinColorIndex             : Int16!      // Set in initializeVariables()
     private var     savedPinBeforeShowingMap  = false
+    private var     userDefaults              = UserDefaults.standard
     
     
     
@@ -773,10 +774,22 @@ extension LocationEditorViewController: PinCentralDelegate {
             indexPathOfItemBeingEdited = pinCentral.newPinIndexPath
         }
         
-        let pin = pinCentral.pinAt( indexPathOfItemBeingEdited )
-        
-        saveStringInUserDefaults( UserDefaultKeys.lastAccessedPinsGuid, value: pin.guid! )
-        
+        // We need to be a little careful here because if the pin type is changed, the indexPathOfItemBeingEdited is no longer valid.
+        if indexPathOfItemBeingEdited.section < pinCentral.pinArrayOfArrays.count {
+            if indexPathOfItemBeingEdited.row < pinCentral.pinArrayOfArrays[indexPathOfItemBeingEdited.section].count {
+                let pin = pinCentral.pinAt( indexPathOfItemBeingEdited )
+                
+                saveStringInUserDefaults( UserDefaultKeys.lastAccessedPinsGuid, value: pin.guid! )
+            }
+            else {
+                userDefaults.removeObject(forKey: UserDefaultKeys.lastAccessedPinsGuid )
+            }
+            
+        }
+        else {
+            userDefaults.removeObject(forKey: UserDefaultKeys.lastAccessedPinsGuid )
+        }
+
         if loadingImageView {
             loadingImageView = false
             launchImageViewController()

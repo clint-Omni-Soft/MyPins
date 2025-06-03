@@ -333,6 +333,11 @@ func stringFor(_ indexPath: IndexPath ) -> String {
 }
 
 
+func stringFor(_ size: CGSize ) -> String {
+    return String( format: "[ %3.1f, %3.1f ]", size.width, size.height )
+}
+
+
 func stringFor(_ rect: CGRect ) -> String {
     return String( format: "[ %3.1f, %3.1f ][ %3.1f, %3.1f ]", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height )
 }

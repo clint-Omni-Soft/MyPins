@@ -15,6 +15,7 @@
 		F418E69029CB6B9A00E3A016 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F418E68F29CB6B9A00E3A016 /* CoreData.framework */; };
 		F418E6A629CB9C8800E3A016 /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F418E6A529CB9C8700E3A016 /* SMBClient.framework */; };
 		F418E6A729CB9C8800E3A016 /* SMBClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F418E6A529CB9C8700E3A016 /* SMBClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F41CA6862DAD8E3700168013 /* PhotosExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41CA6852DAD8E3700168013 /* PhotosExtensions.swift */; };
 		F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF84209A293600DBA3CD /* HowToUseViewController.swift */; };
 		F427FF87209A2A6B00DBA3CD /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF86209A2A6B00DBA3CD /* SettingsViewController.swift */; };
 		F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */; };
@@ -49,6 +50,9 @@
 		F49F1AC82A12E2B8000AD67B /* PleaseWaitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49F1AC72A12E2B8000AD67B /* PleaseWaitViewController.swift */; };
 		F4A449222D0E5E28008F429F /* launchScreenImage.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A449212D0E5E28008F429F /* launchScreenImage.png */; };
 		F4A6552929AEB23400DDC813 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A6552829AEB23400DDC813 /* LogViewController.swift */; };
+		F4AD5ABF2D9DFE27007B95AB /* DatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD5ABE2D9DFE27007B95AB /* DatePickerViewController.swift */; };
+		F4AD5AC22D9E00CB007B95AB /* MyPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD5AC12D9E00CB007B95AB /* MyPhotosViewController.swift */; };
+		F4AD5AC42D9E052F007B95AB /* MyPhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD5AC32D9E052F007B95AB /* MyPhotosCollectionViewCell.swift */; };
 		F4B0B7212A0432CE007D78C7 /* ImageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B0B71F2A0432CE007D78C7 /* ImageRequest.swift */; };
 		F4B0B7222A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B0B7202A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift */; };
 		F4B15A632B32134800557137 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B15A622B32134800557137 /* CommonExtensions.swift */; };
@@ -91,6 +95,7 @@
 		F403EF8722C17780000D9ABD /* LocationEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEditorViewController.swift; sourceTree = "<group>"; };
 		F418E68F29CB6B9A00E3A016 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		F418E6A529CB9C8700E3A016 /* SMBClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SMBClient.framework; path = "../ZKits/ZKits-Debug/SMBClient.framework"; sourceTree = "<group>"; };
+		F41CA6852DAD8E3700168013 /* PhotosExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosExtensions.swift; sourceTree = "<group>"; };
 		F427FF84209A293600DBA3CD /* HowToUseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseViewController.swift; sourceTree = "<group>"; };
 		F427FF86209A2A6B00DBA3CD /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		F427FF88209A2C9E00DBA3CD /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
@@ -134,6 +139,9 @@
 		F49F1AC72A12E2B8000AD67B /* PleaseWaitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PleaseWaitViewController.swift; sourceTree = "<group>"; };
 		F4A449212D0E5E28008F429F /* launchScreenImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launchScreenImage.png; sourceTree = "<group>"; };
 		F4A6552829AEB23400DDC813 /* LogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
+		F4AD5ABE2D9DFE27007B95AB /* DatePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerViewController.swift; sourceTree = "<group>"; };
+		F4AD5AC12D9E00CB007B95AB /* MyPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPhotosViewController.swift; sourceTree = "<group>"; };
+		F4AD5AC32D9E052F007B95AB /* MyPhotosCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPhotosCollectionViewCell.swift; sourceTree = "<group>"; };
 		F4B0B71E2A0431FE007D78C7 /* MyPins 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MyPins 4.xcdatamodel"; sourceTree = "<group>"; };
 		F4B0B71F2A0432CE007D78C7 /* ImageRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRequest.swift; sourceTree = "<group>"; };
 		F4B0B7202A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageRequest+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -209,9 +217,9 @@
 		F400B4D920572E2F00556F51 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				F4A449212D0E5E28008F429F /* launchScreenImage.png */,
 				F49B9A5A207D587D007598F9 /* appIcon MASTER */,
 				F400B4CD20572E0000556F51 /* Assets.xcassets */,
+				F4A449212D0E5E28008F429F /* launchScreenImage.png */,
 				F400B4CF20572E0000556F51 /* LaunchScreen.storyboard */,
 				F4820DFC206998E800780C2D /* Localizable.strings */,
 				F48A45CC20698FDE00C27F03 /* Main_iPad.storyboard */,
@@ -378,6 +386,16 @@
 			path = "ListTableViewController Cells";
 			sourceTree = "<group>";
 		};
+		F4AD5AC02D9E00AE007B95AB /* My Photos */ = {
+			isa = PBXGroup;
+			children = (
+				F4AD5ABE2D9DFE27007B95AB /* DatePickerViewController.swift */,
+				F4AD5AC12D9E00CB007B95AB /* MyPhotosViewController.swift */,
+				F4AD5AC32D9E052F007B95AB /* MyPhotosCollectionViewCell.swift */,
+			);
+			path = "My Photos";
+			sourceTree = "<group>";
+		};
 		F4B47FF0205734F40027755B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -425,6 +443,7 @@
 			isa = PBXGroup;
 			children = (
 				F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */,
+				F41CA6852DAD8E3700168013 /* PhotosExtensions.swift */,
 				F4B76F5F29CD06BA002D2060 /* UIImage+Cropping.swift */,
 				F4CACD9C29D39F8E00BCFF79 /* UIKitExtensions.swift */,
 			);
@@ -450,6 +469,7 @@
 		F4B777DC2B3DEF9D0095B5A7 /* Child ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				F4AD5AC02D9E00AE007B95AB /* My Photos */,
 				F45FB94D2B041F8400FC6B6B /* SortOptionsViewController.swift */,
 			);
 			path = "Child ViewControllers";
@@ -545,9 +565,11 @@
 				F4A6552929AEB23400DDC813 /* LogViewController.swift in Sources */,
 				F4766CE7243D238A0054CD97 /* Logger.swift in Sources */,
 				F49F1AC82A12E2B8000AD67B /* PleaseWaitViewController.swift in Sources */,
+				F4AD5AC42D9E052F007B95AB /* MyPhotosCollectionViewCell.swift in Sources */,
 				F400B4CC20572E0000556F51 /* MyPins.xcdatamodeld in Sources */,
 				F4EB06A62A00575000B159E1 /* PinColor+CoreDataProperties.swift in Sources */,
 				F49766AD205B11AE00A76F9D /* PointAnnotation.swift in Sources */,
+				F4AD5ABF2D9DFE27007B95AB /* DatePickerViewController.swift in Sources */,
 				F445000A22D3A8DD00988667 /* LocationImageTableViewCell.swift in Sources */,
 				F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */,
 				F427FF85209A293600DBA3CD /* HowToUseViewController.swift in Sources */,
@@ -565,12 +587,14 @@
 				F47571FE2A12E7BE002E7E18 /* NasLoginViewController.swift in Sources */,
 				F4B76F6029CD06BA002D2060 /* UIImage+Cropping.swift in Sources */,
 				F427FF89209A2C9E00DBA3CD /* TabBarViewController.swift in Sources */,
+				F41CA6862DAD8E3700168013 /* PhotosExtensions.swift in Sources */,
 				F445000822D3A8C200988667 /* LocationDetailsTableViewCell.swift in Sources */,
 				F47571EC2A12E447002E7E18 /* CloudCentral.swift in Sources */,
 				F47571F52A12E71D002E7E18 /* DataStoreLocationViewController.swift in Sources */,
 				F4B0B7222A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift in Sources */,
 				F403EF8822C17780000D9ABD /* LocationEditorViewController.swift in Sources */,
 				F4B47FF5205745130027755B /* PinCentral.swift in Sources */,
+				F4AD5AC22D9E00CB007B95AB /* MyPhotosViewController.swift in Sources */,
 				F4B15A632B32134800557137 /* CommonExtensions.swift in Sources */,
 				F4CACD9D29D39F8E00BCFF79 /* UIKitExtensions.swift in Sources */,
 				F45FE18B2B0BF99C006FD0D4 /* ListTableViewSectionCell.swift in Sources */,
@@ -767,12 +791,12 @@
 				GCC_PREFIX_HEADER = "MyPins/MyPins-Prefix.pch";
 				INFOPLIST_FILE = MyPins/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Was That?";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.1;
+				MARKETING_VERSION = 5.2;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -800,12 +824,12 @@
 				GCC_PREFIX_HEADER = "MyPins/MyPins-Prefix.pch";
 				INFOPLIST_FILE = MyPins/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Was That?";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.1;
+				MARKETING_VERSION = 5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

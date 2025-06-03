@@ -25,8 +25,10 @@
 "AlertMessage.LocationNotYetSet"            = "Su ubicación aún no ha sido establecida.  Por favor, inténtelo de nuevo más tarde.";
 "AlertMessage.NameCannotBeBlank"            = "El campo de nombre no se puede dejar en blanco";
 "AlertMessage.NoAccess"                     = "¡Error de inicio de sesion! Inténtalo de nuevo.";
+"AlertMessage.NoPhotosFound"                = "No hay fotos en tu biblioteca creadas durante ese periodo. Prueba con una fecha/duración de inicio diferente.";
 "AlertMessage.NoRoutesAvailable"            = "No se pudo encontrar una ruta a esta ubicación.";
 "AlertMessage.OfflineWarning"               = "No podemos conectarnos a su almacenamiento remoto. Debido a que esta aplicación está diseñada para funcionar sin conexión, puede realizar cambios que cargaremos la próxima vez que se conecte a su almacenamiento remoto. Solo tenga en cuenta que si más de una persona realiza cambios fuera de línea, es posible que se sobrescriban sus cambios.";
+"AlertMessage.PhotoLibraryNotAuthorized"    = "Esta aplicación requiere su autorización para acceder a la biblioteca de fotos de este dispositivo.  Actualice la Configuración para permitirnos ver sus fotos.";
 "AlertMessage.PhotoSaved"                   = "Imagen guardada en álbum de fotos";
 "AlertMessage.PhotoSaveFailed"              = "¡No se pudo guardar en el álbum de fotos!";
 "AlertMessage.ReadyToRestart"               = "Listo para reiniciar";
@@ -44,6 +46,7 @@
 
 "AlertTitle.ActionForEntry"                 = "¿Qué te gustaría hacer con esta entrada?";
 "AlertTitle.AreYouSure"                     = "¿Estás seguro de que quieres descartar tus cambios?";
+"AlertTitle.AuthorizationRequired"          = "¡Se requiere autorización!";
 "AlertTitle.CheckForMissingImages"          = "Comprobar si faltan imágenes";
 "AlertTitle.CurrentCoordinates"             = "Coordenadas actuales";
 "AlertTitle.DeviceNameRequired"             = "Se requiere el nombre del dispositivo para NAS";
@@ -57,9 +60,10 @@
 "AlertTitle.ImageDisposition"               = "¿Qué te gustaría hacer con esta imagen?";
 "AlertTitle.LastUpdateDidNotComplete"       = "¡La última actualización NO se completó!";
 "AlertTitle.MappingCannotBeBlank"           = "¡El descriptor de asignación no puede estar en blanco!";
-"AlertTitle.NoMissingImages"                = "NO te faltan imágenes.";
+"AlertTitle.NoMissingImages"                = "No tienes ninguna imagen faltante en %@.";
+"AlertTitle.NoPhotosFound"                  = "¡No se encontraron fotos!";
 "AlertTitle.OverrideOfflineBlock"           = "¿Anular bloqueo sin conexión?";
-"AlertTitle.RequestedImagesLoaded"          = "Se cargó %d de %d imágenes solicitadas.";
+"AlertTitle.RequestedImagesLoaded"          = "Se transfirió %d de %d imágenes solicitadas a %@.";
 "AlertTitle.SaveToPhotoLibrary"             = "¿Le gustaría guardar esta imagen en su biblioteca de fotos?";
 "AlertTitle.SelectMapType"                  = "Seleccionar tipo de mapa";
 "AlertTitle.SelectMediaSource"              = "Seleccionar fuente de medios para foto";
@@ -101,6 +105,8 @@
 "ButtonTitle.SatelliteFlyover"              = "Paso elevado por satélite";
 "ButtonTitle.Save"                          = "Salvar";
 "ButtonTitle.SaveImageToLibrary"            = "Guardar imagen en la biblioteca de fotos";
+"ButtonTitle.ShowMyPhotos"                  = "Mostrar mis fotos";
+"ButtonTitle.ShowNotes"                     = "Notas del programa";
 "ButtonTitle.ShowOnMap"                     = "Mostrar en el mapa";
 "ButtonTitle.ShowSettings"                  = "¿Mostrar configuración?";
 "ButtonTitle.SortAscending"                 = "Orden ascendente";
@@ -146,6 +152,7 @@
 "LabelText.ContactUs"                       = "Todos los derechos reservados. Contactanos en";
 "LabelText.Destination"                     = "Destino";
 "LabelText.Details"                         = "Descripción de la dirección";
+"LabelText.Device"                          = "Dispositivo";
 "LabelText.Latitude"                        = "Latitud";
 "LabelText.Location"                        = "Ubicación";
 "LabelText.Longitude"                       = "Longitud";
@@ -153,10 +160,13 @@
 "LabelText.NetworkPath"                     = "Ruta de red";
 "LabelText.Notes"                           = "Notas";
 "LabelText.NotSet"                          = "No establecido";
+"LabelText.NumberOfDays"                    = "Número de días";
 "LabelText.Password"                        = "Contraseña:";
 "LabelText.PleaseWait"                      = "Esto puede tomar unos pocos minutos.\nPor favor espera...";
 "LabelText.PleaseWaitWhileWeConnect"        = "Espere mientras nos conectamos a su dispositivo externo ..";
+"LabelText.Remote"                          = "Remoto";
 "LabelText.SortedOn"                        = "Clasificado en: ";
+"LabelText.StartingDate"                    = "Fecha de inicio";
 "LabelText.StartingPath"                    = "Camino de inicio";
 "LabelText.UserName"                        = "Nombre de usuario:";
 
@@ -194,6 +204,8 @@
 "Title.Map"                                 = "Mapa";
 "Title.MissingImageCheck"                   = "Comprobación de imagen faltante";
 "Title.MissingImages"                       = "Imágenes faltantes";
+"Title.MyPhotos"                            = "Mis fotos";
+"Title.Notes"                               = "Notas";
 "Title.NotesEditor"                         = "Editor de Notas";
 "Title.OnDeviceOnly"                        = "Solo en el dispositivo";
 "Title.OnRemoteOnly"                        = "Solo en remoto";
@@ -208,6 +220,7 @@
 "Title.SelectShare"                         = "Selecciona un recurso compartido";
 "Title.SelectSortOptions"                   = "Seleccionar opciones de clasificación";
 "Title.SelectSubFolder"                     = "Seleccione una subcarpeta";
+"Title.SetTimePeriod"                       = "Establecer período de tiempo";
 "Title.Settings"                            = "Configuraciones";
 "Title.TransferringFiles"                   = "Transfert de fichiers";
 "Title.Unknown"                             = "Desconocido";

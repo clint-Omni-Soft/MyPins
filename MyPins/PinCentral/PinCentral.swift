@@ -10,12 +10,14 @@
 import UIKit
 import CoreData
 import CoreLocation
+import Photos
 
 
 
 protocol PinCentralDelegate: AnyObject {
     func pinCentral(_ pinCentral: PinCentral, didFetchImage      : Bool, filename : String, image : UIImage )
     func pinCentral(_ pinCentral: PinCentral, didFetch imageNames: [String] )
+    func pinCentral(_ pinCentral: PinCentral, didGetImage: Bool, from asset: PHAsset, image: UIImage )
     func pinCentral(_ pinCentral: PinCentral, didOpenDatabase    : Bool )
     func pinCentral(_ pinCentral: PinCentral, didSaveImageData   : Bool )
     func pinCentral(_ pinCentral: PinCentral, didUpdateDatabase  : Bool )
@@ -29,6 +31,7 @@ protocol PinCentralDelegate: AnyObject {
 extension PinCentralDelegate {
     func pinCentral(_ pinCentral: PinCentral, didFetchImage      : Bool, filename : String, image : UIImage ) {}
     func pinCentral(_ pinCentral: PinCentral, didFetch imageNames: [String] ) {}
+    func pinCentral(_ pinCentral: PinCentral, didGetImage: Bool, from asset: PHAsset, image: UIImage ) {}
     func pinCentral(_ pinCentral: PinCentral, didOpenDatabase    : Bool ) {}
     func pinCentral(_ pinCentral: PinCentral, didSaveImageData   : Bool ) {}
     func pinCentral(_ pinCentral: PinCentral, didUpdateDatabase  : Bool ) {}

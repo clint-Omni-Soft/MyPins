@@ -47,6 +47,7 @@ class SettingsViewController: UIViewController {
     private var imagesRequested     : [String] = []
     private var nasCentral          = NASCentral.sharedInstance
     private let notificationCenter  = NotificationCenter.default
+    private var onRemote            = false
     private let pinCentral          = PinCentral.sharedInstance
     private var replies             = 0
     private var showHowToUse        = true
@@ -264,8 +265,11 @@ extension SettingsViewController: PinCentralDelegate {
         logVerbose( "Requested [ %d ] uploads", imagesRequested.count )
         
         if imagesRequested.count == 0 {
-            self.presentAlert(title: NSLocalizedString( "AlertTitle.NoMissingImages", comment: "You have NO missing images." ), message: "" )
-            
+            let target    = self.onRemote ? NSLocalizedString( "LabelText.Remote", comment: "Remote" ) : NSLocalizedString( "LabelText.Device", comment: "Device" )
+            let titleText = String( format: NSLocalizedString( "AlertTitle.NoMissingImages", comment: "You have NO missing images on the %@." ), target )
+
+            self.presentAlert(title: titleText, message: "" )
+
             self.myActivityIndicator.isHidden = true
             self.myActivityIndicator.stopAnimating()
         }
@@ -275,8 +279,9 @@ extension SettingsViewController: PinCentralDelegate {
         
     private func showResults() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
-            let titleText = String( format: NSLocalizedString( "AlertTitle.RequestedImagesLoaded", comment: "Loaded %d of %d images requested." ), self.imagesLoaded, self.imagesRequested.count )
-            
+            let target    = self.onRemote ? NSLocalizedString( "LabelText.Remote", comment: "Remote" ) : NSLocalizedString( "LabelText.Device", comment: "Device" )
+            let titleText = String( format: NSLocalizedString( "AlertTitle.RequestedImagesLoaded", comment: "Transferred %d of %d images requested to %@." ), self.imagesLoaded, self.imagesRequested.count, target )
+
             self.myActivityIndicator.isHidden = true
             self.myActivityIndicator.stopAnimating()
             
@@ -359,6 +364,7 @@ extension SettingsViewController: UITableViewDelegate {
         let onRemoteAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OnRemote", comment: "On remote" ), style: .default ) {
             ( alertAction ) in
             logTrace( "On remote Action" )
+            self.onRemote = true
             self.myActivityIndicator.isHidden = false
             self.myActivityIndicator.startAnimating()
 
@@ -368,6 +374,7 @@ extension SettingsViewController: UITableViewDelegate {
         let onThisDeviceAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OnThisDevice", comment: "On this device" ), style: .default ) {
             ( alertAction ) in
             logTrace( "On this device Action" )
+            self.onRemote = false
             self.myActivityIndicator.isHidden = false
             self.myActivityIndicator.startAnimating()
 
@@ -375,8 +382,11 @@ extension SettingsViewController: UITableViewDelegate {
             // the download progress is tracked via the pinCentral(didFetchImage::) method which will hide the activityIndicator when we finish
 
             if requestCount == 0 {
-                self.presentAlert(title: NSLocalizedString( "AlertTitle.NoMissingImages", comment: "You have NO missing images." ), message: "" )
-                
+                let target    = self.onRemote ? NSLocalizedString( "LabelText.Remote", comment: "Remote" ) : NSLocalizedString( "LabelText.Device", comment: "Device" )
+                let titleText = String( format: NSLocalizedString( "AlertTitle.NoMissingImages", comment: "You have NO missing images on the %@." ), target )
+
+                self.presentAlert(title: titleText, message: "" )
+
                 self.myActivityIndicator.isHidden = true
                 self.myActivityIndicator.stopAnimating()
             }

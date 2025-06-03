@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Photos
 
 
 
@@ -487,6 +488,42 @@ extension PinCentral {
     }
         
 
+    func getImageFrom(_ phAsset: PHAsset, targetSize: CGSize, isThumbnail: Bool, delegate: PinCentralDelegate ) {
+//        logVerbose( "[ %@ ][ %@ ]", phAsset.descriptorString(), stringFor( targetSize ) )
+        let cachingImageManager = PHCachingImageManager()
+        var firstSegmentLoaded  = false
+        let imageRequestOptions = PHImageRequestOptions()
+        var myImage             : UIImage!
+
+        imageRequestOptions.isNetworkAccessAllowed = false
+        
+        cachingImageManager.requestImage(for: phAsset, targetSize: targetSize, contentMode: .aspectFill, options: imageRequestOptions, resultHandler: { image, _ in
+            if let verifiedImage = image {
+                myImage = verifiedImage
+                
+                if isThumbnail {
+                    delegate.pinCentral( self, didGetImage: true, from: phAsset, image: myImage )
+                }
+                else {
+                    if !firstSegmentLoaded {
+                        firstSegmentLoaded = true
+                    }
+                    else {
+                        delegate.pinCentral( self, didGetImage: true, from: phAsset, image: myImage )
+                    }
+
+                }
+                
+            }
+            else {
+                delegate.pinCentral( self, didGetImage: false, from: phAsset, image: UIImage() )
+            }
+            
+        })
+
+    }
+    
+    
     func imageExistsWith(_ name: String ) -> Bool {
 //        logTrace()
         let         directoryPath = pictureDirectoryPath()

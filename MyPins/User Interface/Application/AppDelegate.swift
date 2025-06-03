@@ -35,18 +35,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? ) -> Bool {
         LogCentral.sharedInstance.setupLogging()
-        pinCentral.enteringForeground()
 
         UNUserNotificationCenter.current().requestAuthorization( options: .badge ) { ( granted, error ) in
             logVerbose( "request to badge icon authorized[ %@ ]", stringFor( granted ) )
+            
             self.pinCentral.userNotificationsAllowed = granted
         }
+        
+        pinCentral.enteringForeground()
         
         locationManager = CLLocationManager()
         locationManager?.requestWhenInUseAuthorization()
         
         if pinCentral.dataStoreLocation != .device {
             showPleaseWaitScreen()
+        }
+        else {
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                getLinkToSplitViewController()
+            }
+            
         }
 
         if #available(iOS 15, *) {
@@ -82,6 +90,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
 
     func applicationWillTerminate(_ application: UIApplication ) {
+        logTrace()
+        pinCentral.enteringBackground()
     }
     
     
@@ -157,7 +167,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
                 let minimumWidth = min( CGRectGetWidth(self.splitViewController.view.bounds), CGRectGetHeight(self.splitViewController.view.bounds) )
                 
-                self.splitViewController.minimumPrimaryColumnWidth = minimumWidth * 0.6
+                self.splitViewController.minimumPrimaryColumnWidth = minimumWidth / 2
                 self.splitViewController.maximumPrimaryColumnWidth = minimumWidth;
                 logTrace( "Captured pointer to SplitViewController" )
             }

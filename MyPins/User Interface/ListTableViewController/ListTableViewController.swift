@@ -9,6 +9,7 @@
 
 import UIKit
 import MapKit
+import Photos
 
 
 
@@ -32,9 +33,12 @@ class ListTableViewController: UIViewController {
     }
     
     private struct StoryboardIds {
+        static let datePicker       = "DatePickerViewController"
         static let imageViewer      = "ImageViewController"
         static let locationEditor   = "LocationEditorViewController"
         static let map              = "MapViewController"
+        static let myPhotos         = "MyPhotosViewController"
+        static let notes            = "NotesViewController"
         static let settings         = "SettingsViewController"
         static let sortOptions      = "SortOptionsViewController"
     }
@@ -77,13 +81,7 @@ class ListTableViewController: UIViewController {
         logTrace()
         super.viewDidLoad()
         
-//        if UIDevice.current.userInterfaceIdiom == .pad {
-//            configureNavBarTitleButtonWith( NSLocalizedString( "Title.PinList", comment: "Pin List" ), #selector( navBarTitleButtonTouched(_:) ) )
-//        }
-//        else {
-            navigationItem.title = NSLocalizedString( "Title.PinList", comment: "Pin List" )
-//        }
-                                                      
+        navigationItem.title = NSLocalizedString( "Title.PinList", comment: "Pin List" )
     }
     
     
@@ -118,13 +116,27 @@ class ListTableViewController: UIViewController {
     }
     
     
+    override func viewDidAppear(_ animated: Bool) {
+        logTrace()
+        super.viewDidAppear( animated )
+        
+        PHPhotoLibrary.requestAuthorization(for: .readWrite ) { (status) in
+            if PHPhotoLibrary.authorizationStatus() != .authorized {
+                self.presentAlert( title  : NSLocalizedString( "AlertTitle.AuthorizationRequired",       comment: "Authorization Required!" ),
+                                   message: NSLocalizedString( "AlertMessage.PhotoLibraryNotAuthorized", comment: "This app requires your authorization to access the photo library on this device.  Please update Settings to allow us to view your photos." ) )
+            }
+            
+        }
+
+    }
+    
+    
     override func viewWillDisappear(_ animated: Bool) {
         logTrace()
         super.viewWillDisappear( animated )
         
         NotificationCenter.default.removeObserver( self )
     }
-    
     
     
     
@@ -376,8 +388,8 @@ class ListTableViewController: UIViewController {
 
     private func registerForNotifications() {
         logTrace()
-        NotificationCenter.default.addObserver( self, selector: #selector( self.pinsUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: nil )
-        NotificationCenter.default.addObserver( self, selector: #selector( self.ready(       notification: ) ), name: NSNotification.Name( rawValue: Notifications.ready             ), object: nil )
+        NotificationCenter.default.addObserver( self, selector: #selector( pinsUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: nil )
+        NotificationCenter.default.addObserver( self, selector: #selector( ready(       notification: ) ), name: NSNotification.Name( rawValue: Notifications.ready             ), object: nil )
     }
     
     
@@ -406,6 +418,68 @@ class ListTableViewController: UIViewController {
         
     }
     
+    
+}
+
+
+
+// MARK: DatePickerViewControllerDelegate Methods
+
+extension ListTableViewController: DatePickerViewControllerDelegate {
+    
+    func datePickerViewControllerDidSelect(_ datePickerViewController: DatePickerViewController, startingDate: Date, duration: Int ) {
+        logVerbose( "startingDate[ %@ ] duration[ %d ]", stringFor( startingDate ), duration )
+
+        var deviceAssetArray = [PHAsset]()
+        let endingDate       = Calendar.current.date(byAdding: .day, value: duration, to: startingDate )!
+        let fetchOptions     = PHFetchOptions()
+        var phAssetArray     = [PHAsset]()
+
+        fetchOptions.sortDescriptors = [ NSSortDescriptor( key: GlobalConstants.sortByCreationDate, ascending: true ) ]
+        
+        let fetchedAssets = PHAsset.fetchAssets(with: fetchOptions )
+        
+        fetchedAssets.enumerateObjects { ( phAsset, count, stop ) in
+            phAssetArray.append( phAsset )
+        }
+        
+        for asset in phAssetArray {
+            if asset.sourceType == .typeUserLibrary {
+                if let creationDate = asset.creationDate {
+                    let dateCreated = stringFor( creationDate )
+                    let dateEnding  = stringFor( endingDate   )
+                    let dateStart   = stringFor( startingDate )
+
+                    if dateStart <= dateCreated && dateCreated <= dateEnding {
+                        deviceAssetArray.append( asset )
+                    }
+
+                }
+
+            }
+            
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
+            if deviceAssetArray.count == 0 {
+                self.presentAlert( title  : NSLocalizedString( "AlertTitle.NoPhotosFound",   comment: "No Photos Found!" ),
+                                   message: NSLocalizedString( "AlertMessage.NoPhotosFound", comment: "There are no photos in your library that were created during that timeframe.  Please try a different starting date/duration." ) )
+            }
+            else {
+                guard let myPhotosViewController: MyPhotosViewController = self.iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.myPhotos ) as? MyPhotosViewController else {
+                    logTrace( "ERROR: Could NOT load MyPhotosViewController!" )
+                    return
+                }
+                
+                myPhotosViewController.deviceAssetArray = deviceAssetArray
+                
+                self.navigationController?.pushViewController( myPhotosViewController, animated: true )
+            }
+
+        }
+        
+    }
+
     
 }
 
@@ -675,6 +749,38 @@ extension ListTableViewController: UITableViewDelegate {
     }
     
     
+    private func launchNotesViewController(_ notes: String ) {
+        guard let notesViewController: NotesViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.notes ) as? NotesViewController else {
+            logTrace( "ERROR: Could NOT load NotesViewController!" )
+            return
+        }
+        
+        notesViewController.editMode     = false
+        notesViewController.originalText = notes
+        
+        navigationController?.pushViewController( notesViewController, animated: true )
+    }
+
+    
+    private func presentDatePickerViewController(_ lastModified: Date ) {
+        guard let datePickerViewController: DatePickerViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.datePicker ) as? DatePickerViewController else {
+            logTrace( "ERROR: Could NOT load DatePickerViewController!" )
+            return
+        }
+        
+        datePickerViewController.delegate     = self
+        datePickerViewController.lastModified = lastModified
+
+        datePickerViewController.modalPresentationStyle = .formSheet  // .popover
+        datePickerViewController.preferredContentSize   = CGSize(width: 375, height: 260 )
+
+        datePickerViewController.popoverPresentationController?.sourceRect = view.frame
+        datePickerViewController.popoverPresentationController?.sourceView = view
+        
+        present( datePickerViewController, animated: true, completion: nil )
+    }
+    
+    
     private func promptForActionOnCellAt(_ indexPath: IndexPath ) {
         logTrace()
         let     cell      = myTableView.cellForRow(at: indexPath ) as! ListTableViewControllerCell
@@ -694,6 +800,29 @@ extension ListTableViewController: UITableViewDelegate {
         { ( alertAction ) in
             logTrace( "Inspect Image Action" )
             self.launchImageViewControllerFor( imageName )
+        }
+        
+        let showMyPhotosAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.ShowMyPhotos", comment: "Show My Photos" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Show My Photos Action" )
+            
+            if PHPhotoLibrary.authorizationStatus() != .authorized {
+                self.presentAlert( title  : NSLocalizedString( "AlertTitle.AuthorizationRequired",       comment: "Authorization Required!" ),
+                                   message: NSLocalizedString( "AlertMessage.PhotoLibraryNotAuthorized", comment: "This app requires your authorization to access the photo library on this device.  Please update Settings to allow us to view your photos." ) )
+            }
+            else {
+                DispatchQueue.main.asyncAfter(deadline: .now() ) {
+                    self.presentDatePickerViewController( pin.lastModified! )
+                }
+                
+            }
+
+        }
+        
+        let showNotesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.ShowNotes", comment: "Show Notes" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Show Notes Action" )
+            self.launchNotesViewController( pin.notes! )
         }
         
         let showOnMapAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.ShowOnMap", comment: "Show on Map" ), style: .default )
@@ -717,22 +846,30 @@ extension ListTableViewController: UITableViewDelegate {
             logTrace( "Cancel Action" )
         }
 
-        alert.addAction( editAction      )
-        alert.addAction( showOnMapAction )
-
+        alert.addAction( editAction )
+        
         if cell.imageState == ImageState.loaded  {
             alert.addAction( inspectImageAction )
 
             if !onDevice {
                 if let name = pin.imageName {
-                    imageName  = name
+                    imageName = name
                 }
                     
             }
             
         }
         
-        alert.addAction( cancelAction )
+        if let _ = pin.lastModified {
+            alert.addAction( showMyPhotosAction )
+        }
+
+        if let _ = pin.notes {
+            alert.addAction( showNotesAction )
+        }
+        
+        alert.addAction( showOnMapAction )
+        alert.addAction( cancelAction    )
         
         present( alert, animated: true, completion: nil )
     }

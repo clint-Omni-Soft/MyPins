@@ -25,8 +25,10 @@
 "AlertMessage.LocationNotYetSet"            = "Your location has not yet been established.  Please try again later.";
 "AlertMessage.NameCannotBeBlank"            = "Name field cannot be left blank";
 "AlertMessage.NoAccess"                     = "Login failed!  Please try again.";
+"AlertMessage.NoPhotosFound"                = "There are no photos in your library that were created during that timeframe.  Please try a different starting date/duration.";
 "AlertMessage.NoRoutesAvailable"            = "Unable to find a route to this location.";
 "AlertMessage.OfflineWarning"               = "We cannot connect to your remote storage.  Because this app is designed to work offline, you can make changes that we will upload the next time you connect to your remote storage.  Just be aware that if more than one person makes changes offline, your changes may be overwritten.";
+"AlertMessage.PhotoLibraryNotAuthorized"    = "This app requires your authorization to access the photo library on this device.  Please update Settings to allow us to view your photos.";
 "AlertMessage.PhotoSaved"                   = "Image saved to photo album";
 "AlertMessage.PhotoSaveFailed"              = "Save to photo album failed!";
 "AlertMessage.ReadyToRestart"               = "Ready to Restart";
@@ -44,6 +46,7 @@
 
 "AlertTitle.ActionForEntry"                 = "What would you like to do with this entry?";
 "AlertTitle.AreYouSure"                     = "Are you sure you want to discard your changes?";
+"AlertTitle.AuthorizationRequired"          = "Authorization Required!";
 "AlertTitle.CheckForMissingImages"          = "Check for missing images";
 "AlertTitle.CurrentCoordinates"             = "Current Coordinates";
 "AlertTitle.DeviceNameRequired"             = "Device Name is Required for NAS";
@@ -57,9 +60,10 @@
 "AlertTitle.ImageDisposition"               = "What would you like to do with this image?";
 "AlertTitle.LastUpdateDidNotComplete"       = "The Last Update Did NOT Complete!";
 "AlertTitle.MappingCannotBeBlank"           = "Mapping Descriptor Cannot be Blank!";
-"AlertTitle.NoMissingImages"                = "You have NO missing images.";
+"AlertTitle.NoMissingImages"                = "You have NO missing images on the %@.";
+"AlertTitle.NoPhotosFound"                  = "No Photos Found!";
 "AlertTitle.OverrideOfflineBlock"           = "Override Offline Block?";
-"AlertTitle.RequestedImagesLoaded"          = "Loaded %d of %d images requested.";
+"AlertTitle.RequestedImagesLoaded"          = "Transferred %d of %d images requested to %@.";
 "AlertTitle.SaveToPhotoLibrary"             = "Would you like to save this image to your Photo Library?";
 "AlertTitle.SelectMapType"                  = "Select Map Type";
 "AlertTitle.SelectMediaSource"              = "Select Media Source for Photo";
@@ -101,6 +105,8 @@
 "ButtonTitle.SatelliteFlyover"              = "Satellite Flyover";
 "ButtonTitle.Save"                          = "Save";
 "ButtonTitle.SaveImageToLibrary"            = "Save Image to Photo Library";
+"ButtonTitle.ShowMyPhotos"                  = "Show My Photos";
+"ButtonTitle.ShowNotes"                     = "Show Notes";
 "ButtonTitle.ShowOnMap"                     = "Show on Map";
 "ButtonTitle.ShowSettings"                  = "Show Settings?";
 "ButtonTitle.SortAscending"                 = "Sort Ascending";
@@ -145,6 +151,7 @@
 "LabelText.Altitude"                        = "Altitude";
 "LabelText.ContactUs"                       = "All rights reserved.  Contact us at";
 "LabelText.Destination"                     = "Destination";
+"LabelText.Device"                          = "Device";
 "LabelText.Details"                         = "Address / Description";
 "LabelText.Latitude"                        = "Latitude";
 "LabelText.Location"                        = "Location";
@@ -153,10 +160,13 @@
 "LabelText.NetworkPath"                     = "Network Path";
 "LabelText.Notes"                           = "Notes";
 "LabelText.NotSet"                          = "Not Set";
+"LabelText.NumberOfDays"                    = "Number of Days";
 "LabelText.Password"                        = "Password:";
 "LabelText.PleaseWait"                      = "This may take a few minutes.\nPlease wait...";
 "LabelText.PleaseWaitWhileWeConnect"        = "Please wait while we connect to your external device ...";
+"LabelText.Remote"                          = "Remote";
 "LabelText.SortedOn"                        = "Sorted on: ";
+"LabelText.StartingDate"                    = "Starting Date";
 "LabelText.StartingPath"                    = "Starting Path";
 "LabelText.UserName"                        = "User Name:";
 
@@ -194,6 +204,8 @@
 "Title.Map"                                 = "Map";
 "Title.MissingImageCheck"                   = "Missing Image Check";
 "Title.MissingImages"                       = "Missing Images";
+"Title.MyPhotos"                            = "My Photos";
+"Title.Notes"                               = "Notes";
 "Title.NotesEditor"                         = "Notes Editor";
 "Title.OnDeviceOnly"                        = "On Device Only";
 "Title.OnRemoteOnly"                        = "On Remote Only";
@@ -208,6 +220,7 @@
 "Title.SelectShare"                         = "Select a Share";
 "Title.SelectSortOptions"                   = "Select Sort Options";
 "Title.SelectSubFolder"                     = "Select a Sub-Folder";
+"Title.SetTimePeriod"                       = "Set Time Period";
 "Title.Settings"                            = "Settings";
 "Title.TransferringFiles"                   = "Transferring files";
 "Title.Unknown"                             = "Unknown";
