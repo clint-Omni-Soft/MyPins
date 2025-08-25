@@ -92,7 +92,7 @@
 "ButtonTitle.MapType"                       = "Types de Carte";
 "ButtonTitle.Meters"                        = "Mètres";
 "ButtonTitle.MutedStandard"                 = "Standard en sourdine";
-"ButtonTitle.No"                            = "Non!";
+"ButtonTitle.No"                            = "Non";
 "ButtonTitle.OK"                            = "OK";
 "ButtonTitle.OnRemote"                      = "À distance";
 "ButtonTitle.OnThisDevice"                  = "Sur cet appareil";

@@ -772,7 +772,7 @@ extension ListTableViewController: UITableViewDelegate {
         datePickerViewController.lastModified = lastModified
 
         datePickerViewController.modalPresentationStyle = .formSheet  // .popover
-        datePickerViewController.preferredContentSize   = CGSize(width: 375, height: 260 )
+        datePickerViewController.preferredContentSize   = CGSize(width: 375, height: 296 )
 
         datePickerViewController.popoverPresentationController?.sourceRect = view.frame
         datePickerViewController.popoverPresentationController?.sourceView = view

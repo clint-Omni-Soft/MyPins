@@ -58,7 +58,9 @@ class DatePickerViewController: UIViewController {
         
         startingDatePicker.maximumDate = Date()
         startingDatePicker.minimumDate = Date.distantPast
-    }
+        
+        durationPickerView.layer.cornerRadius = 10
+  }
     
     
     override func viewDidAppear(_ animated: Bool) {

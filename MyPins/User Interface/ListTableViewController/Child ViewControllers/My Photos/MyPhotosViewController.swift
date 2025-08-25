@@ -93,9 +93,25 @@ class MyPhotosViewController: UIViewController {
     
     
     override func viewWillDisappear(_ animated: Bool) {
+        logTrace()
         super.viewWillDisappear(animated)
         
         notificationCenter.removeObserver( self )
+    }
+    
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
+        logTrace()
+        if playerLayer != nil {
+            playerLayer.removeFromSuperlayer()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
+                self.playerLayer.frame = self.myImageView.layer.bounds
+                self.myImageView.layer.addSublayer( self.playerLayer )
+            }
+
+        }
+        
     }
     
     
@@ -193,7 +209,7 @@ class MyPhotosViewController: UIViewController {
     // MARK: Utility Methods
     
     private func loadBarButtonItems() {
-        //        logTrace()
+//        logTrace()
         var leftBarButtonItems  = [UIBarButtonItem]()
         var rightBarButtonItems = [UIBarButtonItem]()
         

@@ -95,7 +95,6 @@ class SettingsViewController: UIViewController {
         logTrace()
         super.viewWillAppear( animated )
         
-        myActivityIndicator.isHidden = true
         myActivityIndicator.stopAnimating()
 
         if !pinCentral.stayOffline && flagIsPresentInUserDefaults( UserDefaultKeys.usingThumbnails ) && !flagIsPresentInUserDefaults( UserDefaultKeys.thumbnailsRemoved ) {
@@ -270,7 +269,6 @@ extension SettingsViewController: PinCentralDelegate {
 
             self.presentAlert(title: titleText, message: "" )
 
-            self.myActivityIndicator.isHidden = true
             self.myActivityIndicator.stopAnimating()
         }
         
@@ -282,7 +280,6 @@ extension SettingsViewController: PinCentralDelegate {
             let target    = self.onRemote ? NSLocalizedString( "LabelText.Remote", comment: "Remote" ) : NSLocalizedString( "LabelText.Device", comment: "Device" )
             let titleText = String( format: NSLocalizedString( "AlertTitle.RequestedImagesLoaded", comment: "Transferred %d of %d images requested to %@." ), self.imagesLoaded, self.imagesRequested.count, target )
 
-            self.myActivityIndicator.isHidden = true
             self.myActivityIndicator.stopAnimating()
             
             if self.displayingAlert {
@@ -365,17 +362,20 @@ extension SettingsViewController: UITableViewDelegate {
             ( alertAction ) in
             logTrace( "On remote Action" )
             self.onRemote = true
-            self.myActivityIndicator.isHidden = false
             self.myActivityIndicator.startAnimating()
 
-            self.pinCentral.fetchImageNamesFromRemote( self )
+            self.pinCentral.canSeeExternalStorage()    // clears the queue & restarts the session
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 ) {
+                self.pinCentral.fetchImageNamesFromRemote( self )
+            }
+            
         }
         
         let onThisDeviceAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OnThisDevice", comment: "On this device" ), style: .default ) {
             ( alertAction ) in
             logTrace( "On this device Action" )
             self.onRemote = false
-            self.myActivityIndicator.isHidden = false
             self.myActivityIndicator.startAnimating()
 
             let requestCount = self.scanForAndRequestMissingImages()
@@ -387,7 +387,6 @@ extension SettingsViewController: UITableViewDelegate {
 
                 self.presentAlert(title: titleText, message: "" )
 
-                self.myActivityIndicator.isHidden = true
                 self.myActivityIndicator.stopAnimating()
             }
             
@@ -514,25 +513,32 @@ extension SettingsViewController: UITableViewDelegate {
     private func scanForAndRequestMissingImages() -> Int {
         logTrace()
         var requestCount = 0
+        
+        imagesRequested.removeAll()
 
-        for array in pinCentral.pinArrayOfArrays {
-            for pin in array {
-                if let imageName = pin.imageName {
-                    if !imageName.isEmpty {
-                        let descriptor = pinCentral.shortDescriptionFor( pin )
-                        var imageCount = pinCentral.fetchMissingDeviceImages( imageName, descriptor, self )
-                        
-                        requestCount += imageCount
-                        
-                        while imageCount > 0 {
-                            imagesRequested.append( imageName )
-                            imageCount -= 1
+        self.pinCentral.canSeeExternalStorage()    // clears the queue & restarts the session
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 ) {
+            for array in self.pinCentral.pinArrayOfArrays {
+                for pin in array {
+                    if let imageName = pin.imageName {
+                        if !imageName.isEmpty {
+                            let descriptor = self.pinCentral.shortDescriptionFor( pin )
+                            var imageCount = self.pinCentral.fetchMissingDeviceImages( imageName, descriptor, self )
+                            
+                            requestCount += imageCount
+                            
+                            while imageCount > 0 {
+                                self.imagesRequested.append( imageName )
+                                imageCount -= 1
+                            }
+                            
                         }
                         
                     }
-                    
+                   
                 }
-               
+
             }
 
         }

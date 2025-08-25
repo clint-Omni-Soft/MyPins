@@ -92,7 +92,7 @@
 "ButtonTitle.MapType"                       = "Tipo de mapa";
 "ButtonTitle.Meters"                        = "Metros";
 "ButtonTitle.MutedStandard"                 = "Estándar silenciado";
-"ButtonTitle.No"                            = "¡No!";
+"ButtonTitle.No"                            = "No";
 "ButtonTitle.OK"                            = "DE ACUERDO";
 "ButtonTitle.OnRemote"                      = "En control remoto";
 "ButtonTitle.OnThisDevice"                  = "En este dispositivo";

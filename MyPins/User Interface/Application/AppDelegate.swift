@@ -18,23 +18,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     
     // MARK: Public Definitions
-    var hidePrimary = false
-    var mapView     : MapViewController!
-    var window      : UIWindow?
+    var hidePrimary        = false
+    var mapView            : MapViewController!
+    var splitViewController: UISplitViewController!
+    var window             : UIWindow?
     
     
     // MARK: Private Definitions
     private var locationManager    : CLLocationManager?
     private let notificationCenter = NotificationCenter.default
     private let pinCentral         = PinCentral.sharedInstance
-    private var splitViewController: UISplitViewController!
-
+    
+    private var activeWindow: UIWindow? {
+        get {
+            var myWindow = window
+            
+            if myWindow == nil {
+                let sceneDelegate = (UIApplication.shared.connectedScenes.first as? UIWindowScene)!.delegate as! SceneDelegate
+                myWindow = sceneDelegate.window
+            }
+            
+            return myWindow
+        }
+        
+    }
 
     
     // MARK: UIApplication Lifecycle Methods
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? ) -> Bool {
         LogCentral.sharedInstance.setupLogging()
+        logTrace()
 
         UNUserNotificationCenter.current().requestAuthorization( options: .badge ) { ( granted, error ) in
             logVerbose( "request to badge icon authorized[ %@ ]", stringFor( granted ) )
@@ -49,12 +63,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if pinCentral.dataStoreLocation != .device {
             showPleaseWaitScreen()
-        }
-        else {
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                getLinkToSplitViewController()
-            }
-            
         }
 
         if #available(iOS 15, *) {
@@ -81,14 +89,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    }
     
 
-    func applicationDidBecomeActive(_ application: UIApplication ) {
-    }
-    
-
-    func applicationDidEnterBackground(_ application: UIApplication ) {
-    }
-    
-
     func applicationWillTerminate(_ application: UIApplication ) {
         logTrace()
         pinCentral.enteringBackground()
@@ -98,8 +98,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: Public Interfaces
 
+    func configureSplitViewController() {
+        logTrace()
+        if haveLinkToSplitViewController() {
+            splitViewController.presentsWithGesture = false
+            
+            let minimumWidth = min( CGRectGetWidth( splitViewController.view.bounds ), CGRectGetHeight( splitViewController.view.bounds ) )
+            
+            splitViewController.minimumPrimaryColumnWidth = minimumWidth / 2
+            splitViewController.maximumPrimaryColumnWidth = minimumWidth;
+        }
+
+    }
+
+    
     func hidePrimaryView(_ isHidden: Bool ) {
-        if splitViewController != nil {
+        if haveLinkToSplitViewController() {
             hidePrimary = isHidden
 
             UIView.animate(withDuration: 0.5 ) { () -> Void in
@@ -115,21 +129,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         }
         
-//        logVerbose( "hidePrimary[ %@ ]", stringFor( hidePrimary ) )
     }
     
     
     func primaryIsHidden() -> Bool {
         var isHidden = true
         
-        if let splitVC = self.splitViewController {
-            isHidden = splitVC.isCollapsed
-            logVerbose( "instantiated - [ %@ ]", stringFor( isHidden ) )
+        if haveLinkToSplitViewController() {
+            isHidden = splitViewController.isCollapsed
         }
-        else {
-            logTrace( "NOT instantiated" )
-        }
-        
+
         return isHidden
     }
     
@@ -139,44 +148,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let     storyboardName = UIDevice.current.userInterfaceIdiom == .pad ? "Main_iPad" : "Main_iPhone"
         let     storyboard     = UIStoryboard(name: storyboardName, bundle: .main )
 
+        logVerbose( "[ %@ ]", storyboardName )
+        splitViewController = nil
         pinCentral.didOpenDatabase = false
         
         if let initialViewController = storyboard.instantiateInitialViewController() {
             pinCentral.pleaseWaiting = false
 
-            window?.rootViewController = initialViewController
-            window?.makeKeyAndVisible()
+            activeWindow?.rootViewController = initialViewController
+            activeWindow?.makeKeyAndVisible()
             
             if UIDevice.current.userInterfaceIdiom == .pad {
-                getLinkToSplitViewController()
+                configureSplitViewController()
             }
             
         }
-        
+        else {
+            logTrace( "ERROR!!!!  Unable to instantiate initial view controller!" )
+        }
+
     }
     
     
     
     // MARK: Utility Methods (Private)
     
-    private func getLinkToSplitViewController() {
-        DispatchQueue.main.asyncAfter(deadline: .now() ) {
-            if let splitVC = self.window!.rootViewController as? UISplitViewController {
-                self.splitViewController = splitVC
-                self.splitViewController.presentsWithGesture = false
-                
-                let minimumWidth = min( CGRectGetWidth(self.splitViewController.view.bounds), CGRectGetHeight(self.splitViewController.view.bounds) )
-                
-                self.splitViewController.minimumPrimaryColumnWidth = minimumWidth / 2
-                self.splitViewController.maximumPrimaryColumnWidth = minimumWidth;
-                logTrace( "Captured pointer to SplitViewController" )
+    private func haveLinkToSplitViewController() -> Bool {
+        var foundIt = true
+        
+        if splitViewController == nil {
+            if let splitVC = self.activeWindow?.rootViewController as? UISplitViewController {
+                splitViewController = splitVC
             }
             else {
-                logTrace( "ERROR!  Could NOT capture pointer to SplitViewController!" )
+                foundIt = false
+                logVerbose( "NOT instantiated!" )
             }
 
         }
-
+        
+        return foundIt
     }
     
     
@@ -187,8 +198,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let initialViewController = storyboard.instantiateInitialViewController() {
             pinCentral.pleaseWaiting = true
 
-            window?.rootViewController = initialViewController
-            window?.makeKeyAndVisible()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
+                self.activeWindow?.rootViewController = initialViewController
+                self.activeWindow?.makeKeyAndVisible()
+            }
+
         }
 
     }
@@ -217,11 +231,13 @@ extension AppDelegate: PinCentralDelegate {
         
         if pinCentral.dataStoreLocation == .device {
             if .pad == UIDevice.current.userInterfaceIdiom {
+                logTrace( "Posting pinsArrayReloaded" )
                 NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.pinsArrayReloaded ), object: self )
             }
 
         }
 
+        logTrace( "Posting ready" )
         NotificationCenter.default.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
     }
     

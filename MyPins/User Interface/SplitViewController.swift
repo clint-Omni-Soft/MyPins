@@ -12,19 +12,18 @@ import UIKit
 
 
 class SplitViewController: UISplitViewController {
-    
+
+    private let appDelegate = UIApplication.shared.delegate as! AppDelegate
+
     
     // MARK: UIViewController Lifecycle Methods
     
     override func viewDidLoad() {
-        logTrace()
         super.viewDidLoad()
-    }
-    
+        logTrace()
 
-    override func didReceiveMemoryWarning() {
-        logTrace( "MEMORY WARNING!!!" )
-        super.didReceiveMemoryWarning()
+        appDelegate.splitViewController = self
+        appDelegate.configureSplitViewController()
     }
     
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bjp-AP-9w6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bjp-AP-9w6">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -410,7 +410,7 @@
             <objects>
                 <viewController storyboardIdentifier="DatePickerViewController" id="WMx-MG-bf7" customClass="DatePickerViewController" customModule="MyPins" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Alx-J2-gyf">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="260"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="296"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WdT-ka-qBe" userLabel="titleLabel">
@@ -441,9 +441,10 @@
                                 </connections>
                             </datePicker>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MAV-2n-LjF" userLabel="durationPickerView">
-                                <rect key="frame" x="196.5" y="151" width="172.5" height="40"/>
+                                <rect key="frame" x="197" y="151" width="173" height="82"/>
+                                <color key="backgroundColor" systemColor="systemGray6Color"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="GNP-fB-YIC"/>
+                                    <constraint firstAttribute="height" constant="82" id="GNP-fB-YIC"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="dataSource" destination="WMx-MG-bf7" id="stZ-bd-zaW"/>
@@ -451,7 +452,7 @@
                                 </connections>
                             </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZgR-iF-rea" userLabel="cancelButton">
-                                <rect key="frame" x="16" y="205" width="100" height="35"/>
+                                <rect key="frame" x="16" y="241" width="100" height="35"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Button"/>
                                 <connections>
@@ -459,14 +460,14 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C12-MG-2vA" userLabel="spacerView">
-                                <rect key="frame" x="137.5" y="205" width="100" height="35"/>
+                                <rect key="frame" x="137.5" y="241" width="100" height="35"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="eGt-Ij-aeP"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sjX-e0-sf4" userLabel="okButton">
-                                <rect key="frame" x="259" y="205" width="100" height="35"/>
+                                <rect key="frame" x="259" y="241" width="100" height="35"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Button"/>
                                 <connections>
@@ -474,7 +475,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pfz-Kf-skR" userLabel="durationLabel">
-                                <rect key="frame" x="16" y="151" width="172.5" height="40"/>
+                                <rect key="frame" x="16" y="172" width="173" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="emi-Yr-Yae"/>
                                 </constraints>
@@ -486,14 +487,14 @@
                         <viewLayoutGuide key="safeArea" id="G7o-ho-Ftb"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Pfz-Kf-skR" firstAttribute="top" secondItem="obP-p2-LUi" secondAttribute="bottom" constant="23" id="2lq-Nc-b1d"/>
+                            <constraint firstItem="Pfz-Kf-skR" firstAttribute="top" secondItem="obP-p2-LUi" secondAttribute="bottom" constant="44" id="2lq-Nc-b1d"/>
                             <constraint firstItem="ZgR-iF-rea" firstAttribute="leading" secondItem="G7o-ho-Ftb" secondAttribute="leading" constant="16" id="3CS-S3-iGk"/>
                             <constraint firstItem="G7o-ho-Ftb" firstAttribute="trailing" secondItem="sjX-e0-sf4" secondAttribute="trailing" constant="16" id="ARJ-Qf-oCf"/>
                             <constraint firstItem="obP-p2-LUi" firstAttribute="top" secondItem="WdT-ka-qBe" secondAttribute="bottom" constant="8" symbolic="YES" id="BFZ-zR-imz"/>
                             <constraint firstItem="G7o-ho-Ftb" firstAttribute="trailing" secondItem="WdT-ka-qBe" secondAttribute="trailing" constant="16" id="Bl3-ew-D1k"/>
                             <constraint firstItem="MAV-2n-LjF" firstAttribute="top" secondItem="zyw-0r-Suj" secondAttribute="bottom" constant="23" id="Cdy-Tn-Jfz"/>
                             <constraint firstItem="Pfz-Kf-skR" firstAttribute="leading" secondItem="G7o-ho-Ftb" secondAttribute="leading" constant="16" id="GvO-RW-gn6"/>
-                            <constraint firstItem="G7o-ho-Ftb" firstAttribute="trailing" secondItem="MAV-2n-LjF" secondAttribute="trailing" constant="6" id="JFp-7U-BGv"/>
+                            <constraint firstItem="G7o-ho-Ftb" firstAttribute="trailing" secondItem="MAV-2n-LjF" secondAttribute="trailing" constant="5" id="JFp-7U-BGv"/>
                             <constraint firstItem="G7o-ho-Ftb" firstAttribute="bottom" secondItem="sjX-e0-sf4" secondAttribute="bottom" constant="20" id="JcJ-pv-XPg"/>
                             <constraint firstItem="zyw-0r-Suj" firstAttribute="leading" secondItem="obP-p2-LUi" secondAttribute="trailing" constant="8" symbolic="YES" id="Kr4-mk-vm6"/>
                             <constraint firstItem="MAV-2n-LjF" firstAttribute="width" secondItem="Pfz-Kf-skR" secondAttribute="width" id="KxV-LW-NGH"/>
@@ -515,7 +516,7 @@
                             <constraint firstItem="C12-MG-2vA" firstAttribute="centerX" secondItem="Alx-J2-gyf" secondAttribute="centerX" id="zbG-qS-xiN"/>
                         </constraints>
                     </view>
-                    <size key="freeformSize" width="375" height="260"/>
+                    <size key="freeformSize" width="375" height="296"/>
                     <connections>
                         <outlet property="cancelButton" destination="ZgR-iF-rea" id="KSE-tb-8gu"/>
                         <outlet property="durationLabel" destination="Pfz-Kf-skR" id="y4J-rr-d5U"/>
@@ -528,7 +529,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="02r-Fd-Jgi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1676" y="-2031.1844077961021"/>
+            <point key="canvasLocation" x="1676" y="-2014.9925037481262"/>
         </scene>
         <!--Settings-->
         <scene sceneID="kTo-qQ-bG9">
@@ -1735,7 +1736,7 @@
                                     <outlet property="delegate" destination="0t4-bh-AhY" id="RHb-Zc-0eN"/>
                                 </connections>
                             </tableView>
-                            <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="eTg-vn-MYW" userLabel="myActivityIndicator">
+                            <activityIndicatorView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="eTg-vn-MYW" userLabel="myActivityIndicator">
                                 <rect key="frame" x="169" y="315" width="37" height="37"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="37" id="ZK8-jY-sVl"/>
@@ -1791,10 +1792,13 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray5Color">
-            <color red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGray6Color">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGroupedBackgroundColor">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

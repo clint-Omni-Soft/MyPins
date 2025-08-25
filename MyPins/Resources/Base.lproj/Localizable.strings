@@ -92,7 +92,7 @@
 "ButtonTitle.MapType"                       = "Map Type";
 "ButtonTitle.Meters"                        = "Meters";
 "ButtonTitle.MutedStandard"                 = "Muted Standard";
-"ButtonTitle.No"                            = "No!";
+"ButtonTitle.No"                            = "No";
 "ButtonTitle.OK"                            = "OK";
 "ButtonTitle.OnRemote"                      = "On remote";
 "ButtonTitle.OnThisDevice"                  = "On this device";
