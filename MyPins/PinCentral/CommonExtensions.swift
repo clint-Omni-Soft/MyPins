@@ -912,7 +912,8 @@ extension PinCentral: NASCentralDelegate {
         logVerbose( "[ %@ ] by [ %@ ]", descriptionForCompare( didCompareLastUpdatedFiles ), lastUpdatedBy )
         
         externalDeviceLastUpdatedBy = lastUpdatedBy
-        
+        sessionActive               = true
+
         if didCompareLastUpdatedFiles == LastUpdatedFileCompareResult.deviceIsNewer {
             if deviceAccessControl.locked && deviceAccessControl.byMe {
                 deviceAccessControl.updating = true
@@ -1011,7 +1012,8 @@ extension PinCentral: NASCentralDelegate {
         
     func nasCentral(_ nasCentral: NASCentral, didEndSession: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didEndSession ) )
-        
+        sessionActive = false
+
         if backgroundTaskID != UIBackgroundTaskIdentifier.invalid {
             UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
             
@@ -1096,6 +1098,7 @@ extension PinCentral: NASCentralDelegate {
         }
         else if deviceAccessControl.locked && !deviceAccessControl.byMe {
             notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.externalDeviceLocked ), object: self )
+            sessionActive = true
         }
         else {
             nasCentral.compareLastUpdatedFiles( self )

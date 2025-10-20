@@ -42,6 +42,7 @@
 "AlertMessage.UnableToDeleteImage"          = "We were unable to delete the image you created.";
 "AlertMessage.UnableToFetchDevices"         = "Unable to fetch devices!";
 "AlertMessage.UnableToOpenShare"            = "Unable to open the selected share!";
+"AlertMessage.UnableToProcessYourRequest"   = "Sorry, but right now there is another process running that has the NAS locked.  Please try again later.";
 "AlertMessage.UpdatingExternalDevice"       = "Please wait while we update the database with the most recent changes.";
 
 "AlertTitle.ActionForEntry"                 = "What would you like to do with this entry?";
@@ -71,6 +72,7 @@
 "AlertTitle.SetupRequired"                  = "We need to change a few things ...";
 "AlertTitle.Success"                        = "Success!";
 "AlertTitle.TransferComplete"               = "Transfer Complete!";
+"AlertTitle.UnableToProcessYourRequest"     = "Unable to Process Your Request";
 "AlertTitle.Warning"                        = "Warning!";
 
 "ButtonTitle.Back"                          = "Back";

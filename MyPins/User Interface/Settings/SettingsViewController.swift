@@ -364,12 +364,22 @@ extension SettingsViewController: UITableViewDelegate {
             self.onRemote = true
             self.myActivityIndicator.startAnimating()
 
-            self.pinCentral.canSeeExternalStorage()    // clears the queue & restarts the session
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 ) {
-                self.pinCentral.fetchImageNamesFromRemote( self )
+            DispatchQueue.global(qos: .background).async {
+                if self.pinCentral.nasIsIdle() {
+                    self.pinCentral.fetchImageNamesFromRemote( self )
+                }
+                else {
+                    DispatchQueue.main.async {
+                        self.myActivityIndicator.stopAnimating()
+
+                        self.presentAlert( title:   NSLocalizedString( "AlertTitle.UnableToProcessYourRequest",   comment: "Unable to Process Your Request" ),
+                                           message: NSLocalizedString( "AlertMessage.UnableToProcessYourRequest", comment: "Sorry, but right now there is another process running that has the NAS locked.  Please try again later." ) )
+                    }
+
+                }
+
             }
-            
+
         }
         
         let onThisDeviceAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OnThisDevice", comment: "On this device" ), style: .default ) {
@@ -378,16 +388,34 @@ extension SettingsViewController: UITableViewDelegate {
             self.onRemote = false
             self.myActivityIndicator.startAnimating()
 
-            let requestCount = self.scanForAndRequestMissingImages()
-            // the download progress is tracked via the pinCentral(didFetchImage::) method which will hide the activityIndicator when we finish
+            DispatchQueue.global(qos: .background).async {
+                if self.pinCentral.nasIsIdle() {
+                    let requestCount = self.scanForAndRequestMissingImages()
+                    // the download progress is tracked via the pinCentral(didFetchImage::) method which will hide the activityIndicator when we finish
 
-            if requestCount == 0 {
-                let target    = self.onRemote ? NSLocalizedString( "LabelText.Remote", comment: "Remote" ) : NSLocalizedString( "LabelText.Device", comment: "Device" )
-                let titleText = String( format: NSLocalizedString( "AlertTitle.NoMissingImages", comment: "You have NO missing images on the %@." ), target )
+                    if requestCount == 0 {
+                        let target    = self.onRemote ? NSLocalizedString( "LabelText.Remote", comment: "Remote" ) : NSLocalizedString( "LabelText.Device", comment: "Device" )
+                        let titleText = String( format: NSLocalizedString( "AlertTitle.NoMissingImages", comment: "You have NO missing images on the %@." ), target )
 
-                self.presentAlert(title: titleText, message: "" )
+                        DispatchQueue.main.async {
+                            self.presentAlert(title: titleText, message: "" )
 
-                self.myActivityIndicator.stopAnimating()
+                            self.myActivityIndicator.stopAnimating()
+                        }
+
+                    }
+
+                }
+                else {
+                    DispatchQueue.main.async {
+                        self.myActivityIndicator.stopAnimating()
+
+                        self.presentAlert( title:   NSLocalizedString( "AlertTitle.UnableToProcessYourRequest",   comment: "Unable to Process Your Request" ),
+                                           message: NSLocalizedString( "AlertMessage.UnableToProcessYourRequest", comment: "Sorry, but right now there is another process running that has the NAS locked.  Please try again later." ) )
+                    }
+
+                }
+
             }
             
         }

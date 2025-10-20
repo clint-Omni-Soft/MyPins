@@ -43,15 +43,15 @@ class ListTableViewController: UIViewController {
         static let sortOptions      = "SortOptionsViewController"
     }
     
-    private let appDelegate         = UIApplication.shared.delegate as! AppDelegate
-    private let deviceAccessControl = DeviceAccessControl.sharedInstance
-    private let pinCentral          = PinCentral.sharedInstance
-    private var sectionIndexTitles  : [String] = []
-    private var sectionTitleIndexes : [Int]    = []
-    private var showAllSections     = true
-    private let sortOptions         = [SortOptions.byDateLastModified,     SortOptions.byName,     SortOptions.byType    ]
-    private let sortOptionNames     = [SortOptionNames.byDateLastModified, SortOptionNames.byName, SortOptionNames.byType]
-    private let userDefaults        = UserDefaults.standard
+    private let appDelegate             = UIApplication.shared.delegate as! AppDelegate
+    private let deviceAccessControl     = DeviceAccessControl.sharedInstance
+    private let pinCentral              = PinCentral.sharedInstance
+    private var sectionIndexTitles      = [String]()
+    private var sectionTitleIndexes     = [Int]()
+    private var showAllSections         = true
+    private let sortOptions             = [SortOptions.byDateLastModified,     SortOptions.byName,     SortOptions.byType    ]
+    private let sortOptionNames         = [SortOptionNames.byDateLastModified, SortOptionNames.byName, SortOptionNames.byType]
+    private let userDefaults            = UserDefaults.standard
     
     // This is used only when we are sorting on Type
     private var selectedSection: Int {
@@ -161,8 +161,15 @@ class ListTableViewController: UIViewController {
     
     
     @objc func ready( notification: NSNotification ) {
+        if pinCentral.resigningActive {
+            logTrace( "resigningActive" )
+            return
+        }
+
         // We get this one when (a) the pin array is reloaded and (b) when we fail to load an image
         logTrace()
+        loadBarButtonItems()
+        myTableView.reloadData()
     }
 
 
@@ -546,14 +553,18 @@ extension ListTableViewController: PinCentralDelegate {
     
     func pinCentralDidReloadPinArray(_ pinCentral: PinCentral ) {
         logVerbose( "loaded [ %d ] pins", pinCentral.numberOfPinsLoaded )
-        buildSectionTitleIndex()
-        configureSortButtonTitle()
-        loadBarButtonItems()
 
-        myTableView.reloadData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {        // Increased delay to allow PinCentral more time to complete the re-sort of all pins.
+            self.buildSectionTitleIndex()
+            self.configureSortButtonTitle()
+            self.loadBarButtonItems()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 ) {
-            self.scrollToLastSelectedItem()
+            self.myTableView.reloadData()
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
+                self.scrollToLastSelectedItem()
+            }
+
         }
 
     }
@@ -622,6 +633,11 @@ extension ListTableViewController: UITableViewDataSource {
         let     pin         = pinCentral.pinAt( indexPath )
         
         pinListCell.initializeWith( pin )
+        
+        if !pinCentral.stayOffline && pinCentral.dataStoreLocation != .device && pinListCell.imageState == ImageState.missing {
+            let descriptor = pinCentral.shortDescriptionFor( pin )
+            let _          = pinCentral.fetchMissingDeviceImages( pinListCell.imageName, descriptor, self )
+        }
         
         return cell
     }

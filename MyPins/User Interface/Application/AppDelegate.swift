@@ -56,15 +56,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.pinCentral.userNotificationsAllowed = granted
         }
         
-        pinCentral.enteringForeground()
-        
         locationManager = CLLocationManager()
         locationManager?.requestWhenInUseAuthorization()
         
-        if pinCentral.dataStoreLocation != .device {
-            showPleaseWaitScreen()
-        }
-
         if #available(iOS 15, *) {
             UITableView.appearance().sectionHeaderTopPadding = 0.0
         }
@@ -144,7 +138,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     func switchToMainApp() {
-        logTrace()
         let     storyboardName = UIDevice.current.userInterfaceIdiom == .pad ? "Main_iPad" : "Main_iPhone"
         let     storyboard     = UIStoryboard(name: storyboardName, bundle: .main )
 
@@ -157,10 +150,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             activeWindow?.rootViewController = initialViewController
             activeWindow?.makeKeyAndVisible()
-            
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                configureSplitViewController()
-            }
             
         }
         else {

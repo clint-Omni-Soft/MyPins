@@ -414,8 +414,7 @@ class MapViewController: UIViewController {
     
     
     private func refreshMapAnnotations() {
-        logTrace()
-        var     annotationArray:[PointAnnotation] = Array.init()
+        var annotationArray:[PointAnnotation] = Array.init()
         
         myMapView.removeAnnotations( myMapView.annotations )
         

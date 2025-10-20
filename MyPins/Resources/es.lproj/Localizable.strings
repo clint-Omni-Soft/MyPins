@@ -42,6 +42,7 @@
 "AlertMessage.UnableToDeleteImage"          = "No hemos podido eliminar la imagen que ha creado.";
 "AlertMessage.UnableToFetchDevices"         = "¡No se pueden recuperar dispositivos!";
 "AlertMessage.UnableToOpenShare"            = "¡No se puede abrir el recurso compartido seleccionado!";
+"AlertMessage.UnableToProcessYourRequest"   = "Lo sentimos, pero ahora mismo hay otro proceso en ejecución que tiene el NAS bloqueado. Inténtalo de nuevo más tarde.";
 "AlertMessage.UpdatingExternalDevice"       = "Espere mientras actualizamos la base de datos con los cambios más recientes.";
 
 "AlertTitle.ActionForEntry"                 = "¿Qué te gustaría hacer con esta entrada?";
@@ -71,6 +72,7 @@
 "AlertTitle.SetupRequired"                  = "Necesitamos cambiar algunas cosas...";
 "AlertTitle.Success"                        = "¡Éxito!";
 "AlertTitle.TransferComplete"               = "¡Transferencia completa!";
+"AlertTitle.UnableToProcessYourRequest"     = "No se puede procesar su solicitud";
 "AlertTitle.Warning"                        = "¡Advertencia!";
 
 "ButtonTitle.Back"                          = "Espalda";

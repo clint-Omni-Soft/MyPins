@@ -14,6 +14,7 @@ class ListTableViewControllerCell: UITableViewCell {
 
     // MARK: Public Variables
     
+    var imageName  = ""
     var imageState = ImageState.noName
 
     @IBOutlet weak var dateLabel  : UILabel!
@@ -62,7 +63,9 @@ class ListTableViewControllerCell: UITableViewCell {
         imageState        = ImageState.noName
         myImageView.image = UIImage( named: GlobalConstants.noImage )
 
-        if let imageName = pin.imageName {
+        if let name = pin.imageName {
+            imageName = name
+            
             if !imageName.isEmpty {
                 let result       = pinCentral.extractThumbnailFrom( imageName, pinCentral.shortDescriptionFor( pin ) )
                 let imageLoaded  = result.0

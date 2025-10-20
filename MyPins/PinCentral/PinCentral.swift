@@ -60,6 +60,7 @@ class PinCentral: NSObject {
     var pleaseWaiting               = false
     var resigningActive             = false
     var sectionTitleArray: [String] = []
+    var sessionActive               = false
     var stayOffline                 = false
     var userNotificationsAllowed    = false
 
@@ -165,6 +166,22 @@ class PinCentral: NSObject {
     }
     
     
+    var nasQueueContents: String {
+        get {
+            nasCentral.queueContents()
+        }
+        
+    }
+    
+    
+    var nasQueueIsEmpty: Bool {
+        get {
+            return nasCentral.queueIsEmpty()
+        }
+        
+    }
+
+    
     var sortDescriptor: (String, Bool) {
         get {
             if let descriptorString = userDefaults.string(forKey: UserDefaultKeys.currentSortOption ) {
@@ -195,6 +212,7 @@ class PinCentral: NSObject {
     
     // MARK: Private Variables
     
+    private var canSeeNasInProgress         = false
     private var databaseUpdated             = false
     private var dataStoreLocationBacking    = DataStoreLocation.notAssigned
     private var locationManager             : CLLocationManager?
@@ -295,7 +313,13 @@ class PinCentral: NSObject {
         
         notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.enteringBackground ), object: self )
         stopTimer()
+
         locationManager?.stopUpdatingLocation()
+
+        if dataStoreLocation != .device {
+            logVerbose( "NAS queue contents: [ %@ ]", nasCentral.queueContents() )
+        }
+        
     }
     
     
@@ -304,36 +328,101 @@ class PinCentral: NSObject {
         resigningActive = false
         
         notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.enteringForeground ), object: self )
-        canSeeExternalStorage()     // TODO: See if we need to check stayOffline
+        canSeeExternalStorage()
+        
         locationManager?.startUpdatingLocation()
     }
     
     
-    func canSeeExternalStorage() {
+   func canSeeExternalStorage() {
         if dataStoreLocation == .device {
             deviceAccessControl.initForDevice()
             logVerbose( "on device\n    %@", deviceAccessControl.descriptor() )
             return
         }
             
-        logVerbose( "[ %@ ]", nameForDataStoreLocation( dataStoreLocation ) )
-
         // We must be on the NAS
-        if !stayOffline {
-            if didOpenDatabase && updatedOffline {
-                self.persistentContainer.viewContext.perform {
-                    self.fetchAllImageRequestObjects()
+        logVerbose( "dataStoreLocation[ %@ ]", nameForDataStoreLocation( dataStoreLocation ) )
+
+        if stayOffline {
+            logTrace( "stayOffline ... do nothing!" )
+        }
+        else {
+            if sessionActive {
+                if nasCentral.queueIsEmpty() {
+                    logTrace( "sessionActive & queueIsEmpty ..." )
+
+                    // Add app specific stuff here
+                    self.persistentContainer.viewContext.perform {
+                        self.fetchAllImageRequestObjects()
+                    }
+
                 }
-                
+                else {
+                    if nasCentral.queueContents() == "CanSeeNasFolders" {
+                        logTrace( "Do nothing ... CanSeeNasFolders already in queue" )
+                    }
+                    else {
+                        logVerbose( "NAS is busy ... queue[ %@ ]", nasCentral.queueContents() )
+                    }
+
+                }
+
             }
-            
-            nasCentral.emptyQueue()
-            nasCentral.canSeeNasFolders( self )
+            else {  // !sessionActive
+                logTrace( "Starting a new session" )
+                if !nasQueueIsEmpty {
+                    nasCentral.emptyQueue()
+                }
+
+                nasCentral.canSeeNasFolders( self )
+           }
+
         }
 
     }
+
+
+    func nasIsIdle() -> Bool {      // Must be called from inside DispatchQueue.global(qos: .background).async {}
+        logVerbose( "sessionActive[ %@ ], nasQueueContents[ %@ ]", stringFor( sessionActive ), nasQueueContents )
+        var nasIsIdle  = false
+        var retryCount = 0
+
+        if !sessionActive {
+            if nasCentral.queueIsEmpty() {
+                nasCentral.canSeeNasFolders( self )
+            }
+            else {
+                if nasCentral.queueContents() == "CanSeeNasFolders" {
+                    logTrace( "Do nothing ... CanSeeNasFolders already in queue" )
+                }
+                else {
+                    logVerbose( "ERROR!!!  Emptying queue ... nasQueueContents[ %@ ]", nasCentral.queueContents() )
+                    nasCentral.emptyQueue()
+                    nasCentral.canSeeNasFolders( self )
+                }
+
+            }
+                
+        }
+
+        while retryCount < 10 {
+            if sessionActive && nasQueueIsEmpty {
+                nasIsIdle = true
+                break
+            }
+            
+            retryCount += 1
+            sleep( 2 )
+            logVerbose( "retryCount[ %d ] ... sessionActive[ %@ ]  queue[ %@ ]", retryCount, stringFor( sessionActive ), nasQueueContents )
+        }
+
+        logVerbose( "[ %@ ]", stringFor( nasIsIdle ) )
+        
+        return nasIsIdle
+    }
     
-    
+
 
     // MARK: Database Access Methods (Public)
     
@@ -1082,6 +1171,7 @@ extension PinCentral {
                     else {  // .nas
                         logTrace( "ending NAS session" )
                         self.nasCentral.endSession( self )
+                        self.sessionActive = false
                     }
                     
                 }
