@@ -806,7 +806,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.4;
+				MARKETING_VERSION = 5.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -838,7 +838,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.4;
+				MARKETING_VERSION = 5.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

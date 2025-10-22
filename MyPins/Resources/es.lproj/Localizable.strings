@@ -22,6 +22,7 @@
 "AlertMessage.ExternalDriveLocked"          = "La base de datos en su disco externo está bloqueada por otro usuario [ %@ ]. Puede esperar hasta que el otro usuario cierre la aplicación (lo que la desbloquea) o realizar cambios sin conexión y cargarlos cuando la unidad ya no esté bloqueada.";
 "AlertMessage.ImageSaveFailed"              = "No pudimos guardar la imagen que seleccionó.";
 "AlertMessage.InvalidMediaType"             = "No podemos guardar el artículo que seleccionaste. Solo podemos guardar fotos.";
+"AlertMessage.LocationAccessDenied"         = "Habilite los servicios de ubicación para esta aplicación en Configuración.";
 "AlertMessage.LocationNotYetSet"            = "Su ubicación aún no ha sido establecida.  Por favor, inténtelo de nuevo más tarde.";
 "AlertMessage.NameCannotBeBlank"            = "El campo de nombre no se puede dejar en blanco";
 "AlertMessage.NoAccess"                     = "¡Error de inicio de sesion! Inténtalo de nuevo.";
@@ -60,6 +61,7 @@
 "AlertTitle.GotAQuestion"                   = "¿Tienes una pregunta?";
 "AlertTitle.ImageDisposition"               = "¿Qué te gustaría hacer con esta imagen?";
 "AlertTitle.LastUpdateDidNotComplete"       = "¡La última actualización NO se completó!";
+"AlertTitle.LocationAccessDenied"           = "¡Acceso a servicios de ubicación denegado!";
 "AlertTitle.MappingCannotBeBlank"           = "¡El descriptor de asignación no puede estar en blanco!";
 "AlertTitle.NoMissingImages"                = "No tienes ninguna imagen faltante en %@.";
 "AlertTitle.NoPhotosFound"                  = "¡No se encontraron fotos!";

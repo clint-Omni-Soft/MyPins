@@ -22,6 +22,7 @@
 "AlertMessage.ExternalDriveLocked"          = "The database on your external drive is locked by another user [ %@ ].  You can wait until the other user closes the app (which unlocks it) or make you changes offline and upload them when the drive is no longer locked.";
 "AlertMessage.ImageSaveFailed"              = "We were unable to save the image you selected.";
 "AlertMessage.InvalidMediaType"             = "We can't save the item you selected.  We can only save photos.";
+"AlertMessage.LocationAccessDenied"         = "Please enable location services for this app in Settings.";
 "AlertMessage.LocationNotYetSet"            = "Your location has not yet been established.  Please try again later.";
 "AlertMessage.NameCannotBeBlank"            = "Name field cannot be left blank";
 "AlertMessage.NoAccess"                     = "Login failed!  Please try again.";
@@ -60,6 +61,7 @@
 "AlertTitle.GotAQuestion"                   = "Got a question?";
 "AlertTitle.ImageDisposition"               = "What would you like to do with this image?";
 "AlertTitle.LastUpdateDidNotComplete"       = "The Last Update Did NOT Complete!";
+"AlertTitle.LocationAccessDenied"           = "Access to location serivces denied!";
 "AlertTitle.MappingCannotBeBlank"           = "Mapping Descriptor Cannot be Blank!";
 "AlertTitle.NoMissingImages"                = "You have NO missing images on the %@.";
 "AlertTitle.NoPhotosFound"                  = "No Photos Found!";

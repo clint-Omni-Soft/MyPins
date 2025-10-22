@@ -22,6 +22,7 @@
 "AlertMessage.ExternalDriveLocked"          = "La base de données de votre disque externe est verrouillée par un autre utilisateur [ %@ ]. Vous pouvez attendre que l'autre utilisateur ferme l'application (ce qui la déverrouille) ou apporter des modifications hors ligne et les télécharger lorsque le lecteur n'est plus verrouillé.";
 "AlertMessage.ImageSaveFailed"              = "Nous n'avons pas pu enregistrer l'image que vous avez sélectionnée.";
 "AlertMessage.InvalidMediaType"             = "Nous ne pouvons pas enregistrer l'article que vous avez sélectionné. Nous pouvons seulement enregistrer des photos.";
+"AlertMessage.LocationAccessDenied"         = "Veuillez activer les services de localisation pour cette application dans les paramètres.";
 "AlertMessage.LocationNotYetSet"            = "Votre position n'a pas encore été établie.  Veuillez réessayer plus tard.";
 "AlertMessage.NameCannotBeBlank"            = "Le champ Nom ne peut pas être laissé vide";
 "AlertMessage.NoAccess"                     = "Échec de la connexion! Veuillez réessayer.";
@@ -60,6 +61,7 @@
 "AlertTitle.GotAQuestion"                   = "Tu as une question?";
 "AlertTitle.ImageDisposition"               = "Que voudriez-vous faire avec cette image?";
 "AlertTitle.LastUpdateDidNotComplete"       = "La dernière mise à jour n'a PAS été terminée!";
+"AlertTitle.LocationAccessDenied"           = "Accès aux services de localisation refusé !";
 "AlertTitle.MappingCannotBeBlank"           = "Le descripteur de mappage ne peut pas être vide!";
 "AlertTitle.NoMissingImages"                = "Il n'y a AUCUNE image manquante sur le %@";
 "AlertTitle.NoPhotosFound"                  = "Aucune photo trouvée !";

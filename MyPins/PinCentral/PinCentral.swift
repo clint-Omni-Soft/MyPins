@@ -62,6 +62,7 @@ class PinCentral: NSObject {
     var sectionTitleArray: [String] = []
     var sessionActive               = false
     var stayOffline                 = false
+    var useOfLocationAuthorized     = false
     var userNotificationsAllowed    = false
 
     
@@ -314,7 +315,9 @@ class PinCentral: NSObject {
         notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.enteringBackground ), object: self )
         stopTimer()
 
-        locationManager?.stopUpdatingLocation()
+        if useOfLocationAuthorized {
+            locationManager?.stopUpdatingLocation()
+        }
 
         if dataStoreLocation != .device {
             logVerbose( "NAS queue contents: [ %@ ]", nasCentral.queueContents() )
@@ -330,7 +333,10 @@ class PinCentral: NSObject {
         notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.enteringForeground ), object: self )
         canSeeExternalStorage()
         
-        locationManager?.startUpdatingLocation()
+        if useOfLocationAuthorized {
+            locationManager?.startUpdatingLocation()
+        }
+        
     }
     
     
@@ -970,16 +976,15 @@ class PinCentral: NSObject {
     
 
     private func setupLocationManager() {
+        currentAltitude = 0.0
+        currentLocation = CLLocationCoordinate2DMake( 0.0, 0.0 )
         locationManager = CLLocationManager()
         
         if CLLocationManager.locationServicesEnabled() {
-            locationManager?.delegate = self
+            locationManager?.delegate        = self
             locationManager?.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            locationManager?.startUpdatingLocation()
         }
         
-        currentAltitude = 0.0
-        currentLocation = CLLocationCoordinate2DMake( 0.0, 0.0 )
     }
 
     
@@ -1094,6 +1099,18 @@ class PinCentral: NSObject {
 // MARK: CLLocationManagerDelegate Methods
 
 extension PinCentral: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus ) {
+        useOfLocationAuthorized = false
+
+        if status == .authorizedAlways || status == .authorizedWhenInUse {
+            useOfLocationAuthorized = true
+            manager.startUpdatingLocation()
+        }
+        
+        logVerbose( "useOfLocationAuthorized[ %@ ]", stringFor( useOfLocationAuthorized ) )
+    }
+    
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation] ) {
         guard let currentLocation: CLLocationCoordinate2D = manager.location?.coordinate else {

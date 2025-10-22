@@ -51,7 +51,7 @@ class MapViewController: UIViewController {
     private let deviceAccessControl      = DeviceAccessControl.sharedInstance
     private var ignoreRefresh            = false
     private var locationEstablished      = false
-    private var locationManager          : CLLocationManager?
+    private var locationManager          : CLLocationManager!
     private let notificationCenter       = NotificationCenter.default
     private let pinCentral               = PinCentral.sharedInstance
     private var primaryWindowIsHidden    = false
@@ -81,7 +81,7 @@ class MapViewController: UIViewController {
         locationManager = CLLocationManager()
         
         locationManager?.delegate = self
-        locationManager?.startUpdatingLocation()
+        locationManager?.requestWhenInUseAuthorization()
         
         locationEstablished = false
     }
@@ -512,6 +512,25 @@ class MapViewController: UIViewController {
 // MARK: CLLocationManagerDelegate Methods
 
 extension MapViewController: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus ) {
+        if status == .authorizedAlways || status == .authorizedWhenInUse {
+            logTrace( "useOfLocationAuthorized")
+            pinCentral.useOfLocationAuthorized = true
+            locationManager.startUpdatingLocation()
+        }
+        else {
+            pinCentral.useOfLocationAuthorized = false
+            
+            DispatchQueue.main.asyncAfter( deadline: .now() + 0.1 ) {
+                self.presentAlert( title  : NSLocalizedString( "AlertTitle.LocationAccessDenied",   comment: "Access to location serivces denied!" ),
+                                   message: NSLocalizedString( "AlertMessage.LocationAccessDenied", comment: "Please enable location services for this app in Settings." ) )
+            }
+
+        }
+        
+    }
+    
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error ) {
         if !pinCentral.resigningActive {
