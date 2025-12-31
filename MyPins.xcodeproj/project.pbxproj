@@ -34,6 +34,7 @@
 		F47571FB2A12E782002E7E18 /* NasDriveSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47571FA2A12E782002E7E18 /* NasDriveSelectorViewController.swift */; };
 		F47571FE2A12E7BE002E7E18 /* NasLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47571FD2A12E7BE002E7E18 /* NasLoginViewController.swift */; };
 		F4766CE7243D238A0054CD97 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4766CE6243D238A0054CD97 /* Logger.swift */; };
+		F4779AB72EF085DB003457C9 /* LocationPhoto+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4779AB52EF085DB003457C9 /* LocationPhoto+CoreDataProperties.swift */; };
 		F4820DFE206998E800780C2D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4820DFC206998E800780C2D /* Localizable.strings */; };
 		F483C53B2671812600224D53 /* GlobalDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F483C53A2671812600224D53 /* GlobalDefinitions.swift */; };
 		F48A45C720698D0400C27F03 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F48A45C920698D0400C27F03 /* Main_iPhone.storyboard */; };
@@ -41,13 +42,14 @@
 		F48C23E92E1C6E0B002F67C5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48C23E82E1C6E0B002F67C5 /* SceneDelegate.swift */; };
 		F49766AD205B11AE00A76F9D /* PointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49766AC205B11AE00A76F9D /* PointAnnotation.swift */; };
 		F497BAD829353CAC00878E1F /* LocationNotesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F497BAD729353CAC00878E1F /* LocationNotesTableViewCell.swift */; };
-		F497BAE32935493200878E1F /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F497BAE22935493200878E1F /* Pin+CoreDataProperties.swift */; };
 		F497BAE529355B4800878E1F /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F497BAE429355B4800878E1F /* NotesViewController.swift */; };
 		F4982F6A207BEF9B00A30D40 /* PinColorSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */; };
 		F4982F6C207C21B900A30D40 /* NSLayoutContraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */; };
 		F49B9A59207D406B007598F9 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49B9A58207D406B007598F9 /* AboutViewController.swift */; };
 		F49B9A5B207D587E007598F9 /* appIcon MASTER in Resources */ = {isa = PBXBuildFile; fileRef = F49B9A5A207D587D007598F9 /* appIcon MASTER */; };
 		F49F1AC82A12E2B8000AD67B /* PleaseWaitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49F1AC72A12E2B8000AD67B /* PleaseWaitViewController.swift */; };
+		F49FCCED2ECFBE9800848E78 /* LocationPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49FCCE92ECFBE9800848E78 /* LocationPhoto.swift */; };
+		F49FCCF82ECFBF7500848E78 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49FCCF42ECFBF7500848E78 /* Pin+CoreDataProperties.swift */; };
 		F4A449222D0E5E28008F429F /* launchScreenImage.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A449212D0E5E28008F429F /* launchScreenImage.png */; };
 		F4A6552929AEB23400DDC813 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A6552829AEB23400DDC813 /* LogViewController.swift */; };
 		F4AD5AC22D9E00CB007B95AB /* MyPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD5AC12D9E00CB007B95AB /* MyPhotosViewController.swift */; };
@@ -62,6 +64,7 @@
 		F4B47FF9205746A80027755B /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B47FF7205746A80027755B /* Pin.swift */; };
 		F4B76F5A29CCFB64002D2060 /* PleaseWait.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4B76F5929CCFB64002D2060 /* PleaseWait.storyboard */; };
 		F4B76F6029CD06BA002D2060 /* UIImage+Cropping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B76F5F29CD06BA002D2060 /* UIImage+Cropping.swift */; };
+		F4C5F1E82EE3AC83009E526E /* MyPhotosSectionHeaderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5F1E72EE3AC83009E526E /* MyPhotosSectionHeaderCollectionViewCell.swift */; };
 		F4CACD9D29D39F8E00BCFF79 /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CACD9C29D39F8E00BCFF79 /* UIKitExtensions.swift */; };
 		F4D7FE0422D91EEE00D61B8B /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */; };
 		F4EB06A52A00575000B159E1 /* PinColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB06A32A00575000B159E1 /* PinColor.swift */; };
@@ -113,6 +116,8 @@
 		F47571FA2A12E782002E7E18 /* NasDriveSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NasDriveSelectorViewController.swift; sourceTree = "<group>"; };
 		F47571FD2A12E7BE002E7E18 /* NasLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NasLoginViewController.swift; sourceTree = "<group>"; };
 		F4766CE6243D238A0054CD97 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		F4779AAF2EF0850D003457C9 /* MyPins 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MyPins 6.xcdatamodel"; sourceTree = "<group>"; };
+		F4779AB52EF085DB003457C9 /* LocationPhoto+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocationPhoto+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F4820DFD206998E800780C2D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F4820E022069991700780C2D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F4820E032069996D00780C2D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -129,13 +134,15 @@
 		F49766AC205B11AE00A76F9D /* PointAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotation.swift; sourceTree = "<group>"; };
 		F497BAD729353CAC00878E1F /* LocationNotesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationNotesTableViewCell.swift; sourceTree = "<group>"; };
 		F497BAD9293546DE00878E1F /* MyPins 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MyPins 2.xcdatamodel"; sourceTree = "<group>"; };
-		F497BAE22935493200878E1F /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F497BAE429355B4800878E1F /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		F4982F69207BEF9B00A30D40 /* PinColorSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinColorSelectorViewController.swift; sourceTree = "<group>"; };
 		F4982F6B207C21B900A30D40 /* NSLayoutContraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutContraint+Extension.swift"; sourceTree = "<group>"; };
 		F49B9A58207D406B007598F9 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		F49B9A5A207D587D007598F9 /* appIcon MASTER */ = {isa = PBXFileReference; lastKnownFileType = file; name = "appIcon MASTER"; path = "AppIcon/appIcon MASTER"; sourceTree = "<group>"; };
 		F49F1AC72A12E2B8000AD67B /* PleaseWaitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PleaseWaitViewController.swift; sourceTree = "<group>"; };
+		F49FCCE82ECFBC8700848E78 /* MyPins 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MyPins 5.xcdatamodel"; sourceTree = "<group>"; };
+		F49FCCE92ECFBE9800848E78 /* LocationPhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPhoto.swift; sourceTree = "<group>"; };
+		F49FCCF42ECFBF7500848E78 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F4A449212D0E5E28008F429F /* launchScreenImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launchScreenImage.png; sourceTree = "<group>"; };
 		F4A6552829AEB23400DDC813 /* LogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
 		F4AD5AC12D9E00CB007B95AB /* MyPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPhotosViewController.swift; sourceTree = "<group>"; };
@@ -151,6 +158,7 @@
 		F4B47FF7205746A80027755B /* Pin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 		F4B76F5929CCFB64002D2060 /* PleaseWait.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PleaseWait.storyboard; sourceTree = "<group>"; };
 		F4B76F5F29CD06BA002D2060 /* UIImage+Cropping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Cropping.swift"; sourceTree = "<group>"; };
+		F4C5F1E72EE3AC83009E526E /* MyPhotosSectionHeaderCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPhotosSectionHeaderCollectionViewCell.swift; sourceTree = "<group>"; };
 		F4CACD9C29D39F8E00BCFF79 /* UIKitExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtensions.swift; sourceTree = "<group>"; };
 		F4D7FE0322D91EEE00D61B8B /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		F4EB06A22A00550200B159E1 /* MyPins 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MyPins 3.xcdatamodel"; sourceTree = "<group>"; };
@@ -395,6 +403,7 @@
 			children = (
 				F4AD5AC12D9E00CB007B95AB /* MyPhotosViewController.swift */,
 				F4AD5AC32D9E052F007B95AB /* MyPhotosCollectionViewCell.swift */,
+				F4C5F1E72EE3AC83009E526E /* MyPhotosSectionHeaderCollectionViewCell.swift */,
 			);
 			path = "My Photos";
 			sourceTree = "<group>";
@@ -425,8 +434,10 @@
 			children = (
 				F4B0B71F2A0432CE007D78C7 /* ImageRequest.swift */,
 				F4B0B7202A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift */,
+				F49FCCE92ECFBE9800848E78 /* LocationPhoto.swift */,
+				F4779AB52EF085DB003457C9 /* LocationPhoto+CoreDataProperties.swift */,
 				F4B47FF7205746A80027755B /* Pin.swift */,
-				F497BAE22935493200878E1F /* Pin+CoreDataProperties.swift */,
+				F49FCCF42ECFBF7500848E78 /* Pin+CoreDataProperties.swift */,
 				F4EB06A32A00575000B159E1 /* PinColor.swift */,
 				F4EB06A42A00575000B159E1 /* PinColor+CoreDataProperties.swift */,
 			);
@@ -565,9 +576,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4C5F1E82EE3AC83009E526E /* MyPhotosSectionHeaderCollectionViewCell.swift in Sources */,
 				F47571F82A12E750002E7E18 /* TransferProgressViewController.swift in Sources */,
 				F497BAD829353CAC00878E1F /* LocationNotesTableViewCell.swift in Sources */,
-				F497BAE32935493200878E1F /* Pin+CoreDataProperties.swift in Sources */,
 				F4B47FEB205734880027755B /* ListTableViewController.swift in Sources */,
 				F47571EE2A12E4BF002E7E18 /* DeviceAccessControl.swift in Sources */,
 				F4A6552929AEB23400DDC813 /* LogViewController.swift in Sources */,
@@ -599,7 +610,9 @@
 				F47571EC2A12E447002E7E18 /* CloudCentral.swift in Sources */,
 				F47571F52A12E71D002E7E18 /* DataStoreLocationViewController.swift in Sources */,
 				F4B0B7222A0432CE007D78C7 /* ImageRequest+CoreDataProperties.swift in Sources */,
+				F4779AB72EF085DB003457C9 /* LocationPhoto+CoreDataProperties.swift in Sources */,
 				F403EF8822C17780000D9ABD /* LocationEditorViewController.swift in Sources */,
+				F49FCCED2ECFBE9800848E78 /* LocationPhoto.swift in Sources */,
 				F48C23E92E1C6E0B002F67C5 /* SceneDelegate.swift in Sources */,
 				F4B47FF5205745130027755B /* PinCentral.swift in Sources */,
 				F4AD5AC22D9E00CB007B95AB /* MyPhotosViewController.swift in Sources */,
@@ -609,6 +622,7 @@
 				F49B9A59207D406B007598F9 /* AboutViewController.swift in Sources */,
 				F4B47FED205734A80027755B /* MapViewController.swift in Sources */,
 				F497BAE529355B4800878E1F /* NotesViewController.swift in Sources */,
+				F49FCCF82ECFBF7500848E78 /* Pin+CoreDataProperties.swift in Sources */,
 				F427FF87209A2A6B00DBA3CD /* SettingsViewController.swift in Sources */,
 				F4982F6A207BEF9B00A30D40 /* PinColorSelectorViewController.swift in Sources */,
 				F438F6DC2061D0B10032F465 /* SplitViewController.swift in Sources */,
@@ -806,7 +820,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.5;
+				MARKETING_VERSION = 5.6;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -838,7 +852,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.5;
+				MARKETING_VERSION = 5.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.omni-soft.MyPins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -876,12 +890,14 @@
 		F400B4CA20572E0000556F51 /* MyPins.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F4779AAF2EF0850D003457C9 /* MyPins 6.xcdatamodel */,
+				F49FCCE82ECFBC8700848E78 /* MyPins 5.xcdatamodel */,
 				F4B0B71E2A0431FE007D78C7 /* MyPins 4.xcdatamodel */,
 				F4EB06A22A00550200B159E1 /* MyPins 3.xcdatamodel */,
 				F497BAD9293546DE00878E1F /* MyPins 2.xcdatamodel */,
 				F400B4CB20572E0000556F51 /* MyPins.xcdatamodel */,
 			);
-			currentVersion = F4B0B71E2A0431FE007D78C7 /* MyPins 4.xcdatamodel */;
+			currentVersion = F4779AAF2EF0850D003457C9 /* MyPins 6.xcdatamodel */;
 			path = MyPins.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

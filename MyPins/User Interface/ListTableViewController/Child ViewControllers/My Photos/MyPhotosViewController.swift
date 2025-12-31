@@ -16,11 +16,14 @@ class MyPhotosViewController: UIViewController {
     
     // MARK: Public Variables
     
-    var currentImageIndex = 0
-    var deviceAssetArray  = [PHAsset]()
+    var deviceAssetArray  = [PHAsset]()                 // Provided by ListTableVC
     var isOverFullScreen  = false
-    var myParentVC        : MyPhotosViewController!
+    var myParentVC        : MyPhotosViewController!     // Used for full-screen presentation
+    var pin               : Pin!                        // Provided by ListTableVC
+    var selectedIndexPath = IndexPath( row: 0, section: 0 )
     
+    @IBOutlet weak var commentButton              : UIButton!
+    @IBOutlet weak var favoriteButton             : UIButton!
     @IBOutlet      var leftSwipeGestureRecognizer : UISwipeGestureRecognizer!
     @IBOutlet weak var myCollectionView           : UICollectionView!
     @IBOutlet weak var myImageView                : UIImageView!
@@ -31,6 +34,13 @@ class MyPhotosViewController: UIViewController {
     
     // MARK: Private Variables
     
+    private enum FavoriteAction {
+        case add
+        case comment
+        case delete
+        case none
+    }
+    
     private enum VideoStatus {
         case notLoaded
         case loaded
@@ -40,16 +50,22 @@ class MyPhotosViewController: UIViewController {
     }
     
     private struct Constants {
-        static let cellID = "MyPhotosCollectionViewCell"
+        static let cellID   = "MyPhotosCollectionViewCell"
+        static let headerID = "MyPhotosSectionHeaderCollectionViewCell"
     }
     
     private struct StoryboardIds {
         static let myPhotos = "MyPhotosViewController"
     }
     
+    private var favoriteAction     : FavoriteAction = .none
+    private var fetchedMediaArray  = [( LocationPhoto, Data, Bool )]()
     private var imageNameArray     = [String]()
     private let myImageManager     = PHImageManager.default()
     private let notificationCenter = NotificationCenter.default
+    private var section0Open       = true
+    private var section1Open       = false
+    private var originalAssetArray = [PHAsset]()
     private let pinCentral         = PinCentral.sharedInstance
     private var playerLayer        : AVPlayerLayer!
     private var videoStatus        = VideoStatus.loaded
@@ -65,11 +81,24 @@ class MyPhotosViewController: UIViewController {
         
         navigationItem.title = NSLocalizedString( "Title.MyPhotos", comment: "My Photos" )
         
-        view.backgroundColor = .lightGray
         myCollectionView.layer.borderColor = UIColor.black.cgColor
         myCollectionView.layer.borderWidth = 3.0
         
         myImageView.isUserInteractionEnabled = true
+        
+        if #available(iOS 26.0, *) {
+            commentButton.configuration = .glass()
+        }
+        
+        commentButton.isHidden = true
+        commentButton.setTitle( "", for: .normal )
+        commentButton.setTitleColor( .blue, for: .normal )
+        
+        favoriteButton.isHidden = !onDevDevice
+        favoriteButton.setTitle( "", for: .normal )
+        favoriteButton.setImage( UIImage( systemName: "heart" ), for: .normal )
+        
+        originalAssetArray = deviceAssetArray
     }
     
     
@@ -77,14 +106,15 @@ class MyPhotosViewController: UIViewController {
         logTrace()
         super.viewWillAppear( animated )
         
+        reloadDataArrays()
         loadBarButtonItems()
-        
+
         DispatchQueue.main.asyncAfter(wallDeadline: .now() + 0.5 ) {
-            self.populateMyImageViewWithImageAt( self.currentImageIndex )
+            self.populateMyImageViewUsing( self.selectedIndexPath )
             self.myCollectionView.reloadData()
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
-                self.myCollectionView.scrollToItem(at: IndexPath(item: self.currentImageIndex, section: 0 ), at: .centeredHorizontally, animated: true )
+//                self.myCollectionView.scrollToItem(at: self.selectedIndexPath, at: .centeredHorizontally, animated: true )
             }
             
         }
@@ -109,7 +139,7 @@ class MyPhotosViewController: UIViewController {
                 self.playerLayer.frame = self.myImageView.layer.bounds
                 self.myImageView.layer.addSublayer( self.playerLayer )
             }
-
+            
         }
         
     }
@@ -128,10 +158,33 @@ class MyPhotosViewController: UIViewController {
     
     // MARK: Target / Action Methods
     
+    @IBAction func commentButtonTouched(_ sender: UIButton) {
+        logTrace()
+        promptForUpdateToCommentForFavorite()       // Only avaiable for Favorites
+    }
+    
+    
+    @IBAction func favoriteButtonTouched(_ sender: UIButton) {
+        logTrace()
+        if favoriteAction != .none {
+            logTrace( "we're busy right now ... do nothing" )
+            return
+        }
+        
+        if selectedIndexPath.section == 0 {
+            promptForCommentForNewFavorite()
+        }
+        else {
+            promptToRemoveFromFavorites()
+        }
+        
+    }
+    
+    
     @IBAction func fullScreenBarButtonTouched(_ sender : UIBarButtonItem ) {
         logTrace()
         if isOverFullScreen {
-            myParentVC.currentImageIndex = currentImageIndex
+            myParentVC.selectedIndexPath = selectedIndexPath
             dismiss( animated: true )
         }
         else {
@@ -143,15 +196,22 @@ class MyPhotosViewController: UIViewController {
     
     @IBAction func imageSwiped(_ sender: UISwipeGestureRecognizer ) {
 //        logTrace()
-        if sender.direction == .left {
-            if currentImageIndex + 1 <= deviceAssetArray.count - 1 {
-                populateMyImageViewWithImageAt( currentImageIndex + 1 )
+        if onDevDevice {
+            processSwipeOnDevDevice( sender )
+            return
+        }
+        
+        if sender.direction == .left {      // Swipe Left
+            if selectedIndexPath.row + 1 < deviceAssetArray.count {
+                selectedIndexPath = IndexPath( row: selectedIndexPath.row + 1, section: selectedIndexPath.section )
+                populateMyImageViewUsing( selectedIndexPath )
             }
             
         }
-        else {
-            if currentImageIndex - 1 >= 0 {
-                populateMyImageViewWithImageAt( currentImageIndex - 1 )
+        else {      // Swipe Right
+           if selectedIndexPath.row - 1 >= 0 {
+                selectedIndexPath = IndexPath( row: selectedIndexPath.row - 1, section: selectedIndexPath.section )
+                populateMyImageViewUsing( selectedIndexPath )
             }
             
         }
@@ -162,7 +222,7 @@ class MyPhotosViewController: UIViewController {
     @IBAction func leftBarButtonTouched(sender : UIBarButtonItem ) {
         logTrace()
         if isOverFullScreen {
-            myParentVC.currentImageIndex = currentImageIndex
+            myParentVC.selectedIndexPath = selectedIndexPath
             dismiss( animated: true )
         }
         else {
@@ -208,8 +268,45 @@ class MyPhotosViewController: UIViewController {
     
     // MARK: Utility Methods
     
+    private func adjustSetupOnDevDevice() {
+        // This method is called after we have inserted header placeholder cells at the beginning of arrays which are NOT empty
+        section0Open = !deviceAssetArray .isEmpty
+        section1Open = !fetchedMediaArray.isEmpty
+        
+        if section1Open {
+            section0Open = false
+        }
+        
+        if section0Open {
+            if favoriteAction == .delete {     // We just deleted the last favorite
+                selectedIndexPath = IndexPath( row: 1, section: 0 )
+            }
+            else if selectedIndexPath.row == 0 {
+                selectedIndexPath = IndexPath( row: 1, section: 0 )
+            }
+            
+        }
+        else if section1Open {
+            if favoriteAction == .add {         // New favorites are added at the end of the array
+                selectedIndexPath = IndexPath( row: fetchedMediaArray.count - 1, section: 1 )
+            }
+            else if favoriteAction == .delete {
+                let adjacentRow = ( selectedIndexPath.row == 1 ) ? 1 : ( selectedIndexPath.row - 1 )
+                
+                selectedIndexPath = IndexPath( row: adjacentRow, section: 1 )
+            }
+            else if selectedIndexPath.row == 0 {
+                selectedIndexPath = IndexPath( row: 1, section: 1 )
+            }
+            
+        }
+
+        logVerbose( "open sections[ 0: %@  1: %@ ]  selectedIndexPath: [ %@ ]", stringFor( section0Open ), stringFor( section1Open ), stringFor( selectedIndexPath ) )
+    }
+    
+    
     private func loadBarButtonItems() {
-//        logTrace()
+        //        logTrace()
         var leftBarButtonItems  = [UIBarButtonItem]()
         var rightBarButtonItems = [UIBarButtonItem]()
         
@@ -236,15 +333,30 @@ class MyPhotosViewController: UIViewController {
     }
     
     
-    private func populateMyImageViewWithImageAt(_ index: Int ) {
-        let phAsset = deviceAssetArray[index]
+    private func populateMyImageViewUsing(_ indexPath: IndexPath ) {
+        if indexPath.section == 0 {
+            populateMyImageViewUsingAssetAt( indexPath )
+        }
+        else {
+            populateMyImageViewUsingMediaAt( indexPath )
+        }
         
-        setCurrentCellSelection( index )
+    }
+    
+    
+    private func populateMyImageViewUsingAssetAt(_ indexPath: IndexPath ) {
+//        logVerbose( "indexPath[ %@ ]", stringFor( indexPath ) )
+        let row     = indexPath.row
+        let phAsset = deviceAssetArray[row]
+        
+        setCurrentCellSelection( indexPath )
         
         if let _ = playerLayer {
             playerLayer.removeFromSuperlayer()
             playerLayer  = nil
         }
+        
+        commentButton.isHidden = true
         
         myImageView.image     = UIImage()
         myImageView.transform = .identity
@@ -256,6 +368,7 @@ class MyPhotosViewController: UIViewController {
             let targetSize = CGSize( width: myImageView.bounds.width, height: myImageView.bounds.height )
             
             pinCentral.getImageFrom( phAsset, targetSize: targetSize, isThumbnail: false, delegate: self )
+            favoriteButton.setImage( UIImage( systemName: "heart" ), for: .normal )
         }
         else if phAsset.mediaType == .video {
             let videoRequestOptions = PHVideoRequestOptions()
@@ -283,11 +396,92 @@ class MyPhotosViewController: UIViewController {
                 
             })
             
+            favoriteButton.setImage( UIImage( systemName: "heart" ), for: .normal )
         }
         else {
             logVerbose( "ERROR!!! We don't support this style[ %@ ]", phAsset.stringForPlaybackStyle() )
         }
         
+    }
+    
+    
+    private func populateMyImageViewUsingMediaAt(_ indexPath: IndexPath ) {
+//        logVerbose( "indexPath[ %@ ]", stringFor( indexPath ) )
+        let mediaTuple    = fetchedMediaArray[indexPath.row]
+        let locationPhoto = mediaTuple.0
+        let mediaData     = mediaTuple.1
+        let dataLoaded    = mediaTuple.2
+        
+        setCurrentCellSelection( indexPath )
+        
+        if let _ = playerLayer {
+            playerLayer.removeFromSuperlayer()
+            playerLayer  = nil
+        }
+        
+        myImageView.image     = UIImage( named: GlobalConstants.noImage )
+        myImageView.transform = .identity
+        videoStatus           = .notLoaded
+        
+        notificationCenter.removeObserver( self )
+        
+        if !dataLoaded {
+            myImageView.image = UIImage( named: GlobalConstants.missingImage )
+            logVerbose( "ERROR!!!  No data for [ %@ ]", locationPhoto.filename! )
+            return
+        }
+        
+        if locationPhoto.isVideo  {
+            let fileManager          = FileManager.default
+            let picturesDirectoryUrl = URL( string: pinCentral.pictureDirectoryPath() )!
+            let tempFileName         = UUID().uuidString
+            let currentVideoUrl      = picturesDirectoryUrl.appendingPathComponent( tempFileName )
+            let player               = AVPlayer(url: URL( fileURLWithPath: currentVideoUrl.path ) )
+            let playerLayer          = AVPlayerLayer( player: player )
+            let videoCached          = fileManager.createFile( atPath: currentVideoUrl.path, contents: mediaData, attributes: nil )
+            
+            // Since myImageView has constraints on it that will automatically reposition and resize itself,
+            // we attach the playerLayer to it so it can just tag along for the ride
+            playerLayer.videoGravity = AVLayerVideoGravity.resizeAspect
+            playerLayer.frame        = myImageView.layer.bounds
+            
+            myImageView.layer.addSublayer( playerLayer )
+            
+            if videoCached {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2 ) {
+                    do {
+                        try fileManager.removeItem(at: currentVideoUrl )
+                        logTrace( "deleted temporary file",  )
+                    }
+                    catch let error as NSError {
+                        logVerbose( "ERROR!!!  [ %@ ]\n    [ %@ ]", error.localizedDescription, currentVideoUrl.path )
+                    }
+                    
+                }
+                
+            }
+            else {
+                logVerbose( "ERROR!!!  could not cache video[ %@ ]", currentVideoUrl.path )
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
+                self.loadBarButtonItems()
+            }
+            
+        }
+        else {  // Image file
+            let result       = self.pinCentral.fetchFromDiskImageFileNamed( locationPhoto.filename! )
+            let imageLoaded  = result.0
+            
+            myImageView.image = imageLoaded ? UIImage(data: result.1 ) : UIImage( named: GlobalConstants.missingImage )
+        }
+        
+        let buttonTitle = locationPhoto.comment ?? NSLocalizedString( "ButtonTitle.Comments", comment: "Comments" )
+        
+        commentButton.setTitle( buttonTitle, for: .normal )
+        commentButton.isHidden = false
+        
+        favoriteButton.setImage( UIImage( systemName: "heart.fill" ), for: .normal )
     }
     
     
@@ -298,8 +492,8 @@ class MyPhotosViewController: UIViewController {
         }
         
         logTrace()
-        myPhotosViewController.deviceAssetArray     = deviceAssetArray
-        myPhotosViewController.currentImageIndex    = currentImageIndex
+        myPhotosViewController.deviceAssetArray     = originalAssetArray
+        myPhotosViewController.selectedIndexPath    = selectedIndexPath
         myPhotosViewController.isOverFullScreen     = true
         myPhotosViewController.myParentVC           = self
         myPhotosViewController.view.backgroundColor = .lightGray
@@ -313,25 +507,244 @@ class MyPhotosViewController: UIViewController {
     }
     
     
-    private func setCurrentCellSelection(_ newIndex: Int ) {
-        if let collectionViewCell = myCollectionView.cellForItem(at: IndexPath(item: currentImageIndex, section: 0 ) ) {
+    private func processSwipeOnDevDevice(_ sender: UISwipeGestureRecognizer ) {
+        var needToUpdate = true
+        
+        if sender.direction == .left {      // Swipe Left
+            if selectedIndexPath.section == 0 {
+                if selectedIndexPath.row + 1 < deviceAssetArray.count {
+                    selectedIndexPath = IndexPath( row: selectedIndexPath.row + 1, section: selectedIndexPath.section )
+                }
+                else {  // Finished with section 0...
+                    if fetchedMediaArray.count > 0 {
+                        selectedIndexPath = IndexPath(row: 1, section: selectedIndexPath.section + 1 )
+                    }
+                    else {
+                        needToUpdate = false
+                    }
+                    
+                }
+                
+            }
+            else {      // Section 1
+                if selectedIndexPath.row + 1 < fetchedMediaArray.count {
+                    selectedIndexPath = IndexPath( row: selectedIndexPath.row + 1, section: selectedIndexPath.section )
+                }
+                else {
+                    needToUpdate = false
+                }
+                
+            }
+                
+        }
+        else {      // Swipe Right
+            if selectedIndexPath.row - 1 > 0 {
+                selectedIndexPath = IndexPath( row: selectedIndexPath.row - 1, section: selectedIndexPath.section )
+            }
+            else if selectedIndexPath.section == 1 {
+                selectedIndexPath = IndexPath( row: deviceAssetArray.count - 1, section: 0 )
+                section0Open = true
+            }
+            else {
+                needToUpdate = false
+            }
+                
+        }
+        
+        if needToUpdate {
+            let currentlySelectedCell = myCollectionView.cellForItem( at: selectedIndexPath )
+            
+            populateMyImageViewUsing( selectedIndexPath )
+            currentlySelectedCell?.isSelected = false
+            myCollectionView.reloadData()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
+                self.myCollectionView.scrollToItem(at: self.selectedIndexPath, at: .centeredHorizontally, animated: true )
+            }
+                
+        }
+
+    }
+    
+    
+    private func promptForCommentForNewFavorite() {
+        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EnterCommentForFavorite", comment: "What would you like to remember about this favorite?" ), message: nil, preferredStyle: .alert )
+        
+        let saveAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Save Action" )
+            let commentTextField = alert.textFields![0] as UITextField
+            let commentText      = commentTextField.text ?? ""
+            let selectedAsset    = self.deviceAssetArray[self.selectedIndexPath.row]
+            
+            self.favoriteAction = .add
+            self.pinCentral.addAssetMediaTo( self.pin, phAsset: selectedAsset, comment: commentText, self )
+        }
+        
+        let cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel )
+        { ( alertAction ) in
+            logTrace( "Cancel Action" )
+        }
+        
+        alert.addTextField
+        { ( textField ) in
+            textField.placeholder = NSLocalizedString( "LabelText.Comment", comment: "Comment" )
+        }
+        
+        alert.addAction( saveAction   )
+        alert.addAction( cancelAction )
+        
+        present( alert, animated: true, completion: nil )
+    }
+    
+    
+    private func promptForUpdateToCommentForFavorite() {
+        let mediaTuple    = self.fetchedMediaArray[self.selectedIndexPath.row]
+        let locationPhoto = mediaTuple.0
+
+        let alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EnterCommentForFavorite", comment: "What would you like to remember about this favorite?" ), message: nil, preferredStyle: .alert )
+        
+        let saveAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Save Action" )
+            let commentTextField = alert.textFields![0] as UITextField
+            let commentText      = commentTextField.text ?? ""
+            
+            locationPhoto.comment = commentText
+            self.favoriteAction   = .comment
+            
+            self.pinCentral.saveUpdated( locationPhoto, self )
+        }
+        
+        let cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel )
+        { ( alertAction ) in
+            logTrace( "Cancel Action" )
+        }
+        
+        alert.addTextField
+        { ( textField ) in
+            if locationPhoto.comment!.isEmpty {
+                textField.placeholder = NSLocalizedString( "LabelText.Comment", comment: "Comment" )
+            }
+            else {
+                textField.text = locationPhoto.comment
+            }
+            
+        }
+        
+        alert.addAction( saveAction   )
+        alert.addAction( cancelAction )
+        
+        present( alert, animated: true, completion: nil )
+    }
+    
+    
+    private func promptToRemoveFromFavorites() {
+        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.RemoveFromFavorites", comment: "Are you sure you want to reemove this favorite?" ), message: nil, preferredStyle: .alert )
+        
+        let yesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Yes", comment: "Yes" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Yes Action" )
+            let mediaTuple    = self.fetchedMediaArray[self.selectedIndexPath.row]
+            let locationPhoto = mediaTuple.0
+            
+            self.favoriteAction = .delete
+            self.pinCentral.deleteLocationPhotoFrom( self.pin, locationPhoto: locationPhoto, self )
+        }
+        
+        let noAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.No", comment: "No" ), style: .cancel )
+        { ( alertAction ) in
+            logTrace( "No Action" )
+        }
+        
+        alert.addAction( yesAction )
+        alert.addAction( noAction  )
+        
+        present( alert, animated: true, completion: nil )
+    }
+    
+    
+    private func reloadDataArrays() {
+        deviceAssetArray = originalAssetArray
+        
+        if onDevDevice {
+            var assetsRemoved = 0
+            
+            fetchedMediaArray = pinCentral.fetchLocationPhotosDataForPin( pin )
+            
+            for localPhotoTuple in fetchedMediaArray {
+                let localPhoto = localPhotoTuple.0
+                
+                for index in 0..<deviceAssetArray.count {
+                    let phAsset = deviceAssetArray[ index ]
+                    
+                    if phAsset.localIdentifier == localPhoto.localIdentifier {
+                        deviceAssetArray.remove(at: index )
+                        assetsRemoved += 1
+                        break
+                    }
+                    
+                }
+                
+            }
+            
+            // Insert placeholders for header cells for arrays that contain at least one element
+
+            if fetchedMediaArray.count != 0 {
+                fetchedMediaArray.insert( fetchedMediaArray[0], at: 0 )
+            }
+            
+            if deviceAssetArray.count != 0 {
+                deviceAssetArray.insert( deviceAssetArray[0], at: 0 )
+            }
+            
+            adjustSetupOnDevDevice()
+            
+            logVerbose( "assets[ %d ] photos[ %d ] ... filtered out [ %d ] assets", deviceAssetArray.count, fetchedMediaArray.count, assetsRemoved )
+        }
+        
+    }
+    
+    
+    private func setCurrentCellSelection(_ newIndexPath: IndexPath ) {
+        if let collectionViewCell = myCollectionView.cellForItem(at: selectedIndexPath ) {
             let oldSelectedCell = collectionViewCell as! MyPhotosCollectionViewCell
             
             oldSelectedCell.setSelected( false )
         }
         
-        if let collectionViewCell = myCollectionView.cellForItem(at: IndexPath(item: newIndex, section: 0 ) )  {
+        if let collectionViewCell = myCollectionView.cellForItem(at: newIndexPath )  {
             let newSelectedCell = collectionViewCell as! MyPhotosCollectionViewCell
             
             newSelectedCell.setSelected( true  )
             
-            myCollectionView.scrollToItem(at: IndexPath(item: newIndex, section: 0 ), at: .centeredHorizontally, animated: true )
+            myCollectionView.scrollToItem(at: newIndexPath, at: .centeredHorizontally, animated: true )
         }
         
-        currentImageIndex = newIndex
+        selectedIndexPath = newIndexPath
     }
     
     
+}
+
+
+
+// MARK: MyPhotosSectionHeaderCollectionViewCellDelegate Methods
+
+extension MyPhotosViewController: MyPhotosSectionHeaderCollectionViewCellDelegate {
+    
+    func myPhotosSectionHeaderCollectionViewCell(_ cell: MyPhotosSectionHeaderCollectionViewCell, didRequestToggleForSection section: Int, isOpen: Bool) {
+        if section == 0 {
+            section0Open = !section0Open
+        }
+        else {
+            section1Open = !section1Open
+        }
+        
+        myCollectionView.reloadData()
+    }
+    
+
 }
 
 
@@ -341,13 +754,51 @@ class MyPhotosViewController: UIViewController {
 extension MyPhotosViewController: PinCentralDelegate {
     
     func pinCentral(_ pinCentral: PinCentral, didGetImage: Bool, from asset: PHAsset, image: UIImage ) {
-//        logVerbose( "[ %@ ][ %@ ]", stringFor( didGetImage ), asset.descriptorString() )
+        
         if didGetImage {
             myImageView.image = image
+        }
+        else {
+            logVerbose( "[ %@ ]", stringFor(  didGetImage ) )
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
             self.loadBarButtonItems()
+        }
+
+    }
+    
+    
+    func pinCentral(_ pinCentral: PinCentral, didUpdateInAppPhotos: Bool) {
+        logVerbose( "[ %@ ]", stringFor( didUpdateInAppPhotos ) )
+        
+        if didUpdateInAppPhotos {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
+                self.reloadDataArrays()
+                
+                if self.favoriteAction == .delete {
+                    if self.deviceAssetArray.count == 0 && self.fetchedMediaArray.count == 0 {
+                        logTrace( "We don't have anything to show... exiting" )
+                        if self.isOverFullScreen {
+                            self.dismiss( animated: true )
+                        }
+                        else {
+                            self.navigationController?.popViewController(animated: true )
+                        }
+                        
+                        return
+                    }
+                    
+                }
+
+                self.populateMyImageViewUsing( self.selectedIndexPath )
+                self.myCollectionView.reloadData()
+                self.favoriteAction = .none
+            }
+            
+        }
+        else {
+            self.favoriteAction = .none
         }
 
     }
@@ -361,15 +812,57 @@ extension MyPhotosViewController: PinCentralDelegate {
 
 extension MyPhotosViewController: UICollectionViewDataSource {
     
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        let numberOfSections = onDevDevice ? ( deviceAssetArray.count > 0 ? 1 : 0 ) + ( fetchedMediaArray.count > 0 ? 1 : 0 ) : 1
+        
+        return numberOfSections
+    }
+    
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return deviceAssetArray.count
+        var numberOfItems = 0
+        
+        if !onDevDevice {
+            numberOfItems = deviceAssetArray.count
+        }
+        else {
+            if section == 0 {
+                if deviceAssetArray.count > 1 {
+                    numberOfItems = section0Open ? deviceAssetArray.count : 1
+                }
+            
+            }
+            else if fetchedMediaArray.count > 1  {
+                numberOfItems = section1Open ? fetchedMediaArray.count : 1
+            }
+
+        }
+        
+        return numberOfItems
     }
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let isSelected = ( indexPath == selectedIndexPath )
+        
+        if onDevDevice && indexPath.row == 0 {
+            // Header cells
+            let cell   = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.headerID, for: indexPath ) as! MyPhotosSectionHeaderCollectionViewCell
+            let isOpen = ( indexPath.section == 0 ) ? section0Open : section1Open
+            
+            cell.initializeForSection( indexPath.section, isOpen: isOpen, self )
+            return cell
+        }
+        
+        // Normal cells
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.cellID, for: indexPath ) as! MyPhotosCollectionViewCell
-
-        cell.initializeWith( deviceAssetArray[indexPath.row], index: indexPath.row, isSelected: ( indexPath.row == currentImageIndex ) )
+        
+        if indexPath.section == 0 {
+            cell.initializeWith( deviceAssetArray[indexPath.row], isSelected: isSelected )
+        }
+        else {
+            cell.initializeWith( fetchedMediaArray[indexPath.row], isSelected: isSelected )
+        }
         
         return cell
     }
@@ -385,7 +878,7 @@ extension MyPhotosViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        logVerbose( "[ %@ ]", stringFor( indexPath ) )
-        populateMyImageViewWithImageAt( indexPath.row )
+        populateMyImageViewUsing( indexPath )
     }
     
     

@@ -46,8 +46,10 @@ class ListTableViewController: UIViewController {
     private let appDelegate             = UIApplication.shared.delegate as! AppDelegate
     private let deviceAccessControl     = DeviceAccessControl.sharedInstance
     private let pinCentral              = PinCentral.sharedInstance
+    private var pinForPhoto             : Pin!
     private var sectionIndexTitles      = [String]()
     private var sectionTitleIndexes     = [Int]()
+    private var selectedPinIndexPath    = GlobalIndexPaths.noSelection  // Used by promptForActionOnCellAt to inform the datePickerViewControllerDidSelect() delegate method
     private var showAllSections         = true
     private let sortOptions             = [SortOptions.byDateLastModified,     SortOptions.byName,     SortOptions.byType    ]
     private let sortOptionNames         = [SortOptionNames.byDateLastModified, SortOptionNames.byName, SortOptionNames.byType]
@@ -360,7 +362,7 @@ class ListTableViewController: UIViewController {
         sortOptionsVC.delegate = self
         
         sortOptionsVC.modalPresentationStyle = .popover
-        sortOptionsVC.preferredContentSize   = CGSize(width: myTableView.frame.width, height: 300 )
+        sortOptionsVC.preferredContentSize   = CGSize(width: myTableView.frame.width, height: 330 )
 
         sortOptionsVC.popoverPresentationController!.delegate                 = self
         sortOptionsVC.popoverPresentationController?.permittedArrowDirections = .any
@@ -368,6 +370,35 @@ class ListTableViewController: UIViewController {
         sortOptionsVC.popoverPresentationController?.sourceView               = sortButton
         
         present( sortOptionsVC, animated: true, completion: nil )
+    }
+    
+    
+    private func promptForCommentForNewFavorite( _ pin: Pin, image: UIImage ) {
+        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EnterCommentForFavorite", comment: "What would you like to remember about this favorite?" ), message: nil, preferredStyle: .alert )
+        
+        let saveAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Save Action" )
+            let commentTextField = alert.textFields![0] as UITextField
+            let commentText      = commentTextField.text ?? ""
+            
+            self.pinCentral.addPhotoToPin( pin, image: image, comment: commentText, self )
+        }
+        
+        let cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel )
+        { ( alertAction ) in
+            logTrace( "Cancel Action" )
+        }
+        
+        alert.addTextField
+        { ( textField ) in
+            textField.placeholder = NSLocalizedString( "LabelText.Comment", comment: "Comment" )
+        }
+        
+        alert.addAction( saveAction   )
+        alert.addAction( cancelAction )
+        
+        present( alert, animated: true, completion: nil )
     }
     
     
@@ -468,7 +499,12 @@ extension ListTableViewController: DatePickerViewControllerDelegate {
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
-            if deviceAssetArray.count == 0 {
+            let pin                = self.pinCentral.pinAt( self.selectedPinIndexPath )
+            let locationPhotoArray = pin.locationPhotos?.allObjects as! [LocationPhoto]
+
+            self.selectedPinIndexPath = GlobalIndexPaths.noSelection
+            
+            if deviceAssetArray.count == 0 && locationPhotoArray.count == 0 {
                 self.presentAlert( title  : NSLocalizedString( "AlertTitle.NoPhotosFound",   comment: "No Photos Found!" ),
                                    message: NSLocalizedString( "AlertMessage.NoPhotosFound", comment: "There are no photos in your library that were created during that timeframe.  Please try a different starting date/duration." ) )
             }
@@ -479,6 +515,7 @@ extension ListTableViewController: DatePickerViewControllerDelegate {
                 }
                 
                 myPhotosViewController.deviceAssetArray = deviceAssetArray
+                myPhotosViewController.pin              = pin
                 
                 self.navigationController?.pushViewController( myPhotosViewController, animated: true )
             }
@@ -538,6 +575,22 @@ extension ListTableViewController: LocationEditorViewControllerDelegate {
 
 extension ListTableViewController: PinCentralDelegate {
     
+    func pinCentral(_ pinCentral: PinCentral, didAddPhoto: Bool, to pin: Pin) {
+        logVerbose( "[ %@ ]", stringFor( didAddPhoto ) )
+        
+        if didAddPhoto {
+            let formatString = NSLocalizedString( "AlertTitle.PhotoAddedToPin", comment: "Photo added to %@ pin" )
+            
+            presentAlert( title: String( format: formatString, pin.name! ), message: "" )
+        }
+        else {
+            self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                               message: NSLocalizedString( "AlertMessage.ImageSaveFailed", comment: "We were unable to save the image you selected." ) )
+        }
+
+    }
+    
+    
     func pinCentral(_ pinCentral: PinCentral, didOpenDatabase: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
         if didOpenDatabase {
@@ -592,6 +645,80 @@ extension ListTableViewController: SortOptionsViewControllerDelegate {
     }
     
     
+}
+
+
+
+// MARK: UIImagePickerControllerDelegate Methods
+
+extension ListTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController ) {
+        logTrace()
+        if nil != presentedViewController {
+            dismiss( animated: true, completion: nil )
+        }
+        
+    }
+
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any] ) {
+        // Local variable inserted by Swift 4.2 migrator.
+        let     info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
+        if nil != presentedViewController {
+            dismiss( animated: true, completion: nil )
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01 ) {
+            if let mediaType = info[self.convertFromUIImagePickerControllerInfoKey( .mediaType )] as? String {
+                if "public.image" == mediaType {
+                    var     imageToSave: UIImage? = nil
+                    
+                    if let originalImage: UIImage = info[self.convertFromUIImagePickerControllerInfoKey( .originalImage )] as? UIImage {
+                        imageToSave = originalImage
+                    }
+                    else if let editedImage: UIImage = info[self.convertFromUIImagePickerControllerInfoKey( .editedImage )] as? UIImage {
+                        imageToSave = editedImage
+                    }
+                    
+                    if let myImageToSave = imageToSave {
+                        self.promptForCommentForNewFavorite( self.pinForPhoto, image: myImageToSave )
+                    }
+                    else {
+                        logTrace( "ERROR:  Unable to unwrap imageToSave!" )
+                    }
+                    
+                }
+                else {
+                    logVerbose( "ERROR:  Invalid media type[ %@ ]", mediaType )
+                    self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                                       message: NSLocalizedString( "AlertMessage.InvalidMediaType", comment: "We can't save the item you selected.  We can only save photos." ) )
+                }
+                
+            }
+            else {
+                logTrace( "ERROR:  Unable to convert info[UIImagePickerControllerMediaType] to String" )
+            }
+
+        }
+        
+    }
+
+
+
+    // MARK: Helper function inserted by Swift 4.2 migrator.
+
+    fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+        return Dictionary( uniqueKeysWithValues: input.map { key, value in (key.rawValue, value) } )
+    }
+
+
+    fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+        return input.rawValue
+}
+
+            
 }
 
 
@@ -771,10 +898,31 @@ extension ListTableViewController: UITableViewDelegate {
             return
         }
         
+        logTrace()
         notesViewController.editMode     = false
         notesViewController.originalText = notes
         
         navigationController?.pushViewController( notesViewController, animated: true )
+    }
+    
+    
+    private func launchPhotoCaptureFor(_ pin: Pin ) {
+        logTrace()
+        let     imagePickerVC = UIImagePickerController.init()
+        
+        imagePickerVC.allowsEditing = false
+        imagePickerVC.delegate      = self
+        imagePickerVC.sourceType    = .camera
+        
+        imagePickerVC.modalPresentationStyle = .overFullScreen // ( ( .camera == sourceType ) ? .overFullScreen : .popover )
+        pinForPhoto = pin
+
+        present( imagePickerVC, animated: true, completion: nil )
+        
+        imagePickerVC.popoverPresentationController?.delegate                 = self
+        imagePickerVC.popoverPresentationController?.permittedArrowDirections = .any
+        imagePickerVC.popoverPresentationController?.sourceRect               = myTableView.frame
+        imagePickerVC.popoverPresentationController?.sourceView               = myTableView
     }
 
     
@@ -786,13 +934,16 @@ extension ListTableViewController: UITableViewDelegate {
         
         datePickerViewController.delegate     = self
         datePickerViewController.lastModified = lastModified
-
-        datePickerViewController.modalPresentationStyle = .formSheet  // .popover
-        datePickerViewController.preferredContentSize   = CGSize(width: 375, height: 296 )
-
-        datePickerViewController.popoverPresentationController?.sourceRect = view.frame
-        datePickerViewController.popoverPresentationController?.sourceView = view
         
+        let customSize     = CGSize(width: 375, height: 296)
+        let x              = (view.bounds.width  - customSize.width ) / 2
+        let y              = (view.bounds.height - customSize.height) / 2
+        let customFrame    = CGRect(x: x, y: y, width: customSize.width, height: customSize.height)
+        let customDelegate = CustomTransitioningDelegate(customFrame: customFrame)
+        
+        datePickerViewController.modalPresentationStyle = .custom
+        datePickerViewController.transitioningDelegate  = customDelegate
+
         present( datePickerViewController, animated: true, completion: nil )
     }
     
@@ -803,6 +954,8 @@ extension ListTableViewController: UITableViewDelegate {
         var     imageName = ""
         let     onDevice  = pinCentral.dataStoreLocation == .device
         let     pin       = pinCentral.pinAt( indexPath )
+        
+        selectedPinIndexPath = indexPath
 
         let     alert     = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ActionForEntry", comment: "What would you like to do with this entry?" ), message: nil, preferredStyle: .alert )
         
@@ -816,6 +969,12 @@ extension ListTableViewController: UITableViewDelegate {
         { ( alertAction ) in
             logTrace( "Inspect Image Action" )
             self.launchImageViewControllerFor( imageName )
+        }
+        
+        let addPhotoAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.AddPhoto", comment: "Add Photo" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Add Photo Action" )
+            self.launchPhotoCaptureFor( pin )
         }
         
         let showMyPhotosAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.ShowMyPhotos", comment: "Show My Photos" ), style: .default )
@@ -876,10 +1035,15 @@ extension ListTableViewController: UITableViewDelegate {
             
         }
         
-        if let _ = pin.lastModified {
-            alert.addAction( showMyPhotosAction )
-        }
+        if onDevDevice {
+            alert.addAction( addPhotoAction )
 
+            if let _ = pin.lastModified {
+                alert.addAction( showMyPhotosAction )
+            }
+
+        }
+        
         if let _ = pin.notes {
             alert.addAction( showNotesAction )
         }

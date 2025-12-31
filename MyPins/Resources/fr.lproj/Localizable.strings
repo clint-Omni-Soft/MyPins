@@ -50,6 +50,7 @@
 "AlertTitle.AreYouSure"                     = "Êtes-vous sûr de vouloir annuler vos modifications?";
 "AlertTitle.AuthorizationRequired"          = "Autorisation requise!";
 "AlertTitle.CheckForMissingImages"          = "Rechercher les images manquantes";
+"AlertTitle.CommentForFavorite"             = "Que souhaitez-vous retenir de ce plat que vous avez adoré ?";
 "AlertTitle.CurrentCoordinates"             = "Coordonnées actuelles";
 "AlertTitle.DeviceNameRequired"             = "Le nom de l'appareil est requis pour NAS";
 "AlertTitle.DiscardChanges"                 = "Voulez-vous annuler vos modifications?";
@@ -66,6 +67,8 @@
 "AlertTitle.NoMissingImages"                = "Il n'y a AUCUNE image manquante sur le %@";
 "AlertTitle.NoPhotosFound"                  = "Aucune photo trouvée !";
 "AlertTitle.OverrideOfflineBlock"           = "Ignorer le blocage hors connexion ?";
+"AlertTitle.PhotoAddedToPin"                = "Photo ajoutée à l'épingle %@";
+"AlertTitle.RemoveFromFavorites"            = "Êtes-vous sûr de vouloir supprimer cet élément de vos favoris ?";
 "AlertTitle.RequestedImagesLoaded"          = "%d %d images demandées transférées à %@.";
 "AlertTitle.SaveToPhotoLibrary"             = "Souhaitez-vous enregistrer cette image dans votre photothèque ?";
 "AlertTitle.SelectMapType"                  = "Sélectionner le type de carte";
@@ -77,9 +80,11 @@
 "AlertTitle.UnableToProcessYourRequest"     = "Impossible de traiter votre demande";
 "AlertTitle.Warning"                        = "Avertissement!";
 
+"ButtonTitle.AddPhoto"                      = "Ajouter une photo";
 "ButtonTitle.Back"                          = "Retour";
 "ButtonTitle.Cancel"                        = "Annuler";
 "ButtonTitle.Camera"                        = "Caméra";
+"ButtonTitle.Comments"                      = "Commentaires";
 "ButtonTitle.CreateHere"                    = "Créer ici";
 "ButtonTitle.Delete"                        = "Effacer";
 "ButtonTitle.Directions"                    = "Directions";
@@ -154,6 +159,7 @@
 "AlertMessage.ReadyToRestart"               = "Prêt à redémarrer";
 "LabelText.About"                           = "Sur";
 "LabelText.Altitude"                        = "Altitude";
+"LabelText.Comment"                         = "Commentaire";
 "LabelText.ContactUs"                       = "Tous les droits sont réservés. Contactez-nous à";
 "LabelText.Destination"                     = "Destination";
 "LabelText.Details"                         = "Adresse / Description";

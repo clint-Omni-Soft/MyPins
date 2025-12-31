@@ -45,6 +45,8 @@ class LocationNotesTableViewCell: UITableViewCell {
     // MARK: Target/Action Methods
     
     @IBAction func notesButtonTouched(_ sender: UIButton) {
+        notesTextView.resignFirstResponder()
+        
         delegate.locationNotesTableViewCellWantsToEdit( self )
     }
     
@@ -55,10 +57,23 @@ class LocationNotesTableViewCell: UITableViewCell {
     func initializeWith(_ notes: String, _ cellDelegate: LocationNotesTableViewCellDelegate ) {
         logTrace()
         delegate           = cellDelegate
+        
         notesTextView.font = UIFont.systemFont(ofSize: 17.0 )
         notesTextView.text = notes
+        
+        // Add a gesture recognizer so that we can treat a tap on the textView the same as touching the Notes button
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(notesButtonTouched(_:)))
 
+        tapGesture.delegate = self
+        notesTextView.isUserInteractionEnabled = true
+        notesTextView.addGestureRecognizer( tapGesture )
+        
         notesButton.setTitle( NSLocalizedString( "LabelText.Notes", comment: "Notes" ), for: .normal )
+    }
+    
+    
+    override func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
     
     

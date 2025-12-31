@@ -15,12 +15,14 @@ import Photos
 
 
 protocol PinCentralDelegate: AnyObject {
-    func pinCentral(_ pinCentral: PinCentral, didFetchImage      : Bool, filename : String, image : UIImage )
-    func pinCentral(_ pinCentral: PinCentral, didFetch imageNames: [String] )
+    func pinCentral(_ pinCentral: PinCentral, didAddPhoto         : Bool, to pin: Pin )
+    func pinCentral(_ pinCentral: PinCentral, didFetchImage       : Bool, filename : String, image : UIImage )
+    func pinCentral(_ pinCentral: PinCentral, didFetch imageNames : [String] )
     func pinCentral(_ pinCentral: PinCentral, didGetImage: Bool, from asset: PHAsset, image: UIImage )
-    func pinCentral(_ pinCentral: PinCentral, didOpenDatabase    : Bool )
-    func pinCentral(_ pinCentral: PinCentral, didSaveImageData   : Bool )
-    func pinCentral(_ pinCentral: PinCentral, didUpdateDatabase  : Bool )
+    func pinCentral(_ pinCentral: PinCentral, didOpenDatabase     : Bool )
+    func pinCentral(_ pinCentral: PinCentral, didSaveImageData    : Bool )
+    func pinCentral(_ pinCentral: PinCentral, didUpdateDatabase   : Bool )
+    func pinCentral(_ pinCentral: PinCentral, didUpdateInAppPhotos: Bool )
     func pinCentralDidReloadColorArray(_ pinCentral: PinCentral )
     func pinCentralDidReloadPinArray(_   pinCentral: PinCentral )
 }
@@ -29,12 +31,14 @@ protocol PinCentralDelegate: AnyObject {
 // MARK: PinCentralDelegate Default Implementation Methods (makes all optional)
 
 extension PinCentralDelegate {
-    func pinCentral(_ pinCentral: PinCentral, didFetchImage      : Bool, filename : String, image : UIImage ) {}
-    func pinCentral(_ pinCentral: PinCentral, didFetch imageNames: [String] ) {}
+    func pinCentral(_ pinCentral: PinCentral, didAddPhoto         : Bool, to pin: Pin ) {}
+    func pinCentral(_ pinCentral: PinCentral, didFetchImage       : Bool, filename : String, image : UIImage ) {}
+    func pinCentral(_ pinCentral: PinCentral, didFetch imageNames : [String] ) {}
     func pinCentral(_ pinCentral: PinCentral, didGetImage: Bool, from asset: PHAsset, image: UIImage ) {}
-    func pinCentral(_ pinCentral: PinCentral, didOpenDatabase    : Bool ) {}
-    func pinCentral(_ pinCentral: PinCentral, didSaveImageData   : Bool ) {}
-    func pinCentral(_ pinCentral: PinCentral, didUpdateDatabase  : Bool ) {}
+    func pinCentral(_ pinCentral: PinCentral, didOpenDatabase     : Bool ) {}
+    func pinCentral(_ pinCentral: PinCentral, didSaveImageData    : Bool ) {}
+    func pinCentral(_ pinCentral: PinCentral, didUpdateDatabase   : Bool ) {}
+    func pinCentral(_ pinCentral: PinCentral, didUpdateInAppPhotos: Bool ) {}
     func pinCentralDidReloadColorArray(_ pinCentral: PinCentral ) {}
     func pinCentralDidReloadPinArray(_   pinCentral: PinCentral ) {}
 }
@@ -510,7 +514,7 @@ class PinCentral: NSObject {
             pin.details         = details
             pin.guid            = UUID().uuidString
             pin.imageName       = imageName
-            pin.lastModified    = Date()  //NSDate.init()
+            pin.lastModified    = Date()
             pin.latitude        = latitude
             pin.longitude       = longitude
             pin.name            = name
@@ -636,6 +640,290 @@ class PinCentral: NSObject {
         return String(format: "%@ %@", pin.name!, pin.details ?? "" )
     }
 
+    
+
+    // MARK: Location Photo Methods
+    
+    func addAssetMediaTo(_ pin: Pin, phAsset: PHAsset, comment: String, _ delegate: PinCentralDelegate ) {
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            delegate.pinCentral( self, didUpdateInAppPhotos: false )
+            return
+        }
+
+        let picturesDirectoryPath = pictureDirectoryPath()
+
+        if picturesDirectoryPath.isEmpty {
+            logVerbose( "ERROR!  pictureDirectoryPath isEmpty!" )
+            delegate.pinCentral( self, didUpdateInAppPhotos: false )
+            return
+        }
+
+        logTrace()
+        let isVideo    = phAsset.mediaType == .video
+        let filename   = pin.name! + "_" + UUID().uuidString + ( isVideo ? ".mov" : ".jpg" )
+        let fileURL    = URL( fileURLWithPath: picturesDirectoryPath ).appendingPathComponent( filename )
+        let mediaIndex = Int16( pin.locationPhotos!.count )
+
+        persistentContainer.viewContext.perform {
+            let locationPhoto = NSEntityDescription.insertNewObject( forEntityName: EntityNames.locationPhoto, into: self.managedObjectContext ) as! LocationPhoto
+
+            locationPhoto.comment         = comment
+            locationPhoto.dateCreated     = phAsset.creationDate
+            locationPhoto.filename        = filename
+            locationPhoto.index           = mediaIndex
+            locationPhoto.isVideo         = isVideo
+            locationPhoto.localIdentifier = phAsset.localIdentifier
+            locationPhoto.pin             = pin
+            
+            if phAsset.mediaType == .image {
+                let cachingImageManager = PHCachingImageManager()
+                let imageRequestOptions = PHImageRequestOptions()
+                var errorCount          = 0
+                var firstSegmentLoaded  = false
+
+                imageRequestOptions.isNetworkAccessAllowed = false
+                
+                cachingImageManager.requestImage(for: phAsset, targetSize: CGSize( width: 1000, height: 1000 ), contentMode: .aspectFit, options: imageRequestOptions, resultHandler: { image, _ in
+                    if let verifiedImage = image {
+                        
+                        if !firstSegmentLoaded {
+                            firstSegmentLoaded = true
+                        }
+                        else {
+                            if let data = verifiedImage.jpegData( compressionQuality: 1.0 ) {
+                                do {
+                                    try data.write(to: fileURL, options: .atomic)
+                                    
+                                    pin.addToLocationPhotos( locationPhoto )
+                                    pin.numberOfPhotos = Int16( mediaIndex + 1 )
+
+                                    self.saveContext()
+                                    
+                                    if self.dataStoreLocation != .device {
+                                        self.saveToExternalStorage( filename )
+                                    }
+
+                                    delegate.pinCentral( self, didUpdateInAppPhotos: true )
+                                }
+                                
+                                catch let error as NSError {
+                                    errorCount += 1
+                                    logVerbose( "ERROR!  Could not write data to file! [ %d ]\n    [ %@ ][ %@ ]\n\n", errorCount, error.localizedFailureReason ?? error.localizedDescription, filename )
+                                    self.managedObjectContext.delete( locationPhoto )
+
+                                    delegate.pinCentral( self, didUpdateInAppPhotos: false )
+                                }
+                                
+                            }
+                        
+                        }
+                        
+                    }
+                    else {
+                        logVerbose( "ERROR!  Could not unwrap data from asset!  [ %@ ]", phAsset.localIdentifier )
+                        self.managedObjectContext.delete( locationPhoto )
+                        
+                        delegate.pinCentral( self, didUpdateInAppPhotos: false )
+                    }
+                    
+               })
+
+            }
+            else if phAsset.mediaType == .video {
+                let options = PHVideoRequestOptions()
+                
+                options.deliveryMode = .highQualityFormat
+                options.version      = .original
+
+                PHImageManager.default().requestAVAsset(forVideo: phAsset, options: options) { avAsset, audioMix, info in
+                    if let urlAsset = avAsset as? AVURLAsset {
+                        do {
+                            try self.fileManager.copyItem(at: urlAsset.url, to: fileURL )
+                            
+                            pin.addToLocationPhotos( locationPhoto )
+                            pin.numberOfPhotos = Int16( mediaIndex + 1 )
+
+                            self.saveContext()
+                            
+                            if self.dataStoreLocation != .device {
+                                self.saveToExternalStorage( filename )
+                            }
+                            
+                            delegate.pinCentral( self, didUpdateInAppPhotos: true )
+                        }
+                        
+                        catch {
+                            logVerbose( "ERROR!  Could not write data to file!  [ %@ ][ %@ ]", filename, phAsset.localIdentifier )
+                            self.managedObjectContext.delete( locationPhoto )
+                            
+                            delegate.pinCentral( self, didUpdateInAppPhotos: false )
+                        }
+                        
+                    }
+                    else {
+                        logVerbose( "ERROR!  Could not unwrap data from asset!  [ %@ ]", phAsset.localIdentifier )
+                        self.managedObjectContext.delete( locationPhoto )
+                        
+                        delegate.pinCentral( self, didUpdateInAppPhotos: false )
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+    
+    
+    func addPhotoToPin( _ pin: Pin, image: UIImage, comment: String, _ delegate: PinCentralDelegate ) {
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+
+        let picturesDirectoryPath = pictureDirectoryPath()
+
+        if picturesDirectoryPath.isEmpty {
+            logVerbose( "ERROR!  pictureDirectoryPath isEmpty!" )
+            delegate.pinCentral( self, didAddPhoto: false, to: pin )
+            return
+        }
+
+        logTrace()
+        let compressionQuality   = CGFloat( 1.0 )
+        let identifier           = UUID().uuidString
+        let imageFilename        = pin.name! + "_" + identifier + ".jpg"
+        let normalizedImage      = normalize( image )
+        
+        guard let imageData = normalizedImage.jpegData( compressionQuality: compressionQuality ) else {
+            logTrace( "ERROR!  Could NOT convert UIImage to Data!" )
+            delegate.pinCentral( self, didAddPhoto: false, to: pin )
+            return
+        }
+        
+        let fileURL    = URL( fileURLWithPath: picturesDirectoryPath ).appendingPathComponent( imageFilename )
+        let mediaIndex = Int16( pin.locationPhotos!.count )
+
+        persistentContainer.viewContext.perform {
+            let locationPhoto = NSEntityDescription.insertNewObject( forEntityName: EntityNames.locationPhoto, into: self.managedObjectContext ) as! LocationPhoto
+            
+            locationPhoto.comment         = comment
+            locationPhoto.dateCreated     = Date()
+            locationPhoto.filename        = imageFilename
+            locationPhoto.index           = mediaIndex
+            locationPhoto.isVideo         = false
+            locationPhoto.localIdentifier = identifier
+            locationPhoto.pin             = pin
+            
+            do {
+                try imageData.write(to: fileURL, options: .atomic)
+                
+                logVerbose( "saved image to [ %@ ]", imageFilename )
+                
+                pin.addToLocationPhotos( locationPhoto )
+                pin.numberOfPhotos = Int16( mediaIndex + 1 )
+
+                self.saveContext()
+                
+                if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
+                    self.cloudCentral.saveImageData( imageData, filename: imageFilename, self )
+                }
+                else if self.dataStoreLocation == .nas || self.dataStoreLocation == .shareNas {
+                    if self.stayOffline {
+                        self.createImageRequestFor( OfflineImageRequestCommands.save, filename: imageFilename )
+                    }
+                    else {
+                        self.nasCentral.saveImageData( imageData, filename: imageFilename, self )
+                    }
+                    
+                }
+
+                delegate.pinCentral( self, didAddPhoto: true, to: pin )
+            }
+            
+            catch let error as NSError {
+                logVerbose( "ERROR!  Could not write data to file!\n    [ %@ ][ %@ ]\n\n", error.localizedFailureReason ?? error.localizedDescription, imageFilename )
+                self.managedObjectContext.delete( locationPhoto )
+
+                delegate.pinCentral( self, didAddPhoto: false, to: pin )
+            }
+            
+        }
+        
+    }
+
+    
+    func deleteLocationPhotoFrom(_ pin: Pin, locationPhoto: LocationPhoto, _ delegate: PinCentralDelegate ) {
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        persistentContainer.viewContext.perform {
+            let successFlag = self.deleteImageNamed( locationPhoto.filename! )
+            let photoCount  = Int16( pin.locationPhotos!.count )
+
+            logVerbose( "%@ location photo file[ %@ ] from pin[ %@ ]", ( successFlag ? "Deleted" : "ERROR!!! Unable to delete" ), locationPhoto.filename!, pin.name! )
+            
+            if successFlag {
+                pin.numberOfPhotos = Int16( photoCount - 1 )
+                pin.removeFromLocationPhotos( locationPhoto )
+                self.managedObjectContext.delete( locationPhoto )
+                
+                var locationPhotoArray = pin.locationPhotos?.allObjects as! [LocationPhoto]
+                
+                locationPhotoArray = locationPhotoArray.sorted(by: { (locationPhoto1, locationPhoto2 ) -> Bool in
+                    return locationPhoto1.index < locationPhoto2.index
+                } )
+                
+                for index in 0..<locationPhotoArray.count {
+                    let locationPhoto = locationPhotoArray[ index ]
+                    
+                    locationPhoto.index = Int16( index )
+                }
+
+                self.saveContext()
+            }
+            
+            delegate.pinCentral( self, didUpdateInAppPhotos: successFlag )
+        }
+        
+    }
+    
+    
+    func fetchLocationPhotosDataForPin( _ pin: Pin ) -> [( LocationPhoto, Data, Bool )] {
+        var fetchedMediaArray  = [( LocationPhoto, Data, Bool )]()
+        var locationPhotoArray = pin.locationPhotos?.allObjects as! [LocationPhoto]
+        
+        locationPhotoArray = locationPhotoArray.sorted(by: { (locationPhoto1, locationPhoto2 ) -> Bool in
+            return locationPhoto1.index < locationPhoto2.index
+        } )
+        
+        for locationPhoto in locationPhotoArray {
+            let result = fetchFromDiskImageFileNamed( locationPhoto.filename! )
+
+            fetchedMediaArray.append( ( locationPhoto, result.1, result.0 ) )
+        }
+                                                       
+        return fetchedMediaArray
+    }
+    
+    
+    func saveUpdated( _ locationPhoto: LocationPhoto, _ delegate: PinCentralDelegate ) {
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        persistentContainer.viewContext.perform {
+            self.saveContext()
+            delegate.pinCentral( self, didUpdateInAppPhotos: true )
+        }
+        
+    }
+    
     
     
     // MARK: Methods shared with CommonExtensions (Public)

@@ -50,9 +50,11 @@
 "AlertTitle.AreYouSure"                     = "Are you sure you want to discard your changes?";
 "AlertTitle.AuthorizationRequired"          = "Authorization Required!";
 "AlertTitle.CheckForMissingImages"          = "Check for missing images";
+"AlertTitle.CommentForFavorite"             = "What would you like to remember about this favorite?";
 "AlertTitle.CurrentCoordinates"             = "Current Coordinates";
 "AlertTitle.DeviceNameRequired"             = "Device Name is Required for NAS";
 "AlertTitle.DiscardChanges"                 = "Do you want to discard your changes?";
+"AlertTitle.EnterCommentForFavorite"        = "What would you like to remember about this favorite?";
 "AlertTitle.EnterDeviceName"                = "Enter Device Name";
 "AlertTitle.Error"                          = "Error";
 "AlertTitle.EditLatLongAndAlt"              = "Edit latitude, longitude and altitude";
@@ -66,6 +68,8 @@
 "AlertTitle.NoMissingImages"                = "You have NO missing images on the %@.";
 "AlertTitle.NoPhotosFound"                  = "No Photos Found!";
 "AlertTitle.OverrideOfflineBlock"           = "Override Offline Block?";
+"AlertTitle.PhotoAddedToPin"                = "Photo added to %@ pin";
+"AlertTitle.RemoveFromFavorites"            = "Are you sure you want to remove this from your favorites?";
 "AlertTitle.RequestedImagesLoaded"          = "Transferred %d of %d images requested to %@.";
 "AlertTitle.SaveToPhotoLibrary"             = "Would you like to save this image to your Photo Library?";
 "AlertTitle.SelectMapType"                  = "Select Map Type";
@@ -77,9 +81,11 @@
 "AlertTitle.UnableToProcessYourRequest"     = "Unable to Process Your Request";
 "AlertTitle.Warning"                        = "Warning!";
 
+"ButtonTitle.AddPhoto"                      = "Add Photo";
 "ButtonTitle.Back"                          = "Back";
 "ButtonTitle.Camera"                        = "Camera";
 "ButtonTitle.Cancel"                        = "Cancel";
+"ButtonTitle.Comments"                      = "Comments";
 "ButtonTitle.CreateHere"                    = "Create Here";
 "ButtonTitle.Delete"                        = "Delete";
 "ButtonTitle.Directions"                    = "Directions";
@@ -153,6 +159,7 @@
 
 "LabelText.About"                           = "About";
 "LabelText.Altitude"                        = "Altitude";
+"LabelText.Comment"                         = "Comment";
 "LabelText.ContactUs"                       = "All rights reserved.  Contact us at";
 "LabelText.Destination"                     = "Destination";
 "LabelText.Device"                          = "Device";

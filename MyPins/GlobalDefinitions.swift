@@ -9,6 +9,8 @@
 import UIKit
 
 
+let onDevDevice = true    // set to false to hide access to in-app photos
+
 enum DataStoreLocation {
     case device
     case iCloud
@@ -39,9 +41,10 @@ struct DisplayUnits {
 }
 
 struct EntityNames {
-    static let imageRequest = "ImageRequest"
-    static let pin          = "Pin"
-    static let pinColor     = "PinColor"
+    static let imageRequest  = "ImageRequest"
+    static let locationPhoto = "LocationPhoto"
+    static let pin           = "Pin"
+    static let pinColor      = "PinColor"
 }
 
 struct Filenames {

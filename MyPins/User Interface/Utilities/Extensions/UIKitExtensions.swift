@@ -279,6 +279,50 @@ extension UIImage {
 
 
 
+// MARK: Custom Presentation Classes
+
+class CustomPresentationController: UIPresentationController {
+
+    var customFrame: CGRect!
+
+    init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, customFrame: CGRect) {
+        self.customFrame = customFrame
+        super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
+    }
+
+    override var frameOfPresentedViewInContainerView: CGRect {
+        return customFrame
+    }
+
+    override func presentationTransitionWillBegin() {
+        // Optional: Add a dimming view or other custom animations here
+    }
+
+    override func dismissalTransitionWillBegin() {
+        // Optional: Add dismissal animations here
+    }
+
+}
+
+
+class CustomTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
+
+    var customFrame: CGRect!
+
+    init(customFrame: CGRect) {
+        self.customFrame = customFrame
+        super.init()
+    }
+
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return CustomPresentationController(presentedViewController: presented, presenting: presenting, customFrame: customFrame)
+    }
+    
+    
+}
+
+
+
 // MARK: Global Methods
 
 func dateFrom(_ dateString: String ) -> Date {

@@ -47,6 +47,11 @@ class DatePickerViewController: UIViewController {
         logTrace()
         super.viewDidLoad()
 
+        view.layer.borderWidth  = 2.0
+        view.layer.borderColor  = UIColor.black.cgColor
+        view.layer.cornerRadius = 10.0
+        view.clipsToBounds      = true
+        
         durationLabel    .text = NSLocalizedString( "LabelText.NumberOfDays", comment: "Number of Days"  )
         startingDateLabel.text = NSLocalizedString( "LabelText.StartingDate", comment: "Starting Date"   )
         titleLabel       .text = NSLocalizedString( "Title.SetTimePeriod",    comment: "Set Time Period" )
@@ -59,6 +64,8 @@ class DatePickerViewController: UIViewController {
         startingDatePicker.maximumDate = Date()
         startingDatePicker.minimumDate = Date.distantPast
         
+        preferredContentSize = CGSize(width: 375, height: 296 )
+
         durationPickerView.layer.cornerRadius = 10
   }
     

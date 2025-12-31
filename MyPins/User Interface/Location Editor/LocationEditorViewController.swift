@@ -308,7 +308,8 @@ class LocationEditorViewController: UIViewController  {
         navigationItem.rightBarButtonItem = nil
         
         if dataChanged() {
-            navigationItem.rightBarButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .plain, target: self, action: #selector( saveBarButtonTouched   ) )
+//            navigationItem.rightBarButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .plain, target: self, action: #selector( saveBarButtonTouched   ) )
+            navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: .done, target: self, action: #selector( saveBarButtonTouched  ) )
         }
     
     }

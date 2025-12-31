@@ -55,9 +55,7 @@ class LogViewController: UIViewController {
     
     private func loadBarButtonItems() {
 //        logTrace()
-        let title = "< " + (  ( UIDevice.current.userInterfaceIdiom == .pad ) ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back", comment: "Back" ) )
-
-        navigationItem.leftBarButtonItem = UIBarButtonItem.init( title: title, style : .plain, target: self, action: #selector( leftBarButtonTouched(_:) ) )
+        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Back", comment: "Back" ), style: .plain, target: self, action: #selector( leftBarButtonTouched ) )
     }
 
     

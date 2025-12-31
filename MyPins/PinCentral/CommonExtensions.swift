@@ -317,6 +317,23 @@ extension PinCentral {
 
 extension PinCentral {
     
+    func createImageRequestFor(_ command: Int, filename: String ) {
+        logVerbose( "Creating ImageRequest[ %@ ][ %@ ] ", nameForImageRequest( command ), filename )
+        self.persistentContainer.viewContext.perform {
+            let     imageRequest = NSEntityDescription.insertNewObject( forEntityName: EntityNames.imageRequest, into: self.managedObjectContext ) as! ImageRequest
+            
+            imageRequest.index    = Int16( self.offlineImageRequestQueue.count )
+            imageRequest.command  = Int16( command )
+            imageRequest.filename = filename
+            
+            self.saveContext()
+            
+            self.updatedOffline = true
+        }
+        
+    }
+    
+    
     func deleteImageNamed(_ name: String ) -> Bool {
         //        logTrace()
         let         directoryPath = pictureDirectoryPath()
@@ -390,7 +407,7 @@ extension PinCentral {
             return result
         }
 
-        let picturesDirectoryURL = URL.init( fileURLWithPath: picturesDirectoryPath )
+        let picturesDirectoryURL = URL( fileURLWithPath: picturesDirectoryPath )
         let imageFileURL         = picturesDirectoryURL.appendingPathComponent( imageName )
         
         if !fileManager.fileExists( atPath: imageFileURL.path ) {
@@ -630,6 +647,35 @@ extension PinCentral {
  */
     
 
+    func normalize(_ image : UIImage ) -> UIImage {
+         var     rotation : Float = 0.0
+
+         switch image.imageOrientation {
+         case .down:             rotation = .pi
+         case .downMirrored:     rotation = .pi
+         case .left:             rotation = -.pi/2
+         case .leftMirrored:     rotation = -.pi/2
+         case .right:            rotation = .pi/2
+         case .rightMirrored:    rotation = .pi/2
+         case .up:               rotation = 0.0
+         case .upMirrored:       rotation = 0.0
+         default: break
+         }
+         
+         if rotation == 0.0 {
+             return image
+         }
+
+         logOrientationOf( image )
+         logVerbose( "rotation[ %f ]", rotation )
+         
+         let     naturalImage = UIImage( cgImage: (image.cgImage)!, scale: image.scale, orientation: .up )
+         let     rotatedImage = naturalImage.rotate( radians: rotation )!
+         
+         return rotatedImage
+     }
+     
+
     func removeThumbnails() {
         let directoryPath = pictureDirectoryPath()
         
@@ -705,6 +751,32 @@ extension PinCentral {
         }
         
         return false
+    }
+    
+    
+    func saveToExternalStorage(_ mediaFilename: String ) {
+        logTrace()
+        let fileUrl = URL( fileURLWithPath: pictureDirectoryPath() ).appendingPathComponent( mediaFilename )
+        
+        if let data = fileManager.contents( atPath: fileUrl.path ) {
+            if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
+                cloudCentral.saveImageData( data, filename: mediaFilename, self )
+            }
+            else if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
+                if stayOffline {
+                    createImageRequestFor( OfflineImageRequestCommands.save, filename: mediaFilename )
+                }
+                else {
+                    nasCentral.saveImageData( data, filename: mediaFilename, self )
+                }
+                
+            }
+            
+        }
+        else {
+            logVerbose( "ERROR!  Could NOT unwrap data for file [ %@ ]", fileUrl.path )
+        }
+            
     }
     
     
@@ -786,23 +858,6 @@ extension PinCentral {
 
     // MARK: Image Convenience Utility Methods (Private)
 
-    private func createImageRequestFor(_ command: Int, filename: String ) {
-        logVerbose( "Creating ImageRequest[ %@ ][ %@ ] ", nameForImageRequest( command ), filename )
-        self.persistentContainer.viewContext.perform {
-            let     imageRequest = NSEntityDescription.insertNewObject( forEntityName: EntityNames.imageRequest, into: self.managedObjectContext ) as! ImageRequest
-            
-            imageRequest.index    = Int16( self.offlineImageRequestQueue.count )
-            imageRequest.command  = Int16( command )
-            imageRequest.filename = filename
-            
-            self.saveContext()
-            
-            self.updatedOffline = true
-        }
-        
-    }
-    
-    
     private func fetchFromDiskImageNamed(_ name: String ) -> (Bool, UIImage) {
         let result = fetchFromDiskImageFileNamed( name )
         
@@ -837,35 +892,6 @@ extension PinCentral {
     }
 
     
-   private func normalize(_ image : UIImage ) -> UIImage {
-        var     rotation : Float = 0.0
-
-        switch image.imageOrientation {
-        case .down:             rotation = .pi
-        case .downMirrored:     rotation = .pi
-        case .left:             rotation = -.pi/2
-        case .leftMirrored:     rotation = -.pi/2
-        case .right:            rotation = .pi/2
-        case .rightMirrored:    rotation = .pi/2
-        case .up:               rotation = 0.0
-        case .upMirrored:       rotation = 0.0
-        default: break
-        }
-        
-        if rotation == 0.0 {
-            return image
-        }
-
-        logOrientationOf( image )
-        logVerbose( "rotation[ %f ]", rotation )
-        
-        let     naturalImage = UIImage( cgImage: (image.cgImage)!, scale: image.scale, orientation: .up )
-        let     rotatedImage = naturalImage.rotate( radians: rotation )!
-        
-        return rotatedImage
-    }
-    
-
 }
 
 

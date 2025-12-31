@@ -256,7 +256,19 @@ extension SettingsViewController: PinCentralDelegate {
                     }
                     
                 }
-               
+                
+                let locationPhotoArray = pin.locationPhotos?.allObjects as! [LocationPhoto]
+
+                for locationPhoto in locationPhotoArray {
+                    if !remoteImageNameArray.contains( locationPhoto.filename! ) {
+                        logVerbose( "uploading [ %@ ][ %@ ]", pinCentral.shortDescriptionFor( pin ), locationPhoto.filename! )
+
+                        imagesRequested.append( locationPhoto.filename! )
+                        pinCentral.uploadImageNamed( locationPhoto.filename!, self )
+                    }
+
+                }
+                
             }
 
         }
@@ -544,14 +556,13 @@ extension SettingsViewController: UITableViewDelegate {
         
         imagesRequested.removeAll()
 
-        self.pinCentral.canSeeExternalStorage()    // clears the queue & restarts the session
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 ) {
             for array in self.pinCentral.pinArrayOfArrays {
                 for pin in array {
+                    let descriptor = self.pinCentral.shortDescriptionFor( pin )
+
                     if let imageName = pin.imageName {
                         if !imageName.isEmpty {
-                            let descriptor = self.pinCentral.shortDescriptionFor( pin )
                             var imageCount = self.pinCentral.fetchMissingDeviceImages( imageName, descriptor, self )
                             
                             requestCount += imageCount
@@ -564,7 +575,21 @@ extension SettingsViewController: UITableViewDelegate {
                         }
                         
                     }
-                   
+                    
+                    let locationPhotoArray = pin.locationPhotos?.allObjects as! [LocationPhoto]
+
+                    for locationPhoto in locationPhotoArray {
+                        var imageCount = self.pinCentral.fetchMissingDeviceImages( locationPhoto.filename!, descriptor, self )
+
+                        requestCount += imageCount
+                        
+                        while imageCount > 0 {
+                            self.imagesRequested.append( locationPhoto.filename! )
+                            imageCount -= 1
+                        }
+                        
+                    }
+                    
                 }
 
             }
