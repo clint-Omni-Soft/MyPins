@@ -48,6 +48,7 @@ class MapViewController: UIViewController {
     private let appDelegate              = UIApplication.shared.delegate as! AppDelegate
     private var centerMapOnUserLocation  = true
     private var coordinateToCenterMapOn  = CLLocationCoordinate2DMake( 0.0, 0.0 )
+    private let customDelegate           = CustomTransitioningDelegate( CGRect(x: 0, y: 0, width: 1, height: 1) )
     private let deviceAccessControl      = DeviceAccessControl.sharedInstance
     private var ignoreRefresh            = false
     private var locationEstablished      = false
@@ -304,16 +305,17 @@ class MapViewController: UIViewController {
             navigationController?.pushViewController( locationEditorVC, animated: true )
         }
         else {
-            let     navigationController = UINavigationController.init( rootViewController: locationEditorVC )
-            
-            navigationController.modalPresentationStyle = .popover
-            navigationController.preferredContentSize   = CGSize( width: 400, height: 600 )
+            let navigationController = UINavigationController.init( rootViewController: locationEditorVC )
 
-            navigationController.popoverPresentationController?.delegate                 = self
-            navigationController.popoverPresentationController?.permittedArrowDirections = .any
-            navigationController.popoverPresentationController?.sourceRect               = CGRectMake( 50, 20, 50, 50 )
-            navigationController.popoverPresentationController?.sourceView               = view
+            let customSize = CGSize(width: ViewFrameWidths.locationNav, height: ViewFrameHeights.locationNav )
+            let x          = (view.bounds.width  - customSize.width ) / 2
+            let y          = (view.bounds.height - customSize.height) / 2
             
+            customDelegate.customFrame = CGRect(x: x, y: y, width: customSize.width, height: customSize.height )
+            
+            navigationController.modalPresentationStyle = .custom
+            navigationController.transitioningDelegate  = customDelegate
+
             present( navigationController, animated: true, completion: nil )
         }
         

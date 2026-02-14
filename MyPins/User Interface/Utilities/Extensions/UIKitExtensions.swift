@@ -11,14 +11,28 @@ import UIKit
 
 
 
-// MARK: UIViewController Methods
-
-
 struct HeaderViewTagOffsets {
     static let down = 200
     static let up   = 100
 }
 
+
+
+// MARK: Date Methods
+
+extension Date {
+    
+    func daysBetweenDate(toDate: Date) -> Int {
+        let components = Calendar.current.dateComponents([.day], from: self, to: toDate)
+        return components.day ?? 0
+    }
+    
+    
+}
+
+
+
+// MARK: UIViewController Methods
 
 extension UIViewController {
     
@@ -45,6 +59,21 @@ extension UIViewController {
         
         navigationController?.navigationBar.tintColor = .blue
         navigationItem.titleView = containerView
+    }
+    
+    
+    func customizeButton(_ button: UIButton, with title: String ) {
+        button.layer.borderColor   = UIColor.black.cgColor
+        button.layer.borderWidth   = 1.0
+        button.layer.cornerRadius  = 15.0
+        button.layer.masksToBounds = true
+        
+        button.setTitle( title, for: .normal )
+
+        if #available( iOS 26.0, *) {
+            button.configuration = .glass()
+        }
+        
     }
     
     
@@ -104,6 +133,17 @@ extension UIViewController {
     }
 
     
+    func prominentStyleForBarButtonItem() -> UIBarButtonItem.Style {
+        var style = UIBarButtonItem.Style.plain
+        
+        if #available(iOS 26.0, *) {
+            style = .prominent
+        }
+
+        return style
+    }
+    
+    
     func removeViewControllerByIdiom() {
         if UIDevice.current.userInterfaceIdiom == .phone {
             navigationController?.popViewController( animated: true )
@@ -125,6 +165,7 @@ extension UIViewController {
         return simulator
     }
 
+    
     func viewControllerWithStoryboardId( storyboardId: String ) -> UIViewController {
 //        logVerbose( "[ %@ ]", storyboardId )
         let     storyboardName = ( ( .pad == UIDevice.current.userInterfaceIdiom ) ? "Main_iPad" : "Main_iPhone" )
@@ -137,6 +178,17 @@ extension UIViewController {
     
 
     // MARK: UserDefaults Convenience Methods
+    
+    func flagIsPresentInUserDefaults(_ key : String ) -> Bool {
+        var     flagIsPresent = false
+        
+        if let _ = UserDefaults.standard.string( forKey: key ) {
+            flagIsPresent = true
+        }
+        
+        return flagIsPresent
+    }
+    
     
     func getIndexPathFromUserDefaults(_ key: String ) -> IndexPath {
         var indexPath = GlobalIndexPaths.noSelection
@@ -158,14 +210,14 @@ extension UIViewController {
     }
     
     
-    func flagIsPresentInUserDefaults(_ key : String ) -> Bool {
-        var     flagIsPresent = false
+    func getStringFromUserDefaults(_ key: String ) -> String {
+        var savedString = ""
         
-        if let _ = UserDefaults.standard.string( forKey: key ) {
-            flagIsPresent = true
+        if let string = UserDefaults.standard.string( forKey: key ) {
+            savedString = string
         }
-        
-        return flagIsPresent
+
+        return savedString
     }
     
     
@@ -195,8 +247,20 @@ extension UIViewController {
     }
     
     
+    func saveShowFlagInUserDefaults(_ key: String ) {
+        let     calendar    = Calendar.current
+        let     today       = calendar.component( .day, from: Date() )
+        let     todayString = String( format: "%d", today )
+        
+        UserDefaults.standard.set( todayString, forKey: key )
+        UserDefaults.standard.synchronize()
+    }
+    
+    
     func saveStringInUserDefaults(_ key: String, value: String ) {
+        UserDefaults.standard.removeObject( forKey: key )
         UserDefaults.standard.set( value, forKey: key )
+        
         UserDefaults.standard.synchronize()
     }
     
@@ -207,6 +271,16 @@ extension UIViewController {
     }
     
     
+    func showFlagFromUserDefaults(_ key : String ) -> Bool {
+        let     calendar    = Calendar.current
+        let     today       = calendar.component( .day, from: Date() )
+        let     todayString = String( format: "%d", today )
+        let     lastViewed  = UserDefaults.standard.string( forKey: key )
+        
+        return ( lastViewed != todayString )
+    }
+
+    
 }
 
 
@@ -214,6 +288,11 @@ extension UIViewController {
 // MARK: String Methods
 
 extension String {
+    
+    var alphaNumeric: String {
+            return components(separatedBy: CharacterSet.alphanumerics.inverted).joined()
+        }
+    
     
     func heightWithConstrainedWidth( width: CGFloat, font: UIFont ) -> CGFloat {
         let constraintRect = CGSize( width: width, height: .greatestFiniteMagnitude )
@@ -305,15 +384,17 @@ class CustomPresentationController: UIPresentationController {
 }
 
 
+
 class CustomTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
 
     var customFrame: CGRect!
 
-    init(customFrame: CGRect) {
+    init(_ customFrame: CGRect) {
         self.customFrame = customFrame
         super.init()
     }
 
+    
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         return CustomPresentationController(presentedViewController: presented, presenting: presenting, customFrame: customFrame)
     }
@@ -339,6 +420,45 @@ func dateFrom(_ dateString: String ) -> Date {
     }
     
     return date
+}
+
+
+func dayOfTheWeekFrom(_ date: Date ) -> Int {
+    if let oneBasedDay = Calendar.current.dateComponents( [.weekday], from: date ).weekday {
+        return oneBasedDay - 1
+    }
+
+    logTrace( "ERROR!!!  Unable to unwrap date!  Returning 0" )
+    return  0
+}
+
+
+func extensionFrom(_ filename: String ) -> String {
+    var fileExtension = ""
+    
+    let filenameComponents = filename.components(separatedBy: GlobalConstants.fileExtensionSeparator )
+    
+    if filenameComponents.count >= 2 {
+        fileExtension = filenameComponents.last!
+    }
+
+    return fileExtension.uppercased()
+}
+
+
+func indexPathFrom(_ string: String ) -> IndexPath {
+    let components = string.components(separatedBy: "," )
+    var indexPath  = GlobalIndexPaths.noSelection
+
+    if components.count == 2 {
+        let trimmedComponents = components.map {
+            $0.trimmingCharacters( in: .whitespaces )
+        }
+        
+        indexPath = IndexPath(row: Int( trimmedComponents[1] )!, section: Int( trimmedComponents[0] )! )
+    }
+    
+    return indexPath
 }
 
 

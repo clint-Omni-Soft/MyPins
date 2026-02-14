@@ -9,7 +9,7 @@
 import UIKit
 
 
-let onDevDevice = true    // set to false to hide access to in-app photos
+let onDevDevice = false    // set to false to hide access to in-app photos
 
 enum DataStoreLocation {
     case device
@@ -57,6 +57,7 @@ struct Filenames {
 
 struct GlobalConstants {
     static let feetPerMeter                     = 3.28084
+    static let fileExtensionSeparator           = "."
     static let missingImage                     = "missingImage"
     static let newPin                           = -1
     static let noImage                          = "noImage"
@@ -179,4 +180,13 @@ struct UserInfo {
     static let longitude = "Longitude"
 }
 
+struct ViewFrameHeights {
+    static let datePicker  = CGFloat( 315 )
+    static let locationNav = CGFloat( 600 )
+    static let sortOptions = CGFloat( 350 )
+}
 
+struct ViewFrameWidths {
+    static let datePicker  = CGFloat( 375 )
+    static let locationNav = CGFloat( 400 )
+}

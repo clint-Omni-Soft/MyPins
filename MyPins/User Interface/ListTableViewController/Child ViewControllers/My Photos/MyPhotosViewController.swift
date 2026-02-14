@@ -27,6 +27,7 @@ class MyPhotosViewController: UIViewController {
     @IBOutlet      var leftSwipeGestureRecognizer : UISwipeGestureRecognizer!
     @IBOutlet weak var myCollectionView           : UICollectionView!
     @IBOutlet weak var myImageView                : UIImageView!
+    @IBOutlet      var panGestureRecognizer       : UIPanGestureRecognizer!
     @IBOutlet      var pinchGestureRecognizer     : UIPinchGestureRecognizer!
     @IBOutlet      var rightSwipeGestureRecognizer: UISwipeGestureRecognizer!
     
@@ -86,17 +87,16 @@ class MyPhotosViewController: UIViewController {
         
         myImageView.isUserInteractionEnabled = true
         
-        if #available(iOS 26.0, *) {
-            commentButton.configuration = .glass()
-        }
-        
         commentButton.isHidden = true
-        commentButton.setTitle( "", for: .normal )
         commentButton.setTitleColor( .blue, for: .normal )
         
         favoriteButton.isHidden = !onDevDevice
-        favoriteButton.setTitle( "", for: .normal )
         favoriteButton.setImage( UIImage( systemName: "heart" ), for: .normal )
+        
+        leftSwipeGestureRecognizer  .delegate = self
+        panGestureRecognizer        .delegate = self
+        pinchGestureRecognizer      .delegate = self
+        rightSwipeGestureRecognizer .delegate = self
         
         originalAssetArray = deviceAssetArray
     }
@@ -195,7 +195,6 @@ class MyPhotosViewController: UIViewController {
     
     
     @IBAction func imageSwiped(_ sender: UISwipeGestureRecognizer ) {
-//        logTrace()
         if onDevDevice {
             processSwipeOnDevDevice( sender )
             return
@@ -229,6 +228,19 @@ class MyPhotosViewController: UIViewController {
             navigationController?.popViewController(animated: true )
         }
         
+    }
+    
+    
+    @IBAction func panGestureRecognizerTouched(_ sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: self.view)
+        
+        // Move the image view's center based on the translation
+        if let viewToMove = sender.view {
+            viewToMove.center = CGPoint( x: viewToMove.center.x + translation.x, y: viewToMove.center.y + translation.y )
+        }
+        
+        // Reset the translation to zero to prevent compounding movements
+        sender.setTranslation(CGPoint.zero, in: self.view)
     }
     
     
@@ -306,7 +318,7 @@ class MyPhotosViewController: UIViewController {
     
     
     private func loadBarButtonItems() {
-        //        logTrace()
+//        logTrace()
         var leftBarButtonItems  = [UIBarButtonItem]()
         var rightBarButtonItems = [UIBarButtonItem]()
         
@@ -345,7 +357,7 @@ class MyPhotosViewController: UIViewController {
     
     
     private func populateMyImageViewUsingAssetAt(_ indexPath: IndexPath ) {
-//        logVerbose( "indexPath[ %@ ]", stringFor( indexPath ) )
+        logVerbose( "[ %@ ]", stringFor( indexPath ) )
         let row     = indexPath.row
         let phAsset = deviceAssetArray[row]
         
@@ -406,12 +418,12 @@ class MyPhotosViewController: UIViewController {
     
     
     private func populateMyImageViewUsingMediaAt(_ indexPath: IndexPath ) {
-//        logVerbose( "indexPath[ %@ ]", stringFor( indexPath ) )
         let mediaTuple    = fetchedMediaArray[indexPath.row]
         let locationPhoto = mediaTuple.0
         let mediaData     = mediaTuple.1
         let dataLoaded    = mediaTuple.2
         
+//        logVerbose( "[ %@ ] - [ %@ ] was loaded [ %@ ]", stringFor( indexPath ), locationPhoto.filename!, stringFor( dataLoaded ) )
         setCurrentCellSelection( indexPath )
         
         if let _ = playerLayer {
@@ -451,7 +463,7 @@ class MyPhotosViewController: UIViewController {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2 ) {
                     do {
                         try fileManager.removeItem(at: currentVideoUrl )
-                        logTrace( "deleted temporary file",  )
+//                        logTrace( "deleted temporary file",  )
                     }
                     catch let error as NSError {
                         logVerbose( "ERROR!!!  [ %@ ]\n    [ %@ ]", error.localizedDescription, currentVideoUrl.path )
@@ -472,7 +484,8 @@ class MyPhotosViewController: UIViewController {
         else {  // Image file
             let result       = self.pinCentral.fetchFromDiskImageFileNamed( locationPhoto.filename! )
             let imageLoaded  = result.0
-            
+
+//            logVerbose( "imageLoaded[ %@ ] named[ %@ ]", stringFor( imageLoaded ), locationPhoto.filename! )
             myImageView.image = imageLoaded ? UIImage(data: result.1 ) : UIImage( named: GlobalConstants.missingImage )
         }
         
@@ -568,6 +581,7 @@ class MyPhotosViewController: UIViewController {
     
     
     private func promptForCommentForNewFavorite() {
+        logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EnterCommentForFavorite", comment: "What would you like to remember about this favorite?" ), message: nil, preferredStyle: .alert )
         
         let saveAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .default )
@@ -599,6 +613,7 @@ class MyPhotosViewController: UIViewController {
     
     
     private func promptForUpdateToCommentForFavorite() {
+        logTrace()
         let mediaTuple    = self.fetchedMediaArray[self.selectedIndexPath.row]
         let locationPhoto = mediaTuple.0
 
@@ -640,6 +655,7 @@ class MyPhotosViewController: UIViewController {
     
     
     private func promptToRemoveFromFavorites() {
+        logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.RemoveFromFavorites", comment: "Are you sure you want to reemove this favorite?" ), message: nil, preferredStyle: .alert )
         
         let yesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Yes", comment: "Yes" ), style: .default )
@@ -673,7 +689,19 @@ class MyPhotosViewController: UIViewController {
             fetchedMediaArray = pinCentral.fetchLocationPhotosDataForPin( pin )
             
             for localPhotoTuple in fetchedMediaArray {
+                let imageRead  = localPhotoTuple.2
                 let localPhoto = localPhotoTuple.0
+                let imageName  = localPhoto.filename!
+                
+                if !imageRead {
+                    if pinCentral.dataStoreLocation == .device {
+                        logVerbose( "Unable to read image named[ %@ ]", imageName )
+                    }
+                    else {
+                        let _ = pinCentral.imageNamed( imageName, descriptor: imageName, self )
+                    }
+                    
+                }
                 
                 for index in 0..<deviceAssetArray.count {
                     let phAsset = deviceAssetArray[ index ]
@@ -689,6 +717,7 @@ class MyPhotosViewController: UIViewController {
             }
             
             // Insert placeholders for header cells for arrays that contain at least one element
+            logVerbose( "assets[ %d ] photos[ %d ] ... filtered out [ %d ] assets", deviceAssetArray.count, fetchedMediaArray.count, assetsRemoved )
 
             if fetchedMediaArray.count != 0 {
                 fetchedMediaArray.insert( fetchedMediaArray[0], at: 0 )
@@ -699,8 +728,6 @@ class MyPhotosViewController: UIViewController {
             }
             
             adjustSetupOnDevDevice()
-            
-            logVerbose( "assets[ %d ] photos[ %d ] ... filtered out [ %d ] assets", deviceAssetArray.count, fetchedMediaArray.count, assetsRemoved )
         }
         
     }
@@ -734,6 +761,7 @@ class MyPhotosViewController: UIViewController {
 extension MyPhotosViewController: MyPhotosSectionHeaderCollectionViewCellDelegate {
     
     func myPhotosSectionHeaderCollectionViewCell(_ cell: MyPhotosSectionHeaderCollectionViewCell, didRequestToggleForSection section: Int, isOpen: Bool) {
+        logTrace()
         if section == 0 {
             section0Open = !section0Open
         }
@@ -753,13 +781,25 @@ extension MyPhotosViewController: MyPhotosSectionHeaderCollectionViewCellDelegat
 
 extension MyPhotosViewController: PinCentralDelegate {
     
-    func pinCentral(_ pinCentral: PinCentral, didGetImage: Bool, from asset: PHAsset, image: UIImage ) {
+    func pinCentral(_ pinCentral: PinCentral, didFetchImage: Bool, filename: String, image: UIImage) {
+        logVerbose( "[ %@ ] [ %@ ]", stringFor( didFetchImage ), filename )
+        if didFetchImage {
+            reloadDataArrays()
+            
+            DispatchQueue.main.asyncAfter(wallDeadline: .now() + 0.5 ) {
+                self.populateMyImageViewUsing( self.selectedIndexPath )
+                self.myCollectionView.reloadData()
+            }
+
+        }
         
+    }
+    
+    
+    func pinCentral(_ pinCentral: PinCentral, didGetImage: Bool, from asset: PHAsset, image: UIImage ) {
+//        logVerbose( "[ %@ ]", stringFor(  didGetImage ) )
         if didGetImage {
             myImageView.image = image
-        }
-        else {
-            logVerbose( "[ %@ ]", stringFor(  didGetImage ) )
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
@@ -838,6 +878,7 @@ extension MyPhotosViewController: UICollectionViewDataSource {
 
         }
         
+//        logVerbose( "section[ %d ] numberOfItems[ %d ]", section, numberOfItems )
         return numberOfItems
     }
     
@@ -879,6 +920,20 @@ extension MyPhotosViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        logVerbose( "[ %@ ]", stringFor( indexPath ) )
         populateMyImageViewUsing( indexPath )
+    }
+    
+    
+}
+
+
+
+// MARK: - UIGestureRecognizerDelegate method
+
+extension MyPhotosViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        // Return true to allow both to work at the same time
+        return true
     }
     
     

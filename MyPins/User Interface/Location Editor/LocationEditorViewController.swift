@@ -308,8 +308,15 @@ class LocationEditorViewController: UIViewController  {
         navigationItem.rightBarButtonItem = nil
         
         if dataChanged() {
-//            navigationItem.rightBarButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .plain, target: self, action: #selector( saveBarButtonTouched   ) )
-            navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: .done, target: self, action: #selector( saveBarButtonTouched  ) )
+//          navigationItem.rightBarButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .plain, target: self, action: #selector( saveBarButtonTouched   ) )
+
+            var barButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .plain, target: self, action: #selector( saveBarButtonTouched ) )
+            
+            if #available(iOS 26.0, *)  {
+                barButtonItem = UIBarButtonItem( image: UIImage(systemName: "checkmark"), style: .prominent, target: self, action: #selector( saveBarButtonTouched ) )
+            }
+
+            navigationItem.rightBarButtonItem = barButtonItem
         }
     
     }

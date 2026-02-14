@@ -80,6 +80,11 @@ class PleaseWaitViewController: UIViewController {
     
     @objc func connectingToExternalDevice( notification: NSNotification ) {
         logTrace()
+        pleaseWaitLabel  .isHidden = true
+        stayOfflineButton.isHidden = true
+        
+        pinCentral.stayOffline = false
+
         displayAlert(title: NSLocalizedString( "AlertMessage.ConnectingToExternalDevice", comment: "Connecting to your external device." ), message: "" )
     }
 
@@ -126,6 +131,8 @@ class PleaseWaitViewController: UIViewController {
         stayOfflineButton.isHidden = true
         pleaseWaitLabel  .isHidden = true
         
+        pinCentral.stayOffline = false
+
         displayAlert(title: NSLocalizedString( "AlertMessage.UpdatingExternalDevice", comment: "Please wait while we update the database with the most recent changes." ), message: "" )
     }
     

@@ -47,17 +47,22 @@ class DatePickerViewController: UIViewController {
         logTrace()
         super.viewDidLoad()
 
+        view.clipsToBounds      = true
         view.layer.borderWidth  = 2.0
         view.layer.borderColor  = UIColor.black.cgColor
         view.layer.cornerRadius = 10.0
-        view.clipsToBounds      = true
         
+        durationPickerView.clipsToBounds      = true
+        durationPickerView.layer.borderColor  = UIColor.black.cgColor
+        durationPickerView.layer.borderWidth  = 1.0
+        durationPickerView.layer.cornerRadius = 10.0
+
         durationLabel    .text = NSLocalizedString( "LabelText.NumberOfDays", comment: "Number of Days"  )
         startingDateLabel.text = NSLocalizedString( "LabelText.StartingDate", comment: "Starting Date"   )
         titleLabel       .text = NSLocalizedString( "Title.SetTimePeriod",    comment: "Set Time Period" )
         
-        cancelButton.setTitle( NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), for: .normal )
-        okButton    .setTitle( NSLocalizedString( "ButtonTitle.OK",     comment: "OK"     ), for: .normal )
+        customizeButton( cancelButton, with: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ) )
+        customizeButton( okButton,     with: NSLocalizedString( "ButtonTitle.OK",     comment: "OK"     ) )
         
         startingDate = lastModified
         

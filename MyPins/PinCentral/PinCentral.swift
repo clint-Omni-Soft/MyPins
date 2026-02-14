@@ -661,7 +661,8 @@ class PinCentral: NSObject {
 
         logTrace()
         let isVideo    = phAsset.mediaType == .video
-        let filename   = pin.name! + "_" + UUID().uuidString + ( isVideo ? ".mov" : ".jpg" )
+        let index      = pin.numberOfPhotos + 1    // numberOfPhotos is no longer a count but an incrementing number that never is decremented
+        let filename   = (pin.name!).alphaNumeric + "_" + String( index ) + ( isVideo ? ".mov" : ".jpg" )
         let fileURL    = URL( fileURLWithPath: picturesDirectoryPath ).appendingPathComponent( filename )
         let mediaIndex = Int16( pin.locationPhotos!.count )
 
@@ -696,7 +697,7 @@ class PinCentral: NSObject {
                                     try data.write(to: fileURL, options: .atomic)
                                     
                                     pin.addToLocationPhotos( locationPhoto )
-                                    pin.numberOfPhotos = Int16( mediaIndex + 1 )
+                                    pin.numberOfPhotos = index
 
                                     self.saveContext()
                                     
@@ -742,7 +743,7 @@ class PinCentral: NSObject {
                             try self.fileManager.copyItem(at: urlAsset.url, to: fileURL )
                             
                             pin.addToLocationPhotos( locationPhoto )
-                            pin.numberOfPhotos = Int16( mediaIndex + 1 )
+                            pin.numberOfPhotos = index
 
                             self.saveContext()
                             
@@ -793,8 +794,8 @@ class PinCentral: NSObject {
 
         logTrace()
         let compressionQuality   = CGFloat( 1.0 )
-        let identifier           = UUID().uuidString
-        let imageFilename        = pin.name! + "_" + identifier + ".jpg"
+        let index                = pin.numberOfPhotos + 1    // numberOfPhotos is no longer a count but an incrementing number that never is decremented
+        let imageFilename        = (pin.name!).alphaNumeric + "_" + String( index ) + ".jpg"
         let normalizedImage      = normalize( image )
         
         guard let imageData = normalizedImage.jpegData( compressionQuality: compressionQuality ) else {
@@ -803,8 +804,7 @@ class PinCentral: NSObject {
             return
         }
         
-        let fileURL    = URL( fileURLWithPath: picturesDirectoryPath ).appendingPathComponent( imageFilename )
-        let mediaIndex = Int16( pin.locationPhotos!.count )
+        let fileURL = URL( fileURLWithPath: picturesDirectoryPath ).appendingPathComponent( imageFilename )
 
         persistentContainer.viewContext.perform {
             let locationPhoto = NSEntityDescription.insertNewObject( forEntityName: EntityNames.locationPhoto, into: self.managedObjectContext ) as! LocationPhoto
@@ -812,18 +812,16 @@ class PinCentral: NSObject {
             locationPhoto.comment         = comment
             locationPhoto.dateCreated     = Date()
             locationPhoto.filename        = imageFilename
-            locationPhoto.index           = mediaIndex
+            locationPhoto.index           = index
             locationPhoto.isVideo         = false
-            locationPhoto.localIdentifier = identifier
+            locationPhoto.localIdentifier = String( index )
             locationPhoto.pin             = pin
             
             do {
                 try imageData.write(to: fileURL, options: .atomic)
                 
-                logVerbose( "saved image to [ %@ ]", imageFilename )
-                
                 pin.addToLocationPhotos( locationPhoto )
-                pin.numberOfPhotos = Int16( mediaIndex + 1 )
+                pin.numberOfPhotos = index
 
                 self.saveContext()
                 
@@ -863,12 +861,10 @@ class PinCentral: NSObject {
         
         persistentContainer.viewContext.perform {
             let successFlag = self.deleteImageNamed( locationPhoto.filename! )
-            let photoCount  = Int16( pin.locationPhotos!.count )
 
             logVerbose( "%@ location photo file[ %@ ] from pin[ %@ ]", ( successFlag ? "Deleted" : "ERROR!!! Unable to delete" ), locationPhoto.filename!, pin.name! )
             
             if successFlag {
-                pin.numberOfPhotos = Int16( photoCount - 1 )
                 pin.removeFromLocationPhotos( locationPhoto )
                 self.managedObjectContext.delete( locationPhoto )
                 
@@ -878,12 +874,6 @@ class PinCentral: NSObject {
                     return locationPhoto1.index < locationPhoto2.index
                 } )
                 
-                for index in 0..<locationPhotoArray.count {
-                    let locationPhoto = locationPhotoArray[ index ]
-                    
-                    locationPhoto.index = Int16( index )
-                }
-
                 self.saveContext()
             }
             

@@ -44,6 +44,7 @@ class ListTableViewController: UIViewController {
     }
     
     private let appDelegate             = UIApplication.shared.delegate as! AppDelegate
+    private let customDelegate          = CustomTransitioningDelegate( CGRect(x: 0, y: 0, width: 1, height: 1) )
     private let deviceAccessControl     = DeviceAccessControl.sharedInstance
     private let pinCentral              = PinCentral.sharedInstance
     private var pinForPhoto             : Pin!
@@ -268,7 +269,7 @@ class ListTableViewController: UIViewController {
         let sortTypeName   = pinCentral.nameForSortType( sortType )
         let title          = NSLocalizedString( "LabelText.SortedOn", comment: "Sorted on: " ) + sortTypeName + ( sortAscending ? GlobalConstants.sortAscending : GlobalConstants.sortDescending )
         
-        sortButton.setTitle( title, for: .normal )
+        customizeButton( sortButton, with: title )
     }
     
     
@@ -361,14 +362,15 @@ class ListTableViewController: UIViewController {
         
         sortOptionsVC.delegate = self
         
-        sortOptionsVC.modalPresentationStyle = .popover
-        sortOptionsVC.preferredContentSize   = CGSize(width: myTableView.frame.width, height: 330 )
-
-        sortOptionsVC.popoverPresentationController!.delegate                 = self
-        sortOptionsVC.popoverPresentationController?.permittedArrowDirections = .any
-        sortOptionsVC.popoverPresentationController?.sourceRect               = sortButton.frame
-        sortOptionsVC.popoverPresentationController?.sourceView               = sortButton
+        let customSize = CGSize(width: myTableView.frame.width - 20, height: ViewFrameHeights.sortOptions )
+        let x          = (view.bounds.width  - customSize.width ) / 2
+        let y          = (view.bounds.height - customSize.height) / 2
         
+        customDelegate.customFrame = CGRect(x: x, y: y, width: customSize.width, height: customSize.height )
+        
+        sortOptionsVC.modalPresentationStyle = .custom
+        sortOptionsVC.transitioningDelegate  = customDelegate
+
         present( sortOptionsVC, animated: true, completion: nil )
     }
     
@@ -382,6 +384,7 @@ class ListTableViewController: UIViewController {
             let commentTextField = alert.textFields![0] as UITextField
             let commentText      = commentTextField.text ?? ""
             
+            logVerbose( "Saving image with comment[ %@ ]", commentText )
             self.pinCentral.addPhotoToPin( pin, image: image, comment: commentText, self )
         }
         
@@ -676,10 +679,12 @@ extension ListTableViewController: UIImagePickerControllerDelegate, UINavigation
                     var     imageToSave: UIImage? = nil
                     
                     if let originalImage: UIImage = info[self.convertFromUIImagePickerControllerInfoKey( .originalImage )] as? UIImage {
+                        logTrace( "Found original image" )
                         imageToSave = originalImage
                     }
                     else if let editedImage: UIImage = info[self.convertFromUIImagePickerControllerInfoKey( .editedImage )] as? UIImage {
-                        imageToSave = editedImage
+                        logTrace( "Found edited image" )
+                       imageToSave = editedImage
                     }
                     
                     if let myImageToSave = imageToSave {
@@ -935,11 +940,11 @@ extension ListTableViewController: UITableViewDelegate {
         datePickerViewController.delegate     = self
         datePickerViewController.lastModified = lastModified
         
-        let customSize     = CGSize(width: 375, height: 296)
+        let customSize     = CGSize(width: ViewFrameWidths.datePicker, height: ViewFrameHeights.datePicker )
         let x              = (view.bounds.width  - customSize.width ) / 2
         let y              = (view.bounds.height - customSize.height) / 2
         let customFrame    = CGRect(x: x, y: y, width: customSize.width, height: customSize.height)
-        let customDelegate = CustomTransitioningDelegate(customFrame: customFrame)
+        let customDelegate = CustomTransitioningDelegate( customFrame )
         
         datePickerViewController.modalPresentationStyle = .custom
         datePickerViewController.transitioningDelegate  = customDelegate
