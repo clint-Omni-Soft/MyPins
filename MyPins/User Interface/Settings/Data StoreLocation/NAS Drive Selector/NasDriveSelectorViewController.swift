@@ -96,6 +96,7 @@ class NasDriveSelectorViewController: UIViewController {
         controlPanelTitleLabel      .text    = NSLocalizedString( "LabelText.NetworkPath",  comment: "Network Path"     )
         controlPanelCreateHereButton.setTitle( NSLocalizedString( "ButtonTitle.CreateHere", comment: "Create Here"      ), for: .normal )
         
+        configureBackBarButtonItem()
         configureControlPanelButtonsFor( .hiddenState )
         controlPanelHeightConstraint.constant = 0.0
 
@@ -109,8 +110,8 @@ class NasDriveSelectorViewController: UIViewController {
         logTrace()
         super.viewWillAppear( animated )
         
-        questionBarButtonItem = UIBarButtonItem.init( image : UIImage(named: "question"  ), style : .plain, target : self, action : #selector( questionBarButtonTouched(_:) ) )
-        upBarButtonItem       = UIBarButtonItem.init( image : UIImage(named: "upOneLevel"), style : .plain, target : self, action : #selector( upBarButtonItemTouched(_:)   ) )
+        questionBarButtonItem = UIBarButtonItem.init( image : UIImage(systemName: "questionmark.circle" ), style : .plain, target : self, action : #selector( questionBarButtonTouched(_:) ) )
+        upBarButtonItem       = UIBarButtonItem.init( image : UIImage(systemName: "arrow.up" ), style : .plain, target : self, action : #selector( upBarButtonItemTouched(_:)   ) )
         
         myTableView.reloadData()
     }

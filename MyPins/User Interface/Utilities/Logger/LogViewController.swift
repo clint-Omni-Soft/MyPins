@@ -44,7 +44,7 @@ class LogViewController: UIViewController {
 
     // MARK: Target / Action Methods
     
-    @IBAction func leftBarButtonTouched(_ sender : UIBarButtonItem ) {
+    @IBAction func backBarButtonTouched(_ sender : UIBarButtonItem ) {
         logTrace()
         removeViewControllerByIdiom()
     }
@@ -55,13 +55,7 @@ class LogViewController: UIViewController {
     
     private func loadBarButtonItems() {
 //        logTrace()
-        if #available(iOS 26.0, *)  {
-            navigationItem.leftBarButtonItem = UIBarButtonItem( image: UIImage(systemName: "checkmark"), style: .prominent, target: self, action: #selector( leftBarButtonTouched ) )
-        }
-        else {
-            navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Back", comment: "Back" ), style: prominentStyleForBarButtonItem(), target: self, action: #selector( leftBarButtonTouched ) )
-        }
-        
+        navigationItem.leftBarButtonItem = backBarButtonItem( #selector( backBarButtonTouched(_:) ) )
     }
 
     

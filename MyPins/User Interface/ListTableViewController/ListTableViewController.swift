@@ -339,13 +339,15 @@ class ListTableViewController: UIViewController {
         }
 
         if sortType == SortOptions.byType {
-            leftBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: showAllSections ? "arrowUp" : "arrowDown" ), style: .plain, target: self, action: #selector( showAllBarButtonTouched(_:) ) ) )
+            let systemImage = UIImage(systemName: showAllSections ? "chevron.up" : "chevron.down" )
+
+            leftBarButtonItems.append( UIBarButtonItem.init( image: systemImage, style: .plain, target: self, action: #selector( showAllBarButtonTouched(_:) ) ) )
         }
 
         navigationItem.leftBarButtonItems = leftBarButtonItems
 
         if UIDevice.current.userInterfaceIdiom == .pad {
-            rightBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: "gear" ), style: .plain, target: self, action: #selector( settingsBarButtonTouched(_:) ) ) )
+            rightBarButtonItems.append( UIBarButtonItem.init( image: UIImage(systemName: "gearshape" ), style: .plain, target: self, action: #selector( settingsBarButtonTouched(_:) ) ) )
         }
         
         rightBarButtonItems.append( UIBarButtonItem.init( barButtonSystemItem: .add, target: self, action: #selector( addBarButtonItemTouched ) ) )

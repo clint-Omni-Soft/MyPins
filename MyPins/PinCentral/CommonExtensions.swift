@@ -256,17 +256,20 @@ extension PinCentral {
     
     func createLastUpdatedFile() {
         if let documentDirectoryURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
-            let     fileUrl   = documentDirectoryURL.appendingPathComponent( Filenames.lastUpdated )
-            let     formatter = DateFormatter()
+            let fileUrl            = documentDirectoryURL.appendingPathComponent( Filenames.lastUpdated )
+            var lastDbUpdateString = getStringFromUserDefaults( UserDefaultKeys.lastDbUpdate )
+            let lastDbUpdate       =  1 + ( Int( lastDbUpdateString ) ?? 0 )
             
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            lastDbUpdateString  = String( lastDbUpdate )
             
-            let     dateString   = formatter.string( from: Date() )
-            let     outputString = dateString + GlobalConstants.separatorForLastUpdatedString + deviceName
-            let     data         = outputString.data( using: .utf8 )
+            let outputString = GlobalConstants.lastUpdatedVersionString + GlobalConstants.separatorForLastUpdatedString + lastDbUpdateString + GlobalConstants.separatorForLastUpdatedString + deviceName
+            let data         = outputString.data( using: .utf8 )
             
             if !fileManager.createFile( atPath: fileUrl.path, contents: data, attributes: nil ) {
-                logTrace( "ERROR!  Create failed!" )
+                logTrace( "ERROR!  Unable to create file!" )
+            }
+            else {
+                logVerbose( "[ %@ ]", outputString )
             }
             
         }
@@ -978,6 +981,16 @@ extension PinCentral: NASCentralDelegate {
         
     func nasCentral(_ nasCentral: NASCentral, didCopyDatabaseFromDeviceToNas: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didCopyDatabaseFromDeviceToNas ) )
+        
+        // We have to wait until all files are copied to the NAS before we do this or we will drop an update if it fails to complete
+        var lastDbUpdateString = self.userDefaults.string(forKey: UserDefaultKeys.lastDbUpdate ) ?? ""
+        let lastDbUpdate       =  1 + ( Int( lastDbUpdateString ) ?? 0 )
+        
+        lastDbUpdateString  = String( lastDbUpdate )
+        self.userDefaults.set( lastDbUpdateString, forKey: UserDefaultKeys.lastDbUpdate )
+        removeFlagFromUserDefaults( UserDefaultKeys.databaseUpdated )
+
+//        logVerbose( "Set lastDbUpdate to [ %@ ]", lastDbUpdateString )
         
         if updatedOffline {
             DispatchQueue.main.asyncAfter(deadline: .now() + 4.0 ) {

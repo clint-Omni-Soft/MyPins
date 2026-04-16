@@ -15,11 +15,12 @@
 "AlertMessage.CannotSeeExternalDevice"      = "Nous ne pouvons pas voir votre appareil externe. Rapprochez-vous de votre réseau WiFi et réessayez.";
 "AlertMessage.CheckForMissingImages"        = "Cela peut prendre un certain temps. Si vous souhaitez faire cela, vous devrez conserver l'application au premier plan jusqu'à la fin.";
 "AlertMessage.ConnectingToExternalDevice"   = "Connexion à votre appareil externe.";
+"AlertMessage.DatabaseOutOfDate"            = "Nous n'avons pas pu enregistrer vos modifications car votre base de données est obsolète !";
 "AlertMessage.DataWillBeMovedTo"            = "Lorsque vous appuyez sur le bouton OK, nous transférerons vos données, puis tuerons l'application. Lorsque vous redémarrez l'application, vos données seront stockées sur votre ";
 "AlertMessage.DataWillBeShared"             = "Lorsque vous appuyez sur le bouton OK, nous transférerons vos données, puis tuerons l'application. Lorsque vous redémarrerez, l'application PARTAGERA les données de votre ";
 "AlertMessage.DeviceNameRequired"           = "Veuillez accéder à l'onglet Paramètres, appuyez sur l'entrée 'Nom de l'appareil attribué à l'utilisateur' dans le tableau et entrez un nom pour cet appareil.";
 "AlertMessage.Done"                         = "Terminé!";
-"AlertMessage.ExternalDriveLocked"          = "La base de données de votre disque externe est verrouillée par un autre utilisateur [ %@ ]. Vous pouvez attendre que l'autre utilisateur ferme l'application (ce qui la déverrouille) ou apporter des modifications hors ligne et les télécharger lorsque le lecteur n'est plus verrouillé.";
+"AlertMessage.ExternalDriveLocked"          = "La base de données sur votre disque externe est verrouillée par un autre utilisateur [ %@ ]. Veuillez patienter jusqu'à ce que cet utilisateur ferme l'application (ce qui la déverrouille) et télécharge ses modifications avant d'effectuer les vôtres.";
 "AlertMessage.ImageSaveFailed"              = "Nous n'avons pas pu enregistrer l'image que vous avez sélectionnée.";
 "AlertMessage.InvalidMediaType"             = "Nous ne pouvons pas enregistrer l'article que vous avez sélectionné. Nous pouvons seulement enregistrer des photos.";
 "AlertMessage.LocationAccessDenied"         = "Veuillez activer les services de localisation pour cette application dans les paramètres.";
@@ -45,6 +46,7 @@
 "AlertMessage.UnableToOpenShare"            = "Impossible d'ouvrir le partage sélectionné!";
 "AlertMessage.UnableToProcessYourRequest"   = "Désolé, mais un autre processus est actuellement en cours d'exécution et le NAS est verrouillé. Veuillez réessayer ultérieurement.";
 "AlertMessage.UpdatingExternalDevice"       = "Veuillez patienter pendant que nous mettons à jour la base de données avec les modifications les plus récentes.";
+"AlertMessage.WorkOffline"                  = "Cette action verrouillera la base de données afin que personne d'autre ne puisse la modifier jusqu'à ce que vous reveniez ouvrir, vous connecter puis fermer l'application. Prêt ?";
 
 "AlertTitle.ActionForEntry"                 = "Que souhaiteriez-vous faire avec cette entrée?";
 "AlertTitle.AreYouSure"                     = "Êtes-vous sûr de vouloir annuler vos modifications?";
@@ -79,6 +81,7 @@
 "AlertTitle.TransferComplete"               = "Transfert complet!";
 "AlertTitle.UnableToProcessYourRequest"     = "Impossible de traiter votre demande";
 "AlertTitle.Warning"                        = "Avertissement!";
+"AlertTitle.WorkOffline"                    = "Travailler hors ligne";
 
 "ButtonTitle.AddPhoto"                      = "Ajouter une photo";
 "ButtonTitle.Back"                          = "Retour";
@@ -236,3 +239,4 @@
 "Title.TransferringFiles"                   = "Transferencia de archivos";
 "Title.Unknown"                             = "Inconnu";
 "Title.UserAssignedDeviceName"              = "Nom de périphérique attribué par l'utilisateur";
+"Title.WorkOffline"                         = "Travailler hors ligne";

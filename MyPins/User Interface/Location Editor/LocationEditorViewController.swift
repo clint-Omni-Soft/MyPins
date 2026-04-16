@@ -59,6 +59,7 @@ class LocationEditorViewController: UIViewController  {
     private var     imageCell                 : LocationImageTableViewCell!     // Set in LocationImageTableViewCellDelegate Method
     private var     imageName                 = String()
     private var     latitude                  = 0.0
+    private var     launchingNotesEditor      = false
     private var     loadingImageView          = false
     private var     longitude                 = 0.0
     private var     name                      = String()
@@ -99,6 +100,7 @@ class LocationEditorViewController: UIViewController  {
         super.viewWillAppear( animated )
         
         loadBarButtonItems()
+        
         myTableView.reloadData()
     }
     
@@ -304,19 +306,14 @@ class LocationEditorViewController: UIViewController  {
     
     private func loadBarButtonItems() {
         logTrace()
-        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .plain, target: self, action: #selector( cancelBarButtonTouched ) )
+        navigationItem.leftBarButtonItem  = UIBarButtonItem(barButtonSystemItem: .cancel, target: self , action: #selector( cancelBarButtonTouched ) )
         navigationItem.rightBarButtonItem = nil
         
         if dataChanged() {
-//          navigationItem.rightBarButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .plain, target: self, action: #selector( saveBarButtonTouched   ) )
-
-            var barButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .plain, target: self, action: #selector( saveBarButtonTouched ) )
+            let rightBarButtonItem = UIBarButtonItem( image: UIImage(systemName: "checkmark"), style: .plain, target: self, action: #selector( saveBarButtonTouched ) )
             
-            if #available(iOS 26.0, *)  {
-                barButtonItem = UIBarButtonItem( image: UIImage(systemName: "checkmark"), style: .prominent, target: self, action: #selector( saveBarButtonTouched ) )
-            }
-
-            navigationItem.rightBarButtonItem = barButtonItem
+            rightBarButtonItem.tintColor = .systemBlue
+            navigationItem.rightBarButtonItem = rightBarButtonItem
         }
     
     }
@@ -729,8 +726,16 @@ extension LocationEditorViewController: LocationNotesTableViewCellDelegate {
     // MARK: LocationNotesTableViewCellDelegate Utility Methods
 
     private func launchNotesViewController() {
+        if launchingNotesEditor {
+           logTrace( "Ignoring multiple simultaneous calls to launchNotesViewController()" )
+            return
+        }
+        
+        launchingNotesEditor = true
+        
         guard let notesViewController: NotesViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.notes ) as? NotesViewController else {
             logTrace( "ERROR: Could NOT load NotesViewController!" )
+            launchingNotesEditor = false
             return
         }
         
@@ -738,6 +743,11 @@ extension LocationEditorViewController: LocationNotesTableViewCellDelegate {
         notesViewController.originalText = notes
         
         navigationController?.pushViewController( notesViewController, animated: true )
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 ) {
+            self.launchingNotesEditor = false
+        }
+        
     }
 
     

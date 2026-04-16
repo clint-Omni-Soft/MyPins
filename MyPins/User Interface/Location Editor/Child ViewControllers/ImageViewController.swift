@@ -67,9 +67,9 @@ class ImageViewController: UIViewController, UIScrollViewDelegate {
     // MARK: Utilities
     
     private func loadBarButtonItems() {
-        let title = (UIDevice.current.userInterfaceIdiom == .phone) ? NSLocalizedString( "ButtonTitle.Back", comment: "Back" ) : NSLocalizedString( "ButtonTitle.Done", comment: "Done" )
+        let image = UIImage( systemName: UIDevice.current.userInterfaceIdiom == .phone ? "chevron.left" : "xmark" )!
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem.init( title: title, style: .plain, target: self, action: #selector( leftBarButtonTouched ) )
+        navigationItem.leftBarButtonItem = UIBarButtonItem.init( image: image, style: .plain, target: self, action: #selector( leftBarButtonTouched ) )
     }
 
     

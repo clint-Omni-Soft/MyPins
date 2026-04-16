@@ -28,6 +28,7 @@ class SettingsViewController: UIViewController {
         static let howToUse          = 4
         static let missingImageCheck = 5
         static let deviceName        = 6
+        static let workOffline       = 7
     }
     
     private struct Constants {
@@ -80,6 +81,7 @@ class SettingsViewController: UIViewController {
         if pinCentral.dataStoreLocation != .device {
             optionArray.append( NSLocalizedString( "Title.MissingImageCheck",      comment: "Missing Image Check"       ) )
             optionArray.append( NSLocalizedString( "Title.UserAssignedDeviceName", comment: "User Assigned Device Name" ) )
+            optionArray.append( NSLocalizedString( "Title.WorkOffline",            comment: "Work Offline"              ) )
         }
 
 //        if runningInSimulator() {   // Testing
@@ -140,6 +142,12 @@ class SettingsViewController: UIViewController {
 
     // MARK: Target/Action Methods
     
+    @IBAction func backBarButtonTouched(_ sender: UIBarButtonItem ) {
+        logTrace()
+        navigationController?.popViewController(animated: true )
+    }
+    
+    
     @IBAction func infoBarButtonItemTouched(_ sender : UIBarButtonItem ) {
         let     message = String( format: NSLocalizedString( "AlertMessage.SelectHowToUseForInfo", comment: "Select '%@' for helpful information on: %@,%@,%@,%@ and\nmany other topics." ),
                                           NSLocalizedString( "Title.HowToUse",                     comment: "How to Use" ),
@@ -157,11 +165,15 @@ class SettingsViewController: UIViewController {
 
     private func loadBarButtonItems() {
         logTrace()
+        var leftBarButtonItems: [UIBarButtonItem] = []
+        
         if UIDevice.current.userInterfaceIdiom == .pad {
-            configureBackBarButtonItem()
+            leftBarButtonItems.append( backBarButtonItem( #selector( backBarButtonTouched(_:) ) ) )
         }
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem.init( image: UIImage(named: "info" ), style: .plain, target: self, action: #selector( infoBarButtonItemTouched(_:) ) )
+        leftBarButtonItems.append( UIBarButtonItem.init( image: UIImage(systemName: "questionmark.circle" ), style: .plain, target: self, action: #selector( infoBarButtonItemTouched(_:) ) ) )
+        
+        navigationItem.leftBarButtonItems = leftBarButtonItems
         
 //        if testing {
 //            navigationItem.leftBarButtonItem = UIBarButtonItem.init(title: "Testing", style: .plain, target: self, action: #selector( testingBarButtonItemTouched(_:) ) )
@@ -357,6 +369,7 @@ extension SettingsViewController: UITableViewDelegate {
             case CellIndexes.deviceName:        promptForDeviceName()
             case CellIndexes.howToUse:          pushViewControllerWith( StoryboardIds.howToUse          )
             case CellIndexes.missingImageCheck: checkForMissingImages()
+            case CellIndexes.workOffline:       promptForWorkOffline()
             default:    break
         }
             
@@ -550,52 +563,75 @@ extension SettingsViewController: UITableViewDelegate {
     }
    
     
+    private func promptForWorkOffline() {
+        logTrace()
+        let     alert = UIAlertController.init( title:   NSLocalizedString( "AlertTitle.WorkOffline",   comment: "Work Offline" ),
+                                                message: NSLocalizedString( "AlertMessage.WorkOffline", comment: "Taking this action will lock the database so that no one else can make changes until you return and open, connect then close the app.  Ready to go?" ),
+                                                preferredStyle: .alert )
+
+        let     yesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Yes", comment: "Yes" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Yes Action" )
+            self.pinCentral.workOffline = true
+        }
+
+        let     noAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.No", comment: "No" ), style: .cancel )
+        { ( alertAction ) in
+            logTrace( "No Action" )
+        }
+
+        alert.addAction( yesAction )
+        alert.addAction( noAction )
+        
+        present( alert, animated: true, completion: nil )
+
+        
+    }
+    
+    
     private func scanForAndRequestMissingImages() -> Int {
         logTrace()
         var requestCount = 0
         
         imagesRequested.removeAll()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 ) {
-            for array in self.pinCentral.pinArrayOfArrays {
-                for pin in array {
-                    let descriptor = self.pinCentral.shortDescriptionFor( pin )
+        for array in self.pinCentral.pinArrayOfArrays {
+            for pin in array {
+                let descriptor = self.pinCentral.shortDescriptionFor( pin )
 
-                    if let imageName = pin.imageName {
-                        if !imageName.isEmpty {
-                            var imageCount = self.pinCentral.fetchMissingDeviceImages( imageName, descriptor, self )
-                            
-                            requestCount += imageCount
-                            
-                            while imageCount > 0 {
-                                self.imagesRequested.append( imageName )
-                                imageCount -= 1
-                            }
-                            
-                        }
+                if let imageName = pin.imageName {
+                    if !imageName.isEmpty {
+                        var imageCount = self.pinCentral.fetchMissingDeviceImages( imageName, descriptor, self )
                         
-                    }
-                    
-                    let locationPhotoArray = pin.locationPhotos?.allObjects as! [LocationPhoto]
-
-                    for locationPhoto in locationPhotoArray {
-                        var imageCount = self.pinCentral.fetchMissingDeviceImages( locationPhoto.filename!, descriptor, self )
-
                         requestCount += imageCount
                         
                         while imageCount > 0 {
-                            self.imagesRequested.append( locationPhoto.filename! )
+                            self.imagesRequested.append( imageName )
                             imageCount -= 1
                         }
                         
                     }
                     
                 }
+                
+                let locationPhotoArray = pin.locationPhotos?.allObjects as! [LocationPhoto]
 
+                for locationPhoto in locationPhotoArray {
+                    var imageCount = self.pinCentral.fetchMissingDeviceImages( locationPhoto.filename!, descriptor, self )
+
+                    requestCount += imageCount
+                    
+                    while imageCount > 0 {
+                        self.imagesRequested.append( locationPhoto.filename! )
+                        imageCount -= 1
+                    }
+                    
+                }
+                
             }
 
         }
-            
+
         return requestCount
     }
 

@@ -15,11 +15,12 @@
 "AlertMessage.CannotSeeExternalDevice"      = "We cannot see your external device.  Move closer to your WiFi network and try again.";
 "AlertMessage.CheckForMissingImages"        = "This may take some time.  If you want to do this you will need to keep the app in the foreground until it finishes.";
 "AlertMessage.ConnectingToExternalDevice"   = "Connecting to your external device.";
+"AlertMessage.DatabaseOutOfDate"            = "We could not save your changes because your database is out of date!";
 "AlertMessage.DataWillBeMovedTo"            = "When you hit the OK button we will transfer your data then kill the app.  When you re-start the app your data will stored be on your ";
 "AlertMessage.DataWillBeShared"             = "When you hit the OK button we will transfer your data then kill the app.  When you re-start the app will SHARE the data in your ";
 "AlertMessage.DeviceNameRequired"           = "Please go to the Settings tab, tap on the 'User Assigned Device Name' entry in the table and enter a name for this device.";
 "AlertMessage.Done"                         = "Done!";
-"AlertMessage.ExternalDriveLocked"          = "The database on your external drive is locked by another user [ %@ ].  You can wait until the other user closes the app (which unlocks it) or make you changes offline and upload them when the drive is no longer locked.";
+"AlertMessage.ExternalDriveLocked"          = "The database on your external drive is locked by another user [ %@ ].  Please wait until the other user closes the app (which unlocks it) and download their changes before making yours.";
 "AlertMessage.ImageSaveFailed"              = "We were unable to save the image you selected.";
 "AlertMessage.InvalidMediaType"             = "We can't save the item you selected.  We can only save photos.";
 "AlertMessage.LocationAccessDenied"         = "Please enable location services for this app in Settings.";
@@ -45,6 +46,7 @@
 "AlertMessage.UnableToOpenShare"            = "Unable to open the selected share!";
 "AlertMessage.UnableToProcessYourRequest"   = "Sorry, but right now there is another process running that has the NAS locked.  Please try again later.";
 "AlertMessage.UpdatingExternalDevice"       = "Please wait while we update the database with the most recent changes.";
+"AlertMessage.WorkOffline"                  = "Taking this action will lock the database so that no one else can make changes until you return and open, connect then close the app.  Ready to go?";
 
 "AlertTitle.ActionForEntry"                 = "What would you like to do with this entry?";
 "AlertTitle.AreYouSure"                     = "Are you sure you want to discard your changes?";
@@ -80,6 +82,7 @@
 "AlertTitle.TransferComplete"               = "Transfer Complete!";
 "AlertTitle.UnableToProcessYourRequest"     = "Unable to Process Your Request";
 "AlertTitle.Warning"                        = "Warning!";
+"AlertTitle.WorkOffline"                    = "Work Offline";
 
 "ButtonTitle.AddPhoto"                      = "Add Photo";
 "ButtonTitle.Back"                          = "Back";
@@ -236,3 +239,4 @@
 "Title.TransferringFiles"                   = "Transferring files";
 "Title.Unknown"                             = "Unknown";
 "Title.UserAssignedDeviceName"              = "User Assigned Device Name";
+"Title.WorkOffline"                         = "Work Offline";

@@ -9,7 +9,13 @@
 import UIKit
 
 
-let onDevDevice = false    // set to false to hide access to in-app photos
+let onDevDevice = true    // set to false to hide access to in-app photos
+
+struct ControlViewBorder {
+    static let color       : UIColor = .lightGray
+    static let cornerRadius: CGFloat = 10.0
+    static let width       : CGFloat = 2.0
+}
 
 enum DataStoreLocation {
     case device
@@ -59,6 +65,7 @@ struct GlobalConstants {
     static let feetPerMeter                     = 3.28084
     static let fileExtensionSeparator           = "."
     static let missingImage                     = "missingImage"
+    static let lastUpdatedVersionString         = "V2"
     static let newPin                           = -1
     static let noImage                          = "noImage"
     static let noSelection                      = -1
@@ -100,6 +107,7 @@ struct Notifications {
     static let cannotSeeExternalDevice      = "CannotSeeExternalDevice"
     static let centerMap                    = "CenterMap"
     static let connectingToExternalDevice   = "ConnectingToExternalDevice"
+    static let databaseOutOfDate            = "DatabaseOutOfDate"
     static let deviceNameNotSet             = "DeviceNameNotSet"
     static let enteringBackground           = "EnteringBackground"
     static let enteringForeground           = "EnteringForeground"
@@ -144,6 +152,12 @@ struct PinColors {
     static let pinYellow    = Int16( 13 )
 }
 
+struct PopoverViewBorder {
+    static let color       : UIColor = .lightGray
+    static let cornerRadius: CGFloat = 20.0
+    static let width       : CGFloat = 4.0
+}
+
 struct SortOptions {
     static let byDateLastModified = "byLastModified"
     static let byName             = "byName"
@@ -158,12 +172,14 @@ struct SortOptionNames {
 
 struct UserDefaultKeys {
     static let currentSortOption     = "CurrentSortOption"
+    static let databaseUpdated       = "DatabaseUpdated"
     static let dataStoreLocation     = "DataStoreLocation"
     static let deviceName            = "DeviceName"
     static let dontRemindMeAgain     = "DontRemindMeAgain"
     static let howToUseShown         = "HowToUseShown"
     static let lastAccessedPinsGuid  = "LastAccessedPinsGuid"
     static let lastComponentSelected = "LastComponentSelected"
+    static let lastDbUpdate          = "LastDbUpdate"
     static let lastLocationIndexPath = "LastLocationIndexPath"
     static let lastTabSelected       = "LastTabSelected"
     static let lastTextColor         = "LastTextColor"
@@ -173,6 +189,7 @@ struct UserDefaultKeys {
     static let thumbnailsRemoved     = "ThumbnailsRemoved"
     static let updatedOffline        = "UpdatedOffline"
     static let usingThumbnails       = "UsingThumbnails"
+    static let workOffline           = "WorkOffline"
 }
 
 struct UserInfo {

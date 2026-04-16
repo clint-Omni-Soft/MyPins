@@ -232,7 +232,7 @@ class MapViewController: UIViewController {
     }
     
 
-    @IBAction func infoBarButtonTouched(_ sender : UIBarButtonItem ) {
+    @IBAction func questionBarButtonItemTouched(_ sender : UIBarButtonItem ) {
         let     message = NSLocalizedString( "InfoText.Map1", comment: "MAP\n\nTouching the plus sign (+) bar button will take you to the Pin Editor where you can associate provide information about that pin.\n\n" ) +
                           NSLocalizedString( "InfoText.Map2", comment: "Touching the 'Map' bar button will produce a popover that will allow you to choose from the supported map display modes.\n\n" ) +
                           NSLocalizedString( "InfoText.Map3", comment: "Touching the 'Dart' bar button will produce a popover that will give the device's current latitude, longitude and altitude.\n\n" ) +
@@ -325,11 +325,11 @@ class MapViewController: UIViewController {
     private func loadBarButtonItems() {
         logTrace()
         let dartBarButtonItem  = UIBarButtonItem.init( image: UIImage(named: "dart" ), style: .plain, target: self, action: #selector( dartBarButtonItemTouched(_:) ) )
-        let infoBarButtonItem  = UIBarButtonItem.init( image: UIImage(named: "info" ), style: .plain, target: self, action: #selector( infoBarButtonTouched(_    :) ) )
+        let infoBarButtonItem  = UIBarButtonItem.init( image: UIImage(systemName: "questionmark.circle" ), style: .plain, target: self, action: #selector( questionBarButtonItemTouched(_:) ) )
         var leftBarButtonItems = [UIBarButtonItem]()
         
         if UIDevice.current.userInterfaceIdiom == .pad {
-            leftBarButtonItems.append( UIBarButtonItem.init(image: UIImage(named: "hamburger" ), style: .plain, target: self, action: #selector( showPrimaryBarButtonItemTouched(_:) ) ) )
+            leftBarButtonItems.append( UIBarButtonItem.init(image: UIImage(systemName: "sidebar.left" ), style: .plain, target: self, action: #selector( showPrimaryBarButtonItemTouched(_:) ) ) )
         }
         
         leftBarButtonItems.append( infoBarButtonItem )

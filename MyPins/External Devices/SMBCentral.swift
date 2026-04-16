@@ -526,6 +526,7 @@ extension SMBCentral {
                         delegate.smbCentral( self, didReadFile: false, fileData )
                     }
                     else {
+//                        logTrace( "    opening" )
                         smbFile.open( .read, completion: {
                             (error) in
                             

@@ -214,11 +214,23 @@ class PinCentral: NSObject {
     }
     
     
+    var workOffline: Bool {
+        get {
+            return userDefaults.bool( forKey: UserDefaultKeys.workOffline )
+        }
+        
+        set( workOfflineFlag ) {
+            userDefaults.set( workOfflineFlag, forKey: UserDefaultKeys.workOffline )
+            userDefaults.synchronize()
+        }
+        
+    }
     
+    
+
     // MARK: Private Variables
     
     private var canSeeNasInProgress         = false
-    private var databaseUpdated             = false
     private var dataStoreLocationBacking    = DataStoreLocation.notAssigned
     private var locationManager             : CLLocationManager?
     private var newPinGuid                  = ""
@@ -284,6 +296,22 @@ class PinCentral: NSObject {
     var persistentContainer     : NSPersistentContainer!
     let userDefaults            = UserDefaults.standard
 
+    var databaseUpdated: Bool {
+        get {
+            return flagIsPresentInUserDefaults( UserDefaultKeys.databaseUpdated )
+        }
+        
+        set ( setFlag ) {
+            if setFlag {
+                setFlagInUserDefaults( UserDefaultKeys.databaseUpdated )
+            }
+            else {
+                removeFlagFromUserDefaults( UserDefaultKeys.databaseUpdated )
+            }
+            
+        }
+        
+    }
     
     var updatedOffline: Bool {
         get {
@@ -1029,7 +1057,6 @@ class PinCentral: NSObject {
                         updatedOffline = true
                     }
 
-                    createLastUpdatedFile()
                 }
                 
            }
@@ -1445,8 +1472,10 @@ extension PinCentral {
                     logTrace( "We are updating ... do nothing!" )
                 }
                 else if self.databaseUpdated {
-                    self.databaseUpdated = false
                     logVerbose( "databaseUpdated[ true ]\n    %@", self.deviceAccessControl.descriptor() )
+                    
+                    self.databaseUpdated = false
+                    self.createLastUpdatedFile()
                     
                     if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
                         logVerbose( "copying database to iCloud" )
@@ -1489,6 +1518,13 @@ extension PinCentral {
             timer.invalidate()
         }
         
+        if !deviceAccessControl.byMe {
+            logTrace( "do nothing!" )
+            self.nasCentral.emptyQueue()
+            self.nasCentral.unlockNas( self )
+            return
+        }
+        
         logVerbose( "databaseUpdated[ %@ ]\n    %@", stringFor( databaseUpdated ), deviceAccessControl.descriptor() )
         
         if databaseUpdated {
@@ -1523,6 +1559,8 @@ extension PinCentral {
                         self.deviceAccessControl.updating = true
                         
                         logTrace( "copying database to NAS" )
+                        self.createLastUpdatedFile()
+                        
                         self.nasCentral.emptyQueue()
                         self.nasCentral.copyDatabaseFromDeviceToNas( self )
                     }
@@ -1530,14 +1568,18 @@ extension PinCentral {
                 }
 
             }
-            
-        }
-        else {
-            if !deviceAccessControl.byMe {
-                logTrace( "do nothing!" )
-                return
+            else {
+                if self.userNotificationsAllowed {
+                    DispatchQueue.main.async() {
+                        UIApplication.shared.applicationIconBadgeNumber = 1
+                    }
+                    
+                }
+
             }
-            
+
+        }
+        else {      // !databaseUpdated
             if !stayOffline {
                 DispatchQueue.global().async {
 

@@ -78,6 +78,11 @@ class PleaseWaitViewController: UIViewController {
     }
 
     
+    @objc func databaseOutOfDate( notification: NSNotification ) {
+        displayAlert(title: NSLocalizedString( "AlertMessage.DatabaseOutOfDate", comment: "We could not save your changes because your database is out of date!" ), message: "" )
+    }
+    
+    
     @objc func connectingToExternalDevice( notification: NSNotification ) {
         logTrace()
         pleaseWaitLabel  .isHidden = true
@@ -323,6 +328,7 @@ class PleaseWaitViewController: UIViewController {
         notificationCenter.addObserver( self, selector: #selector( cannotReadAllDbFiles(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.cannotReadAllDbFiles       ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( cannotSeeExternalDevice(         notification: ) ), name: NSNotification.Name( rawValue: Notifications.cannotSeeExternalDevice    ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( connectingToExternalDevice(      notification: ) ), name: NSNotification.Name( rawValue: Notifications.connectingToExternalDevice ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( databaseOutOfDate(               notification: ) ), name: NSNotification.Name( rawValue: Notifications.databaseOutOfDate          ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( externalDeviceLocked(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.externalDeviceLocked       ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( ready(                           notification: ) ), name: NSNotification.Name( rawValue: Notifications.ready                      ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( transferringDatabase(            notification: ) ), name: NSNotification.Name( rawValue: Notifications.transferringDatabase       ), object: nil )

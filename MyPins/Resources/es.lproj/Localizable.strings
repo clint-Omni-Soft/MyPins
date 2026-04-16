@@ -15,11 +15,12 @@
 "AlertMessage.CannotSeeExternalDevice"      = "No podemos ver su dispositivo externo. Acérquese a su red WiFi e intente nuevamente.";
 "AlertMessage.CheckForMissingImages"        = "Esto puede tomar algo de tiempo. Si desea hacer esto, deberá mantener la aplicación en primer plano hasta que finalice.";
 "AlertMessage.ConnectingToExternalDevice"   = "Conectándose a su dispositivo externo.";
+"AlertMessage.DatabaseOutOfDate"            = "¡No pudimos guardar sus cambios porque su base de datos no está actualizada!";
 "AlertMessage.DataWillBeMovedTo"            = "Cuando presione el botón Aceptar, transferiremos sus datos y luego eliminaremos la aplicación. Cuando reinicie la aplicación, sus datos se almacenarán en su ";
 "AlertMessage.DataWillBeShared"             = "Cuando presione el botón Aceptar, transferiremos sus datos y luego eliminaremos la aplicación. Cuando reinicie la aplicación, COMPARTIRÁ los datos en su ";
 "AlertMessage.DeviceNameRequired"           = "Vaya a la pestaña Configuración, toque la entrada 'Nombre de dispositivo asignado por el usuario' en la tabla e ingrese un nombre para este dispositivo.";
 "AlertMessage.Done"                         = "Hecho!";
-"AlertMessage.ExternalDriveLocked"          = "La base de datos en su disco externo está bloqueada por otro usuario [ %@ ]. Puede esperar hasta que el otro usuario cierre la aplicación (lo que la desbloquea) o realizar cambios sin conexión y cargarlos cuando la unidad ya no esté bloqueada.";
+"AlertMessage.ExternalDriveLocked"          = "La base de datos en su disco externo está bloqueada por otro usuario [ %@ ]. Espere a que el otro usuario cierre la aplicación (lo que la desbloqueará) y descargue sus cambios antes de realizar los suyos.";
 "AlertMessage.ImageSaveFailed"              = "No pudimos guardar la imagen que seleccionó.";
 "AlertMessage.InvalidMediaType"             = "No podemos guardar el artículo que seleccionaste. Solo podemos guardar fotos.";
 "AlertMessage.LocationAccessDenied"         = "Habilite los servicios de ubicación para esta aplicación en Configuración.";
@@ -45,6 +46,7 @@
 "AlertMessage.UnableToOpenShare"            = "¡No se puede abrir el recurso compartido seleccionado!";
 "AlertMessage.UnableToProcessYourRequest"   = "Lo sentimos, pero ahora mismo hay otro proceso en ejecución que tiene el NAS bloqueado. Inténtalo de nuevo más tarde.";
 "AlertMessage.UpdatingExternalDevice"       = "Espere mientras actualizamos la base de datos con los cambios más recientes.";
+"AlertMessage.WorkOffline"                  = "Al realizar esta acción, la base de datos se bloqueará para que nadie más pueda realizar cambios hasta que regreses, abras, conectes y cierres la aplicación. ¿Listo para empezar?";
 
 "AlertTitle.ActionForEntry"                 = "¿Qué te gustaría hacer con esta entrada?";
 "AlertTitle.AreYouSure"                     = "¿Estás seguro de que quieres descartar tus cambios?";
@@ -79,6 +81,7 @@
 "AlertTitle.TransferComplete"               = "¡Transferencia completa!";
 "AlertTitle.UnableToProcessYourRequest"     = "No se puede procesar su solicitud";
 "AlertTitle.Warning"                        = "¡Advertencia!";
+"AlertTitle.WorkOffline"                    = "Trabajar sin conexión";
 
 "ButtonTitle.AddPhoto"                      = "Añadir foto";
 "ButtonTitle.Back"                          = "Espalda";
@@ -235,3 +238,4 @@
 "Title.TransferringFiles"                   = "Transfert de fichiers";
 "Title.Unknown"                             = "Desconocido";
 "Title.UserAssignedDeviceName"              = "Nombre de dispositivo asignado por el usuario";
+"Title.WorkOffline"                         = "Trabajar sin conexión";

@@ -55,9 +55,6 @@ class SortOptionsViewController: UIViewController {
         titleLabel        .text = NSLocalizedString( "Title.SelectSortOptions",   comment: "Select Sort Options" )
         sortAscendingLabel.text = NSLocalizedString( "ButtonTitle.SortAscending", comment: "Sort Ascending"      )
         
-        customizeButton( cancelButton, with: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ) )
-        customizeButton( saveButton,   with: NSLocalizedString( "ButtonTitle.Save",   comment: "Save"   ) )
-        
         saveButton.isHidden = !somethingChanged
         
         originalOptionTuple = pinCentral.sortDescriptor

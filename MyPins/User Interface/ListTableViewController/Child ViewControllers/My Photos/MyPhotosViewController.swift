@@ -22,14 +22,16 @@ class MyPhotosViewController: UIViewController {
     var pin               : Pin!                        // Provided by ListTableVC
     var selectedIndexPath = IndexPath( row: 0, section: 0 )
     
-    @IBOutlet weak var commentButton              : UIButton!
-    @IBOutlet weak var favoriteButton             : UIButton!
-    @IBOutlet      var leftSwipeGestureRecognizer : UISwipeGestureRecognizer!
-    @IBOutlet weak var myCollectionView           : UICollectionView!
-    @IBOutlet weak var myImageView                : UIImageView!
-    @IBOutlet      var panGestureRecognizer       : UIPanGestureRecognizer!
-    @IBOutlet      var pinchGestureRecognizer     : UIPinchGestureRecognizer!
-    @IBOutlet      var rightSwipeGestureRecognizer: UISwipeGestureRecognizer!
+    @IBOutlet weak var backArrrowButton      : UIButton!
+    @IBOutlet weak var commentButton         : UIButton!
+    @IBOutlet weak var downloadButton        : UIButton!
+    @IBOutlet weak var forwardArrowButton    : UIButton!
+    @IBOutlet weak var favoriteButton        : UIButton!
+    @IBOutlet weak var myCollectionView      : UICollectionView!
+    @IBOutlet weak var myImageView           : UIImageView!
+    @IBOutlet      var panGestureRecognizer  : UIPanGestureRecognizer!
+    @IBOutlet      var pinchGestureRecognizer: UIPinchGestureRecognizer!
+    @IBOutlet      var tapGestureRecognizer  : UITapGestureRecognizer!
     
     
     
@@ -90,13 +92,13 @@ class MyPhotosViewController: UIViewController {
         commentButton.isHidden = true
         commentButton.setTitleColor( .blue, for: .normal )
         
+        downloadButton.isHidden = !onDevDevice
         favoriteButton.isHidden = !onDevDevice
         favoriteButton.setImage( UIImage( systemName: "heart" ), for: .normal )
         
-        leftSwipeGestureRecognizer  .delegate = self
-        panGestureRecognizer        .delegate = self
-        pinchGestureRecognizer      .delegate = self
-        rightSwipeGestureRecognizer .delegate = self
+        panGestureRecognizer  .delegate = self
+        pinchGestureRecognizer.delegate = self
+        tapGestureRecognizer  .delegate = self
         
         originalAssetArray = deviceAssetArray
     }
@@ -158,9 +160,60 @@ class MyPhotosViewController: UIViewController {
     
     // MARK: Target / Action Methods
     
+    @IBAction func backArrowButtonTouched(_ sender: UIButton) {
+//        logTrace()
+        var senderIsHidden = false
+        
+        if selectedIndexPath.section == 0 {  // Photo Assets
+            if selectedIndexPath.row > 1 {
+                selectedIndexPath = IndexPath( row: selectedIndexPath.row - 1, section: 0 )
+                populateMyImageViewUsing( selectedIndexPath )
+                forwardArrowButton.isHidden = false
+                senderIsHidden = ( selectedIndexPath.row == 1 )
+           }
+            else {
+                senderIsHidden = true
+            }
+
+        }
+        else {  // Favorites
+            if selectedIndexPath.row > 1 {
+                selectedIndexPath = IndexPath( row: selectedIndexPath.row - 1, section: 1 )
+                populateMyImageViewUsing( selectedIndexPath )
+                forwardArrowButton.isHidden = false
+                senderIsHidden = ( selectedIndexPath.row == 1 )
+            }
+            else if deviceAssetArray.count > 1 {
+                selectedIndexPath = IndexPath( row: deviceAssetArray.count - 1, section: selectedIndexPath.section - 1 )
+                populateMyImageViewUsing( selectedIndexPath )
+                forwardArrowButton.isHidden = false
+                senderIsHidden = ( selectedIndexPath.row == 1 )
+            }
+            else {
+                senderIsHidden = true
+            }
+
+        }
+
+        sender.isHidden = senderIsHidden
+    }
+    
+    
     @IBAction func commentButtonTouched(_ sender: UIButton) {
         logTrace()
         promptForUpdateToCommentForFavorite()       // Only avaiable for Favorites
+    }
+    
+    
+    @IBAction func downloadButtonTouched(_ sender: UIButton) {
+        logTrace()
+        promptToSaveToPhotoAlbum()
+    }
+    
+    
+    @IBAction func doubleTapGestureRecognizerFired(_ sender: UITapGestureRecognizer) {
+        logTrace()
+        populateMyImageViewUsing( selectedIndexPath )
     }
     
     
@@ -181,6 +234,45 @@ class MyPhotosViewController: UIViewController {
     }
     
     
+    @IBAction func forwardArrowButtonTouched(_ sender: UIButton) {
+//        logTrace()
+        var senderIsHidden = false
+        
+        if selectedIndexPath.section == 0 {     // Device Assets
+            if selectedIndexPath.row + 1 < deviceAssetArray.count {
+                selectedIndexPath = IndexPath( row: selectedIndexPath.row + 1, section: selectedIndexPath.section )
+                populateMyImageViewUsing( selectedIndexPath )
+                backArrrowButton.isHidden = false
+                senderIsHidden = ( selectedIndexPath.row == deviceAssetArray.count - 1 )
+            }
+            else if fetchedMediaArray.count > 1 {
+                selectedIndexPath = IndexPath( row: 1, section: 1 )
+                populateMyImageViewUsing( selectedIndexPath )
+                backArrrowButton.isHidden = false
+            }
+            else {
+                backArrrowButton.isHidden = false
+                senderIsHidden = true
+            }
+
+        }
+        else {      // Favorites
+            if selectedIndexPath.row + 1 < fetchedMediaArray.count {
+                selectedIndexPath = IndexPath( row: selectedIndexPath.row + 1, section: selectedIndexPath.section )
+                populateMyImageViewUsing( selectedIndexPath )
+                backArrrowButton.isHidden = false
+                senderIsHidden = ( selectedIndexPath.row == fetchedMediaArray.count - 1 )
+           }
+            else {
+                senderIsHidden = true
+            }
+
+        }
+        
+        sender.isHidden = senderIsHidden
+    }
+    
+    
     @IBAction func fullScreenBarButtonTouched(_ sender : UIBarButtonItem ) {
         logTrace()
         if isOverFullScreen {
@@ -194,31 +286,7 @@ class MyPhotosViewController: UIViewController {
     }
     
     
-    @IBAction func imageSwiped(_ sender: UISwipeGestureRecognizer ) {
-        if onDevDevice {
-            processSwipeOnDevDevice( sender )
-            return
-        }
-        
-        if sender.direction == .left {      // Swipe Left
-            if selectedIndexPath.row + 1 < deviceAssetArray.count {
-                selectedIndexPath = IndexPath( row: selectedIndexPath.row + 1, section: selectedIndexPath.section )
-                populateMyImageViewUsing( selectedIndexPath )
-            }
-            
-        }
-        else {      // Swipe Right
-           if selectedIndexPath.row - 1 >= 0 {
-                selectedIndexPath = IndexPath( row: selectedIndexPath.row - 1, section: selectedIndexPath.section )
-                populateMyImageViewUsing( selectedIndexPath )
-            }
-            
-        }
-        
-    }
-    
-    
-    @IBAction func leftBarButtonTouched(sender : UIBarButtonItem ) {
+    @IBAction func backBarButtonTouched(_ sender: UIBarButtonItem ) {
         logTrace()
         if isOverFullScreen {
             myParentVC.selectedIndexPath = selectedIndexPath
@@ -313,7 +381,19 @@ class MyPhotosViewController: UIViewController {
             
         }
 
-        logVerbose( "open sections[ 0: %@  1: %@ ]  selectedIndexPath: [ %@ ]", stringFor( section0Open ), stringFor( section1Open ), stringFor( selectedIndexPath ) )
+        backArrrowButton.isHidden = false
+        
+        if selectedIndexPath.section == 0 {
+            backArrrowButton  .isHidden = selectedIndexPath.row == 1                                // the header for favorites will not be present if there are no favorites
+            forwardArrowButton.isHidden = ( selectedIndexPath.row == deviceAssetArray.count - 1 ) && fetchedMediaArray.count == 0
+        }
+        else {
+            backArrrowButton  .isHidden = selectedIndexPath.row == 1  && deviceAssetArray.count == 1
+            forwardArrowButton.isHidden = selectedIndexPath.row == fetchedMediaArray.count - 1
+        }
+        
+        logVerbose( "section0 is %@[ %d ]  section1 is %@[ %d ]  selectedIndexPath[ %@ ]", ( section0Open ? "Open" : "Closed" ), deviceAssetArray.count,
+                    ( section1Open ? "Open" : "Closed" ), fetchedMediaArray.count, stringFor( selectedIndexPath ) )
     }
     
     
@@ -328,7 +408,7 @@ class MyPhotosViewController: UIViewController {
             rightBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: imageName ), style: .plain, target: self, action: #selector( fullScreenBarButtonTouched(_:) ) ) )
         }
         
-        leftBarButtonItems.append( UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Back", comment: "Back" ), style: .plain, target: self, action: #selector( leftBarButtonTouched ) ) )
+        leftBarButtonItems.append( backBarButtonItem( #selector( backBarButtonTouched(_:) ) ) )
         
         if let _ = playerLayer {
             switch videoStatus {
@@ -357,7 +437,7 @@ class MyPhotosViewController: UIViewController {
     
     
     private func populateMyImageViewUsingAssetAt(_ indexPath: IndexPath ) {
-        logVerbose( "[ %@ ]", stringFor( indexPath ) )
+//        logVerbose( "[ %@ ]", stringFor( indexPath ) )
         let row     = indexPath.row
         let phAsset = deviceAssetArray[row]
         
@@ -368,7 +448,8 @@ class MyPhotosViewController: UIViewController {
             playerLayer  = nil
         }
         
-        commentButton.isHidden = true
+        commentButton .isHidden = true
+        downloadButton.isHidden = true
         
         myImageView.image     = UIImage()
         myImageView.transform = .identity
@@ -489,11 +570,13 @@ class MyPhotosViewController: UIViewController {
             myImageView.image = imageLoaded ? UIImage(data: result.1 ) : UIImage( named: GlobalConstants.missingImage )
         }
         
-        let buttonTitle = locationPhoto.comment ?? NSLocalizedString( "ButtonTitle.Comments", comment: "Comments" )
-        
-        commentButton.setTitle( buttonTitle, for: .normal )
-        commentButton.isHidden = false
-        
+        let photoComment = locationPhoto.comment ?? ""
+        let buttonTitle  = ( photoComment != "" ) ? photoComment : NSLocalizedString( "ButtonTitle.Comments", comment: "Comments" )
+
+        commentButton .setTitle( buttonTitle, for: .normal )
+        commentButton .isHidden = false
+        downloadButton.isHidden = false
+
         favoriteButton.setImage( UIImage( systemName: "heart.fill" ), for: .normal )
     }
     
@@ -612,6 +695,26 @@ class MyPhotosViewController: UIViewController {
     }
     
     
+    private func promptToSaveToPhotoAlbum() {
+        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.SaveToPhotoLibrary", comment: "Would you like to save this image to your Photo Library?" ), message: nil, preferredStyle: .alert )
+        
+        let     yesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Yes", comment: "Yes" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Yes Action" )
+            let imageToSave = self.myImageView.image!
+            
+            UIImageWriteToSavedPhotosAlbum( imageToSave, self, #selector( MyPhotosViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
+        }
+        
+        let     noAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.No", comment: "No!" ), style: .cancel, handler: nil )
+        
+        alert.addAction( yesAction )
+        alert.addAction( noAction  )
+        
+        present( alert, animated: true, completion: nil )
+    }
+    
+    
     private func promptForUpdateToCommentForFavorite() {
         logTrace()
         let mediaTuple    = self.fetchedMediaArray[self.selectedIndexPath.row]
@@ -719,12 +822,10 @@ class MyPhotosViewController: UIViewController {
             // Insert placeholders for header cells for arrays that contain at least one element
             logVerbose( "assets[ %d ] photos[ %d ] ... filtered out [ %d ] assets", deviceAssetArray.count, fetchedMediaArray.count, assetsRemoved )
 
+            deviceAssetArray.insert( PHAsset(), at: 0 )     // The asset header must always be present or we might not show the fetchedMedia
+            
             if fetchedMediaArray.count != 0 {
                 fetchedMediaArray.insert( fetchedMediaArray[0], at: 0 )
-            }
-            
-            if deviceAssetArray.count != 0 {
-                deviceAssetArray.insert( deviceAssetArray[0], at: 0 )
             }
             
             adjustSetupOnDevDevice()
@@ -761,15 +862,20 @@ class MyPhotosViewController: UIViewController {
 extension MyPhotosViewController: MyPhotosSectionHeaderCollectionViewCellDelegate {
     
     func myPhotosSectionHeaderCollectionViewCell(_ cell: MyPhotosSectionHeaderCollectionViewCell, didRequestToggleForSection section: Int, isOpen: Bool) {
-        logTrace()
         if section == 0 {
-            section0Open = !section0Open
+            if deviceAssetArray.count > 1 {     // We don't need to do anything if all we have in the deviceAssetArray is the header
+                logTrace()
+                section0Open = !section0Open
+                myCollectionView.reloadData()
+            }
+            
         }
         else {
+            logTrace()
             section1Open = !section1Open
+            myCollectionView.reloadData()
         }
         
-        myCollectionView.reloadData()
     }
     
 
@@ -782,7 +888,7 @@ extension MyPhotosViewController: MyPhotosSectionHeaderCollectionViewCellDelegat
 extension MyPhotosViewController: PinCentralDelegate {
     
     func pinCentral(_ pinCentral: PinCentral, didFetchImage: Bool, filename: String, image: UIImage) {
-        logVerbose( "[ %@ ] [ %@ ]", stringFor( didFetchImage ), filename )
+//        logVerbose( "[ %@ ] [ %@ ]", stringFor( didFetchImage ), filename )
         if didFetchImage {
             reloadDataArrays()
             
@@ -853,7 +959,11 @@ extension MyPhotosViewController: PinCentralDelegate {
 extension MyPhotosViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        let numberOfSections = onDevDevice ? ( deviceAssetArray.count > 0 ? 1 : 0 ) + ( fetchedMediaArray.count > 0 ? 1 : 0 ) : 1
+        if !onDevDevice {
+            return 1
+        }
+        
+        let numberOfSections = 1 + ( fetchedMediaArray.count > 0 ? 1 : 0 )
         
         return numberOfSections
     }
@@ -867,10 +977,7 @@ extension MyPhotosViewController: UICollectionViewDataSource {
         }
         else {
             if section == 0 {
-                if deviceAssetArray.count > 1 {
-                    numberOfItems = section0Open ? deviceAssetArray.count : 1
-                }
-            
+                numberOfItems = section0Open ? deviceAssetArray.count : 1
             }
             else if fetchedMediaArray.count > 1  {
                 numberOfItems = section1Open ? fetchedMediaArray.count : 1
@@ -886,6 +993,7 @@ extension MyPhotosViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let isSelected = ( indexPath == selectedIndexPath )
         
+//        logVerbose( "[ %@ ]", stringFor( indexPath ) )
         if onDevDevice && indexPath.row == 0 {
             // Header cells
             let cell   = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.headerID, for: indexPath ) as! MyPhotosSectionHeaderCollectionViewCell
@@ -937,6 +1045,36 @@ extension MyPhotosViewController: UIGestureRecognizerDelegate {
     }
     
     
+}
+
+
+
+// MARK: UIImageWrite Completion Methods
+
+extension MyPhotosViewController {
+
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer ) {
+        let message = error == nil ? NSLocalizedString( "AlertMessage.PhotoSaved",      comment: "Image saved to photo album"  ) :
+                                     NSLocalizedString( "AlertMessage.PhotoSaveFailed", comment: "Save to photo album failed!" )
+        let title   = error == nil ? NSLocalizedString( "AlertTitle.Success", comment: "Success!" ) : NSLocalizedString( "AlertTitle.Error", comment: "Error!" )
+        
+        presentAlert(title: title, message: message )
+    }
+
+
+
+    // MARK: Helper functions inserted by Swift 4.2 migrator.
+
+    fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+        return Dictionary( uniqueKeysWithValues: input.map { key, value in (key.rawValue, value) } )
+    }
+
+
+    fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+        return input.rawValue
+    }
+
+                
 }
 
 

@@ -89,13 +89,13 @@ class DataStoreLocationViewController: UIViewController {
     
     // MARK: Target/Action Methods
     
-    @IBAction func backBarButtonTouched( sender : UIBarButtonItem ) {
+    @IBAction func backBarButtonTouched(_ sender: UIBarButtonItem ) {
         logTrace()
-        navigationController?.popViewController( animated: true )
+        navigationController?.popViewController(animated: true )
     }
     
-
-    @IBAction func infoBarButtonTouched(_ sender : UIBarButtonItem ) {
+    
+    @IBAction func infoBarButtonItemTouched(_ sender : UIBarButtonItem ) {
         let     message = NSLocalizedString( "InfoText.DataStoreLocation1", comment: "DATA STORE LOCATION\n\nWe provide support for two different storage location options...\n\n   (a) on your device (default) or \n   (b) on a Network Accessible Storage (NAS) unit.\n\n" ) +
                           NSLocalizedString( "InfoText.DataStoreLocation2", comment: "The key point here is that there is no sharing on the device.  If you chose NAS then anyone who has access to your Wi-Fi can access it.\n" ) 
 
@@ -108,8 +108,12 @@ class DataStoreLocationViewController: UIViewController {
     
     private func loadBarButtonItems() {
 //        logTrace()
-        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Back", comment: "Back" ), style: .plain, target: self, action: #selector( backBarButtonTouched ) )
-        navigationItem.rightBarButtonItem = UIBarButtonItem.init( image: UIImage(named: "info" ), style: .plain, target: self, action: #selector( infoBarButtonTouched(_:) ) )
+        var leftBarButtonItems: [UIBarButtonItem] = []
+        
+        leftBarButtonItems.append( backBarButtonItem( #selector( backBarButtonTouched(_:) ) ) )
+        leftBarButtonItems.append( UIBarButtonItem.init( image: UIImage(systemName: "questionmark.circle" ), style: .plain, target: self, action: #selector( infoBarButtonItemTouched(_:) ) ) )
+        
+        navigationItem.leftBarButtonItems = leftBarButtonItems
     }
     
 

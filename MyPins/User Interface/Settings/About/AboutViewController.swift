@@ -51,8 +51,6 @@ class AboutViewController: UIViewController {
         versionLabel.isHidden = labelText.isEmpty
         versionLabel.text     = "v" + labelText
 
-        loadBarButtonItems()
-        
         downGestureRecognizer.delegate                = self
         downGestureRecognizer.direction               = .down
         downGestureRecognizer.numberOfTouchesRequired = 1
@@ -62,17 +60,13 @@ class AboutViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool ) {
         logTrace()
         super.viewWillAppear( animated )
+
+        configureBackBarButtonItem()
     }
     
     
     
     // MARK: Target/Action Methods
-    
-    @IBAction func backBarButtonTouched( sender : UIBarButtonItem ) {
-        logTrace()
-        navigationController?.popViewController( animated: true )
-    }
-    
     
     @IBAction func invisibleButtonTouched(_ sender: UIButton) {
         guard let logVC: LogViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardId.logViewer ) as? LogViewController else {
@@ -98,14 +92,6 @@ class AboutViewController: UIViewController {
     @IBAction func respondToDownSwipeGesture(_ sender: UISwipeGestureRecognizer ) {
         logTrace()
 //        presentAlert(title: "Ta Da!  Flare!", message: "We rock!" )
-    }
-    
-    
-    
-    // MARK: Utilities
-    
-    private func loadBarButtonItems() {
-        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Back", comment: "Back" ), style: .plain, target: self, action: #selector( backBarButtonTouched ) )
     }
 
     

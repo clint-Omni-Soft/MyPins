@@ -50,26 +50,9 @@ class PinColorSelectorViewController: UIViewController {
         logTrace()
         super.viewWillAppear( animated )
         
-        loadBarButtonItems()
+        configureBackBarButtonItem()
     }
     
-    
-    //MARK: Target/Action Methods
-    
-    @IBAction func backBarButtonTouched( sender : UIBarButtonItem ) {
-        logTrace()
-        navigationController?.popViewController( animated: true )
-    }
-
-    
-    
-    // MARK: Utility Methods
-    
-    private func loadBarButtonItems() {
-        logTrace()
-        navigationItem.leftBarButtonItem = UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Back", comment: "Back" ), style: .plain, target: self, action: #selector( backBarButtonTouched ) )
-    }
-
     
 }
 
