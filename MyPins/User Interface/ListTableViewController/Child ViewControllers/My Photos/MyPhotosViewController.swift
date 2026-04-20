@@ -166,7 +166,7 @@ class MyPhotosViewController: UIViewController {
         
         if selectedIndexPath.section == 0 {  // Photo Assets
             if selectedIndexPath.row > 1 {
-                selectedIndexPath = IndexPath( row: selectedIndexPath.row - 1, section: 0 )
+                changeSelectedCellTo( IndexPath( row: selectedIndexPath.row - 1, section: 0 ) )
                 populateMyImageViewUsing( selectedIndexPath )
                 forwardArrowButton.isHidden = false
                 senderIsHidden = ( selectedIndexPath.row == 1 )
@@ -178,13 +178,13 @@ class MyPhotosViewController: UIViewController {
         }
         else {  // Favorites
             if selectedIndexPath.row > 1 {
-                selectedIndexPath = IndexPath( row: selectedIndexPath.row - 1, section: 1 )
+                changeSelectedCellTo( IndexPath( row: selectedIndexPath.row - 1, section: 1 ) )
                 populateMyImageViewUsing( selectedIndexPath )
                 forwardArrowButton.isHidden = false
                 senderIsHidden = ( selectedIndexPath.row == 1 )
             }
             else if deviceAssetArray.count > 1 {
-                selectedIndexPath = IndexPath( row: deviceAssetArray.count - 1, section: selectedIndexPath.section - 1 )
+                changeSelectedCellTo( IndexPath( row: deviceAssetArray.count - 1, section: selectedIndexPath.section - 1 ) )
                 populateMyImageViewUsing( selectedIndexPath )
                 forwardArrowButton.isHidden = false
                 senderIsHidden = ( selectedIndexPath.row == 1 )
@@ -240,13 +240,13 @@ class MyPhotosViewController: UIViewController {
         
         if selectedIndexPath.section == 0 {     // Device Assets
             if selectedIndexPath.row + 1 < deviceAssetArray.count {
-                selectedIndexPath = IndexPath( row: selectedIndexPath.row + 1, section: selectedIndexPath.section )
+                changeSelectedCellTo( IndexPath( row: selectedIndexPath.row + 1, section: selectedIndexPath.section ) )
                 populateMyImageViewUsing( selectedIndexPath )
                 backArrrowButton.isHidden = false
                 senderIsHidden = ( selectedIndexPath.row == deviceAssetArray.count - 1 )
             }
             else if fetchedMediaArray.count > 1 {
-                selectedIndexPath = IndexPath( row: 1, section: 1 )
+                changeSelectedCellTo( IndexPath( row: 1, section: 1 ) )
                 populateMyImageViewUsing( selectedIndexPath )
                 backArrrowButton.isHidden = false
             }
@@ -258,7 +258,7 @@ class MyPhotosViewController: UIViewController {
         }
         else {      // Favorites
             if selectedIndexPath.row + 1 < fetchedMediaArray.count {
-                selectedIndexPath = IndexPath( row: selectedIndexPath.row + 1, section: selectedIndexPath.section )
+                changeSelectedCellTo( IndexPath( row: selectedIndexPath.row + 1, section: selectedIndexPath.section ) )
                 populateMyImageViewUsing( selectedIndexPath )
                 backArrrowButton.isHidden = false
                 senderIsHidden = ( selectedIndexPath.row == fetchedMediaArray.count - 1 )
@@ -1027,8 +1027,14 @@ extension MyPhotosViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        logVerbose( "[ %@ ]", stringFor( indexPath ) )
-        let currentlySelectedCell = collectionView.cellForItem( at: selectedIndexPath ) as! MyPhotosCollectionViewCell
-        let newSelectedCell       = collectionView.cellForItem( at: indexPath         ) as! MyPhotosCollectionViewCell
+        changeSelectedCellTo( indexPath )
+        populateMyImageViewUsing( indexPath )
+    }
+    
+    
+    private func changeSelectedCellTo(_ indexPath: IndexPath ) {
+        let currentlySelectedCell = myCollectionView.cellForItem( at: selectedIndexPath ) as! MyPhotosCollectionViewCell
+        let newSelectedCell       = myCollectionView.cellForItem( at: indexPath         ) as! MyPhotosCollectionViewCell
 
         if indexPath.section == 0 {
             currentlySelectedCell.initializeWith( deviceAssetArray[selectedIndexPath.row], isSelected: false )
@@ -1040,7 +1046,6 @@ extension MyPhotosViewController: UICollectionViewDelegate {
         }
         
         selectedIndexPath = indexPath
-        populateMyImageViewUsing( indexPath )
     }
     
     
