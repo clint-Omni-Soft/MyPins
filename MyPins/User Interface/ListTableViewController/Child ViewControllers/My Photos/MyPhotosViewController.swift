@@ -1027,6 +1027,19 @@ extension MyPhotosViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        logVerbose( "[ %@ ]", stringFor( indexPath ) )
+        let currentlySelectedCell = collectionView.cellForItem( at: selectedIndexPath ) as! MyPhotosCollectionViewCell
+        let newSelectedCell       = collectionView.cellForItem( at: indexPath         ) as! MyPhotosCollectionViewCell
+
+        if indexPath.section == 0 {
+            currentlySelectedCell.initializeWith( deviceAssetArray[selectedIndexPath.row], isSelected: false )
+            newSelectedCell      .initializeWith( deviceAssetArray[        indexPath.row], isSelected: true  )
+        }
+        else {
+            currentlySelectedCell.initializeWith( fetchedMediaArray[selectedIndexPath.row], isSelected: false )
+            newSelectedCell      .initializeWith( fetchedMediaArray[        indexPath.row], isSelected: true  )
+        }
+        
+        selectedIndexPath = indexPath
         populateMyImageViewUsing( indexPath )
     }
     
