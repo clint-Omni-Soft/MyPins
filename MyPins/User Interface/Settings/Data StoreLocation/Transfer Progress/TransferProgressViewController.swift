@@ -19,7 +19,8 @@ class TransferProgressViewController: UIViewController {
 
     // MARK: Private Variables
 
-    private let pinCentral = PinCentral.sharedInstance
+    private var application = UIApplication.shared
+    private let pinCentral  = PinCentral.sharedInstance
 
     
     
@@ -38,6 +39,7 @@ class TransferProgressViewController: UIViewController {
         logTrace()
         super.viewWillAppear( animated )
         
+        application.isIdleTimerDisabled = true
         activityIndicator.startAnimating()
         
         if pinCentral.dataStoreLocation == .iCloud || pinCentral.dataStoreLocation == .shareCloud {

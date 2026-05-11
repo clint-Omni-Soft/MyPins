@@ -73,13 +73,8 @@ class SortOptionsViewController: UIViewController {
         logTrace()
         super.viewWillAppear(animated)
         
-        view.layer.borderColor = UIColor.black.cgColor
-        view.layer.borderWidth = 2.0
-        
-        myTableView.clipsToBounds      = true
-        myTableView.layer.borderColor  = UIColor.black.cgColor
-        myTableView.layer.borderWidth  = 1.0
-        myTableView.layer.cornerRadius = 10.0
+        configurePopoverViewBorder( view )
+        configureControlViewBorder( myTableView )
 
         sortAscendingSwitch.isOn = originalOptionTuple.1
         myTableView.reloadData()

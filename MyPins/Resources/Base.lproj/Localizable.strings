@@ -147,7 +147,7 @@
 "DefaultColorNickname.White"                = "Shopping";
 "DefaultColorNickname.Yellow"               = "Winery";
 
-"InfoText.DataStoreLocation1"               = "DATA STORE LOCATION\n\nWe provide support for two different storage location options...\n\n   (a) on your device (default) or \n   (b) on a Network Accessible Storage (NAS) unit.\n\n";
+"InfoText.DataStoreLocation1"               = "DATA STORE LOCATION\n\nWe provide support for two different storage location options...\n\n   (a) on your device (default) or \n   (b) on a Network Accessible Storage (NAS) unit that supports SMB 1.0.\n\n";
 "InfoText.DataStoreLocation2"               = "The key point here is that there is no sharing on the device.  If you chose NAS then anyone who has access to your Wi-Fi can access it.\n\n";
 "InfoText.Map1"                             = "MAP\n\nTouching the plus sign (+) bar button will take you to the Pin Editor where you can associate provide information about that pin.\n\n";
 "InfoText.Map2"                             = "Touching the 'Map' bar button will produce a popover that will allow you to choose from the supported map display modes.\n\n";

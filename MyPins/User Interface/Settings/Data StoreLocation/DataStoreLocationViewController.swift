@@ -53,7 +53,6 @@ class DataStoreLocationViewController: UIViewController {
         self.navigationItem.title = NSLocalizedString( "Title.SaveDataIn", comment: "Save Data In?" )
         
         if let dataStoreLocation = UserDefaults.standard.string( forKey: UserDefaultKeys.dataStoreLocation ) {
-            
             switch dataStoreLocation {
             case DataStoreLocationName.device:      selectedOption = CellIndexes.device
             case DataStoreLocationName.nas:         selectedOption = CellIndexes.nas
@@ -61,9 +60,6 @@ class DataStoreLocationViewController: UIViewController {
             default:                                logTrace( "ERROR!  SBH!" )
             }
             
-        }
-        else {
-            selectedOption = CellIndexes.device
         }
         
     }
@@ -74,11 +70,8 @@ class DataStoreLocationViewController: UIViewController {
         super.viewWillAppear( animated )
         
         canSeeNasFolders = false
-        
+        myActivityIndicator.isHidden = true
         NASCentral.sharedInstance.canSeeNasFolders( self )
-        
-        myActivityIndicator.isHidden = false
-        myActivityIndicator.startAnimating()
         
         loadBarButtonItems()
         
@@ -96,8 +89,8 @@ class DataStoreLocationViewController: UIViewController {
     
     
     @IBAction func infoBarButtonItemTouched(_ sender : UIBarButtonItem ) {
-        let     message = NSLocalizedString( "InfoText.DataStoreLocation1", comment: "DATA STORE LOCATION\n\nWe provide support for two different storage location options...\n\n   (a) on your device (default) or \n   (b) on a Network Accessible Storage (NAS) unit.\n\n" ) +
-                          NSLocalizedString( "InfoText.DataStoreLocation2", comment: "The key point here is that there is no sharing on the device.  If you chose NAS then anyone who has access to your Wi-Fi can access it.\n" ) 
+        let     message = NSLocalizedString( "InfoText.DataStoreLocation1", comment: "DATA STORE LOCATION\n\nWe provide support for two different storage location options...\n\n   (a) on your device (default) or \n   (b) on a Network Accessible Storage (NAS) unit that supports SMB 1.0.\n\n" ) +
+                          NSLocalizedString( "InfoText.DataStoreLocation2", comment: "The key point here is that there is no sharing on the device.  If you chose NAS then anyone who has access to your Wi-Fi can access it.\n" )
 
         presentAlert( title: NSLocalizedString( "AlertTitle.GotAQuestion", comment: "Got a question?" ), message: message )
     }
@@ -130,8 +123,6 @@ extension DataStoreLocationViewController : NASCentralDelegate {
         
         self.canSeeNasFolders = canSeeNasFolders
         
-        myActivityIndicator.stopAnimating()
-        myActivityIndicator.isHidden = true
         myTableView.reloadData()
     }
 
@@ -208,13 +199,7 @@ extension DataStoreLocationViewController : UITableViewDelegate {
             presentConfirmationForMoveToDevice()
 
         case CellIndexes.nas:
-            if canSeeNasFolders {
-                launchNasSelectorViewController()
-            }
-            else {
-                presentAlert( title   : NSLocalizedString( "AlertTitle.Error", comment:  "Error" ),
-                              message : NSLocalizedString( "AlertMessage.CannotSeeExternalDevice", comment: "We cannot see your external device.  Move closer to your WiFi network and try again." ) )
-            }
+            launchNasSelectorViewController()
 
         default:
             logTrace( "ERROR!  SBH!" )

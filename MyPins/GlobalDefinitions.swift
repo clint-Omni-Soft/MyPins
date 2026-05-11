@@ -176,6 +176,7 @@ struct UserDefaultKeys {
     static let dataStoreLocation     = "DataStoreLocation"
     static let deviceName            = "DeviceName"
     static let dontRemindMeAgain     = "DontRemindMeAgain"
+    static let nasConnectAttempted   = "NasConnectAttempted"
     static let howToUseShown         = "HowToUseShown"
     static let lastAccessedPinsGuid  = "LastAccessedPinsGuid"
     static let lastComponentSelected = "LastComponentSelected"

@@ -146,7 +146,7 @@
 "DefaultColorNickname.White"                = "Achats";
 "DefaultColorNickname.Yellow"               = "Vignoble";
 
-"InfoText.DataStoreLocation1"               = "EMPLACEMENT DU MAGASIN DE DONNÉES\n\nNous prenons en charge deux options d'emplacement de stockage différentes...\n\n (a) sur votre appareil (par défaut) ou \n (b) sur une unité de stockage accessible en réseau (NAS).\n\n";
+"InfoText.DataStoreLocation1"               = "EMPLACEMENT DU MAGASIN DE DONNÉES\n\nNous prenons en charge deux options d'emplacement de stockage différentes...\n\n (a) sur votre appareil (par défaut) ou \n (b) sur une unité de stockage accessible par le réseau (NAS) prenant en charge SMB 1.0.\n\n";
 "InfoText.DataStoreLocation2"               = "Le point clé ici est qu’il n’y a pas de partage sur l’appareil.  Si vous avez choisi NAS, toute personne ayant accès à votre Wi-Fi peut y accéder.\n\n";
 "InfoText.Map1"                             = "CARTE\n\nAppuyer sur le bouton de la barre du signe plus (+) vous amènera à l'éditeur de broches où vous pouvez associer des informations sur cette broche.\n\n";
 "InfoText.Map2"                             = "Toucher le bouton de la barre 'Carte' produira une fenêtre contextuelle qui vous permettra de choisir parmi les modes d'affichage de carte pris en charge.\n\n";

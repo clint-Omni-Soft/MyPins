@@ -47,6 +47,7 @@ class NasLoginViewController: UIViewController {
         passwordLabel.text = NSLocalizedString( "LabelText.Password",     comment: "Password"  )
         userNameLabel.text = NSLocalizedString( "LabelText.UserName",     comment: "User Name" )
         titleLabel   .text = NSLocalizedString( "Title.EnterCredentials", comment: "Enter Credentials for" )
+        
         expandImageToFit( cancelButton )
         expandImageToFit( okButton     )
     }
@@ -55,6 +56,8 @@ class NasLoginViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         logTrace()
         super.viewWillAppear( animated )
+
+        configurePopoverViewBorder( view )
 
         nasDriveNameLabel.text = device.netbiosName
     }

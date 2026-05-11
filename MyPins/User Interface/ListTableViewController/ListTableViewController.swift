@@ -335,7 +335,7 @@ class ListTableViewController: UIViewController {
         let sortType           = sortDescriptor.0
         
         if UIDevice.current.userInterfaceIdiom == .pad {
-            leftBarButtonItems.append( UIBarButtonItem.init( barButtonSystemItem: .close, target: self, action: #selector( hidePrimaryBarButtonTouched(_: ) ) ) )
+            leftBarButtonItems.append( UIBarButtonItem.init( image: UIImage(systemName: "sidebar.left" ), style: .plain, target: self, action: #selector( hidePrimaryBarButtonTouched(_:) ) ) )
         }
 
         if sortType == SortOptions.byType {

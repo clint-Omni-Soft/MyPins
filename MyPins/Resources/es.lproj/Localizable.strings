@@ -146,7 +146,7 @@
 "DefaultColorNickname.White"                = "Compras";
 "DefaultColorNickname.Yellow"               = "Lagar";
 
-"InfoText.DataStoreLocation1"               = "UBICACIÓN DEL ALMACENAMIENTO DE DATOS\n\nBrindamos soporte para dos opciones de ubicación de almacenamiento diferentes...\n\n (a) en su dispositivo (predeterminado) o \n (b) en una unidad de almacenamiento accesible en red (NAS).\n\n";
+"InfoText.DataStoreLocation1"               = "UBICACIÓN DEL ALMACENAMIENTO DE DATOS\n\nBrindamos soporte para dos opciones de ubicación de almacenamiento diferentes...\n\n (a) en su dispositivo (predeterminado) o \n (b) en una unidad de almacenamiento accesible en red (NAS) que admita SMB 1.0.\n\n";
 "InfoText.DataStoreLocation2"               = "El punto clave aquí es que no se puede compartir en el dispositivo.  Si elige NAS, cualquiera que tenga acceso a su Wi-Fi podrá acceder a él.\n\n";
 "InfoText.Map1"                             = "MAP\n\nAl tocar el botón de la barra del signo más (+), accederá al Editor de pines, donde puede asociar proporcionar información sobre ese pin.\n\n";
 "InfoText.Map2"                             = "Al tocar el botón de la barra 'Mapa' se producirá una ventana emergente que le permitirá elegir entre los modos de visualización de mapas admitidos.\n\n";

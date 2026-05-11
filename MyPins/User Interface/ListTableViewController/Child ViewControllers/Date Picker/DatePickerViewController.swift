@@ -49,10 +49,7 @@ class DatePickerViewController: UIViewController {
 
         configurePopoverViewBorder( view )
         
-        durationPickerView.clipsToBounds      = true
-        durationPickerView.layer.borderColor  = ControlViewBorder.color.cgColor
-        durationPickerView.layer.borderWidth  = ControlViewBorder.width
-        durationPickerView.layer.cornerRadius = ControlViewBorder.cornerRadius
+        configureControlViewBorder( durationPickerView )
 
         durationLabel    .text = NSLocalizedString( "LabelText.NumberOfDays", comment: "Number of Days"  )
         startingDateLabel.text = NSLocalizedString( "LabelText.StartingDate", comment: "Starting Date"   )
@@ -67,8 +64,6 @@ class DatePickerViewController: UIViewController {
         startingDatePicker.minimumDate = Date.distantPast
         
         preferredContentSize = CGSize(width: 375, height: 296 )
-
-        durationPickerView.layer.cornerRadius = 10
   }
     
     
