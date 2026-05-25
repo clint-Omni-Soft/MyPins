@@ -842,7 +842,7 @@ extension NasDriveSelectorViewController : UITableViewDelegate {
                                 
                                 nasCentral.openShare( selectedShare, self )
             
-        case .navigating:       var goDown1Level = targetDirectoryIndex == GlobalConstants.noSelection
+        case .navigating:       let goDown1Level = targetDirectoryIndex == GlobalConstants.noSelection
             
 //                                switch mode {
 //                                case .deviceSelect:     goDown1Level = targetDirectoryIndex == GlobalConstants.noSelection
